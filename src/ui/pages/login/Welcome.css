@@ -1,0 +1,25 @@
+.page.welcome {
+  display: grid;
+  grid-template-rows: 1fr auto 12px;
+  height: 100%;
+}
+
+.page.welcome > .brand {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  padding-top: 24px;
+}
+
+.page.welcome > .brand > .logo {
+  font-weight: 500;
+  font-size: 32px;
+  font-family: 'Avenir Next', Arial, sans-serif;
+  color: rgb(119, 133, 255);
+  cursor: default;
+}
+
+.page.welcome > .actions > * {
+  margin-top: 8px;
+}

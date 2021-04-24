@@ -1,18 +1,40 @@
+html {
+  --theme-color: rgb(119, 133, 255);
+  --theme-color-5: rgba(119, 133, 255, 0.35);
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   margin: 0;
   -webkit-app-region: drag;
+  color: #111;
 }
 
 #root {
   display: grid;
-  padding: 12px;
   height: 100vh;
   width: 100vw;
   box-sizing: border-box;
   background-color: aliceblue;
 }
 
+page {
+  box-sizing: border-box;
+}
+
 button {
   -webkit-app-region: no-drag;
+  border: 1px solid #dfe8f9;
+  background: none;
+  width: 100%;
+  font-size: 16px;
+  padding: 8px 0;
+  font-family: 'Avenir Next', Arial, sans-serif;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+button:hover {
+  color: white;
+  background-color: var(--theme-color-5);
 }
