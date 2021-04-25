@@ -1,0 +1,47 @@
+.page.import {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.page.import > .form > textarea {
+  background: none;
+  width: 100%;
+  border: 1px solid var(--border-color);
+  box-sizing: border-box;
+  padding: 8px;
+  outline: none;
+}
+
+.page.import > .form > .derivation-path {
+  position: relative;
+}
+
+.page.import > .form > .derivation-path > input.path {
+  background: none;
+  border: none;
+  color: var(--font-color-desc);
+  border-bottom: 1px solid var(--border-color);
+  margin-top: 12px;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 16px;
+  text-align: end;
+}
+
+.page.import > .form > .derivation-path > span {
+  position: absolute;
+  left: 0;
+  bottom: 3px;
+  font-size: 15px;
+  opacity: 0.5;
+}
+
+.page.import > .form > span.path-desc {
+  display: inline-block;
+  text-align: end;
+  width: 100%;
+  opacity: 0.5;
+  font-size: 9px;
+  text-transform: uppercase;
+}

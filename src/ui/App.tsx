@@ -1,7 +1,7 @@
 import './App.css';
 
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { Generate, Welcome } from './pages/login/';
+import { Generate, Import, Welcome } from './pages/login/';
 
 import React from 'react';
 
@@ -11,6 +11,7 @@ export default () => {
       <div id="app">
         <Switch>
           <Route path="/generate" exact component={Generate} />
+          <Route path="/import" exact component={Import} />
           <Route path="/" component={Welcome} />
         </Switch>
       </div>

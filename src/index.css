@@ -41,6 +41,7 @@ body {
 
 .page {
   box-sizing: border-box;
+  padding: 12px;
 }
 
 button,
@@ -70,4 +71,11 @@ a.button:hover {
 button:active,
 a.button:active {
   background-color: black;
+}
+
+button:disabled,
+a.button:disabled {
+  cursor: not-allowed;
+  color: var(--border-color);
+  background-color: transparent;
 }

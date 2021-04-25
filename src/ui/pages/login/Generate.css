@@ -1,5 +1,4 @@
 .page.generate {
-  padding: 12px;
   display: grid;
   grid-template-rows: auto auto 1fr auto;
 }
@@ -32,6 +31,7 @@ td {
   text-align: center;
   border-collapse: collapse;
   table-layout: fixed;
+  font-weight: 500;
 }
 
 .page.generate > div.seeds td > div {

@@ -2,7 +2,6 @@
   display: grid;
   grid-template-rows: 1fr auto;
   height: 100%;
-  padding: 12px;
 }
 
 .page.welcome > .brand {
