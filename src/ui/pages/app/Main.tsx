@@ -1,9 +1,11 @@
 import './Main.css';
 
+import DAI from '../../../assets/icons/crypto/dai.svg';
 import ETH from '../../../assets/icons/crypto/eth.svg';
 import Feather from 'feather-icons-react';
 import { Line } from 'rc-progress';
 import React from 'react';
+import USDC from '../../../assets/icons/crypto/usdc.svg';
 
 export default (props) => {
   return (
@@ -16,7 +18,7 @@ export default (props) => {
 
       <div className="net-worth">
         <h3 className="title">Net Worth</h3>
-        <div className="value">$ 1,129,385.22</div>
+        <div className="value">$ 2,729,185.22</div>
 
         <div className="asset-percent">
           <Line percent={90} strokeColor="rgb(97, 134, 255)" strokeWidth={1.5} trailWidth={1.5} />
@@ -45,7 +47,33 @@ export default (props) => {
           <tbody>
             <tr>
               <td>
-                <img src={ETH} alt="" />
+                <div>
+                  <img src={ETH} alt="" />
+                  <span>ETH</span>
+                  <span></span>
+                  <span>1.001</span>
+                </div>
+              </td>
+              <td>
+                <div>
+                  <img src={USDC} alt="" />
+                  <span>USDC</span>
+                  <span></span>
+                  <span>1,234,567.89</span>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div>
+                  <img src={DAI} alt="" />
+                  <span>DAI</span>
+                  <span></span>
+                  <span>123.001</span>
+                </div>
+              </td>
+              <td>
+                <div></div>
               </td>
             </tr>
           </tbody>

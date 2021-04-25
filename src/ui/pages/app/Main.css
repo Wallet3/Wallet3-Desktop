@@ -23,7 +23,7 @@
 .page.main > .net-worth > .asset-percent > .value {
   display: flex;
   justify-content: space-between;
-  font-size: 12px;
+  font-size: 10px;
   color: var(--font-color-title);
 }
 
@@ -51,6 +51,41 @@
   margin-top: 12px;
 }
 
-.page.main > .assets > table, td {
+.page.main > .assets > table {
+  margin-top: 8px;
+}
+
+.page.main > .assets > table td {
   border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.page.main > .assets > table td:hover {
+  color: var(--theme-color-05);
+}
+
+.page.main > .assets > table td > div {
+  overflow: hidden;
+  font-size: 14px;
+  display: grid;
+  column-gap: 4px;
+  padding: 4px 0;
+  grid-template-columns: auto auto 1fr auto;
+  margin-bottom: 6px;
+}
+
+.page.main > .assets > table td > div > img {
+  width: 17px;
+  height: 17px;
+  display: inline-block;
+  margin-right: 2px;
+}
+
+.page.main > .assets > table td:first-child div {
+  margin-right: 8px;
+}
+
+.page.main > .assets > table td:last-child div {
+  margin-left: 8px;
 }
