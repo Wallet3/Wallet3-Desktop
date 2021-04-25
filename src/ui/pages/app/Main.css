@@ -1,0 +1,46 @@
+.page.main {
+  padding-top: 10px;
+}
+
+.page.main > .utility-bar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.page.main > .net-worth > .title {
+  font-size: 14px;
+  color: var(--font-color-title);
+  margin-bottom: 4px;
+}
+
+.page.main > .net-worth > .value {
+  font-size: 30px;
+  font-weight: 500;
+}
+
+.page.main > .net-worth > .asset-percent > .value {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--font-color-title);
+}
+
+.page.main > .wallet-actions {
+  display: grid;
+  margin-top: 12px;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 8px;
+}
+
+.page.main > .wallet-actions button {
+  padding: 4px 0;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page.main > .wallet-actions button > span {
+  display: inline-block;
+  margin: 0 8px;
+}
