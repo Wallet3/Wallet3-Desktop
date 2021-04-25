@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { BrowserWindow, app } from 'electron';
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = '1';
 
@@ -13,6 +13,8 @@ const createWindow = (): void => {
   const mainWindow = new BrowserWindow({
     height: 540,
     width: 360,
+    minWidth: 360,
+    minHeight: 540,
     frame: false,
     titleBarStyle: 'hiddenInset',
   });

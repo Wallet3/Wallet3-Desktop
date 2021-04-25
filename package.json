@@ -84,7 +84,8 @@
     "node-loader": "^1.0.1",
     "style-loader": "^1.2.1",
     "ts-loader": "^8.0.2",
-    "typescript": "^4.2.4"
+    "typescript": "^4.2.4",
+    "url-loader": "^4.1.1"
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",

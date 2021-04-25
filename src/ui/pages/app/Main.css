@@ -7,10 +7,12 @@
   justify-content: flex-end;
 }
 
-.page.main > .net-worth > .title {
+.page.main h3.title {
   font-size: 14px;
   color: var(--font-color-title);
   margin-bottom: 4px;
+  margin-top: 0;
+  font-weight: 400;
 }
 
 .page.main > .net-worth > .value {
@@ -43,4 +45,12 @@
 .page.main > .wallet-actions button > span {
   display: inline-block;
   margin: 0 8px;
+}
+
+.page.main > .assets {
+  margin-top: 12px;
+}
+
+.page.main > .assets > table, td {
+  border: none;
 }

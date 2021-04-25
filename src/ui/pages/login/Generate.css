@@ -23,14 +23,11 @@
   margin-top: 24px;
 }
 
-.page.generate > div.seeds table,
+.page.generate > div.seeds > table,
 td {
   border: 1px solid var(--border-color);
-  width: 100%;
   font-size: 15px;
   text-align: center;
-  border-collapse: collapse;
-  table-layout: fixed;
   font-weight: 500;
 }
 

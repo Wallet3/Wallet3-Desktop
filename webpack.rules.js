@@ -20,8 +20,19 @@ module.exports = [
     use: {
       loader: 'ts-loader',
       options: {
-        transpileOnly: true
-      }
-    }
+        transpileOnly: true,
+      },
+    },
+  },
+  {
+    test: /\.(png|jpg|gif|svg)$/i,
+    use: [
+      {
+        loader: 'url-loader',
+        options: {
+          limit: 8192,
+        },
+      },
+    ],
   },
 ];

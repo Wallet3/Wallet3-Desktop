@@ -46,6 +46,12 @@ body {
   padding: 12px;
 }
 
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
 button,
 a.button {
   -webkit-app-region: no-drag;

@@ -2,6 +2,7 @@
   "compilerOptions": {
     "allowJs": true,
     "module": "commonjs",
+    "target": "es2015",
     "skipLibCheck": true,
     "esModuleInterop": true,
     "noImplicitAny": false,
@@ -9,6 +10,7 @@
     "baseUrl": ".",
     "jsx": "react",
     "outDir": "dist",
+    "rootDir": "src",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "paths": {
