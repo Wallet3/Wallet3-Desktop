@@ -1,16 +1,19 @@
-import React from 'react';
-import { BrowserRouter as Router, Switch, Route, Link, useRouteMatch, useParams } from 'react-router-dom';
 import './App.css';
-import Welcome from './pages/login/Welcome';
+
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { Generate, Welcome } from './pages/login/';
+
+import React from 'react';
 
 export default () => {
   return (
-    <Router>
+    <BrowserRouter>
       <div id="app">
         <Switch>
+          <Route path="/generate" exact component={Generate} />
           <Route path="/" component={Welcome} />
         </Switch>
       </div>
-    </Router>
+    </BrowserRouter>
   );
 };

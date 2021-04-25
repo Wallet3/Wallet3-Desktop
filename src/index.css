@@ -1,13 +1,34 @@
 html {
-  --theme-color: rgb(119, 133, 255);
-  --theme-color-5: rgba(119, 133, 255, 0.35);
+  --theme-color: rgb(97, 134, 255);
+  --theme-color-05: rgba(97, 134, 255, 0.5);
+  --font-color: #333;
+  --font-color-desc: rgb(42, 134, 219);
+  --border-color: #dfe8f9;
 }
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   margin: 0;
   -webkit-app-region: drag;
-  color: #111;
+  color: var(--font-color);
+}
+
+* {
+  user-select: none;
+}
+
+*.button {
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.no-drag {
+  -webkit-app-region: no-drag;
+}
+
+.padding {
+  width: 100%;
+  height: 100%;
 }
 
 #root {
@@ -18,13 +39,18 @@ body {
   background-color: aliceblue;
 }
 
-page {
+.page {
   box-sizing: border-box;
 }
 
-button {
+button,
+a.button {
   -webkit-app-region: no-drag;
-  border: 1px solid #dfe8f9;
+  text-decoration: none;
+  display: block;
+  border: 1px solid var(--border-color);
+  color: var(--font-color);
+  text-align: center;
   background: none;
   width: 100%;
   font-size: 16px;
@@ -32,9 +58,16 @@ button {
   font-family: 'Avenir Next', Arial, sans-serif;
   cursor: pointer;
   transition: all 0.3s;
+  outline: none;
 }
 
-button:hover {
+button:hover,
+a.button:hover {
   color: white;
-  background-color: var(--theme-color-5);
+  background-color: var(--theme-color-05);
+}
+
+button:active,
+a.button:active {
+  background-color: black;
 }

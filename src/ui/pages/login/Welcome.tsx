@@ -1,5 +1,7 @@
-import React from 'react';
 import './Welcome.css';
+
+import { Link } from 'react-router-dom';
+import React from 'react';
 
 export default () => {
   return (
@@ -9,8 +11,12 @@ export default () => {
       </div>
 
       <div className="actions">
-        <button>IMPORT</button>
-        <button>CREATE</button>
+        <Link className="button" to="/generate">
+          CREATE
+        </Link>
+        <Link className="button" to="/import">
+          IMPORT
+        </Link>
       </div>
     </div>
   );

@@ -1,7 +1,8 @@
 .page.welcome {
   display: grid;
-  grid-template-rows: 1fr auto 12px;
+  grid-template-rows: 1fr auto;
   height: 100%;
+  padding: 12px;
 }
 
 .page.welcome > .brand {
@@ -16,7 +17,7 @@
   font-weight: 500;
   font-size: 32px;
   font-family: 'Avenir Next', Arial, sans-serif;
-  color: rgb(119, 133, 255);
+  color: var(--theme-color);
   cursor: default;
 }
 

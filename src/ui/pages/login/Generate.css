@@ -1,0 +1,100 @@
+.page.generate {
+  padding: 12px;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+}
+
+.page.generate h5 {
+  margin: 8px 0;
+  color: var(--font-color-desc);
+}
+
+.page.generate ul {
+  padding: 0 4px;
+  margin: 0 14px;
+  font-size: 13px;
+  color: var(--font-color-desc);
+}
+
+.page.generate ul > li {
+  margin-bottom: 8px;
+}
+
+.page.generate > div.seeds {
+  margin-top: 24px;
+}
+
+.page.generate > div.seeds table,
+td {
+  border: 1px solid var(--border-color);
+  width: 100%;
+  font-size: 15px;
+  text-align: center;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.page.generate > div.seeds td > div {
+  padding: 8px 0;
+  position: relative;
+}
+
+.page.generate > div.seeds td > div > .no {
+  position: absolute;
+  left: 1px;
+  top: 0;
+  font-size: 7px;
+  opacity: 0.35;
+}
+
+.page.generate > div.seeds > .actions {
+  display: grid;
+  margin-top: 12px;
+  max-width: 100%;
+  grid-template-columns: 9fr 3fr 1fr;
+  font-size: 10px;
+}
+
+.page.generate > div.seeds > .actions > .addr {
+  display: inline-block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.page.generate > div.seeds > .actions > .addr > .addr-value {
+  user-select: text;
+}
+
+.page.generate > div.seeds > .actions > .switch,
+.icon {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+.page.generate > div.seeds > .actions > .switch {
+  margin-top: -1px;
+}
+
+.page.generate > div.seeds > .actions > .switch > span {
+  opacity: 0.25;
+  display: inline-block;
+  font-size: 10px;
+}
+
+.page.generate > div.seeds > .actions > .switch > span.button {
+  margin-top: 0;
+  margin: 0 3px;
+  font-size: 11px;
+}
+
+.page.generate > div.seeds > .actions > .switch > span.button.active {
+  opacity: 1;
+}
+
+.page.generate > div.seeds > .actions *.button:hover {
+  color: var(--theme-color-05);
+  opacity: 1;
+}
