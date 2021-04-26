@@ -1,4 +1,7 @@
 import { BrowserWindow, app } from 'electron';
+
+import App from './core/App';
+
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = '1';
 
@@ -8,7 +11,11 @@ if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
-const createWindow = (): void => {
+const createWindow = async (): Promise<void> => {
+  if (App.touchIDSupported) {
+    await App.init();
+  }
+
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     height: 540,
