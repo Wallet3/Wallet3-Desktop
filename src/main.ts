@@ -1,6 +1,6 @@
 import { BrowserWindow, app } from 'electron';
 
-import App from './core/App';
+import App from './backend/App';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = '1';
