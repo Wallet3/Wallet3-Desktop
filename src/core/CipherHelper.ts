@@ -9,9 +9,9 @@ export function generateIv(size = 16): Buffer {
 export function encrypt(iv: Buffer, text: string, password: string): string {
   const pw = crypto.createHash('sha256').update(password).digest();
   const cipher = crypto.createCipheriv(algorithm, pw, iv);
-  let crypted = cipher.update(text, 'utf8', 'hex');
-  crypted += cipher.final('hex');
-  return crypted;
+  let enc = cipher.update(text, 'utf8', 'hex');
+  enc += cipher.final('hex');
+  return enc;
 }
 
 export function decrypt(iv: Buffer, encrypted: string, password: string): string {
