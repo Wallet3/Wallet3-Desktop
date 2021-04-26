@@ -1,3 +1,4 @@
-import Main from './Main';
+import Settings from './Settings';
+import Wallet from './Wallet';
 
-export { Main };
+export { Wallet, Settings };

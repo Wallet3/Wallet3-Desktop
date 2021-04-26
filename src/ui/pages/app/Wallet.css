@@ -1,14 +1,56 @@
 .page.main {
-  padding-top: 10px;
+  padding: 0;
+  display: grid;
+  grid-template-rows: auto auto auto 1fr;
 }
 
 .page.main > .utility-bar {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  grid-template-rows: auto;
   justify-content: flex-end;
+  column-gap: 4px;
+  margin-top: -2px;
+}
+
+.page.main > .utility-bar > button {
+  border: none;
+  width: auto;
+  height: auto;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.page.main > .utility-bar > button:hover {
+  background-color: transparent;
+}
+
+.page.main > .utility-bar > button.menu-button {
+  margin-top: -4px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0 8px;
+  border-radius: 5px;
+}
+
+.page.main > .utility-bar > button.menu-button:hover {
+  color: var(--font-color);
+  background-color: var(--border-color);
+}
+
+.page.main > .utility-bar > button.icon-button {
+  color: var(--theme-color);
+}
+
+.page.main > .utility-bar > button.icon-button:hover {
+  color: var(--theme-color-05);
+  opacity: 0.85;
 }
 
 .page.main h3.title {
-  font-size: 14px;
+  font-size: 12px;
   color: var(--font-color-title);
   margin-bottom: 4px;
   margin-top: 0;

@@ -88,6 +88,7 @@
     "url-loader": "^4.1.1"
   },
   "dependencies": {
+    "@szhsin/react-menu": "^1.9.1",
     "electron-squirrel-startup": "^1.0.0",
     "feather-icons": "^4.28.0",
     "feather-icons-react": "^0.4.3",

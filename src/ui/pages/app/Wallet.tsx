@@ -1,19 +1,47 @@
-import './Main.css';
+import './Wallet.css';
+import '@szhsin/react-menu/dist/index.css';
+
+import { Menu, MenuButton, MenuItem } from '@szhsin/react-menu';
 
 import DAI from '../../../assets/icons/crypto/dai.svg';
 import ETH from '../../../assets/icons/crypto/eth.svg';
 import Feather from 'feather-icons-react';
 import { Line } from 'rc-progress';
+import NetworkLabel from '../../components/NetworkLabel';
 import React from 'react';
 import USDC from '../../../assets/icons/crypto/usdc.svg';
+
+const menuItemStyle = {
+  padding: '8px 12px',
+};
 
 export default (props) => {
   return (
     <div className="page main">
       <div className="utility-bar">
-        <div title="Scan QR">
-          <Feather icon="instagram" size={20} stroke="#6186ff" strokeWidth={1} />
-        </div>
+        <div></div>
+
+        <Menu
+          menuButton={
+            <MenuButton className="menu-button">
+              <NetworkLabel network="ETH" />
+            </MenuButton>
+          }
+        >
+          <MenuItem styles={menuItemStyle}>
+            <NetworkLabel className="expand" network="ETH" />
+          </MenuItem>
+          <MenuItem styles={menuItemStyle}>
+            <NetworkLabel className="expand" network="BSC" />
+          </MenuItem>
+          <MenuItem styles={menuItemStyle}>
+            <NetworkLabel className="expand" network="POLYGON" />
+          </MenuItem>
+        </Menu>
+
+        <button className="icon-button" title="Scan QR" onClick={(_) => console.log('click')}>
+          <Feather icon="instagram" size={20} strokeWidth={1} />
+        </button>
       </div>
 
       <div className="net-worth">

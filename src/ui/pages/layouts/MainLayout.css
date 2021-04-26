@@ -1,0 +1,44 @@
+.layout {
+  padding: 12px;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-rows: 1fr auto;
+}
+
+.layout > .tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 12px;
+  border-top: 1px solid var(--border-color);
+}
+
+.layout > .tabs > a {
+  text-decoration: none;
+  outline: none;
+  color: var(--font-color);
+}
+
+.layout > .tabs > a > div {
+  padding: 2px 0;
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 10px;
+}
+
+.layout > .tabs > a > div:hover {
+  color: var(--theme-color-05);
+}
+
+.layout > .tabs > a > div.active {
+  color: var(--theme-color);
+}
+
+.layout > .tabs > a > div > span {
+  display: inline-block;
+  margin-top: 4px;
+}

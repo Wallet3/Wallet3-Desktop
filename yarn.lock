@@ -483,6 +483,11 @@
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-4.0.1.tgz#d26729db850fa327b7cacc5522252194404226f5"
   integrity sha512-Qm9hBEBu18wt1PO2flE7LPb30BHMQt1eQgbV76YntdNk73XZGpn3izvGTYxbGgzXKgbCjiia0uxTd3aTNQrY/g==
 
+"@szhsin/react-menu@^1.9.1":
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/@szhsin/react-menu/-/react-menu-1.9.1.tgz#e09f4bb8c15c681d4954063f30b4a5a8dc5513f2"
+  integrity sha512-Ib3zAarWocSbZ8N5I4k5EMVwQf3Tlc/WLvUdwB4U+c/1kTse5o7l6vBHRjCKC0N53JWl/N0yzGeNlBzN6fNzWg==
+
 "@szmarczak/http-timer@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@szmarczak/http-timer/-/http-timer-1.1.2.tgz#b1665e2c461a2cd92f4c1bbf50d5454de0d4b421"

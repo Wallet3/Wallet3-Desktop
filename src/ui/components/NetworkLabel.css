@@ -1,0 +1,16 @@
+.network-label {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+}
+
+.network-label > img {
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+  margin-right: 4px;
+}
+
+.network-label.expand > img {
+    margin-right: 8px;
+}
