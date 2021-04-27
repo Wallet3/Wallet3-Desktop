@@ -1,0 +1,16 @@
+.page.blank {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.page.blank > img.logo {
+  width: 96px;
+}
+
+.page.blank > .slogan {
+  font-size: 10px;
+  margin-top: -16px;
+  opacity: 0.5;
+}

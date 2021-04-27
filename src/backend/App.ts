@@ -38,6 +38,10 @@ class App {
     ipcMain.handle(MessageKeys.genMnemonic, (e, length) => {
       return KeyMan.genMnemonic(length);
     });
+
+    ipcMain.handle(MessageKeys.saveMnemonic, () => {
+      systemPreferences.setUserDefault(AppKeys.hasMnemonic, 'boolean', true as never);
+    });
   }
 
   async init() {

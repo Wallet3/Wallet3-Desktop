@@ -2,14 +2,13 @@ import * as crypto from 'crypto';
 
 import { ethers } from 'ethers';
 
-ethers.Wallet.createRandom({});
-
 class KeyMan {
-  mnemonic: string;
+  tmpMnemonic?: string;
 
   genMnemonic(length = 12): string {
-    this.mnemonic = ethers.utils.entropyToMnemonic(crypto.randomBytes(length === 12 ? 16 : 32));
-    return this.mnemonic;
+    const entropy = crypto.randomBytes(length === 12 ? 16 : 32);
+    this.tmpMnemonic = ethers.utils.entropyToMnemonic(entropy);
+    return this.tmpMnemonic;
   }
 }
 

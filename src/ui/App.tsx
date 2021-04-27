@@ -1,7 +1,7 @@
 import './App.css';
 
+import { Blank, Generate, Import, Welcome } from './pages/login/';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { Generate, Import, Welcome } from './pages/login/';
 
 import MainLayout from './pages/layouts/MainLayout';
 // import { Main } from './pages/app';
@@ -15,7 +15,8 @@ export default () => {
           <Route path="/generate" exact component={Generate} />
           <Route path="/import" exact component={Import} />
           <Route path="/welcome" exact component={Welcome} />
-          <Route path="/" component={MainLayout} />
+          <Route path="/app" exact component={MainLayout} />
+          <Route path="/" component={Blank} />
         </Switch>
       </div>
     </BrowserRouter>
