@@ -1,0 +1,20 @@
+table.mnemonic,
+table.mnemonic td {
+  border: 1px solid var(--border-color);
+  font-size: 15px;
+  text-align: center;
+  font-weight: 500;
+}
+
+table.mnemonic td > div {
+  padding: 8px 0;
+  position: relative;
+}
+
+table.mnemonic td > div > .no {
+  position: absolute;
+  left: 1px;
+  top: 0;
+  font-size: 7px;
+  opacity: 0.35;
+}

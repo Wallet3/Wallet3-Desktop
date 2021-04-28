@@ -23,27 +23,6 @@
   margin-top: 24px;
 }
 
-.page.generate > div.seeds > table,
-td {
-  border: 1px solid var(--border-color);
-  font-size: 15px;
-  text-align: center;
-  font-weight: 500;
-}
-
-.page.generate > div.seeds td > div {
-  padding: 8px 0;
-  position: relative;
-}
-
-.page.generate > div.seeds td > div > .no {
-  position: absolute;
-  left: 1px;
-  top: 0;
-  font-size: 7px;
-  opacity: 0.35;
-}
-
 .page.generate > div.seeds > .actions {
   display: grid;
   margin-top: 12px;

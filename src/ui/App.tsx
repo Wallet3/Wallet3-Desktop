@@ -5,6 +5,7 @@ import { Route, Router, Switch } from 'react-router-dom';
 
 import { Application } from './viewmodels/Application';
 import MainLayout from './pages/layouts/MainLayout';
+import MnemonicVM from './viewmodels/MnemonicVM';
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 
@@ -16,7 +17,7 @@ export default observer((args: { app: Application }) => {
       <div id="app">
         <Switch>
           <Route path="/generate" exact>
-            <Generate {...args} />
+            <Generate {...args} mnVm={MnemonicVM} />
           </Route>
           <Route path="/import" exact>
             <Import {...args} />

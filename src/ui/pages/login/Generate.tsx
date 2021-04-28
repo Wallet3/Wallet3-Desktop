@@ -1,12 +1,20 @@
 import './Generate.css';
 import './Styles.css';
 
+import React, { useEffect } from 'react';
+
 import { Application } from '../../viewmodels/Application';
 import FeatherIcon from 'feather-icons-react';
-import React from 'react';
+import Mnemonic from '../../components/Mnemonic';
+import { MnemonicVM } from '../../viewmodels/MnemonicVM';
+import { action } from 'mobx';
 import { observer } from 'mobx-react-lite';
 
-export default observer(({ app }: { app: Application }) => {
+export default observer(({ app, mnVm }: { app: Application; mnVm: MnemonicVM }) => {
+  useEffect(() => {
+    mnVm.requestMnemonic(12);
+  }, [mnVm]);
+
   return (
     <div className="page generate">
       <div>
@@ -24,93 +32,14 @@ export default observer(({ app }: { app: Application }) => {
       </div>
 
       <div className="seeds no-drag">
-        <table>
-          <tbody>
-            <tr>
-              <td>
-                <div>
-                  <span>apple</span>
-                  <span className="no">1</span>
-                </div>
-              </td>
-              <td>
-                <div>
-                  <span>banana</span>
-                  <span className="no">2</span>
-                </div>
-              </td>
-              <td>
-                <div>
-                  <span>fruits</span>
-                  <span className="no">3</span>
-                </div>
-              </td>
-              <td>
-                <div>
-                  <span>ipad</span>
-                  <span className="no">4</span>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div>
-                  <span>system</span>
-                  <span className="no">5</span>
-                </div>
-              </td>
-              <td>
-                <div>
-                  <span>welcome</span>
-                  <span className="no">6</span>
-                </div>
-              </td>
-              <td>
-                <div>
-                  <span>menu</span>
-                  <span className="no">7</span>
-                </div>
-              </td>
-              <td>
-                <div>
-                  <span>bilibili</span>
-                  <span className="no">8</span>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div>
-                  <span>duck</span>
-                  <span className="no">9</span>
-                </div>
-              </td>
-              <td>
-                <div>
-                  <span>javascript</span>
-                  <span className="no">10</span>
-                </div>
-              </td>
-              <td>
-                <div>
-                  <span>mask</span>
-                  <span className="no">11</span>
-                </div>
-              </td>
-              <td>
-                <div>
-                  <span>box</span>
-                  <span className="no">12</span>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <Mnemonic phrases={mnVm.phrases} />
 
         <div className="actions">
           <div className="addr">
             <span>Address: </span>
-            <span className="addr-value">0x02ba0f0fdDf21D061f99F108844bc2b1CA05126C</span>
+            <span className="addr-value" title={mnVm.address}>
+              {mnVm.address}
+            </span>
           </div>
 
           <div className="switch">
