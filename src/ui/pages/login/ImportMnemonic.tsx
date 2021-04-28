@@ -30,7 +30,9 @@ export default observer(({ app }: { app: Application }) => {
 
       <div></div>
 
-      <button disabled>NEXT</button>
+      <button disabled onClick={(_) => app.history.push('/setupPassword')}>
+        NEXT
+      </button>
     </div>
   );
 });

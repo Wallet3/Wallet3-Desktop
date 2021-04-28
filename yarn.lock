@@ -8522,6 +8522,11 @@ rcedit@^2.0.0:
   resolved "https://registry.yarnpkg.com/rcedit/-/rcedit-2.3.0.tgz#951685a079db98a4cc8c21ebab75e374d5a0b108"
   integrity sha512-h1gNEl9Oai1oijwyJ1WYqYSXTStHnOcv1KYljg/8WM4NAg3H1KBK3azIaKkQ1WQl+d7PoJpcBMscPfLXVKgCLQ==
 
+react-codes-input@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/react-codes-input/-/react-codes-input-1.2.1.tgz#674253b328fec85a52e0191cc9a7ec835473e0f4"
+  integrity sha512-wkSbZYzeTA3xm/yxUHsWp5et7e7z7dLp8QBHwfImQJlLobvMfxPrpoqEC8IfgrYIwfMYxNR7IuOw+SnkscoCHA==
+
 react-dom@^17.0.2:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-17.0.2.tgz#ecffb6845e3ad8dbfcdc498f0d0a939736502c23"
