@@ -1,0 +1,9 @@
+.nav {
+  display: flex;
+  color: var(--font-color);
+  align-items: center;
+}
+
+.nav > h3 {
+  margin-left: 8px;
+}

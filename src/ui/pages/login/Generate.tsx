@@ -1,4 +1,5 @@
 import './Generate.css';
+import './Styles.css';
 
 import FeatherIcon from 'feather-icons-react';
 import React from 'react';
@@ -7,7 +8,12 @@ export default () => {
   return (
     <div className="page generate">
       <div>
-        <h3>Mnemonic</h3>
+        <div className="nav">
+          <button className="icon-button">
+            <FeatherIcon icon="arrow-left" size={17} />
+          </button>
+          <h3>Mnemonic</h3>
+        </div>
         <h5>Security Tips</h5>
         <ul>
           <li>The mnemonic consists of English words, please keep them safe.</li>
