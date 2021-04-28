@@ -1,12 +1,13 @@
-import './Generate.css';
-import './Styles.css';
+import './GenerateMnemonic.css';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Application } from '../../viewmodels/Application';
 import FeatherIcon from 'feather-icons-react';
+import { Link } from 'react-router-dom';
 import Mnemonic from '../../components/Mnemonic';
 import { MnemonicVM } from '../../viewmodels/MnemonicVM';
+import { NavBar } from '../../components';
 import { action } from 'mobx';
 import { observer } from 'mobx-react-lite';
 
@@ -15,15 +16,13 @@ export default observer(({ app, mnVm }: { app: Application; mnVm: MnemonicVM }) 
     mnVm.requestMnemonic(12);
   }, [mnVm]);
 
+  const [mnLength, setMnLength] = useState(12);
+
   return (
     <div className="page generate">
       <div>
-        <div className="nav">
-          <button className="icon-button" onClick={(_) => app.history.goBack()}>
-            <FeatherIcon icon="arrow-left" size={18} />
-          </button>
-          <h3>Mnemonic</h3>
-        </div>
+        <NavBar title="Mnemonic" onBackClick={() => app.history.goBack()} />
+
         <h5>Security Tips</h5>
         <ul>
           <li>The mnemonic consists of English words, please keep them safe.</li>
@@ -43,13 +42,29 @@ export default observer(({ app, mnVm }: { app: Application; mnVm: MnemonicVM }) 
           </div>
 
           <div className="switch">
-            <span className="button active">12</span>
+            <span
+              className={`button ${mnLength === 12 ? 'active' : ''}`}
+              onClick={(_) => {
+                setMnLength(12);
+                mnVm.requestMnemonic(12);
+              }}
+            >
+              12
+            </span>
             <span> | </span>
-            <span className="button">24</span>
+            <span
+              className={`button ${mnLength === 24 ? 'active' : ''}`}
+              onClick={(_) => {
+                setMnLength(24);
+                mnVm.requestMnemonic(24);
+              }}
+            >
+              24
+            </span>
           </div>
 
           <div className="icon">
-            <span className="button">
+            <span className="button" onClick={(_) => mnVm.requestMnemonic(mnLength)}>
               <FeatherIcon icon="refresh-cw" size="12" />
             </span>
           </div>
@@ -58,7 +73,9 @@ export default observer(({ app, mnVm }: { app: Application; mnVm: MnemonicVM }) 
 
       <div className="padding"></div>
 
-      <button>NEXT</button>
+      <Link className="button" to="/setupPassword">
+        NEXT
+      </Link>
     </div>
   );
 });

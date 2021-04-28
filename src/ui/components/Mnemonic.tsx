@@ -26,7 +26,7 @@ export default ({ phrases }: { phrases: string[] }) => {
               {word ? (
                 <div>
                   <span>{word}</span>
-                  <span className="no">{ri * 4 + wi}</span>
+                  <span className="no">{ri * 4 + wi + 1}</span>
                 </div>
               ) : (
                 <Skeleton width={64} height={20} style={{ margin: '8px 0' }} />

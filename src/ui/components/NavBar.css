@@ -4,6 +4,10 @@
   align-items: center;
 }
 
+.nav > button svg {
+  margin-left: -1px;
+}
+
 .nav > h3 {
   margin-left: 8px;
 }
