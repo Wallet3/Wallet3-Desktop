@@ -8,13 +8,19 @@ import MainLayout from './pages/layouts/MainLayout';
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 
-export default observer(({ app }: { app: Application }) => {
+export default observer((args: { app: Application }) => {
+  const { app } = args;
+
   return (
     <Router history={app.history}>
       <div id="app">
         <Switch>
-          <Route path="/generate" exact component={Generate} />
-          <Route path="/import" exact component={Import} />
+          <Route path="/generate" exact>
+            <Generate {...args} />
+          </Route>
+          <Route path="/import" exact>
+            <Import {...args} />
+          </Route>
           <Route path="/welcome" exact component={Welcome} />
           <Route path="/app" exact component={MainLayout} />
           <Route path="/" component={Blank} />

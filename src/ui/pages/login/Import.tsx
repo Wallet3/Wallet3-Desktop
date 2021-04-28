@@ -1,16 +1,18 @@
 import './Import.css';
 import './Styles.css';
 
+import { Application } from '../../viewmodels/Application';
 import FeatherIcon from 'feather-icons-react';
 import React from 'react';
+import { observer } from 'mobx-react-lite';
 
-export default () => {
+export default observer(({ app }: { app: Application }) => {
   return (
     <div className="page import">
       <div className="form">
         <div className="nav">
-          <button className="icon-button">
-            <FeatherIcon icon="arrow-left" size={17} />
+          <button className="icon-button" onClick={(_) => app.history.goBack()}>
+            <FeatherIcon icon="arrow-left" size={18} />
           </button>
           <h3>Import Mnemonic</h3>
         </div>
@@ -36,4 +38,4 @@ export default () => {
       <button disabled>NEXT</button>
     </div>
   );
-};
+});

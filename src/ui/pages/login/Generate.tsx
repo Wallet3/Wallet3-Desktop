@@ -1,16 +1,18 @@
 import './Generate.css';
 import './Styles.css';
 
+import { Application } from '../../viewmodels/Application';
 import FeatherIcon from 'feather-icons-react';
 import React from 'react';
+import { observer } from 'mobx-react-lite';
 
-export default () => {
+export default observer(({ app }: { app: Application }) => {
   return (
     <div className="page generate">
       <div>
         <div className="nav">
-          <button className="icon-button">
-            <FeatherIcon icon="arrow-left" size={17} />
+          <button className="icon-button" onClick={(_) => app.history.goBack()}>
+            <FeatherIcon icon="arrow-left" size={18} />
           </button>
           <h3>Mnemonic</h3>
         </div>
@@ -130,4 +132,4 @@ export default () => {
       <button>NEXT</button>
     </div>
   );
-};
+});
