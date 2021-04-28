@@ -89,6 +89,7 @@ a.button:disabled {
   cursor: not-allowed;
   color: var(--border-color);
   background-color: transparent;
+  border-color: var(--border-color);
 }
 
 button.icon-button {

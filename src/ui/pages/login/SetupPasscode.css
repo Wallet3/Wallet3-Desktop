@@ -1,0 +1,20 @@
+.page.setupPw {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.page.setupPw > div.password {
+  display: flex;
+  flex-direction: column;
+  padding-top: 25vh;
+  align-items: center;
+}
+
+.page.setupPw > div.password > p {
+  font-size: 15px;
+  color: var(--font-color-title);
+}
+
+.page.setupPw > div.password > div {
+  margin-right: 2px;
+}

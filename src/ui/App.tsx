@@ -1,6 +1,6 @@
 import './App.css';
 
-import { Blank, Generate, Import, SetupPassword, Welcome } from './pages/login/';
+import { Blank, Generate, Import, SetupPasscode, Welcome } from './pages/login/';
 import { Route, Router, Switch } from 'react-router-dom';
 
 import { Application } from './viewmodels/Application';
@@ -23,7 +23,7 @@ export default observer((args: { app: Application }) => {
             <Import {...args} />
           </Route>
           <Route path="/setupPassword" exact>
-            <SetupPassword {...args} />
+            <SetupPasscode {...args} />
           </Route>
           <Route path="/welcome" exact component={Welcome} />
           <Route path="/app" exact component={MainLayout} />
