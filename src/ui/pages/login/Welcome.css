@@ -6,10 +6,17 @@
 
 .page.welcome > .brand {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
   padding-top: 24px;
+}
+
+.page.welcome > .brand > .slogan {
+  font-size: 10px;
+  margin-top: -16px;
+  opacity: 0.5;
 }
 
 .page.welcome > .brand > .logo {

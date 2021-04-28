@@ -1,15 +1,16 @@
 import './App.css';
 
 import { Blank, Generate, Import, Welcome } from './pages/login/';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { Route, Router, Switch } from 'react-router-dom';
 
+import { Application } from './viewmodels/Application';
 import MainLayout from './pages/layouts/MainLayout';
-// import { Main } from './pages/app';
 import React from 'react';
+import { observer } from 'mobx-react-lite';
 
-export default () => {
+export default observer(({ app }: { app: Application }) => {
   return (
-    <BrowserRouter>
+    <Router history={app.history}>
       <div id="app">
         <Switch>
           <Route path="/generate" exact component={Generate} />
@@ -19,6 +20,6 @@ export default () => {
           <Route path="/" component={Blank} />
         </Switch>
       </div>
-    </BrowserRouter>
+    </Router>
   );
-};
+});

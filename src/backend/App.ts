@@ -1,5 +1,4 @@
 import * as Cipher from './Cipher';
-import * as crypto from 'crypto';
 import * as keytar from 'keytar';
 
 import { ipcMain, systemPreferences } from 'electron';
@@ -51,8 +50,8 @@ class App {
       this.iv = Cipher.generateIv().toString('hex');
       keytar.setPassword(AppKeys.iv, AppKeys.defaultAccount, this.iv);
 
-      this.corePass = Cipher.generateIv(32).toString('hex');
-      await keytar.setPassword(AppKeys.corePass, AppKeys.defaultAccount, this.corePass);
+      // this.corePass = Cipher.generateIv(32).toString('hex');
+      // await keytar.setPassword(AppKeys.corePass, AppKeys.defaultAccount, this.corePass);
     } else {
       this.corePass = await this.getCorePassword('unlock wallet');
     }

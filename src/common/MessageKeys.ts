@@ -3,3 +3,8 @@ export default {
   genMnemonic: 'msg-gen-mnemonic',
   saveMnemonic: 'msg-save-mnemonic',
 };
+
+export interface InitStatus {
+  hasMnemonic: boolean;
+  touchIDSupported: boolean;
+}

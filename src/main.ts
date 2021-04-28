@@ -24,11 +24,17 @@ const createWindow = async (): Promise<void> => {
     minHeight: 540,
     frame: false,
     titleBarStyle: 'hiddenInset',
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+    },
     // transparent: true,
   });
 
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+
+  console.log(process.env);
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools();
