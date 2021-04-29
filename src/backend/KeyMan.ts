@@ -26,7 +26,7 @@ class KeyMan {
   }
 
   async verifyPassword(userPassword: string) {
-    const user = sha256(`${this.salt}-${userPassword}`);
+    const user = sha256(this.getCorePassword(userPassword));
     return user === (await keytar.getPassword(Keys.password, Keys.account));
   }
 
@@ -49,17 +49,21 @@ class KeyMan {
     this.salt = Cipher.generateIv().toString('hex');
     await keytar.setPassword(Keys.salt, Keys.account, this.salt);
 
-    const pwHash = sha256(`${this.salt}-${userPassword}`);
+    const pwHash = sha256(this.getCorePassword(userPassword));
     await keytar.setPassword(Keys.password, Keys.account, pwHash);
   }
 
   async saveMnemonic(userPassword: string) {
-    if (!this.tmpMnemonic) return;
+    if (!this.tmpMnemonic) return false;
+    if (!ethers.utils.isValidMnemonic(this.tmpMnemonic)) return false;
+    if (!(await this.verifyPassword(userPassword))) return false;
 
-    const password = `${this.salt}-${userPassword}`;
-    const encryptedMnemonic = Cipher.encrypt(this.ivBuffer, this.tmpMnemonic, password);
+    const encryptedMnemonic = Cipher.encrypt(this.ivBuffer, this.tmpMnemonic, this.getCorePassword(userPassword));
 
     await keytar.setPassword(Keys.mnemonic, Keys.account, encryptedMnemonic);
+    this.tmpMnemonic = undefined;
+
+    return true;
   }
 
   async readMnemonic(userPassword: string) {}
@@ -70,6 +74,15 @@ class KeyMan {
 
   get saltBuffer() {
     return Buffer.from(this.salt, 'hex');
+  }
+
+  setTmpMnemonic(mnemonic: string) {
+    if (!ethers.utils.isValidMnemonic(mnemonic)) return;
+    this.tmpMnemonic = mnemonic;
+  }
+
+  private getCorePassword(userPassword: string) {
+    return `${this.salt}-${userPassword}`;
   }
 }
 

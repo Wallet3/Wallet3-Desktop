@@ -40,13 +40,19 @@ class App {
       return this.encryptIpc(KeyMan.genMnemonic(length));
     });
 
-    ipcMain.handle(`${MessageKeys.saveMnemonic}-secure`, async (e, encrypted) => {
+    ipcMain.handle(`${MessageKeys.saveTmpMnemonic}-secure`, (e, encrypted) => {
+      const { mnemonic } = this.decryptIpc(encrypted);
+      KeyMan.setTmpMnemonic(mnemonic);
+    });
+
+    ipcMain.handle(`${MessageKeys.setupMnemonic}-secure`, async (e, encrypted) => {
       if (this.hasMnemonic) return false;
 
       const { password: userPassword } = this.decryptIpc(encrypted);
 
       await KeyMan.savePassword(userPassword);
-      await KeyMan.saveMnemonic(userPassword);
+      if (!(await KeyMan.saveMnemonic(userPassword))) return false;
+
       systemPreferences.setUserDefault(AppKeys.hasMnemonic, 'boolean', true as never);
       this.hasMnemonic = true;
 

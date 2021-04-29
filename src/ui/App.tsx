@@ -5,11 +5,11 @@ import { Route, Router, Switch } from 'react-router-dom';
 
 import { Application } from './viewmodels/Application';
 import MainLayout from './pages/layouts/MainLayout';
-import MnemonicVM from './viewmodels/MnemonicVM';
+import { MnemonicVM } from './viewmodels/MnemonicVM';
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 
-export default observer((args: { app: Application }) => {
+export default observer((args: { app: Application; mnVm: MnemonicVM }) => {
   const { app } = args;
 
   return (
@@ -17,13 +17,13 @@ export default observer((args: { app: Application }) => {
       <div id="app">
         <Switch>
           <Route path="/generate" exact>
-            <Generate {...args} mnVm={MnemonicVM} />
+            <Generate {...args} />
           </Route>
           <Route path="/import" exact>
             <Import {...args} />
           </Route>
           <Route path="/setupPassword" exact>
-            <SetupPasscode {...args} mnVm={MnemonicVM} />
+            <SetupPasscode {...args} />
           </Route>
           <Route path="/welcome" exact component={Welcome} />
           <Route path="/app" exact component={MainLayout} />

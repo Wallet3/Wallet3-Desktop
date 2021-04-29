@@ -21,9 +21,13 @@ export class MnemonicVM {
     });
   }
 
-  async saveMnemonic(passcode: string) {
+  async saveTmpMnemonic(mnemonic: string) {
+    await ipc.invokeSecure(MessageKeys.saveTmpMnemonic, { mnemonic });
+  }
+
+  async setupMnemonic(passcode: string) {
     const password = crypto.sha256(passcode);
-    await ipc.invokeSecure<boolean>(MessageKeys.saveMnemonic, { password });
+    await ipc.invokeSecure<boolean>(MessageKeys.setupMnemonic, { password });
   }
 }
 

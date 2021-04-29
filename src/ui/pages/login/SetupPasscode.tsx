@@ -37,7 +37,7 @@ export default ({ app, mnVm }: { app: Application; mnVm: MnemonicVM }) => {
         ) : undefined}
       </div>
 
-      <button disabled={!passVerified} onClick={(_) => mnVm.saveMnemonic(passcode1)}>
+      <button disabled={!passVerified} onClick={(_) => mnVm.setupMnemonic(passcode1)}>
         DONE
       </button>
     </div>
