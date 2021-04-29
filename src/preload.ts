@@ -31,8 +31,8 @@ async function initSecureContext() {
 export class ContextBridgeApi {
   static readonly API_KEY = 'wallet3_ipc';
 
-  invoke = (channel: string, ...args: any[]) => {
-    return ipcRenderer.invoke(channel, ...args);
+  invoke = (channel: string, argObj: any) => {
+    return ipcRenderer.invoke(channel, argObj);
   };
 
   invokeSecure = async (channel: string, argObj: any) => {
