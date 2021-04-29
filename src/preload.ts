@@ -9,23 +9,15 @@ const ipcSecureIv = crypto.randomBytes(16);
 let ipcSecureKey: string;
 
 async function initSecureContext() {
-  const rendererDH = crypto.createDiffieHellman(256);
-  const rendererKey = rendererDH.generateKeys();
-  const rendererPrime = rendererDH.getPrime();
-  const rendererGenerator = rendererDH.getGenerator();
-
-  console.log(rendererKey);
-  console.log(rendererPrime);
-  console.log(rendererGenerator);
+  const ecdh = crypto.createECDH('secp521r1');
+  const rendererEcdhKey = ecdh.generateKeys();
 
   const mainKey = await ipcRenderer.invoke(IPCKeys.exchangeDHKey, {
-    rendererKey,
-    rendererPrime,
-    rendererGenerator,
+    rendererEcdhKey,
     ipcSecureIv,
   });
 
-  ipcSecureKey = rendererDH.computeSecret(mainKey).toString('hex');
+  ipcSecureKey = ecdh.computeSecret(mainKey).toString('hex');
 }
 
 export class ContextBridgeApi {

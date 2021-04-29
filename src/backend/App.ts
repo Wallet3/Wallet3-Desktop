@@ -5,7 +5,7 @@ import { ipcMain, systemPreferences } from 'electron';
 
 import KeyMan from './KeyMan';
 import MessageKeys from '../common/IPC';
-import { createDiffieHellman } from 'crypto';
+import { createECDH } from 'crypto';
 
 const AppKeys = {
   hasMnemonic: 'has-mnemonic',
@@ -22,14 +22,14 @@ class App {
     this.hasMnemonic = systemPreferences.getUserDefault(AppKeys.hasMnemonic, 'boolean');
 
     ipcMain.handleOnce(MessageKeys.exchangeDHKey, (e, dh) => {
-      const { rendererKey, rendererPrime, rendererGenerator, ipcSecureIv } = dh;
+      const { rendererEcdhKey, ipcSecureIv } = dh;
       this.ipcSecureIv = ipcSecureIv;
 
-      const mainDH = createDiffieHellman(rendererPrime, rendererGenerator);
-      const mainDHSecret = mainDH.generateKeys();
+      const ecdh = createECDH('secp521r1');
+      const mainEcdhKey = ecdh.generateKeys();
 
-      this.ipcSecureKey = mainDH.computeSecret(rendererKey).toString('hex');
-      return mainDHSecret;
+      this.ipcSecureKey = ecdh.computeSecret(rendererEcdhKey).toString('hex');
+      return mainEcdhKey;
     });
 
     ipcMain.handle(MessageKeys.getInitStatus, () => {
