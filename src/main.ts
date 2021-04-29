@@ -34,8 +34,6 @@ const createWindow = async (): Promise<void> => {
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
-  console.log(process.env);
-
   // Open the DevTools.
   // mainWindow.webContents.openDevTools();
 };

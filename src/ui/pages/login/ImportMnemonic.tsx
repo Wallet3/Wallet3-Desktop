@@ -1,12 +1,17 @@
 import './ImportMnemonic.css';
 
+import * as ethers from 'ethers';
+
+import React, { useState } from 'react';
+
 import { Application } from '../../viewmodels/Application';
 import FeatherIcon from 'feather-icons-react';
 import { NavBar } from '../../components';
-import React from 'react';
 import { observer } from 'mobx-react-lite';
 
 export default observer(({ app }: { app: Application }) => {
+  const [isValidMnemonic, setIsValidMnemonic] = useState(false);
+
   return (
     <div className="page import">
       <div className="form">
@@ -19,6 +24,7 @@ export default observer(({ app }: { app: Application }) => {
           cols={30}
           rows={7}
           placeholder="Enter mnemonic phrases separated by spaces"
+          onChange={(e) => setIsValidMnemonic(ethers.utils.isValidMnemonic(e.target.value.trim()))}
         />
 
         <div className="derivation-path">
@@ -30,7 +36,7 @@ export default observer(({ app }: { app: Application }) => {
 
       <div></div>
 
-      <button disabled onClick={(_) => app.history.push('/setupPassword')}>
+      <button disabled={!isValidMnemonic} onClick={(_) => app.history.push('/setupPassword')}>
         NEXT
       </button>
     </div>

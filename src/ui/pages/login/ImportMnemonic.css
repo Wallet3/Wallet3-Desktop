@@ -10,6 +10,7 @@
   box-sizing: border-box;
   padding: 8px;
   outline: none;
+  color: var(--font-color-title);
 }
 
 .page.import > .form > .derivation-path {

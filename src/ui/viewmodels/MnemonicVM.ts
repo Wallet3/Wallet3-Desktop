@@ -1,4 +1,4 @@
-import MessageKeys, { GenMnemonic } from '../../common/IPCKeys';
+import MessageKeys, { GenMnemonic } from '../../common/IPC';
 import { action, makeAutoObservable, runInAction } from 'mobx';
 
 import crypto from '../ipc/Crypto';
@@ -13,7 +13,7 @@ export class MnemonicVM {
   }
 
   async requestMnemonic(length = 12) {
-    const { address, mnemonic }: GenMnemonic = await ipc.invoke(MessageKeys.genMnemonic, length);
+    const { address, mnemonic } = await ipc.invokeSecure<GenMnemonic>(MessageKeys.genMnemonic, { length });
 
     runInAction(() => {
       this.address = address;
@@ -23,7 +23,7 @@ export class MnemonicVM {
 
   async saveMnemonic(passcode: string) {
     const password = crypto.sha256(passcode);
-    await ipc.invoke(MessageKeys.saveMnemonic, password);
+    await ipc.invoke<boolean>(MessageKeys.saveMnemonic, password);
   }
 }
 

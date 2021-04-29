@@ -1,4 +1,4 @@
-import * as helper from './Cipher';
+import * as helper from '../common/Cipher';
 
 test('encrypt', () => {
   const iv = helper.generateIv();

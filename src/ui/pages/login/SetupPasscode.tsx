@@ -1,13 +1,14 @@
 import 'react-codes-input/lib/react-codes-input.min.css';
 import './SetupPasscode.css';
 
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 
+import { Application } from '../../viewmodels/Application';
 import { Link } from 'react-router-dom';
 import { NavBar } from '../../components';
 import Passcode from 'react-codes-input';
 
-export default (props) => {
+export default ({ app }: { app: Application }) => {
   const [passcode1, setPasscode1] = useState('');
   const [passVerified, setPassVerified] = useState(false);
 
@@ -20,10 +21,9 @@ export default (props) => {
     setPassVerified(code === passcode1);
   };
 
-  console.log(passcode1.length);
   return (
     <div className="page setupPw">
-      <NavBar title="Setup Passcode" />
+      <NavBar title="Setup Passcode" onBackClick={() => app.history.goBack()} />
 
       <div className="password">
         <p>{passcode1.length === 0 ? 'Please enter a passcode' : 'Please enter again'}</p>

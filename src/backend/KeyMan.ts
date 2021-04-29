@@ -1,4 +1,4 @@
-import * as Cipher from './Cipher';
+import * as Cipher from '../common/Cipher';
 import * as crypto from 'crypto';
 import * as ethers from 'ethers';
 import * as keytar from 'keytar';
