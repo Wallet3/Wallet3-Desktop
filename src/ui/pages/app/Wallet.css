@@ -41,12 +41,13 @@
 
 .page.main > .utility-bar > button.icon-button {
   color: var(--theme-color);
+  margin-right: -2px;
 }
 
-.page.main > .utility-bar > button.icon-button:hover {
+/* .page.main > .utility-bar > button.icon-button:hover {
   color: var(--theme-color-05);
   opacity: 0.85;
-}
+} */
 
 .page.main h3.title {
   font-size: 12px;

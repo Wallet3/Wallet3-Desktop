@@ -96,17 +96,14 @@ button.icon-button {
   border: none;
   width: auto;
   height: auto;
-  padding: 0;
-  margin: 0;
+  padding: 0 4px !important;
   cursor: pointer;
   display: flex;
   align-items: center;
 }
 
 button.icon-button:hover {
-  color: var(--theme-color-05);
-  opacity: 0.85;
-  background: transparent;
+  background-color: var(--border-color) !important;
 }
 
 button.icon-button:active {
