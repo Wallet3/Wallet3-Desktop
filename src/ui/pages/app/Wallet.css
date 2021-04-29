@@ -10,7 +10,7 @@
   grid-template-rows: auto;
   justify-content: flex-end;
   column-gap: 4px;
-  margin-top: -2px;
+  margin-top: -5px;
 }
 
 .page.main > .utility-bar > button {
@@ -28,10 +28,9 @@
 }
 
 .page.main > .utility-bar > button.menu-button {
-  margin-top: -4px;
   font-weight: 500;
   cursor: pointer;
-  padding: 0 8px;
+  padding: 5px 8px;
   border-radius: 5px;
 }
 

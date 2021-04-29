@@ -25,7 +25,7 @@ interface INetworkLabel {
 export default (props: INetworkLabel) => {
   return (
     <div className={`network-label ${props.className ?? ''}`}>
-      <img src={SVGs.get(props.network)} alt={props.network} /> {Labels.get(props.network)}
+      <img src={SVGs.get(props.network)} alt={props.network} /> <span>{Labels.get(props.network)}</span>
     </div>
   );
 };

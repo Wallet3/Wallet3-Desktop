@@ -11,6 +11,10 @@
   margin-right: 4px;
 }
 
+.network-label > span {
+  display: inline-block;
+}
+
 .network-label.expand > img {
-    margin-right: 8px;
+  margin-right: 8px;
 }

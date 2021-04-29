@@ -29,8 +29,8 @@ export default observer((args: { app: Application; mnVm: MnemonicVM }) => {
           <Route path="/locking" exact>
             <Locking {...args} />
           </Route>
-          <Route path="/app" exact component={MainLayout} />
-          <Route path="/" component={Blank} />
+          <Route path="/app" component={MainLayout} />
+          <Route path="*" component={Blank} />
         </Switch>
       </div>
     </Router>
