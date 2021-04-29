@@ -40,6 +40,17 @@ class App {
       return { hasMnemonic: this.hasMnemonic, touchIDSupported: this.touchIDSupported };
     });
 
+    ipcMain.handle(MessageKeys.promptTouchID, async () => {
+      if (!this.touchIDSupported) return false;
+
+      try {
+        await systemPreferences.promptTouchID('Unlock Wallet');
+        return true;
+      } catch (error) {
+        return false;
+      }
+    });
+
     ipcMain.handle(`${MessageKeys.genMnemonic}-secure`, (e, encrypted) => {
       const { length } = this.decryptIpc(encrypted);
       return this.encryptIpc(KeyMan.genMnemonic(length));

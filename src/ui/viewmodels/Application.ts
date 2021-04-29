@@ -32,6 +32,10 @@ export class Application {
     const password = crypto.sha256(passcode);
     return await ipc.invokeSecure<boolean>(MessageKeys.verifyPassword, { password });
   }
+
+  async promptTouchID() {
+    return await ipc.invoke<boolean>(MessageKeys.promptTouchID);
+  }
 }
 
 export default new Application();

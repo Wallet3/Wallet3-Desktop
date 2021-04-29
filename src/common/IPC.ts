@@ -5,6 +5,7 @@ export default {
   saveTmpMnemonic: 'msg-save-tmp-mnemonic',
   setupMnemonic: 'msg-setup-mnemonic',
   verifyPassword: 'msg-verify-password',
+  promptTouchID: 'msg-prompt-touchid',
   resetSystem: 'msg-reset-system',
 };
 

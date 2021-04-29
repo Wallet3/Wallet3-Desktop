@@ -2,7 +2,8 @@
   display: grid;
 }
 
-.page.locking > div.passcode-view {
+.page.locking > div.passcode-view,
+div.touchid-view {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -14,7 +15,28 @@
   margin-right: 2px;
 }
 
-.page.locking > div.passcode-view > p {
+.page.locking > div.passcode-view,
+div.touchid-view > p {
   font-size: 15px;
   color: var(--font-color-title);
+}
+
+.page.locking > div.touchid-view {
+  margin-top: -5vh;
+  outline: none;
+}
+
+.page.locking > div.touchid-view svg {
+  width: 81px;
+  display: inline-block;
+  margin-top: 12px;
+  cursor: pointer;
+}
+
+.page.locking > div.touchid-view > div {
+  transition: all 0.3s;
+}
+
+.page.locking > div.touchid-view > div:hover {
+  opacity: 0.5;
 }
