@@ -18,11 +18,9 @@ class KeyMan {
   salt!: string;
   tmpMnemonic?: string;
 
-  async init(userPassword: string) {
+  async init() {
     this.iv = await keytar.getPassword(Keys.iv, Keys.account);
     this.salt = await keytar.getPassword(Keys.salt, Keys.account);
-
-    if (!(await this.verifyPassword(userPassword))) return false;
   }
 
   async verifyPassword(userPassword: string) {
@@ -79,6 +77,8 @@ class KeyMan {
   setTmpMnemonic(mnemonic: string) {
     if (!ethers.utils.isValidMnemonic(mnemonic)) return;
     this.tmpMnemonic = mnemonic;
+
+    console.log(ethers.Wallet.fromMnemonic(mnemonic).address);
   }
 
   private getCorePassword(userPassword: string) {

@@ -1,7 +1,8 @@
 import './Mnemonic.css';
 
-import React, { useEffect, useState } from 'react';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+
+import React from 'react';
 
 export default ({ phrases }: { phrases: string[] }) => {
   const rows = phrases.length / 4;
@@ -39,7 +40,7 @@ export default ({ phrases }: { phrases: string[] }) => {
   });
 
   return (
-    <SkeletonTheme color="#6186ff20" highlightColor="#6186ff">
+    <SkeletonTheme color="#6186ff20" highlightColor="#6186ff90">
       <table className="mnemonic">
         <tbody>{tableRows}</tbody>
       </table>

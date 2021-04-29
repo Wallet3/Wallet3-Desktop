@@ -1,0 +1,20 @@
+.page.locking {
+  display: grid;
+}
+
+.page.locking > div.passcode-view {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: -10vh;
+  align-items: center;
+}
+
+.page.locking > div.passcode-view > div {
+  margin-right: 2px;
+}
+
+.page.locking > div.passcode-view > p {
+  font-size: 15px;
+  color: var(--font-color-title);
+}

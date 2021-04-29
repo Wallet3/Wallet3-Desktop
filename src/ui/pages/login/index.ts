@@ -1,7 +1,8 @@
 import Blank from './Blank';
 import Generate from './GenerateMnemonic';
 import Import from './ImportMnemonic';
+import Locking from './Locking';
 import SetupPasscode from './SetupPasscode';
 import Welcome from './Welcome';
 
-export { Welcome, Generate, Import, Blank, SetupPasscode };
+export { Welcome, Generate, Import, Blank, SetupPasscode, Locking };

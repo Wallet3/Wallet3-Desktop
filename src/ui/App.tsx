@@ -1,6 +1,6 @@
 import './App.css';
 
-import { Blank, Generate, Import, SetupPasscode, Welcome } from './pages/login/';
+import { Blank, Generate, Import, Locking, SetupPasscode, Welcome } from './pages/login/';
 import { Route, Router, Switch } from 'react-router-dom';
 
 import { Application } from './viewmodels/Application';
@@ -26,6 +26,9 @@ export default observer((args: { app: Application; mnVm: MnemonicVM }) => {
             <SetupPasscode {...args} />
           </Route>
           <Route path="/welcome" exact component={Welcome} />
+          <Route path="/locking" exact>
+            <Locking {...args} />
+          </Route>
           <Route path="/app" exact component={MainLayout} />
           <Route path="/" component={Blank} />
         </Switch>

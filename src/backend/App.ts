@@ -20,6 +20,8 @@ class App {
     this.touchIDSupported = systemPreferences.canPromptTouchID();
     this.hasMnemonic = systemPreferences.getUserDefault(AppKeys.hasMnemonic, 'boolean');
 
+    KeyMan.init();
+
     ipcMain.handleOnce(MessageKeys.exchangeDHKey, (e, dh) => {
       const { rendererEcdhKey, ipcSecureIv } = dh;
       this.ipcSecureIv = ipcSecureIv;
@@ -46,17 +48,22 @@ class App {
     });
 
     ipcMain.handle(`${MessageKeys.setupMnemonic}-secure`, async (e, encrypted) => {
-      if (this.hasMnemonic) return false;
+      if (this.hasMnemonic) return this.encryptIpc(false);
 
       const { password: userPassword } = this.decryptIpc(encrypted);
 
       await KeyMan.savePassword(userPassword);
-      if (!(await KeyMan.saveMnemonic(userPassword))) return false;
+      if (!(await KeyMan.saveMnemonic(userPassword))) return this.encryptIpc(false);
 
       systemPreferences.setUserDefault(AppKeys.hasMnemonic, 'boolean', true as never);
       this.hasMnemonic = true;
 
-      return true;
+      return this.encryptIpc(true);
+    });
+
+    ipcMain.handle(`${MessageKeys.verifyPassword}-secure`, async (e, encrypted) => {
+      const { password } = this.decryptIpc(encrypted);
+      return this.encryptIpc(await KeyMan.verifyPassword(password));
     });
   }
 

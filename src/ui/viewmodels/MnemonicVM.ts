@@ -27,7 +27,7 @@ export class MnemonicVM {
 
   async setupMnemonic(passcode: string) {
     const password = crypto.sha256(passcode);
-    await ipc.invokeSecure<boolean>(MessageKeys.setupMnemonic, { password });
+    return await ipc.invokeSecure<boolean>(MessageKeys.setupMnemonic, { password });
   }
 }
 

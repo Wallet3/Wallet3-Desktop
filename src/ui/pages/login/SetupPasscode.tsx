@@ -1,10 +1,11 @@
 import 'react-codes-input/lib/react-codes-input.min.css';
 import './SetupPasscode.css';
 
+import * as Anime from '../../misc/Anime';
+
 import React, { useState } from 'react';
 
 import { Application } from '../../viewmodels/Application';
-import { Link } from 'react-router-dom';
 import { MnemonicVM } from '../../viewmodels/MnemonicVM';
 import { NavBar } from '../../components';
 import Passcode from 'react-codes-input';
@@ -19,7 +20,12 @@ export default ({ app, mnVm }: { app: Application; mnVm: MnemonicVM }) => {
   };
 
   const onPasscode2Change = (code: string) => {
-    setPassVerified(code === passcode1);
+    if (code.length === 6 && code !== passcode1) {
+      Anime.vibrate('page.setupPw > .password');
+      return;
+    }
+
+    setPassVerified(true);
   };
 
   return (
@@ -37,7 +43,14 @@ export default ({ app, mnVm }: { app: Application; mnVm: MnemonicVM }) => {
         ) : undefined}
       </div>
 
-      <button disabled={!passVerified} onClick={(_) => mnVm.setupMnemonic(passcode1)}>
+      <button
+        disabled={!passVerified}
+        onClick={async (_) => {
+          if (await mnVm.setupMnemonic(passcode1)) {
+            app.history.push('/app');
+          }
+        }}
+      >
         DONE
       </button>
     </div>

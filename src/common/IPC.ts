@@ -4,6 +4,8 @@ export default {
   genMnemonic: 'msg-gen-mnemonic',
   saveTmpMnemonic: 'msg-save-tmp-mnemonic',
   setupMnemonic: 'msg-setup-mnemonic',
+  verifyPassword: 'msg-verify-password',
+  resetSystem: 'msg-reset-system',
 };
 
 export interface InitStatus {
