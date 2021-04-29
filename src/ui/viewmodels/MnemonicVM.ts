@@ -1,3 +1,5 @@
+import * as crypto from 'crypto';
+
 import MessageKeys, { GenMnemonic } from '../../common/MessageKeys';
 import { action, makeAutoObservable, runInAction } from 'mobx';
 
@@ -18,6 +20,11 @@ export class MnemonicVM {
       this.address = address;
       this.phrases = mnemonic.split(/\s/);
     });
+  }
+
+  async saveMnemonic(passcode: string) {
+    const password = crypto.createHash('sha256').update(passcode).digest().toString('hex');
+    await ipcRenderer.invoke(MessageKeys.saveMnemonic, password);
   }
 }
 

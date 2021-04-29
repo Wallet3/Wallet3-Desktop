@@ -38,12 +38,17 @@ class App {
       return KeyMan.genMnemonic(length);
     });
 
-    ipcMain.handle(MessageKeys.saveMnemonic, () => {
+    ipcMain.handle(MessageKeys.saveMnemonic, (e, password) => {
+      if (this.hasMnemonic) return;
+
+      KeyMan.savePassword(password);
+      KeyMan.saveMnemonic(this.iv, password);
       systemPreferences.setUserDefault(AppKeys.hasMnemonic, 'boolean', true as never);
+      this.hasMnemonic = true;
     });
   }
 
-  async init() {
+  async init(password: string) {
     this.iv = await keytar.getPassword(AppKeys.iv, AppKeys.defaultAccount);
 
     if (!this.iv) {
