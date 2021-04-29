@@ -1,8 +1,8 @@
 import { History, createBrowserHistory } from 'history';
-import MessageKeys, { InitStatus } from '../../common/MessageKeys';
+import MessageKeys, { InitStatus } from '../../common/IPCKeys';
 import { action, computed, flow, makeAutoObservable, makeObservable } from 'mobx';
 
-import { ipcRenderer } from 'electron';
+import ipc from '../ipc/Bridge';
 
 export class Application {
   readonly history = createBrowserHistory();
@@ -15,8 +15,9 @@ export class Application {
   }
 
   async init() {
-    const { hasMnemonic, touchIDSupported }: InitStatus = await ipcRenderer.invoke(MessageKeys.getInitStatus);
-
+    const { hasMnemonic, touchIDSupported }: InitStatus = await ipc.invoke(MessageKeys.getInitStatus);
+    console.log(hasMnemonic, touchIDSupported);
+    
     this.hasMnemonic = hasMnemonic;
     this.touchIDSupported = touchIDSupported;
 

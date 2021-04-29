@@ -4,7 +4,7 @@ import * as keytar from 'keytar';
 import { ipcMain, systemPreferences } from 'electron';
 
 import KeyMan from './KeyMan';
-import MessageKeys from '../common/MessageKeys';
+import MessageKeys from '../common/IPCKeys';
 import SecureEnclave from 'secure-enclave';
 import { ethers } from 'ethers';
 
@@ -19,8 +19,6 @@ const AppKeys = {
 };
 
 class App {
-  iv!: string;
-  corePass!: string;
   touchIDSupported = false;
   secureEnclaveSupported = false;
   hasMnemonic = false;
@@ -38,28 +36,14 @@ class App {
       return KeyMan.genMnemonic(length);
     });
 
-    ipcMain.handle(MessageKeys.saveMnemonic, (e, password) => {
+    ipcMain.handle(MessageKeys.saveMnemonic, async (e, userPassword) => {
       if (this.hasMnemonic) return;
 
-      KeyMan.savePassword(password);
-      KeyMan.saveMnemonic(this.iv, password);
+      await KeyMan.savePassword(userPassword);
+      await KeyMan.saveMnemonic(userPassword);
       systemPreferences.setUserDefault(AppKeys.hasMnemonic, 'boolean', true as never);
       this.hasMnemonic = true;
     });
-  }
-
-  async init(password: string) {
-    this.iv = await keytar.getPassword(AppKeys.iv, AppKeys.defaultAccount);
-
-    if (!this.iv) {
-      this.iv = Cipher.generateIv().toString('hex');
-      keytar.setPassword(AppKeys.iv, AppKeys.defaultAccount, this.iv);
-
-      // this.corePass = Cipher.generateIv(32).toString('hex');
-      // await keytar.setPassword(AppKeys.corePass, AppKeys.defaultAccount, this.corePass);
-    } else {
-      this.corePass = await this.getCorePassword('unlock wallet');
-    }
   }
 
   async getCorePassword(reason: string) {
@@ -72,10 +56,6 @@ class App {
     }
 
     return await keytar.getPassword(AppKeys.corePass, AppKeys.defaultAccount);
-  }
-
-  get unlocked() {
-    return this.iv && this.corePass;
   }
 }
 
