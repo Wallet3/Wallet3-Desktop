@@ -1,5 +1,4 @@
 import * as Cipher from '../common/Cipher';
-import * as keytar from 'keytar';
 
 import { ipcMain, systemPreferences } from 'electron';
 
@@ -14,7 +13,7 @@ const AppKeys = {
 class App {
   touchIDSupported = false;
   hasMnemonic = false;
-  ipcSecureKey: string;
+  ipcSecureKey: Buffer;
   ipcSecureIv: Buffer;
 
   constructor() {
@@ -28,7 +27,7 @@ class App {
       const ecdh = createECDH('secp521r1');
       const mainEcdhKey = ecdh.generateKeys();
 
-      this.ipcSecureKey = ecdh.computeSecret(rendererEcdhKey).toString('hex');
+      this.ipcSecureKey = ecdh.computeSecret(rendererEcdhKey);
       return mainEcdhKey;
     });
 
@@ -36,19 +35,15 @@ class App {
       return { hasMnemonic: this.hasMnemonic, touchIDSupported: this.touchIDSupported };
     });
 
-    ipcMain.handle(MessageKeys.genMnemonic, (e, length) => {
-      return KeyMan.genMnemonic(length);
-    });
-
     ipcMain.handle(`${MessageKeys.genMnemonic}-secure`, (e, encrypted) => {
-      const serialized = Cipher.decrypt(this.ipcSecureIv, encrypted, this.ipcSecureKey);
-      const { length } = JSON.parse(serialized);
-
-      return Cipher.encrypt(this.ipcSecureIv, JSON.stringify(KeyMan.genMnemonic(length)), this.ipcSecureKey);
+      const { length } = this.decryptIpc(encrypted);
+      return this.encryptIpc(KeyMan.genMnemonic(length));
     });
 
-    ipcMain.handle(MessageKeys.saveMnemonic, async (e, userPassword) => {
+    ipcMain.handle(`${MessageKeys.saveMnemonic}-secure`, async (e, encrypted) => {
       if (this.hasMnemonic) return false;
+
+      const { password: userPassword } = this.decryptIpc(encrypted);
 
       await KeyMan.savePassword(userPassword);
       await KeyMan.saveMnemonic(userPassword);
@@ -58,6 +53,15 @@ class App {
       return true;
     });
   }
+
+  decryptIpc = (encrypted: string) => {
+    const serialized = Cipher.decrypt(this.ipcSecureIv, encrypted, this.ipcSecureKey);
+    return JSON.parse(serialized);
+  };
+
+  encryptIpc = (obj: any) => {
+    return Cipher.encrypt(this.ipcSecureIv, JSON.stringify(obj), this.ipcSecureKey);
+  };
 }
 
 export default new App();

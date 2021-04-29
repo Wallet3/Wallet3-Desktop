@@ -5,10 +5,11 @@ import React, { useState } from 'react';
 
 import { Application } from '../../viewmodels/Application';
 import { Link } from 'react-router-dom';
+import { MnemonicVM } from '../../viewmodels/MnemonicVM';
 import { NavBar } from '../../components';
 import Passcode from 'react-codes-input';
 
-export default ({ app }: { app: Application }) => {
+export default ({ app, mnVm }: { app: Application; mnVm: MnemonicVM }) => {
   const [passcode1, setPasscode1] = useState('');
   const [passVerified, setPassVerified] = useState(false);
 
@@ -36,7 +37,9 @@ export default ({ app }: { app: Application }) => {
         ) : undefined}
       </div>
 
-      <button disabled={!passVerified}>DONE</button>
+      <button disabled={!passVerified} onClick={(_) => mnVm.saveMnemonic(passcode1)}>
+        DONE
+      </button>
     </div>
   );
 };

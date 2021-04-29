@@ -6,7 +6,7 @@ import { decrypt, encrypt } from './common/Cipher';
 import IPCKeys from './common/IPC';
 
 const ipcSecureIv = crypto.randomBytes(16);
-let ipcSecureKey: string;
+let ipcSecureKey: Buffer;
 
 async function initSecureContext() {
   const ecdh = crypto.createECDH('secp521r1');
@@ -17,7 +17,7 @@ async function initSecureContext() {
     ipcSecureIv,
   });
 
-  ipcSecureKey = ecdh.computeSecret(mainKey).toString('hex');
+  ipcSecureKey = ecdh.computeSecret(mainKey);
 }
 
 export class ContextBridgeApi {

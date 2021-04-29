@@ -23,7 +23,7 @@ export default observer((args: { app: Application }) => {
             <Import {...args} />
           </Route>
           <Route path="/setupPassword" exact>
-            <SetupPasscode {...args} />
+            <SetupPasscode {...args} mnVm={MnemonicVM} />
           </Route>
           <Route path="/welcome" exact component={Welcome} />
           <Route path="/app" exact component={MainLayout} />
