@@ -84,6 +84,11 @@ class KeyMan {
   private getCorePassword(userPassword: string) {
     return `${this.salt}-${userPassword}`;
   }
+
+  reset(password: string) {
+    this.iv = this.salt = undefined;
+    [Keys.iv, Keys.mnemonic, Keys.salt, Keys.mnemonic].forEach((key) => keytar.deletePassword(key, Keys.account));
+  }
 }
 
 export default new KeyMan();

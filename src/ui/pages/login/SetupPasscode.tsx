@@ -21,11 +21,10 @@ export default ({ app, mnVm }: { app: Application; mnVm: MnemonicVM }) => {
 
   const onPasscode2Change = (code: string) => {
     if (code.length === 6 && code !== passcode1) {
-      Anime.vibrate('page.setupPw > .password');
-      return;
+      Anime.vibrate('.page.setupPw > .password');
     }
 
-    setPassVerified(true);
+    setPassVerified(code === passcode1);
   };
 
   return (

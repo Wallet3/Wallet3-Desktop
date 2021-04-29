@@ -20,6 +20,9 @@ class App {
     this.touchIDSupported = systemPreferences.canPromptTouchID();
     this.hasMnemonic = systemPreferences.getUserDefault(AppKeys.hasMnemonic, 'boolean');
 
+    // KeyMan.reset('');
+    // this.hasMnemonic = false;
+
     KeyMan.init();
 
     ipcMain.handleOnce(MessageKeys.exchangeDHKey, (e, dh) => {
