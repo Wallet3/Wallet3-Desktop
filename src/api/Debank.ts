@@ -26,14 +26,14 @@ export async function getTokenBalances(address: string, chain: chain) {
 export async function getTotalBalance(address: string) {
   try {
     const resp = await axios.get(`${host}/v1/user/total_balance?id=${address.toLowerCase()}`);
-    const data = resp.data as ITotalBalance[];
+    const data = resp.data as ITotalBalance;
     return data;
   } catch (error) {
-    return [];
+    return undefined;
   }
 }
 
-interface ITokenBalance {
+export interface ITokenBalance {
   id: string;
   chain: string;
   name: string;
@@ -55,7 +55,7 @@ interface ITotalBalance {
   chain_list: IChainBalance[];
 }
 
-interface IChainBalance {
+export interface IChainBalance {
   id: string;
   community_id: number;
   name: string;

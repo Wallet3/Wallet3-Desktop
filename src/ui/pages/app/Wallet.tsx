@@ -9,6 +9,7 @@ import { AccountVM } from '../../viewmodels/AccountVM';
 import DAI from '../../../assets/icons/crypto/dai.svg';
 import ETH from '../../../assets/icons/crypto/eth.svg';
 import Feather from 'feather-icons-react';
+import HSBar from 'react-horizontal-stacked-bar-chart';
 import { Line } from 'rc-progress';
 import NetworkLabel from '../../components/NetworkLabel';
 import Skeleton from 'react-loading-skeleton';
@@ -59,11 +60,11 @@ export default observer(({ networksVM, accountVM }: { networksVM: NetworksVM; ac
         <div className="value">{accountVM.balance ? '$ 2,729,185.22' : <Skeleton />}</div>
 
         <div className="asset-percent">
-          <Line percent={90} strokeColor="rgb(97, 134, 255)" strokeWidth={1.5} trailWidth={1.5} />
-          <div className="value">
-            <div>Wealth: $ 1,500,000.11</div>
-            <div>Debt: $ 200,000.22</div>
-          </div>
+          {accountVM?.chains.length > 0 ? (
+            <HSBar height={2} showTextWithValue={false} showTextDown outlineWidth={0} data={accountVM?.chains} />
+          ) : (
+            <Skeleton />
+          )}
         </div>
       </div>
 

@@ -2,8 +2,10 @@ import { makeAutoObservable } from 'mobx';
 import store from 'storejs';
 
 interface INetwork {
+  symbol: string;
   network: string;
   chainId: number;
+  color: string;
 }
 
 const Keys = {
@@ -28,25 +30,33 @@ export class NetworksVM {
 
 export const Networks: INetwork[] = [
   {
-    network: 'ETH',
+    symbol: 'ETH',
+    network: 'Ethereum',
     chainId: 1,
+    color: '#6186ff',
   },
   {
-    network: 'POLYGON',
+    symbol: 'MATIC',
+    network: 'Polygon',
     chainId: 137,
+    color: '#8247E5',
   },
   {
-    network: 'xDAI',
-    chainId: 100,
-  },
-  {
+    symbol: 'BSC',
     network: 'BSC',
     chainId: 56,
+    color: '#f3ba2f',
   },
   {
-    network: 'FTM',
-    chainId: 250,
+    symbol: 'xDAI',
+    network: 'xDAI',
+    chainId: 100,
+    color: '#48A9A6',
   },
+  // {
+  //   symbol: 'FTM',
+  //   chainId: 250,
+  // },
 ];
 
 export default new NetworksVM();

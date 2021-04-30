@@ -1,17 +1,27 @@
+import * as Debank from '../../api/Debank';
 import * as Zapper from '../../api/Zapper';
 
 import { makeAutoObservable, runInAction } from 'mobx';
 
 import { ITokenBalance } from '../../api/Zapper';
+import { Networks } from './NetworksVM';
+import delay from 'delay';
 
 interface IArgs {
   address: string;
 }
 
+interface ChainOverview {
+  name: string;
+  value: number;
+  color: string;
+}
+
 export class AccountVM {
   address: string;
   balance: string;
-  tokens: ITokenBalance[];
+  tokens: Zapper.ITokenBalance[] = [];
+  chains: ChainOverview[] = [];
 
   constructor(args: IArgs) {
     makeAutoObservable(this);
@@ -20,7 +30,17 @@ export class AccountVM {
   }
 
   async refresh() {
-    const balances = await Zapper.getTokenBalances(this.address);
-    runInAction(() => (this.tokens = balances));
+    Debank.getTotalBalance(this.address).then((overview) => {
+      runInAction(() => {
+        this.chains = overview.chain_list.map((chain) => {
+          const network = Networks.find((n) => n.symbol.toLowerCase() === chain.id);
+          return {
+            name: network.network,
+            value: chain.usd_value || 1,
+            color: network.color,
+          };
+        });
+      });
+    });
   }
 }

@@ -62,10 +62,8 @@
   font-weight: 500;
 }
 
-.page.main > .net-worth > .asset-percent > .value {
-  display: flex;
-  justify-content: space-between;
-  font-size: 10px;
+.page.main > .net-worth > .asset-percent {
+  font-size: 11px;
   color: var(--font-color-title);
 }
 
