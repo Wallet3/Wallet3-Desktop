@@ -6,7 +6,7 @@ const host = 'https://api.zapper.fi/v1';
 export async function getTokenBalances(address: string) {
   try {
     const resp = await axios.get(`${host}/balances/tokens?addresses[]=${address}&api_key=${api_key}`);
-    const data = resp.data as { [index: string]: TokenBalance[] };
+    const data = resp.data as { [index: string]: ITokenBalance[] };
     return data[address];
   } catch (error) {
     return [];
@@ -15,7 +15,7 @@ export async function getTokenBalances(address: string) {
 
 export async function getGasPrice(network = 'ethereum') {}
 
-interface TokenBalance {
+export interface ITokenBalance {
   address: string;
   tokenAddress: string;
   decimals: number;
