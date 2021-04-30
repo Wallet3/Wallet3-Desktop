@@ -3,7 +3,7 @@ import * as Cipher from '../common/Cipher';
 import { ipcMain, systemPreferences } from 'electron';
 
 import KeyMan from './KeyMan';
-import MessageKeys from '../common/IPC';
+import MessageKeys from '../common/Messages';
 import { createECDH } from 'crypto';
 
 const AppKeys = {
@@ -15,6 +15,7 @@ class App {
   hasMnemonic = false;
   ipcSecureKey: Buffer;
   ipcSecureIv: Buffer;
+  userPassword?: string; // keep password in memory for TouchID users
 
   constructor() {
     this.touchIDSupported = systemPreferences.canPromptTouchID();
@@ -62,22 +63,41 @@ class App {
     });
 
     ipcMain.handle(`${MessageKeys.setupMnemonic}-secure`, async (e, encrypted) => {
-      if (this.hasMnemonic) return this.encryptIpc(false);
+      if (this.hasMnemonic) return this.encryptIpc({ success: false });
 
       const { password: userPassword } = this.decryptIpc(encrypted);
 
       await KeyMan.savePassword(userPassword);
-      if (!(await KeyMan.saveMnemonic(userPassword))) return this.encryptIpc(false);
+      if (!(await KeyMan.saveMnemonic(userPassword))) return this.encryptIpc({ success: false });
+
+      const addresses = await KeyMan.genAddresses(userPassword, 1);
 
       systemPreferences.setUserDefault(AppKeys.hasMnemonic, 'boolean', true as never);
       this.hasMnemonic = true;
 
-      return this.encryptIpc(true);
+      return this.encryptIpc({ addresses, success: true });
     });
 
     ipcMain.handle(`${MessageKeys.verifyPassword}-secure`, async (e, encrypted) => {
       const { password } = this.decryptIpc(encrypted);
       return this.encryptIpc(await KeyMan.verifyPassword(password));
+    });
+
+    ipcMain.handle(`${MessageKeys.initVerifyPassword}-secure`, async (e, encrypted) => {
+      const { password, count } = this.decryptIpc(encrypted);
+      const verified = await KeyMan.verifyPassword(password);
+      const addresses: string[] = [];
+
+      if (verified && this.touchIDSupported) {
+        this.userPassword = password;
+        addresses.push(...(await KeyMan.genAddresses(password, count)));
+      }
+
+      return this.encryptIpc({ verified, addresses });
+    });
+
+    ipcMain.handle(`${MessageKeys.fetchAddresses}-secure`, (e, encrypted) => {
+      KeyMan;
     });
   }
 

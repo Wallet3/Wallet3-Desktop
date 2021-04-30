@@ -4,9 +4,9 @@ import * as ethers from 'ethers';
 import * as keytar from 'keytar';
 
 const Keys = {
-  iv: 'iv',
   salt: 'salt',
   password: 'password',
+  path: 'path',
   account: 'master',
   mnemonic: 'mnemonic',
 };
@@ -14,12 +14,15 @@ const Keys = {
 const sha256 = (text: string) => crypto.createHash('sha256').update(text).digest().toString('hex');
 
 class KeyMan {
-  iv!: string;
   salt!: string;
   tmpMnemonic?: string;
+  path = `m/44'/60'/0'/0`;
+
+  private getCorePassword(userPassword: string) {
+    return `${this.salt}-${userPassword}`;
+  }
 
   async init() {
-    this.iv = await keytar.getPassword(Keys.iv, Keys.account);
     this.salt = await keytar.getPassword(Keys.salt, Keys.account);
   }
 
@@ -37,13 +40,6 @@ class KeyMan {
   }
 
   async savePassword(userPassword: string) {
-    this.iv = await keytar.getPassword(Keys.iv, Keys.account);
-
-    if (!this.iv) {
-      this.iv = Cipher.generateIv().toString('hex');
-      await keytar.setPassword(Keys.iv, Keys.account, this.iv);
-    }
-
     this.salt = Cipher.generateIv().toString('hex');
     await keytar.setPassword(Keys.salt, Keys.account, this.salt);
 
@@ -56,38 +52,46 @@ class KeyMan {
     if (!ethers.utils.isValidMnemonic(this.tmpMnemonic)) return false;
     if (!(await this.verifyPassword(userPassword))) return false;
 
-    const encryptedMnemonic = Cipher.encrypt(this.ivBuffer, this.tmpMnemonic, this.getCorePassword(userPassword));
+    const iv = Cipher.generateIv();
+    const encryptedMnemonic = Cipher.encrypt(iv, this.tmpMnemonic, this.getCorePassword(userPassword));
 
-    await keytar.setPassword(Keys.mnemonic, Keys.account, encryptedMnemonic);
+    await keytar.setPassword(Keys.mnemonic, Keys.account, `${iv.toString('hex')}:${encryptedMnemonic}`);
     this.tmpMnemonic = undefined;
 
     return true;
   }
 
-  async readMnemonic(userPassword: string) {}
+  async readMnemonic(userPassword: string) {
+    if (!(await this.verifyPassword(userPassword))) return undefined;
 
-  get ivBuffer() {
-    return Buffer.from(this.iv, 'hex');
-  }
+    const formatted = await keytar.getPassword(Keys.mnemonic, Keys.account);
+    const [iv, enMnemonic] = formatted.split(':');
 
-  get saltBuffer() {
-    return Buffer.from(this.salt, 'hex');
+    return Cipher.decrypt(Buffer.from(iv, 'hex'), enMnemonic, this.getCorePassword(userPassword));
   }
 
   setTmpMnemonic(mnemonic: string) {
     if (!ethers.utils.isValidMnemonic(mnemonic)) return;
     this.tmpMnemonic = mnemonic;
-
-    console.log(ethers.Wallet.fromMnemonic(mnemonic).address);
   }
 
-  private getCorePassword(userPassword: string) {
-    return `${this.salt}-${userPassword}`;
+  async genAddresses(userPassword: string, count: number) {
+    const mnemonic = await this.readMnemonic(userPassword);
+    if (!mnemonic) return undefined;
+
+    const hd = ethers.utils.HDNode.fromMnemonic(mnemonic);
+    const addresses = [hd.address];
+
+    for (let i = 1; i < count; i++) {
+      addresses.push(hd.derivePath(`${this.path}/${i}`).address);
+    }
+
+    return addresses;
   }
 
   reset(password: string) {
-    this.iv = this.salt = undefined;
-    [Keys.iv, Keys.mnemonic, Keys.salt, Keys.mnemonic].forEach((key) => keytar.deletePassword(key, Keys.account));
+    this.salt = undefined;
+    [Keys.mnemonic, Keys.salt, Keys.mnemonic].forEach((key) => keytar.deletePassword(key, Keys.account));
   }
 }
 

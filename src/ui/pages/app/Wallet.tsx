@@ -22,7 +22,7 @@ export default observer(({ networksVM }: { networksVM: NetworksVM }) => {
   return (
     <div className="page main">
       <div className="utility-bar">
-        <div>{networksVM.currentChainId}</div>
+        <div></div>
 
         <Menu
           menuButton={() => (
@@ -40,7 +40,7 @@ export default observer(({ networksVM }: { networksVM: NetworksVM }) => {
               <MenuItem
                 key={item.chainId}
                 styles={menuItemStyle}
-                onClick={(_) => runInAction(() => networksVM.setCurrentChainId(item.chainId))}
+                onClick={(_) => networksVM.setCurrentChainId(item.chainId)}
               >
                 <NetworkLabel expand chainId={item.chainId} />
               </MenuItem>
@@ -48,8 +48,8 @@ export default observer(({ networksVM }: { networksVM: NetworksVM }) => {
           })}
         </Menu>
 
-        <button className="icon-button" title="Scan QR" onClick={(_) => console.log('click')}>
-          <Feather icon="instagram" size={20} strokeWidth={1} />
+        <button className="icon-button" title="Show Address" onClick={(_) => console.log('click')}>
+          <Feather icon="user" size={18} strokeWidth={1} />
         </button>
       </div>
 
@@ -68,8 +68,8 @@ export default observer(({ networksVM }: { networksVM: NetworksVM }) => {
 
       <div className="wallet-actions">
         <button>
-          <Feather icon="download" size={14} strokeWidth={2} />
-          <span>Receive</span>
+          <Feather icon="camera" size={14} strokeWidth={2} />
+          <span>Scan</span>
         </button>
         <button>
           <Feather icon="send" size={14} strokeWidth={2} />

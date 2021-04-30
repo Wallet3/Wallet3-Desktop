@@ -32,16 +32,16 @@ export const Networks: INetwork[] = [
     chainId: 1,
   },
   {
-    network: 'MATIC',
+    network: 'POLYGON',
     chainId: 137,
-  },
-  {
-    network: 'BSC',
-    chainId: 56,
   },
   {
     network: 'xDAI',
     chainId: 100,
+  },
+  {
+    network: 'BSC',
+    chainId: 56,
   },
   {
     network: 'FTM',

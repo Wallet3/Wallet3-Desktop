@@ -3,7 +3,7 @@ import * as crypto from 'crypto';
 import { IpcRendererEvent, contextBridge, ipcRenderer } from 'electron';
 import { decrypt, encrypt } from './common/Cipher';
 
-import IPCKeys from './common/IPC';
+import IPCKeys from './common/Messages';
 
 const ipcSecureIv = crypto.randomBytes(16);
 let ipcSecureKey: Buffer;
@@ -32,7 +32,7 @@ export class ContextBridgeApi {
     const encrypted = encrypt(ipcSecureIv, serialized, ipcSecureKey);
     const returned = await ipcRenderer.invoke(`${channel}-secure`, encrypted);
     const ret = JSON.parse(decrypt(ipcSecureIv, returned, ipcSecureKey));
-    console.log(channel, returned, ret);
+
     return ret;
   };
 

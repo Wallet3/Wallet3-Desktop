@@ -1,15 +1,18 @@
 import { History, createBrowserHistory } from 'history';
-import MessageKeys, { InitStatus } from '../../common/IPC';
-import { action, computed, flow, makeAutoObservable, makeObservable } from 'mobx';
+import MessageKeys, { InitStatus, InitVerifyPassword } from '../../common/Messages';
+import { action, computed, flow, makeAutoObservable, makeObservable, runInAction } from 'mobx';
 
 import crypto from '../ipc/Crypto';
 import ipc from '../ipc/Bridge';
+import store from 'storejs';
 
 export class Application {
   readonly history = createBrowserHistory();
 
+  initVerified = false;
   hasMnemonic = false;
   touchIDSupported = false;
+  addresses: string[] = [];
 
   constructor() {
     makeAutoObservable(this);
@@ -26,6 +29,17 @@ export class Application {
     } else {
       this.history.push('/locking');
     }
+  }
+
+  async verifyInitialization(passcode: string) {
+    const password = crypto.sha256(passcode);
+    const { addresses, verified } = await ipc.invokeSecure<InitVerifyPassword>(MessageKeys.initVerifyPassword, {
+      password,
+      count: store.get('AddressCount') || 1,
+    });
+
+    this.addresses = addresses;
+    return verified;
   }
 
   async verifyPassword(passcode: string) {
