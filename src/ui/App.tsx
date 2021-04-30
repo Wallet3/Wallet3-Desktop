@@ -6,10 +6,11 @@ import { Route, Router, Switch } from 'react-router-dom';
 import { Application } from './viewmodels/Application';
 import MainLayout from './pages/layouts/MainLayout';
 import { MnemonicVM } from './viewmodels/MnemonicVM';
+import { NetworksVM } from './viewmodels/NetworksVM';
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 
-export default observer((args: { app: Application; mnVm: MnemonicVM }) => {
+export default observer((args: { app: Application; mnVM: MnemonicVM; networksVM: NetworksVM }) => {
   const { app } = args;
 
   return (
@@ -29,7 +30,10 @@ export default observer((args: { app: Application; mnVm: MnemonicVM }) => {
           <Route path="/locking" exact>
             <Locking {...args} />
           </Route>
-          <Route path="/app" component={MainLayout} />
+          <Route path="/app">
+            <MainLayout {...args} />
+          </Route>
+
           <Route path="*" component={Blank} />
         </Switch>
       </div>

@@ -6,8 +6,10 @@ import { Route, Switch } from 'react-router';
 import { Settings, Wallet } from '../app';
 
 import Feather from 'feather-icons-react';
+import { NetworksVM } from '../../viewmodels/NetworksVM';
+import { observer } from 'mobx-react-lite';
 
-export default () => {
+export default observer((args: { networksVM: NetworksVM }) => {
   let { path, url } = useRouteMatch();
 
   const [active, setActive] = useState(0);
@@ -17,7 +19,9 @@ export default () => {
       <div>
         <Switch>
           <Route path={`${path}/settings`} component={Settings} />
-          <Route path={path} component={Wallet} />
+          <Route path={path}>
+            <Wallet {...args} />
+          </Route>
         </Switch>
       </div>
 
@@ -38,4 +42,4 @@ export default () => {
       </div>
     </div>
   );
-};
+});

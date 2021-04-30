@@ -11,10 +11,10 @@ import { NavBar } from '../../components';
 import { action } from 'mobx';
 import { observer } from 'mobx-react-lite';
 
-export default observer(({ app, mnVm }: { app: Application; mnVm: MnemonicVM }) => {
+export default observer(({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) => {
   useEffect(() => {
-    mnVm.requestMnemonic(12);
-  }, [mnVm]);
+    mnVM.requestMnemonic(12);
+  }, [mnVM]);
 
   const [mnLength, setMnLength] = useState(12);
 
@@ -31,13 +31,13 @@ export default observer(({ app, mnVm }: { app: Application; mnVm: MnemonicVM }) 
       </div>
 
       <div className="seeds no-drag">
-        <Mnemonic phrases={mnVm.phrases} />
+        <Mnemonic phrases={mnVM.phrases} />
 
         <div className="actions">
           <div className="addr">
             <span>Address: </span>
-            <span className="addr-value" title={mnVm.address}>
-              {mnVm.address}
+            <span className="addr-value" title={mnVM.address}>
+              {mnVM.address}
             </span>
           </div>
 
@@ -46,7 +46,7 @@ export default observer(({ app, mnVm }: { app: Application; mnVm: MnemonicVM }) 
               className={`button ${mnLength === 12 ? 'active' : ''}`}
               onClick={(_) => {
                 setMnLength(12);
-                mnVm.requestMnemonic(12);
+                mnVM.requestMnemonic(12);
               }}
             >
               12
@@ -56,7 +56,7 @@ export default observer(({ app, mnVm }: { app: Application; mnVm: MnemonicVM }) 
               className={`button ${mnLength === 24 ? 'active' : ''}`}
               onClick={(_) => {
                 setMnLength(24);
-                mnVm.requestMnemonic(24);
+                mnVM.requestMnemonic(24);
               }}
             >
               24
@@ -64,7 +64,7 @@ export default observer(({ app, mnVm }: { app: Application; mnVm: MnemonicVM }) 
           </div>
 
           <div className="icon">
-            <span className="button" onClick={(_) => mnVm.requestMnemonic(mnLength)}>
+            <span className="button" onClick={(_) => mnVM.requestMnemonic(mnLength)}>
               <FeatherIcon icon="refresh-cw" size="12" />
             </span>
           </div>

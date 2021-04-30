@@ -10,7 +10,7 @@ import { MnemonicVM } from '../../viewmodels/MnemonicVM';
 import { NavBar } from '../../components';
 import Passcode from 'react-codes-input';
 
-export default ({ app, mnVm }: { app: Application; mnVm: MnemonicVM }) => {
+export default ({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) => {
   const [passcode1, setPasscode1] = useState('');
   const [passVerified, setPassVerified] = useState(false);
 
@@ -45,7 +45,7 @@ export default ({ app, mnVm }: { app: Application; mnVm: MnemonicVM }) => {
       <button
         disabled={!passVerified}
         onClick={async (_) => {
-          if (await mnVm.setupMnemonic(passcode1)) {
+          if (await mnVM.setupMnemonic(passcode1)) {
             app.history.push('/app');
           }
         }}

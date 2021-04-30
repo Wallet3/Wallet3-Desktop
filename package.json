@@ -116,6 +116,7 @@
     "react-dom": "^17.0.2",
     "react-loading-skeleton": "^2.2.0",
     "react-router-dom": "^5.2.0",
-    "secure-enclave": "^0.4.1"
+    "secure-enclave": "^0.4.1",
+    "storejs": "^1.1.0"
   }
 }

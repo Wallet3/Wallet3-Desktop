@@ -10,7 +10,7 @@ import { MnemonicVM } from '../../viewmodels/MnemonicVM';
 import { NavBar } from '../../components';
 import { observer } from 'mobx-react-lite';
 
-export default observer(({ app, mnVm }: { app: Application; mnVm: MnemonicVM }) => {
+export default observer(({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) => {
   const [isValidMnemonic, setIsValidMnemonic] = useState(false);
   const [mnemonic, setMnemonic] = useState('');
 
@@ -45,7 +45,7 @@ export default observer(({ app, mnVm }: { app: Application; mnVm: MnemonicVM }) 
         disabled={!isValidMnemonic}
         onClick={(_) => {
           if (!isValidMnemonic) return;
-          mnVm.saveTmpMnemonic(mnemonic);
+          mnVM.saveTmpMnemonic(mnemonic);
           app.history.push('/setupPassword');
         }}
       >

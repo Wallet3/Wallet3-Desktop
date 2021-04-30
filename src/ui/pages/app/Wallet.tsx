@@ -2,41 +2,50 @@ import './Wallet.css';
 import '@szhsin/react-menu/dist/index.css';
 
 import { Menu, MenuButton, MenuItem } from '@szhsin/react-menu';
+import { Networks, NetworksVM } from '../../viewmodels/NetworksVM';
+import React, { useState } from 'react';
+import { autorun, runInAction } from 'mobx';
 
 import DAI from '../../../assets/icons/crypto/dai.svg';
 import ETH from '../../../assets/icons/crypto/eth.svg';
 import Feather from 'feather-icons-react';
 import { Line } from 'rc-progress';
 import NetworkLabel from '../../components/NetworkLabel';
-import React from 'react';
 import USDC from '../../../assets/icons/crypto/usdc.svg';
+import { observer } from 'mobx-react-lite';
 
 const menuItemStyle = {
   padding: '8px 12px',
 };
 
-export default (props) => {
+export default observer(({ networksVM }: { networksVM: NetworksVM }) => {
   return (
     <div className="page main">
       <div className="utility-bar">
-        <div></div>
+        <div>{networksVM.currentChainId}</div>
 
         <Menu
-          menuButton={
+          menuButton={() => (
             <MenuButton className="menu-button">
-              <NetworkLabel network="ETH" />
+              <NetworkLabel chainId={networksVM.currentChainId} />
             </MenuButton>
-          }
+          )}
+          direction="bottom"
+          overflow="auto"
+          position="anchor"
+          arrow
         >
-          <MenuItem styles={menuItemStyle}>
-            <NetworkLabel className="expand" network="ETH" />
-          </MenuItem>
-          <MenuItem styles={menuItemStyle}>
-            <NetworkLabel className="expand" network="BSC" />
-          </MenuItem>
-          <MenuItem styles={menuItemStyle}>
-            <NetworkLabel className="expand" network="POLYGON" />
-          </MenuItem>
+          {Networks.map((item) => {
+            return (
+              <MenuItem
+                key={item.chainId}
+                styles={menuItemStyle}
+                onClick={(_) => runInAction(() => networksVM.setCurrentChainId(item.chainId))}
+              >
+                <NetworkLabel expand chainId={item.chainId} />
+              </MenuItem>
+            );
+          })}
         </Menu>
 
         <button className="icon-button" title="Scan QR" onClick={(_) => console.log('click')}>
@@ -109,4 +118,4 @@ export default (props) => {
       </div>
     </div>
   );
-};
+});
