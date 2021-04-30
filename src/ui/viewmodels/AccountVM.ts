@@ -1,3 +1,5 @@
+import * as Zapper from '../../api/Zapper';
+
 import { makeAutoObservable } from 'mobx';
 
 interface IArgs {
@@ -14,5 +16,7 @@ export class AccountVM {
     this.address = args.address;
   }
 
-  refresh() {}
+  async refresh() {
+    const balances = await Zapper.getTokenBalances(this.address);
+  }
 }
