@@ -57,11 +57,11 @@ export default observer(({ networksVM, accountVM }: { networksVM: NetworksVM; ac
 
       <div className="net-worth">
         <h3 className="title">Net Worth</h3>
-        <div className="value">{accountVM.balance ? '$ 2,729,185.22' : <Skeleton />}</div>
+        <div className="value">{accountVM.netWorth ?? <Skeleton />}</div>
 
         <div className="asset-percent">
           {accountVM?.chains.length > 0 ? (
-            <HSBar height={2} showTextWithValue={false} showTextDown outlineWidth={0} data={accountVM?.chains} />
+            <HSBar height={3} showTextWithValue={false} showTextDown outlineWidth={0} data={accountVM?.chains} />
           ) : (
             <Skeleton />
           )}
@@ -71,7 +71,7 @@ export default observer(({ networksVM, accountVM }: { networksVM: NetworksVM; ac
       <div className="wallet-actions">
         <button>
           <Feather icon="camera" size={14} strokeWidth={2} />
-          <span>Scan</span>
+          <span>Connect</span>
         </button>
         <button>
           <Feather icon="send" size={14} strokeWidth={2} />

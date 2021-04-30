@@ -63,4 +63,5 @@ export interface IChainBalance {
   logo_url: string;
   wrapped_token_id: string;
   usd_value: number;
+  percent?: number;
 }

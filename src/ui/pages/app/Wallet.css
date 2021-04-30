@@ -64,7 +64,18 @@
 
 .page.main > .net-worth > .asset-percent {
   font-size: 11px;
+  padding-right: 3px;
   color: var(--font-color-title);
+}
+
+.page.main > .net-worth > .asset-percent #hsbar {
+  border-radius: 4px;
+}
+
+.page.main > .net-worth > .asset-percent #hsbar_text > div {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .page.main > .wallet-actions {
