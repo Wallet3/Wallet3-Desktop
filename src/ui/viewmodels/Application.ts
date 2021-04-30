@@ -2,6 +2,7 @@ import { History, createBrowserHistory } from 'history';
 import MessageKeys, { InitStatus, InitVerifyPassword } from '../../common/Messages';
 import { action, computed, flow, makeAutoObservable, makeObservable, runInAction } from 'mobx';
 
+import WalletVM from './WalletVM';
 import crypto from '../ipc/Crypto';
 import ipc from '../ipc/Bridge';
 import store from 'storejs';
@@ -12,7 +13,6 @@ export class Application {
   initVerified = false;
   hasMnemonic = false;
   touchIDSupported = false;
-  addresses: string[] = [];
 
   constructor() {
     makeAutoObservable(this);
@@ -38,7 +38,10 @@ export class Application {
       count: store.get('AddressCount') || 1,
     });
 
-    this.addresses = addresses;
+    if (verified) {
+      WalletVM.initAccounts(addresses);
+    }
+
     return verified;
   }
 

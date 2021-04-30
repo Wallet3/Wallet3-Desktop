@@ -8,9 +8,10 @@ import MainLayout from './pages/layouts/MainLayout';
 import { MnemonicVM } from './viewmodels/MnemonicVM';
 import { NetworksVM } from './viewmodels/NetworksVM';
 import React from 'react';
+import { WalletVM } from './viewmodels/WalletVM';
 import { observer } from 'mobx-react-lite';
 
-export default observer((args: { app: Application; mnVM: MnemonicVM; networksVM: NetworksVM }) => {
+export default observer((args: { app: Application; mnVM: MnemonicVM; networksVM: NetworksVM; walletVM: WalletVM }) => {
   const { app } = args;
 
   return (

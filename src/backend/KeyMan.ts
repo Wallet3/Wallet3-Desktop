@@ -80,7 +80,8 @@ class KeyMan {
     if (!mnemonic) return undefined;
 
     const hd = ethers.utils.HDNode.fromMnemonic(mnemonic);
-    const addresses = [hd.address];
+    const main = hd.derivePath(`${this.path}/${0}`);
+    const addresses = [main.address];
 
     for (let i = 1; i < count; i++) {
       addresses.push(hd.derivePath(`${this.path}/${i}`).address);

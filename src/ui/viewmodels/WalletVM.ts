@@ -1,5 +1,6 @@
 import { makeAutoObservable, runInAction, when } from 'mobx';
 
+import { AccountVM } from './AccountVM';
 import App from './Application';
 import MessageKeys from '../../common/Messages';
 import ipc from '../ipc/Bridge';
@@ -9,17 +10,19 @@ const Keys = {
   addressCount: 'AddressCount',
 };
 
-class WalletVM {
-  addresses: string[];
+export class WalletVM {
+  accounts: AccountVM[];
+  currentAccount: AccountVM;
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  fetchAddresses = async (password: string) => {
-    const count = store.get(Keys.addressCount) || 1;
-    const addrs = await ipc.invoke<string[]>(MessageKeys.fetchAddresses, { count });
-
-    runInAction(() => (this.addresses = addrs));
-  };
+  initAccounts(addresses: string[]) {
+    this.accounts = addresses.map((address) => new AccountVM({ address }));
+    this.currentAccount = this.accounts[0];
+    this.currentAccount?.refresh();
+  }
 }
+
+export default new WalletVM();

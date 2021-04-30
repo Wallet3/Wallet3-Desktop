@@ -4,13 +4,14 @@ import '@szhsin/react-menu/dist/index.css';
 import { Menu, MenuButton, MenuItem } from '@szhsin/react-menu';
 import { Networks, NetworksVM } from '../../viewmodels/NetworksVM';
 import React, { useState } from 'react';
-import { autorun, runInAction } from 'mobx';
 
+import { AccountVM } from '../../viewmodels/AccountVM';
 import DAI from '../../../assets/icons/crypto/dai.svg';
 import ETH from '../../../assets/icons/crypto/eth.svg';
 import Feather from 'feather-icons-react';
 import { Line } from 'rc-progress';
 import NetworkLabel from '../../components/NetworkLabel';
+import Skeleton from 'react-loading-skeleton';
 import USDC from '../../../assets/icons/crypto/usdc.svg';
 import { observer } from 'mobx-react-lite';
 
@@ -18,7 +19,7 @@ const menuItemStyle = {
   padding: '8px 12px',
 };
 
-export default observer(({ networksVM }: { networksVM: NetworksVM }) => {
+export default observer(({ networksVM, accountVM }: { networksVM: NetworksVM; accountVM?: AccountVM }) => {
   return (
     <div className="page main">
       <div className="utility-bar">
@@ -48,14 +49,14 @@ export default observer(({ networksVM }: { networksVM: NetworksVM }) => {
           })}
         </Menu>
 
-        <button className="icon-button" title="Show Address" onClick={(_) => console.log('click')}>
+        <button className="icon-button" title={accountVM?.address ?? 'Show Address'} onClick={(_) => console.log('click')}>
           <Feather icon="user" size={18} strokeWidth={1} />
         </button>
       </div>
 
       <div className="net-worth">
         <h3 className="title">Net Worth</h3>
-        <div className="value">$ 2,729,185.22</div>
+        <div className="value">{accountVM.balance ? '$ 2,729,185.22' : <Skeleton />}</div>
 
         <div className="asset-percent">
           <Line percent={90} strokeColor="rgb(97, 134, 255)" strokeWidth={1.5} trailWidth={1.5} />
