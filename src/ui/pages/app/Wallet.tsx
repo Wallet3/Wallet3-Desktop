@@ -10,7 +10,6 @@ import AnimatedNumber from 'react-animated-number';
 import Feather from 'feather-icons-react';
 import HSBar from 'react-horizontal-stacked-bar-chart';
 import { ITokenBalance } from '../../../api/Debank';
-import { Line } from 'rc-progress';
 import NetworkLabel from '../../components/NetworkLabel';
 import Skeleton from 'react-loading-skeleton';
 import findIcon from '../../misc/Icons';
@@ -22,16 +21,15 @@ const menuItemStyle = {
 };
 
 export default observer(({ networksVM, accountVM }: { networksVM: NetworksVM; accountVM?: AccountVM }) => {
-  const rows = accountVM.tokens.length / 2;
+  const rows = accountVM.chainTokens.length / 2;
   const rowTokens: ITokenBalance[][] = [];
 
-  for (let i = 0; i < rows; i++) {
+  for (let i = 0; i < rows && i < 7; i++) {
     const row: ITokenBalance[] = [];
     for (let j = 0; j < 2; j++) {
-      const token = accountVM.tokens[i * 2 + j];
-      if (token) row.push(token);
+      const token = accountVM.chainTokens[i * 2 + j];
+      row.push(token);
     }
-
     rowTokens.push(row);
   }
 
@@ -80,8 +78,8 @@ export default observer(({ networksVM, accountVM }: { networksVM: NetworksVM; ac
         </div>
 
         <div className="asset-percent">
-          {accountVM?.chains.length > 0 ? (
-            <HSBar height={3} showTextWithValue={false} showTextDown outlineWidth={0} data={accountVM?.chains} />
+          {accountVM?.chainsOverview.length > 0 ? (
+            <HSBar height={3} showTextWithValue={false} showTextDown outlineWidth={0} data={accountVM?.chainsOverview} />
           ) : (
             <Skeleton />
           )}
@@ -110,57 +108,22 @@ export default observer(({ networksVM, accountVM }: { networksVM: NetworksVM; ac
                   {row.map((token, j) => {
                     return (
                       <td key={`${i}-${j}`}>
-                        <button>
-                          <div>
-                            <img className="token-icon" src={findIcon(token.symbol)} alt="" />
-                            <span className="symbol">{token.symbol}</span>
-                            <span></span>
-                            <span className="amount">{formatNum(token.amount, '')}</span>
-                          </div>
-                        </button>
+                        {token ? (
+                          <button title={`${token.symbol}: $${token.amount * token.price}`}>
+                            <div>
+                              <img className="token-icon" src={findIcon(token.symbol)} alt="" />
+                              <span className="symbol">{token.symbol}</span>
+                              <span></span>
+                              <span className="amount">{formatNum(token.amount, '')}</span>
+                            </div>
+                          </button>
+                        ) : undefined}
                       </td>
                     );
                   })}
                 </tr>
               );
             })}
-            {/* <tr>
-              <td>
-                <button>
-                  <div>
-                    <img src={ETH} alt="" />
-                    <span>ETH</span>
-                    <span></span>
-                    <span>1.001</span>
-                  </div>
-                </button>
-              </td>
-              <td>
-                <button>
-                  <div>
-                    <img src={USDC} alt="" />
-                    <span>USDC</span>
-                    <span></span>
-                    <span>1,234,567.89</span>
-                  </div>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <button>
-                  <div>
-                    <img src={DAI} alt="" />
-                    <span>DAI</span>
-                    <span></span>
-                    <span>123.001</span>
-                  </div>
-                </button>
-              </td>
-              <td>
-                <div></div>
-              </td>
-            </tr> */}
           </tbody>
         </table>
       </div>

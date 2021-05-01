@@ -16,16 +16,40 @@ interface ChainOverview {
 
 export class AccountVM {
   address: string;
-  netWorth: number;
-  tokens: Debank.ITokenBalance[] = [];
-  chains: ChainOverview[] = [];
+
+  private tokens: Debank.ITokenBalance[] = [];
+  private chains: Debank.IChainBalance[] = [];
+
+  get netWorth() {
+    const usd = this.chains.find((c) => c.community_id === NetVM.currentChainId)?.usd_value;
+    if (this.chains.length > 0 && usd === undefined) {
+      return 0;
+    }
+
+    return usd;
+  }
+
+  get chainsOverview() {
+    return this.chains.map((chain) => {
+      const network = Networks.find((n) => n.symbol.toLowerCase() === chain.id);
+      return {
+        name: network.network,
+        value: chain.usd_value,
+        color: network.color,
+      };
+    });
+  }
+
+  get chainTokens() {
+    return this.tokens.filter((t) => t?.chain === NetVM.currentNetwork.symbol.toLowerCase());
+  }
 
   constructor(args: IArgs) {
     makeAutoObservable(this);
 
     reaction(
       () => NetVM.currentChainId,
-      (curr, prev) => console.log('networks: ', curr, prev)
+      () => this.refreshChainTokens()
     );
 
     this.address = '0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B'; // args.address;
@@ -44,17 +68,7 @@ export class AccountVM {
         chains.push(...overview.chain_list);
       }
 
-      runInAction(() => {
-        this.netWorth = overview.chain_list.find((c) => c.community_id === NetVM.currentChainId).usd_value;
-        this.chains = chains.map((chain) => {
-          const network = Networks.find((n) => n.symbol.toLowerCase() === chain.id);
-          return {
-            name: network.network,
-            value: chain.usd_value,
-            color: network.color,
-          };
-        });
-      });
+      runInAction(() => (this.chains = chains));
     });
   };
 

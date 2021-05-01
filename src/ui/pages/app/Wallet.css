@@ -137,10 +137,16 @@
   margin-right: 2px;
 }
 
+.page.main > .assets > table td > button > div > .amount {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .page.main > .assets > table td:first-child {
   padding-right: 0px;
 }
 
-.page.main > .assets > table td:last-child > {
+.page.main > .assets > table td:last-child {
   padding-left: 0px;
 }
