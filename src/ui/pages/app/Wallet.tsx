@@ -1,6 +1,7 @@
 import './Wallet.css';
 import '@szhsin/react-menu/dist/index.css';
 
+import { Link, useRouteMatch } from 'react-router-dom';
 import { Menu, MenuButton, MenuItem } from '@szhsin/react-menu';
 import { Networks, NetworksVM } from '../../viewmodels/NetworksVM';
 import React, { useState } from 'react';
@@ -91,10 +92,10 @@ export default observer(({ networksVM, accountVM }: { networksVM: NetworksVM; ac
           <Feather icon="camera" size={14} strokeWidth={2} />
           <span>Connect</span>
         </button>
-        <button>
+        <Link className='button' to='/send'>
           <Feather icon="send" size={14} strokeWidth={2} />
           <span>Send</span>
-        </button>
+        </Link>
       </div>
 
       <div className="assets">
@@ -109,14 +110,18 @@ export default observer(({ networksVM, accountVM }: { networksVM: NetworksVM; ac
                     return (
                       <td key={`${i}-${j}`}>
                         {token ? (
-                          <button title={`${token.symbol}: $${token.amount * token.price}`}>
+                          <Link
+                            className="button"
+                            to={`/send?token=${token.id}`}
+                            title={`${token.symbol}: $${token.amount * token.price}`}
+                          >
                             <div>
                               <img className="token-icon" src={findIcon(token.symbol)} alt="" />
                               <span className="symbol">{token.symbol}</span>
                               <span></span>
                               <span className="amount">{formatNum(token.amount, '')}</span>
                             </div>
-                          </button>
+                          </Link>
                         ) : undefined}
                       </td>
                     );

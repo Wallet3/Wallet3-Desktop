@@ -12,7 +12,7 @@ import { WalletVM } from '../../viewmodels/WalletVM';
 import { observer } from 'mobx-react-lite';
 
 export default observer((args: { networksVM: NetworksVM; walletVM: WalletVM }) => {
-  let { path, url } = useRouteMatch();
+  const { path, url } = useRouteMatch();
 
   const [activeTab, setActiveTab] = useState(0);
   const { walletVM } = args;

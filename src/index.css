@@ -70,6 +70,8 @@ a.button {
   cursor: pointer;
   transition: all 0.3s;
   outline: none;
+  display: block;
+  box-sizing: border-box;
 }
 
 button:hover,

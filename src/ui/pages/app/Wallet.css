@@ -80,7 +80,7 @@
   column-gap: 8px;
 }
 
-.page.main > .wallet-actions button {
+.page.main > .wallet-actions > button {
   padding: 4px 0;
   border-radius: 5px;
   display: flex;
@@ -88,7 +88,20 @@
   justify-content: center;
 }
 
-.page.main > .wallet-actions button > span {
+.page.main > .wallet-actions > .button {
+  padding: 4px 0;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page.main > .wallet-actions > button > span {
+  display: inline-block;
+  margin: 0 8px;
+}
+
+.page.main > .wallet-actions > .button > span {
   display: inline-block;
   margin: 0 8px;
 }
@@ -108,19 +121,19 @@
   padding: 0 5px;
 }
 
-.page.main > .assets > table td button {
+.page.main > .assets > table td .button {
   border: none;
   padding: 2px 7px;
   padding-bottom: 1px;
   margin-bottom: 1px;
 }
 
-.page.main > .assets > table td button:hover {
+.page.main > .assets > table td .button:hover {
   background-color: var(--border-color);
   color: var(--theme-color);
 }
 
-.page.main > .assets > table td > button > div {
+.page.main > .assets > table td > .button > div {
   overflow: hidden;
   font-size: 13px;
   font-weight: 450;
@@ -130,14 +143,14 @@
   grid-template-columns: auto auto 1fr auto;
 }
 
-.page.main > .assets > table td > button > div > img {
+.page.main > .assets > table td > .button > div > img {
   width: 17px;
   height: 17px;
   display: inline-block;
   margin-right: 2px;
 }
 
-.page.main > .assets > table td > button > div > .amount {
+.page.main > .assets > table td > .button > div > .amount {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
