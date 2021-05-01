@@ -62,12 +62,10 @@ export class AccountVM {
     Debank.getTokenBalances(this.address, NetVM.currentNetwork.symbol).then((tokens) => {
       const assets = tokens
         .filter((t) => t.amount * (t.price || 0) > 1 && t.id !== 'eth')
-        .sort((a, b) => a.amount * a.price - b.amount * b.price);
+        .sort((a, b) => b.amount * b.price - a.amount * a.price);
 
       const nativeToken = tokens.find((t) => t.id === 'eth');
       assets.unshift(nativeToken);
-
-      console.log('vm', assets);
 
       runInAction(() => (this.tokens = assets));
     });

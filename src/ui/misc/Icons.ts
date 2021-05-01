@@ -1,10 +1,9 @@
-import defaultCoin from '../../assets/icons/app/coins.svg';
-import eth from '../../assets/icons/crypto2/eth.svg';
-
-const icons = {
-  eth,
-};
+import defaultCoin from '../../assets/icons/app/coin.svg';
 
 export default (symbol: string) => {
-  return icons[symbol.toLowerCase()] || defaultCoin;
+  try {
+    return require(`../../assets/icons/crypto/${symbol.toLowerCase()}.svg`).default;
+  } catch (error) {
+    return defaultCoin;
+  }
 };
