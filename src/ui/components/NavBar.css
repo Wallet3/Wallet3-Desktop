@@ -4,6 +4,15 @@
   align-items: center;
 }
 
+.nav > button {
+  padding: 0 !important;
+}
+
+.nav > button:hover {
+  color: var(--theme-color-05) !important;
+  background-color: transparent !important;
+}
+
 .nav > button svg {
   margin-left: -1px;
 }

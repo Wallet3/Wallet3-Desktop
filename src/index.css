@@ -5,6 +5,7 @@ html {
   --font-color-title: #657795;
   --font-color-desc: rgb(42, 134, 219);
   --border-color: #dfe8f9;
+  --background-color: aliceblue;
 }
 
 body {

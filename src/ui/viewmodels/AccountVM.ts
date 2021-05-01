@@ -17,8 +17,8 @@ interface ChainOverview {
 export class AccountVM {
   address: string;
 
-  private tokens: Debank.ITokenBalance[] = [];
-  private chains: Debank.IChainBalance[] = [];
+  tokens: Debank.ITokenBalance[] = [];
+  chains: Debank.IChainBalance[] = [];
 
   get netWorth() {
     const usd = this.chains.find((c) => c.community_id === NetVM.currentChainId)?.usd_value;
@@ -41,7 +41,7 @@ export class AccountVM {
   }
 
   get chainTokens() {
-    return this.tokens.filter((t) => t?.chain === NetVM.currentNetwork.symbol.toLowerCase());
+    return this.tokens.filter((t) => t?.is_wallet && t?.chain === NetVM.currentNetwork.symbol.toLowerCase());
   }
 
   constructor(args: IArgs) {
