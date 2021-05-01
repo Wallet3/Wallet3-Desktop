@@ -87,15 +87,57 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
             {walletVM.currentAccount?.tokens.map((t) => {
               return (
                 <MenuItem key={t.id} styles={{ padding: '0.375rem 1rem' }}>
-                  <TokenLabel symbol={t.symbol} name={t.symbol} expand />
+                  <TokenLabel symbol={t.symbol} name={t.display_symbol || t.symbol} expand />
                 </MenuItem>
               );
             })}
           </Menu>
         </div>
 
-        <div className="gas"></div>
+        {/* <div></div> */}
+
+        <div className="amount">
+          <span>Gas:</span>
+          <input type="text" placeholder="100000" />
+          <span></span>
+        </div>
+
+        <div className="amount">
+          <span>Nonce:</span>
+          <input type="text" placeholder="1" />
+          <span></span>
+        </div>
+
+        <div className="gas">
+          <div>
+            <span>Rapid</span>
+            <span style={{ color: '#2ecc71' }}>37 Gwei</span>
+          </div>
+
+          <div className="separator" />
+
+          <div>
+            <span>Fast</span>
+            <span style={{ color: 'orange' }}>32 Gwei</span>
+          </div>
+
+          <div className="separator" />
+
+          <div>
+            <span>Standard</span>
+            <span style={{ color: 'deepskyblue' }}>27 Gwei</span>
+          </div>
+
+          <div className="separator" />
+
+          <div>
+            <span>Cust.</span>
+            <input type="text" placeholder="20" />
+          </div>
+        </div>
       </div>
+
+      <button>Send</button>
     </div>
   );
 });
