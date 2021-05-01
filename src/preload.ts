@@ -6,6 +6,7 @@ import { decrypt, encrypt } from './common/Cipher';
 import IPCKeys from './common/Messages';
 
 const ipcSecureIv = crypto.randomBytes(16);
+const windowId = crypto.randomBytes(4).toString('hex');
 let ipcSecureKey: Buffer;
 
 async function initSecureContext() {
@@ -15,6 +16,7 @@ async function initSecureContext() {
   const mainKey = await ipcRenderer.invoke(IPCKeys.exchangeDHKey, {
     rendererEcdhKey,
     ipcSecureIv,
+    windowId,
   });
 
   ipcSecureKey = ecdh.computeSecret(mainKey);
@@ -30,7 +32,7 @@ export class ContextBridgeApi {
   invokeSecure = async (channel: string, argObj: any) => {
     const serialized = JSON.stringify(argObj);
     const encrypted = encrypt(ipcSecureIv, serialized, ipcSecureKey);
-    const returned = await ipcRenderer.invoke(`${channel}-secure`, encrypted);
+    const returned = await ipcRenderer.invoke(`${channel}-secure`, encrypted, windowId);
     const ret = JSON.parse(decrypt(ipcSecureIv, returned, ipcSecureKey));
 
     return ret;

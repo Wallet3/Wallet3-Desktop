@@ -13,9 +13,10 @@ const AppKeys = {
 class App {
   touchIDSupported = false;
   hasMnemonic = false;
-  ipcSecureKey: Buffer;
-  ipcSecureIv: Buffer;
+  // ipcSecureKey: Buffer;
+  // ipcSecureIv: Buffer;
   userPassword?: string; // keep password in memory for TouchID users
+  ipcs = new Map<string, { iv: Buffer; key: Buffer }>();
 
   constructor() {
     this.touchIDSupported = systemPreferences.canPromptTouchID();
@@ -27,13 +28,15 @@ class App {
     KeyMan.init();
 
     ipcMain.handleOnce(MessageKeys.exchangeDHKey, (e, dh) => {
-      const { rendererEcdhKey, ipcSecureIv } = dh;
-      this.ipcSecureIv = ipcSecureIv;
+      const { rendererEcdhKey, ipcSecureIv, windowId } = dh;
 
       const ecdh = createECDH('secp521r1');
       const mainEcdhKey = ecdh.generateKeys();
 
-      this.ipcSecureKey = ecdh.computeSecret(rendererEcdhKey);
+      const ipcSecureKey = ecdh.computeSecret(rendererEcdhKey);
+      const secret = { iv: ipcSecureIv, key: ipcSecureKey };
+      this.ipcs.set(windowId, secret);
+
       return mainEcdhKey;
     });
 
@@ -52,39 +55,44 @@ class App {
       }
     });
 
-    ipcMain.handle(`${MessageKeys.genMnemonic}-secure`, (e, encrypted) => {
-      const { length } = this.decryptIpc(encrypted);
-      return this.encryptIpc(KeyMan.genMnemonic(length));
+    ipcMain.handle(`${MessageKeys.genMnemonic}-secure`, (e, encrypted, winId) => {
+      const { key, iv } = this.ipcs.get(winId);
+      const { length } = this.decryptIpc(encrypted, iv, key);
+      return this.encryptIpc(KeyMan.genMnemonic(length), iv, key);
     });
 
-    ipcMain.handle(`${MessageKeys.saveTmpMnemonic}-secure`, (e, encrypted) => {
-      const { mnemonic } = this.decryptIpc(encrypted);
+    ipcMain.handle(`${MessageKeys.saveTmpMnemonic}-secure`, (e, encrypted, winId) => {
+      const { iv, key } = this.ipcs.get(winId);
+      const { mnemonic } = this.decryptIpc(encrypted, iv, key);
       KeyMan.setTmpMnemonic(mnemonic);
     });
 
-    ipcMain.handle(`${MessageKeys.setupMnemonic}-secure`, async (e, encrypted) => {
-      if (this.hasMnemonic) return this.encryptIpc({ success: false });
+    ipcMain.handle(`${MessageKeys.setupMnemonic}-secure`, async (e, encrypted, winId) => {
+      const { iv, key } = this.ipcs.get(winId);
+      if (this.hasMnemonic) return this.encryptIpc({ success: false }, iv, key);
 
-      const { password: userPassword } = this.decryptIpc(encrypted);
+      const { password: userPassword } = this.decryptIpc(encrypted, iv, key);
 
       await KeyMan.savePassword(userPassword);
-      if (!(await KeyMan.saveMnemonic(userPassword))) return this.encryptIpc({ success: false });
+      if (!(await KeyMan.saveMnemonic(userPassword))) return this.encryptIpc({ success: false }, iv, key);
 
       const addresses = await KeyMan.genAddresses(userPassword, 1);
 
       systemPreferences.setUserDefault(AppKeys.hasMnemonic, 'boolean', true as never);
       this.hasMnemonic = true;
 
-      return this.encryptIpc({ addresses, success: true });
+      return this.encryptIpc({ addresses, success: true }, iv, key);
     });
 
-    ipcMain.handle(`${MessageKeys.verifyPassword}-secure`, async (e, encrypted) => {
-      const { password } = this.decryptIpc(encrypted);
-      return this.encryptIpc(await KeyMan.verifyPassword(password));
+    ipcMain.handle(`${MessageKeys.verifyPassword}-secure`, async (e, encrypted, winId) => {
+      const { iv, key } = this.ipcs.get(winId);
+      const { password } = this.decryptIpc(encrypted, iv, key);
+      return this.encryptIpc(await KeyMan.verifyPassword(password), iv, key);
     });
 
-    ipcMain.handle(`${MessageKeys.initVerifyPassword}-secure`, async (e, encrypted) => {
-      const { password, count } = this.decryptIpc(encrypted);
+    ipcMain.handle(`${MessageKeys.initVerifyPassword}-secure`, async (e, encrypted, winId) => {
+      const { iv, key } = this.ipcs.get(winId);
+      const { password, count } = this.decryptIpc(encrypted, iv, key);
       const verified = await KeyMan.verifyPassword(password);
       const addresses: string[] = [];
 
@@ -93,7 +101,7 @@ class App {
         addresses.push(...(await KeyMan.genAddresses(password, count)));
       }
 
-      return this.encryptIpc({ verified, addresses });
+      return this.encryptIpc({ verified, addresses }, iv, key);
     });
 
     ipcMain.handle(`${MessageKeys.fetchAddresses}-secure`, (e, encrypted) => {
@@ -101,13 +109,13 @@ class App {
     });
   }
 
-  decryptIpc = (encrypted: string) => {
-    const serialized = Cipher.decrypt(this.ipcSecureIv, encrypted, this.ipcSecureKey);
+  decryptIpc = (encrypted: string, iv: Buffer, key: Buffer) => {
+    const serialized = Cipher.decrypt(iv, encrypted, key);
     return JSON.parse(serialized);
   };
 
-  encryptIpc = (obj: any) => {
-    return Cipher.encrypt(this.ipcSecureIv, JSON.stringify(obj), this.ipcSecureKey);
+  encryptIpc = (obj: any, iv: Buffer, key: Buffer) => {
+    return Cipher.encrypt(iv, JSON.stringify(obj), key);
   };
 }
 
