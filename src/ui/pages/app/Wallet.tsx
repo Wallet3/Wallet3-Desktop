@@ -6,6 +6,7 @@ import { Networks, NetworksVM } from '../../viewmodels/NetworksVM';
 import React, { useState } from 'react';
 
 import { AccountVM } from '../../viewmodels/AccountVM';
+import AnimatedNumber from 'react-animated-number';
 import DAI from '../../../assets/icons/crypto/dai.svg';
 import ETH from '../../../assets/icons/crypto/eth.svg';
 import Feather from 'feather-icons-react';
@@ -14,6 +15,7 @@ import { Line } from 'rc-progress';
 import NetworkLabel from '../../components/NetworkLabel';
 import Skeleton from 'react-loading-skeleton';
 import USDC from '../../../assets/icons/crypto/usdc.svg';
+import { formatNum } from '../../misc/Formatter';
 import { observer } from 'mobx-react-lite';
 
 const menuItemStyle = {
@@ -57,7 +59,13 @@ export default observer(({ networksVM, accountVM }: { networksVM: NetworksVM; ac
 
       <div className="net-worth">
         <h3 className="title">Net Worth</h3>
-        <div className="value">{accountVM.netWorth ?? <Skeleton />}</div>
+        <div className="value">
+          {accountVM.netWorth === undefined ? (
+            <Skeleton />
+          ) : (
+            <AnimatedNumber component="text" value={accountVM.netWorth} duration={300} formatValue={(n) => formatNum(n)} />
+          )}
+        </div>
 
         <div className="asset-percent">
           {accountVM?.chains.length > 0 ? (

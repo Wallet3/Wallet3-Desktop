@@ -21,7 +21,7 @@ interface ChainOverview {
 
 export class AccountVM {
   address: string;
-  netWorth: string;
+  netWorth: number;
   tokens: Zapper.ITokenBalance[] = [];
   chains: ChainOverview[] = [];
 
@@ -33,24 +33,19 @@ export class AccountVM {
 
   async refresh() {
     Debank.getTotalBalance(this.address).then((overview) => {
-      overview.chain_list.forEach((c) => {
-        c.percent = c.usd_value / overview.total_usd_value;
-        c.percent = c.percent > 0 && c.percent < 0.005 ? 0.015 : c.percent;
-      });
-
       const chains = overview.chain_list.filter((c) => c.usd_value > 0);
       if (chains.length === 0) {
-        overview.chain_list.forEach((c) => (c.percent = 1));
+        overview.chain_list.forEach((c) => (c.usd_value = 1));
         chains.push(...overview.chain_list);
       }
 
       runInAction(() => {
-        this.netWorth = formatNum(overview.total_usd_value);
+        this.netWorth = overview.total_usd_value;
         this.chains = chains.map((chain) => {
           const network = Networks.find((n) => n.symbol.toLowerCase() === chain.id);
           return {
             name: network.network,
-            value: chain.percent,
+            value: chain.usd_value,
             color: network.color,
           };
         });

@@ -64,7 +64,7 @@
 
 .page.main > .net-worth > .asset-percent {
   font-size: 11px;
-  padding-right: 3px;
+  padding-right: 1px;
   color: var(--font-color-title);
 }
 
