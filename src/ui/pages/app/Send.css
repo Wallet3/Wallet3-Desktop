@@ -7,7 +7,7 @@
   position: relative;
   height: 35px;
   font-size: 15px;
-  z-index: 999;
+  z-index: 5;
 }
 
 .page.send > .form > .to > span {
@@ -38,6 +38,9 @@
 
 .page.send > .form > .to ul {
   background: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-top: none;
+  padding-bottom: 0;
 }
 
 .page.send > .form input {
@@ -74,4 +77,20 @@
   right: 0;
   bottom: 8px;
   color: #d0d0d0;
+}
+
+.page.send > .form > .tokens {
+  margin-top: 8px;
+  font-size: 12px;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+}
+
+.page.send > .form > .tokens > .balance {
+  cursor: pointer;
+  margin: 2px 8px;
+}
+
+.page.send > .form > .tokens > .menu-button {
+  padding: 2px 5px;
 }

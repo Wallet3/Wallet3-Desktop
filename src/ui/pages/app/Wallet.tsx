@@ -17,10 +17,6 @@ import findIcon from '../../misc/Icons';
 import { formatNum } from '../../misc/Formatter';
 import { observer } from 'mobx-react-lite';
 
-const menuItemStyle = {
-  padding: '8px 12px',
-};
-
 export default observer(({ networksVM, accountVM }: { networksVM: NetworksVM; accountVM?: AccountVM }) => {
   const rows = accountVM.chainTokens.length / 2;
   const rowTokens: ITokenBalance[][] = [];
@@ -45,6 +41,7 @@ export default observer(({ networksVM, accountVM }: { networksVM: NetworksVM; ac
               <NetworkLabel chainId={networksVM.currentChainId} />
             </MenuButton>
           )}
+          styles={{ minWidth: '7rem' }}
           direction="bottom"
           overflow="auto"
           position="anchor"
@@ -54,7 +51,7 @@ export default observer(({ networksVM, accountVM }: { networksVM: NetworksVM; ac
             return (
               <MenuItem
                 key={item.chainId}
-                styles={menuItemStyle}
+                styles={{ padding: '8px 12px' }}
                 onClick={(_) => networksVM.setCurrentChainId(item.chainId)}
               >
                 <NetworkLabel expand chainId={item.chainId} />
@@ -92,7 +89,7 @@ export default observer(({ networksVM, accountVM }: { networksVM: NetworksVM; ac
           <Feather icon="camera" size={14} strokeWidth={2} />
           <span>Connect</span>
         </button>
-        <Link className='button' to='/send'>
+        <Link className="button" to="/send">
           <Feather icon="send" size={14} strokeWidth={2} />
           <span>Send</span>
         </Link>

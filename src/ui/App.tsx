@@ -13,7 +13,7 @@ import { WalletVM } from './viewmodels/WalletVM';
 import { observer } from 'mobx-react-lite';
 
 export default observer((args: { app: Application; mnVM: MnemonicVM; networksVM: NetworksVM; walletVM: WalletVM }) => {
-  const { app } = args;
+  const { app, walletVM } = args;
 
   return (
     <Router history={app.history}>
@@ -36,7 +36,7 @@ export default observer((args: { app: Application; mnVM: MnemonicVM; networksVM:
             <MainLayout {...args} />
           </Route>
           <Route path="/send">
-            <Send />
+            <Send {...args} />
           </Route>
 
           <Route path="*" component={Blank} />

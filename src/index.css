@@ -34,6 +34,10 @@ body {
   height: 100%;
 }
 
+span {
+  display: inline-block;
+}
+
 #root {
   display: grid;
   height: 100vh;
@@ -111,4 +115,16 @@ button.icon-button:hover {
 
 button.icon-button:active {
   color: black;
+}
+
+button.menu-button {
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+}
+
+button.menu-button:hover {
+  color: var(--theme-color);
+  background-color: var(--border-color);
 }

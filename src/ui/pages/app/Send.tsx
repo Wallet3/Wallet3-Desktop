@@ -1,10 +1,15 @@
 import './Send.css';
 
+import { Menu, MenuButton, MenuItem } from '@szhsin/react-menu';
+
+import { AccountVM } from '../../viewmodels/AccountVM';
+import { Application } from '../../viewmodels/Application';
 import Feather from 'feather-icons-react';
 import { NavBar } from '../../components';
 import React from 'react';
 import { ReactSearchAutocomplete } from 'react-search-autocomplete';
-import Select from 'react-select';
+import TokenLabel from '../../components/TokenLabel';
+import { WalletVM } from '../../viewmodels/WalletVM';
 import { observer } from 'mobx-react-lite';
 
 const AddressSearchStyle = {
@@ -44,10 +49,10 @@ const items = [
   },
 ];
 
-export default observer((props) => {
+export default observer(({ app, walletVM }: { app: Application; walletVM: WalletVM }) => {
   return (
     <div className="page send">
-      <NavBar title="Send" />
+      <NavBar title="Send" onBackClick={() => app.history.goBack()} />
 
       <div className="form">
         <div className="to">
@@ -65,6 +70,28 @@ export default observer((props) => {
           <span>Amount:</span>
           <input type="text" placeholder="1000" />
           <span className="symbol">ETH</span>
+        </div>
+
+        <div className="tokens">
+          <span></span>
+          <span className="balance">Max: 2.223</span>
+          <Menu
+            overflow="auto"
+            styles={{ minWidth: '0', marginRight: '12px' }}
+            menuButton={() => (
+              <MenuButton className="menu-button">
+                <TokenLabel symbol="ETH" name="ETH" />
+              </MenuButton>
+            )}
+          >
+            {walletVM.currentAccount?.tokens.map((t) => {
+              return (
+                <MenuItem key={t.id} styles={{ padding: '0.375rem 1rem' }}>
+                  <TokenLabel symbol={t.symbol} name={t.symbol} expand />
+                </MenuItem>
+              );
+            })}
+          </Menu>
         </div>
 
         <div className="gas"></div>

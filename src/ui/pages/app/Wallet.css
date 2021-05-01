@@ -28,10 +28,7 @@
 }
 
 .page.main > .utility-bar > button.menu-button {
-  font-weight: 500;
-  cursor: pointer;
   padding: 5px 8px;
-  border-radius: 5px;
 }
 
 .page.main > .utility-bar > button.menu-button:hover {
@@ -125,7 +122,7 @@
   border: none;
   padding: 2px 7px;
   padding-bottom: 1px;
-  margin-bottom: 1px;
+  margin-bottom: 2px;
 }
 
 .page.main > .assets > table td .button:hover {

@@ -13,9 +13,11 @@ export async function getChainBalance(address: string, chain: chain) {
   }
 }
 
-export async function getTokenBalances(address: string, chain: chain) {
+export async function getTokenBalances(address: string, chain: chain, is_all = false) {
   try {
-    const resp = await axios.get(`${host}/v1/user/token_list?id=${address}&chain_id=${chain}&is_all=true`.toLowerCase());
+    const resp = await axios.get(
+      `${host}/v1/user/token_list?id=${address}&chain_id=${chain}&is_all=${is_all}`.toLowerCase()
+    );
     const data = resp.data as ITokenBalance[];
     return data;
   } catch (error) {
