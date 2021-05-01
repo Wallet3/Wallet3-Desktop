@@ -15,6 +15,9 @@ const Keys = {
 
 export class NetworksVM {
   currentChainId: number = store.get(Keys.currentNetworkId) || 1;
+  get currentNetwork() {
+    return Networks.find((n) => n.chainId === this.currentChainId);
+  }
 
   constructor() {
     makeAutoObservable(this);

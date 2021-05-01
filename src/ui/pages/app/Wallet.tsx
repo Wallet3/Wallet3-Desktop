@@ -7,14 +7,13 @@ import React, { useState } from 'react';
 
 import { AccountVM } from '../../viewmodels/AccountVM';
 import AnimatedNumber from 'react-animated-number';
-import DAI from '../../../assets/icons/crypto/dai.svg';
-import ETH from '../../../assets/icons/crypto/eth.svg';
 import Feather from 'feather-icons-react';
 import HSBar from 'react-horizontal-stacked-bar-chart';
+import { ITokenBalance } from '../../../api/Debank';
 import { Line } from 'rc-progress';
 import NetworkLabel from '../../components/NetworkLabel';
 import Skeleton from 'react-loading-skeleton';
-import USDC from '../../../assets/icons/crypto/usdc.svg';
+import findIcon from '../../misc/Icons';
 import { formatNum } from '../../misc/Formatter';
 import { observer } from 'mobx-react-lite';
 
@@ -23,6 +22,19 @@ const menuItemStyle = {
 };
 
 export default observer(({ networksVM, accountVM }: { networksVM: NetworksVM; accountVM?: AccountVM }) => {
+  const rows = accountVM.tokens.length / 2;
+  const rowTokens: ITokenBalance[][] = [];
+
+  for (let i = 0; i < rows; i++) {
+    const row: ITokenBalance[] = [];
+    for (let j = 0; j < 2; j++) {
+      const token = accountVM.tokens[i * 2 + j];
+      if (token) row.push(token);
+    }
+
+    rowTokens.push(row);
+  }
+
   return (
     <div className="page main">
       <div className="utility-bar">
@@ -63,7 +75,7 @@ export default observer(({ networksVM, accountVM }: { networksVM: NetworksVM; ac
           {accountVM.netWorth === undefined ? (
             <Skeleton />
           ) : (
-            <AnimatedNumber component="text" value={accountVM.netWorth} duration={300} formatValue={(n) => formatNum(n)} />
+            <AnimatedNumber component="span" value={accountVM.netWorth} duration={300} formatValue={(n) => formatNum(n)} />
           )}
         </div>
 
@@ -92,37 +104,63 @@ export default observer(({ networksVM, accountVM }: { networksVM: NetworksVM; ac
 
         <table>
           <tbody>
-            <tr>
+            {rowTokens.map((row, i) => {
+              return (
+                <tr key={i}>
+                  {row.map((token, j) => {
+                    return (
+                      <td key={`${i}-${j}`}>
+                        <button>
+                          <div>
+                            <img className="token-icon" src={findIcon(token.symbol)} alt="" />
+                            <span className="symbol">{token.symbol}</span>
+                            <span></span>
+                            <span className="amount">{formatNum(token.amount, '')}</span>
+                          </div>
+                        </button>
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+            {/* <tr>
               <td>
-                <div>
-                  <img src={ETH} alt="" />
-                  <span>ETH</span>
-                  <span></span>
-                  <span>1.001</span>
-                </div>
+                <button>
+                  <div>
+                    <img src={ETH} alt="" />
+                    <span>ETH</span>
+                    <span></span>
+                    <span>1.001</span>
+                  </div>
+                </button>
               </td>
               <td>
-                <div>
-                  <img src={USDC} alt="" />
-                  <span>USDC</span>
-                  <span></span>
-                  <span>1,234,567.89</span>
-                </div>
+                <button>
+                  <div>
+                    <img src={USDC} alt="" />
+                    <span>USDC</span>
+                    <span></span>
+                    <span>1,234,567.89</span>
+                  </div>
+                </button>
               </td>
             </tr>
             <tr>
               <td>
-                <div>
-                  <img src={DAI} alt="" />
-                  <span>DAI</span>
-                  <span></span>
-                  <span>123.001</span>
-                </div>
+                <button>
+                  <div>
+                    <img src={DAI} alt="" />
+                    <span>DAI</span>
+                    <span></span>
+                    <span>123.001</span>
+                  </div>
+                </button>
               </td>
               <td>
                 <div></div>
               </td>
-            </tr>
+            </tr> */}
           </tbody>
         </table>
       </div>

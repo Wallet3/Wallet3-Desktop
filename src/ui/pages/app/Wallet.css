@@ -35,7 +35,7 @@
 }
 
 .page.main > .utility-bar > button.menu-button:hover {
-  color: var(--font-color);
+  color: var(--theme-color);
   background-color: var(--border-color);
 }
 
@@ -43,11 +43,6 @@
   color: var(--theme-color);
   margin-right: -2px;
 }
-
-/* .page.main > .utility-bar > button.icon-button:hover {
-  color: var(--theme-color-05);
-  opacity: 0.85;
-} */
 
 .page.main h3.title {
   font-size: 12px;
@@ -103,40 +98,49 @@
 }
 
 .page.main > .assets > table {
+  margin: 0 -12px;
   margin-top: 8px;
+  width: 100vw;
 }
 
 .page.main > .assets > table td {
   border: none;
-  cursor: pointer;
-  transition: all 0.3s;
+  padding: 0 5px;
 }
 
-.page.main > .assets > table td:hover {
-  color: var(--theme-color-05);
+.page.main > .assets > table td button {
+  border: none;
+  padding: 2px 7px;
+  padding-bottom: 1px;
+  margin-bottom: 1px;
 }
 
-.page.main > .assets > table td > div {
+.page.main > .assets > table td button:hover {
+  background-color: var(--border-color);
+  color: var(--theme-color);
+}
+
+.page.main > .assets > table td > button > div {
   overflow: hidden;
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 450;
   display: grid;
   column-gap: 4px;
   padding: 4px 0;
   grid-template-columns: auto auto 1fr auto;
-  margin-bottom: 6px;
 }
 
-.page.main > .assets > table td > div > img {
+.page.main > .assets > table td > button > div > img {
   width: 17px;
   height: 17px;
   display: inline-block;
   margin-right: 2px;
 }
 
-.page.main > .assets > table td:first-child div {
-  margin-right: 8px;
+.page.main > .assets > table td:first-child {
+  padding-right: 0px;
 }
 
-.page.main > .assets > table td:last-child div {
-  margin-left: 8px;
+.page.main > .assets > table td:last-child > {
+  padding-left: 0px;
 }

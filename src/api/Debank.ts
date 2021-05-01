@@ -1,11 +1,11 @@
 import axios from 'axios';
 
 const host = 'https://openapi.debank.com';
-type chain = 'eth' | 'bsc' | 'xdai' | 'matic';
+type chain = 'eth' | 'bsc' | 'xdai' | 'matic' | string;
 
 export async function getChainBalance(address: string, chain: chain) {
   try {
-    const resp = await axios.get(`${host}/v1/user/chain_balance?id=${address.toLowerCase()}&chain_id=${chain}`);
+    const resp = await axios.get(`${host}/v1/user/chain_balance?id=${address}&chain_id=${chain}`.toLowerCase());
     const data = resp.data as { usd_value: number };
     return data;
   } catch (error) {
@@ -15,7 +15,7 @@ export async function getChainBalance(address: string, chain: chain) {
 
 export async function getTokenBalances(address: string, chain: chain) {
   try {
-    const resp = await axios.get(`${host}/v1/user/token_list?id=${address.toLowerCase()}&chain_id=${chain}&is_all=false`);
+    const resp = await axios.get(`${host}/v1/user/token_list?id=${address}&chain_id=${chain}&is_all=false`.toLowerCase());
     const data = resp.data as ITokenBalance[];
     return data;
   } catch (error) {
@@ -23,9 +23,9 @@ export async function getTokenBalances(address: string, chain: chain) {
   }
 }
 
-export async function getTotalBalance(address: string) {
+export async function fetchChainsOverview(address: string) {
   try {
-    const resp = await axios.get(`${host}/v1/user/total_balance?id=${address.toLowerCase()}`);
+    const resp = await axios.get(`${host}/v1/user/total_balance?id=${address}`.toLowerCase());
     const data = resp.data as ITotalBalance;
     return data;
   } catch (error) {
