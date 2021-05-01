@@ -1,15 +1,17 @@
 import './Send.css';
 
 import { Menu, MenuButton, MenuItem } from '@szhsin/react-menu';
+import React, { useState } from 'react';
 
-import { AccountVM } from '../../viewmodels/AccountVM';
+import AnimatedNumber from 'react-animated-number';
 import { Application } from '../../viewmodels/Application';
 import Feather from 'feather-icons-react';
 import { NavBar } from '../../components';
-import React from 'react';
 import { ReactSearchAutocomplete } from 'react-search-autocomplete';
 import TokenLabel from '../../components/TokenLabel';
+import { TransferVM } from '../../viewmodels/TransferVM';
 import { WalletVM } from '../../viewmodels/WalletVM';
+import { formatNum } from '../../misc/Formatter';
 import { observer } from 'mobx-react-lite';
 
 const AddressSearchStyle = {
@@ -50,6 +52,9 @@ const items = [
 ];
 
 export default observer(({ app, walletVM }: { app: Application; walletVM: WalletVM }) => {
+  const [activeGas, setActiveGas] = useState(1);
+  const { transferVM } = walletVM.currentAccount;
+
   return (
     <div className="page send">
       <NavBar title="Send" onBackClick={() => app.history.goBack()} />
@@ -68,33 +73,33 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
 
         <div className="amount">
           <span>Amount:</span>
-          <input type="text" placeholder="1000" />
+          <input type="text" placeholder="1000" onChange={(e) => (transferVM.amount = e.target.value)} />
           <span className="symbol">ETH</span>
         </div>
 
         <div className="tokens">
           <span></span>
-          <span className="balance">Max: 2.223</span>
+          <span className="balance">
+            Max: <AnimatedNumber value={transferVM.selectedToken?.amount ?? 0} formatValue={(n) => formatNum(n, '')} />
+          </span>
           <Menu
             overflow="auto"
             styles={{ minWidth: '0', marginRight: '12px' }}
             menuButton={() => (
               <MenuButton className="menu-button">
-                <TokenLabel symbol="ETH" name="ETH" />
+                <TokenLabel symbol={transferVM.selectedToken?.symbol} name={transferVM.selectedToken?.symbol} />
               </MenuButton>
             )}
           >
             {walletVM.currentAccount?.tokens.map((t) => {
               return (
-                <MenuItem key={t.id} styles={{ padding: '0.375rem 1rem' }}>
+                <MenuItem key={t.id} styles={{ padding: '0.375rem 1rem' }} onClick={(_) => transferVM.setToken(t)}>
                   <TokenLabel symbol={t.symbol} name={t.display_symbol || t.symbol} expand />
                 </MenuItem>
               );
             })}
           </Menu>
         </div>
-
-        {/* <div></div> */}
 
         <div className="amount">
           <span>Gas:</span>
@@ -109,30 +114,36 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
         </div>
 
         <div className="gas">
-          <div>
+          <div className={`${activeGas === 0 ? 'active' : ''}`} onClick={(_) => setActiveGas(0)}>
             <span>Rapid</span>
-            <span style={{ color: '#2ecc71' }}>37 Gwei</span>
+            <span style={{ color: '#2ecc71' }}>
+              <AnimatedNumber value={37} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
+            </span>
           </div>
 
           <div className="separator" />
 
-          <div>
+          <div className={`${activeGas === 1 ? 'active' : ''}`} onClick={(_) => setActiveGas(1)}>
             <span>Fast</span>
-            <span style={{ color: 'orange' }}>32 Gwei</span>
+            <span style={{ color: 'orange' }}>
+              <AnimatedNumber value={32} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
+            </span>
           </div>
 
           <div className="separator" />
 
-          <div>
+          <div className={`${activeGas === 2 ? 'active' : ''}`} onClick={(_) => setActiveGas(2)}>
             <span>Standard</span>
-            <span style={{ color: 'deepskyblue' }}>27 Gwei</span>
+            <span style={{ color: 'deepskyblue' }}>
+              <AnimatedNumber value={27} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
+            </span>
           </div>
 
           <div className="separator" />
 
-          <div>
+          <div className={`${activeGas === 3 ? 'active' : ''}`} onClick={(_) => setActiveGas(3)}>
             <span>Cust.</span>
-            <input type="text" placeholder="20" />
+            <input type="text" placeholder="20" onClick={(_) => setActiveGas(3)} />
           </div>
         </div>
       </div>

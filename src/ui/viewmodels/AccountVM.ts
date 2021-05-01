@@ -4,6 +4,8 @@ import * as Zapper from '../../api/Zapper';
 import NetVM, { Networks } from './NetworksVM';
 import { autorun, makeAutoObservable, reaction, runInAction, when } from 'mobx';
 
+import { TransferVM } from './TransferVM';
+
 interface IArgs {
   address: string;
 }
@@ -29,7 +31,7 @@ export class AccountVM {
     return usd;
   }
 
-  get chainsOverview() {
+  get chainsOverview(): ChainOverview[] {
     return this.chains.map((chain) => {
       const network = Networks.find((n) => n.symbol.toLowerCase() === chain.id);
       return {
@@ -42,6 +44,11 @@ export class AccountVM {
 
   get chainTokens() {
     return this.tokens.filter((t) => t?.is_wallet && t?.chain === NetVM.currentNetwork.symbol.toLowerCase());
+  }
+
+  private _transferVM: TransferVM;
+  get transferVM() {
+    return this._transferVM ?? (this._transferVM = new TransferVM(this));
   }
 
   constructor(args: IArgs) {

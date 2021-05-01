@@ -3,12 +3,6 @@
   grid-template-rows: auto 1fr auto;
 }
 
-.page.send > .form {
-  /* display: grid; */
-  grid-template-rows: auto auto auto auto auto 1fr;
-  padding-bottom: 24px;
-}
-
 .page.send > .form > .to {
   position: relative;
   height: 35px;
@@ -132,6 +126,7 @@
 .page.send > .form > .gas > .separator {
   width: 1px;
   background: var(--border-color);
+  opacity: 1;
   height: 100%;
 }
 
@@ -157,8 +152,3 @@
 .page.send > .form > .gas > div.active {
   opacity: 1;
 }
-/* 
-.page.send > .form > .gas {
-  position: relative;
-  margin-top: 12px;
-} */
