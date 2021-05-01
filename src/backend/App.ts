@@ -13,8 +13,6 @@ const AppKeys = {
 class App {
   touchIDSupported = false;
   hasMnemonic = false;
-  // ipcSecureKey: Buffer;
-  // ipcSecureIv: Buffer;
   userPassword?: string; // keep password in memory for TouchID users
   ipcs = new Map<string, { iv: Buffer; key: Buffer }>();
 

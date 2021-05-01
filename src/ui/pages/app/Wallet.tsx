@@ -110,11 +110,11 @@ export default observer(({ networksVM, accountVM }: { networksVM: NetworksVM; ac
                           <Link
                             className="button"
                             to={`/send?token=${token.id}`}
-                            title={`${token.symbol}: $${token.amount * token.price}`}
+                            title={`${token.display_symbol || token.symbol}: $${token.amount * token.price}`}
                           >
                             <div>
-                              <img className="token-icon" src={findIcon(token.symbol)} alt="" />
-                              <span className="symbol">{token.symbol}</span>
+                              <img className="token-icon" src={findIcon(token.display_symbol || token.symbol)} alt="" />
+                              <span className="symbol">{token.display_symbol || token.symbol}</span>
                               <span></span>
                               <span className="amount">{formatNum(token.amount, '')}</span>
                             </div>

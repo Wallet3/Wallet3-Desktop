@@ -87,14 +87,17 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
             styles={{ minWidth: '0', marginRight: '12px' }}
             menuButton={() => (
               <MenuButton className="menu-button">
-                <TokenLabel symbol={transferVM.selectedToken?.symbol} name={transferVM.selectedToken?.symbol} />
+                <TokenLabel
+                  symbol={transferVM.selectedToken?.display_symbol || transferVM.selectedToken?.symbol}
+                  name={transferVM.selectedToken?.display_symbol || transferVM.selectedToken?.symbol}
+                />
               </MenuButton>
             )}
           >
             {walletVM.currentAccount?.tokens.map((t) => {
               return (
                 <MenuItem key={t.id} styles={{ padding: '0.375rem 1rem' }} onClick={(_) => transferVM.setToken(t)}>
-                  <TokenLabel symbol={t.symbol} name={t.display_symbol || t.symbol} expand />
+                  <TokenLabel symbol={t.display_symbol || t.symbol} name={t.display_symbol || t.symbol} expand />
                 </MenuItem>
               );
             })}
