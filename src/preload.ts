@@ -4,6 +4,7 @@ import { IpcRendererEvent, contextBridge, ipcRenderer } from 'electron';
 import { decrypt, encrypt } from './common/Cipher';
 
 import IPCKeys from './common/Messages';
+import Messages from './common/Messages';
 
 const ipcSecureIv = crypto.randomBytes(16);
 const windowId = crypto.randomBytes(4).toString('hex');
@@ -41,6 +42,10 @@ export class ContextBridgeApi {
   on = (channel: string, listener: (event: IpcRendererEvent, ...arg: any[]) => void) => {
     ipcRenderer.on(channel, listener);
   };
+
+  once = (channel: string, listener: (event: IpcRendererEvent, ...arg: any[]) => void) => {
+    ipcRenderer.once(channel, listener);
+  };
 }
 
 contextBridge.exposeInMainWorld(ContextBridgeApi.API_KEY, new ContextBridgeApi());
@@ -56,3 +61,9 @@ export class CryptoApi {
 contextBridge.exposeInMainWorld(CryptoApi.API_KEY, new CryptoApi());
 
 initSecureContext();
+
+// (function initMessage() {
+//   ipcRenderer.on(Messages.initWindowType, (e, args) => {
+//     console.log(Messages.initWindowType, args);
+//   });
+// })();

@@ -28,7 +28,7 @@ class App {
 
     KeyMan.init();
 
-    ipcMain.handleOnce(MessageKeys.exchangeDHKey, (e, dh) => {
+    ipcMain.handle(MessageKeys.exchangeDHKey, (e, dh) => {
       const { rendererEcdhKey, ipcSecureIv, windowId } = dh;
 
       const ecdh = createECDH('secp521r1');
@@ -132,14 +132,13 @@ class App {
   };
 
   createPopupWindow(type: PopupWindowTypes, args: any) {
-    // Create the browser window.
     const poupWindow = new BrowserWindow({
       height: 540,
       width: 360,
       minWidth: 360,
       minHeight: 540,
       frame: false,
-      titleBarStyle: 'hiddenInset',
+      alwaysOnTop: true,
       webPreferences: {
         preload: POPUP_WINDOW_PRELOAD_WEBPACK_ENTRY,
         contextIsolation: true,
@@ -150,7 +149,7 @@ class App {
 
     poupWindow.loadURL(POPUP_WINDOW_WEBPACK_ENTRY);
 
-    return new Promise(() => (resolve) => {
+    return new Promise<void>((resolve) => {
       poupWindow.webContents.once('did-finish-load', () => {
         poupWindow.webContents.send(MessageKeys.initWindowType, { type, args });
         resolve();

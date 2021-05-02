@@ -2,6 +2,8 @@ import './backend/App';
 
 import { BrowserWindow, app } from 'electron';
 
+import App from './backend/App';
+
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
@@ -31,6 +33,8 @@ const createWindow = async (): Promise<void> => {
 
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+
+  await App.createPopupWindow('sendTx', { to: '' });
 };
 
 // This method will be called when Electron has finished

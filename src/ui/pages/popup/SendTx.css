@@ -1,0 +1,6 @@
+.page.tx > .title {
+  border-bottom: 1px solid var(--border-color);
+  padding: 8px 0;
+  display: flex;
+  justify-content: flex-end;
+}

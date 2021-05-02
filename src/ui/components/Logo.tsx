@@ -10,7 +10,7 @@ interface Props {
 
 export default (props: Props) => {
   return (
-    <svg width={props.width ?? 128} height={props.height ?? 72} viewBox="0 0 353.901 72" xmlns="http://www.w3.org/2000/svg">
+    <svg width={props.width} height={props.height} viewBox="0 0 353.901 72" xmlns="http://www.w3.org/2000/svg">
       <g id="svgGroup" strokeLinecap="round" fillRule="evenodd" fill="#6186ff" {...props}>
         <path
           d="M 29.1 70 L 20.6 70 L 0 3.8 L 7.9 3.8 L 24.9 59.4 L 42.7 3.8 L 51.3 3.8 L 69.1 59.4 L 86.1 3.8 L 94 3.8 L 73.4 70 L 64.9 70 L 47 14.4 L 29.1 70 Z"

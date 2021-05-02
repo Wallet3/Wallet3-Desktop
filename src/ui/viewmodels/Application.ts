@@ -1,10 +1,10 @@
-import { History, createBrowserHistory } from 'history';
 import MessageKeys, { InitStatus, InitVerifyPassword } from '../../common/Messages';
-import { action, computed, flow, makeAutoObservable, makeObservable, runInAction } from 'mobx';
 
 import WalletVM from './WalletVM';
+import { createBrowserHistory } from 'history';
 import crypto from '../ipc/Crypto';
 import ipc from '../ipc/Bridge';
+import { makeAutoObservable } from 'mobx';
 import store from 'storejs';
 
 export class Application {
