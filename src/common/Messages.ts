@@ -8,8 +8,10 @@ export default {
   initVerifyPassword: 'msg-init-verify-password',
   promptTouchID: 'msg-prompt-touchid',
   resetSystem: 'msg-reset-system',
-
+  createSendTx: 'msg-create-send-tx',
   fetchAddresses: 'msg-fetch-addresses',
+
+  initWindowType: 'msg-init-window-type',
 };
 
 export interface InitStatus {
@@ -31,3 +33,14 @@ export interface SetupMnemonic {
   success: boolean;
   addresses: string[];
 }
+
+export interface CreateSendTx {
+  to: string;
+  value: string;
+  gas: number;
+  gasPrice: number;
+  nonce: number;
+  data: string;
+}
+
+export type PopupWindowTypes = 'connect' | 'signature' | 'approve' | 'sendTx';

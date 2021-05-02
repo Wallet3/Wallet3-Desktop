@@ -189,7 +189,9 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
         </div>
       </div>
 
-      <button disabled={!transferVM.isValid}>Send</button>
+      <button disabled={!transferVM.isValid} onClick={(_) => transferVM.sendTx()}>
+        Send
+      </button>
     </div>
   );
 });

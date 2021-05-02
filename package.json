@@ -58,6 +58,14 @@
                   "preload": {
                     "js": "./src/preload.ts"
                   }
+                },
+                {
+                  "html": "./src/index.html",
+                  "js": "./src/popup_renderer.ts",
+                  "name": "popup_window",
+                  "preload": {
+                    "js": "./src/preload.ts"
+                  }
                 }
               ]
             }

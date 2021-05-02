@@ -1,10 +1,12 @@
+import { GasnowHttp, GasnowWs } from '../../api/Gasnow';
+import Messages, { CreateSendTx } from '../../common/Messages';
 import { makeAutoObservable, reaction, runInAction } from 'mobx';
 
 import { AccountVM } from './AccountVM';
 import ERC20ABI from '../../abis/ERC20.json';
-import { GasnowHttp } from '../../api/Gasnow';
 import { ITokenBalance } from '../../api/Debank';
 import { ethers } from 'ethers';
+import ipc from '../ipc/Bridge';
 import { parseUnits } from 'ethers/lib/utils';
 import provider from '../../common/Provider';
 
@@ -22,7 +24,7 @@ export class TransferVM {
 
   get isValid() {
     try {
-      const validAmount = parseUnits(this.amount || '0', this.selectedToken?.decimals ?? 18).lte(
+      const validAmount = this.amountBigInt.lte(
         parseUnits(this.selectedToken?.amount.toString() ?? '0', this.selectedToken?.decimals ?? 18)
       );
 
@@ -38,6 +40,14 @@ export class TransferVM {
     } catch (error) {
       return false;
     }
+  }
+
+  get isERC20() {
+    return this.selectedToken?.id.startsWith('0x') ?? false;
+  }
+
+  get amountBigInt() {
+    return parseUnits(this.amount || '0', this.selectedToken?.decimals ?? 18);
   }
 
   selectedToken: ITokenBalance = null;
@@ -109,7 +119,7 @@ export class TransferVM {
     this.amount = amount;
   }
 
-  initGasPrice() {
+  private initGasPrice() {
     GasnowHttp.refresh().then(({ fast, rapid, standard }) => {
       runInAction(() => {
         this.fast = fast;
@@ -120,19 +130,19 @@ export class TransferVM {
     });
   }
 
-  initNonce() {
+  private initNonce() {
     provider.getTransactionCount(this.self).then((nonce) => {
       runInAction(() => (this.nonce = nonce));
     });
   }
 
-  estimateGas() {
+  private estimateGas() {
     if (!this.selectToken) {
       this.gas = 21000;
       return;
     }
 
-    if (!this.selectedToken.id.startsWith('0x')) {
+    if (!this.isERC20) {
       this.gas = 21000;
       return;
     }
@@ -142,10 +152,26 @@ export class TransferVM {
     erc20.estimateGas
       .transferFrom(this.self, this.receiptAddress || '0xD1b05E3AFEDcb11F29c5A560D098170bE26Fe5f5', amt)
       .then((v) => {
-        runInAction(() => (this.gas = Number.parseInt((v.toNumber() * 1.5) as any)));
+        runInAction(() => (this.gas = Number.parseInt((v.toNumber() * 2) as any)));
       })
       .catch(() => {
-        runInAction(() => (this.gas = 100_000));
+        runInAction(() => (this.gas = 150_000));
       });
+  }
+
+  async sendTx() {
+    const value = this.isERC20 ? 0 : this.amountBigInt.toString();
+
+    const iface = new ethers.utils.Interface(ERC20ABI);
+    const data = this.isERC20 ? '0x' : iface.encodeFunctionData('transfer', [this.receiptAddress, value]);
+
+    await ipc.invokeSecure<void>(Messages.createSendTx, {
+      to: this.receiptAddress,
+      value,
+      gas: this.gas,
+      gasPrice: this.gasPrice * GasnowWs.gwei_1,
+      nonce: this.nonce,
+      data,
+    } as CreateSendTx);
   }
 }

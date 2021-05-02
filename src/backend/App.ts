@@ -1,10 +1,13 @@
 import * as Cipher from '../common/Cipher';
 
-import { ipcMain, systemPreferences } from 'electron';
+import { BrowserWindow, ipcMain, systemPreferences } from 'electron';
+import MessageKeys, { CreateSendTx, PopupWindowTypes } from '../common/Messages';
 
 import KeyMan from './KeyMan';
-import MessageKeys from '../common/Messages';
 import { createECDH } from 'crypto';
+
+declare const POPUP_WINDOW_WEBPACK_ENTRY: string;
+declare const POPUP_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
 const AppKeys = {
   hasMnemonic: 'has-mnemonic',
@@ -107,6 +110,8 @@ class App {
     ipcMain.handle(`${MessageKeys.fetchAddresses}-secure`, (e, encrypted) => {
       KeyMan;
     });
+
+    this.initPopupHandlers();
   }
 
   decryptIpc = (encrypted: string, iv: Buffer, key: Buffer) => {
@@ -117,6 +122,41 @@ class App {
   encryptIpc = (obj: any, iv: Buffer, key: Buffer) => {
     return Cipher.encrypt(iv, JSON.stringify(obj), key);
   };
+
+  initPopupHandlers = () => {
+    ipcMain.handle(`${MessageKeys.createSendTx}-secure`, async (e, encrypted, winId) => {
+      const { iv, key } = this.ipcs.get(winId);
+      const params: CreateSendTx = this.decryptIpc(encrypted, iv, key);
+      await this.createPopupWindow('sendTx', params);
+    });
+  };
+
+  createPopupWindow(type: PopupWindowTypes, args: any) {
+    // Create the browser window.
+    const poupWindow = new BrowserWindow({
+      height: 540,
+      width: 360,
+      minWidth: 360,
+      minHeight: 540,
+      frame: false,
+      titleBarStyle: 'hiddenInset',
+      webPreferences: {
+        preload: POPUP_WINDOW_PRELOAD_WEBPACK_ENTRY,
+        contextIsolation: true,
+        nodeIntegration: false,
+        webSecurity: true,
+      },
+    });
+
+    poupWindow.loadURL(POPUP_WINDOW_WEBPACK_ENTRY);
+
+    return new Promise(() => (resolve) => {
+      poupWindow.webContents.once('did-finish-load', () => {
+        poupWindow.webContents.send(MessageKeys.initWindowType, { type, args });
+        resolve();
+      });
+    });
+  }
 }
 
 export default new App();
