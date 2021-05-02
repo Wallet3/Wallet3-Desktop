@@ -1,0 +1,15 @@
+.page.tx {
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.page.tx > .details {
+  display: grid;
+  grid-template-rows: 1fr auto;
+}
+
+.page.tx > .details > .actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 8px;
+}

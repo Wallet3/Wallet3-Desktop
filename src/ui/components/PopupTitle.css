@@ -1,4 +1,4 @@
-.page.tx > .title {
+.pop-title {
   border-bottom: 1px solid var(--border-color);
   padding: 8px 0;
   display: flex;

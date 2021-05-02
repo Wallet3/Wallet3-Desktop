@@ -18,6 +18,7 @@ class App {
   hasMnemonic = false;
   userPassword?: string; // keep password in memory for TouchID users
   ipcs = new Map<string, { iv: Buffer; key: Buffer }>();
+  mainWindow?: BrowserWindow;
 
   constructor() {
     this.touchIDSupported = systemPreferences.canPromptTouchID();
@@ -127,16 +128,19 @@ class App {
     ipcMain.handle(`${MessageKeys.createSendTx}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.ipcs.get(winId);
       const params: CreateSendTx = this.decryptIpc(encrypted, iv, key);
-      await this.createPopupWindow('sendTx', params);
+      await this.createPopupWindow('sendTx', params, true, this.mainWindow);
     });
   };
 
-  createPopupWindow(type: PopupWindowTypes, args: any) {
-    const poupWindow = new BrowserWindow({
-      height: 540,
+  createPopupWindow(type: PopupWindowTypes, args: any, modal = false, parent?: BrowserWindow) {
+    const popup = new BrowserWindow({
       width: 360,
       minWidth: 360,
-      minHeight: 540,
+      height: 300,
+      minHeight: 300,
+      modal,
+      parent,
+      show: false,
       frame: false,
       alwaysOnTop: true,
       webPreferences: {
@@ -144,14 +148,16 @@ class App {
         contextIsolation: true,
         nodeIntegration: false,
         webSecurity: true,
+        enableRemoteModule: true,
       },
     });
 
-    poupWindow.loadURL(POPUP_WINDOW_WEBPACK_ENTRY);
+    popup.loadURL(POPUP_WINDOW_WEBPACK_ENTRY);
+    popup.once('ready-to-show', () => popup.show());
 
     return new Promise<void>((resolve) => {
-      poupWindow.webContents.once('did-finish-load', () => {
-        poupWindow.webContents.send(MessageKeys.initWindowType, { type, args });
+      popup.webContents.once('did-finish-load', () => {
+        popup.webContents.send(MessageKeys.initWindowType, { type, args });
         resolve();
       });
     });

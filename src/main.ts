@@ -1,5 +1,3 @@
-import './backend/App';
-
 import { BrowserWindow, app } from 'electron';
 
 import App from './backend/App';
@@ -27,14 +25,16 @@ const createWindow = async (): Promise<void> => {
       contextIsolation: true,
       nodeIntegration: false,
       webSecurity: true,
+      enableRemoteModule: true,
     },
     // transparent: true,
   });
 
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  App.mainWindow = mainWindow;
 
-  await App.createPopupWindow('sendTx', { to: '' });
+  // await App.createPopupWindow('sendTx', { to: '' });
 };
 
 // This method will be called when Electron has finished

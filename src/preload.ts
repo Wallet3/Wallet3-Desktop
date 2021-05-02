@@ -1,6 +1,6 @@
 import * as crypto from 'crypto';
 
-import { IpcRendererEvent, contextBridge, ipcRenderer } from 'electron';
+import { IpcRendererEvent, contextBridge, ipcRenderer, remote } from 'electron';
 import { decrypt, encrypt } from './common/Cipher';
 
 import IPCKeys from './common/Messages';
@@ -22,6 +22,8 @@ async function initSecureContext() {
 
   ipcSecureKey = ecdh.computeSecret(mainKey);
 }
+
+initSecureContext();
 
 export class ContextBridgeApi {
   static readonly API_KEY = 'wallet3_ipc';
@@ -60,10 +62,12 @@ export class CryptoApi {
 
 contextBridge.exposeInMainWorld(CryptoApi.API_KEY, new CryptoApi());
 
-initSecureContext();
+export class WindowApi {
+  static readonly API_KEY = 'wallet3_window';
 
-// (function initMessage() {
-//   ipcRenderer.on(Messages.initWindowType, (e, args) => {
-//     console.log(Messages.initWindowType, args);
-//   });
-// })();
+  close = () => {
+    remote.getCurrentWindow().close();
+  };
+}
+
+contextBridge.exposeInMainWorld(WindowApi.API_KEY, new WindowApi());
