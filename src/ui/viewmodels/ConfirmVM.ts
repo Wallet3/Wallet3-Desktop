@@ -1,0 +1,82 @@
+import Gasnow, { GasnowWs } from '../../api/Gasnow';
+
+import { CreateSendTx } from '../../common/Messages';
+import { makeAutoObservable } from 'mobx';
+import { parseUnits } from '@ethersproject/units';
+import { utils } from 'ethers';
+
+export class ConfirmVM {
+  args: CreateSendTx;
+
+  constructor(args: CreateSendTx) {
+    makeAutoObservable(this);
+
+    this.args = args;
+    this._gas = args.gas;
+    this._gasPrice = args.gasPrice / GasnowWs.gwei_1;
+    this._nonce = args.nonce;
+  }
+
+  get receipt() {
+    return this.args.receipt?.name ?? this.args.receipt?.address ?? this.args.to;
+  }
+
+  get receiptAddress() {
+    return this.args.receipt.address || this.args.to;
+  }
+
+  get amount() {
+    return utils.formatUnits(this.args.value || this.args.token.amount, this.args.token.decimals);
+  }
+
+  private _gas = 0;
+  get gas() {
+    return this._gas;
+  }
+
+  private _gasPrice = 0;
+  get gasPrice() {
+    return this._gasPrice;
+  }
+
+  get tokenSymbol() {
+    return this.args.token.symbol;
+  }
+
+  private _nonce = -1;
+  get nonce() {
+    return this._nonce;
+  }
+
+  get maxFee() {
+    return utils.formatEther((BigInt(this.args.gasPrice) * BigInt(this.args.gas)).toString());
+  }
+
+  get insufficientFee() {
+    return parseUnits(`${this.args.nativeToken?.amount ?? 0}`, this.args.nativeToken?.decimals).lt(
+      (BigInt(this.gasPrice * GasnowWs.gwei_1) * BigInt(this.gas)).toString()
+    );
+  }
+
+  get isValid() {
+    return this.gas >= 21000 && this.gas <= 12_500_000 && this.gasPrice > 0 && this.nonce >= 0;
+  }
+
+  setGasPrice(value: string) {
+    const price = Number.parseFloat(value);
+    this._gasPrice = price;
+    this.args.gasPrice = price * GasnowWs.gwei_1;
+  }
+
+  setGas(value: string) {
+    const max = Number.parseInt(value);
+    this.args.gas = max;
+    this._gas = max;
+  }
+
+  setNonce(value: string) {
+    const nonce = Number.parseInt(value);
+    this._nonce = nonce;
+    this.args.nonce = nonce;
+  }
+}

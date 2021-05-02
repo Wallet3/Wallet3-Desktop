@@ -22,6 +22,8 @@ export class AccountVM {
   tokens: Debank.ITokenBalance[] = [];
   chains: Debank.IChainBalance[] = [];
 
+  nativeToken: Debank.ITokenBalance;
+
   get netWorth() {
     const usd = this.chains.find((c) => c.community_id === NetVM.currentChainId)?.usd_value;
     if (this.chains.length > 0 && usd === undefined) {
@@ -88,7 +90,10 @@ export class AccountVM {
         .sort((a, b) => b.amount * b.price - a.amount * a.price);
 
       const nativeToken = tokens.find((t) => nativeSymbols.includes(t.id));
-      if (nativeToken) assets.unshift(nativeToken);
+      if (nativeToken) {
+        assets.unshift(nativeToken);
+        this.nativeToken = nativeToken;
+      }
 
       runInAction(() => (this.tokens = assets));
     });

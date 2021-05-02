@@ -8,7 +8,7 @@ import MainLayout from './pages/layouts/MainLayout';
 import { MnemonicVM } from './viewmodels/MnemonicVM';
 import { NetworksVM } from './viewmodels/NetworksVM';
 import React from 'react';
-import { Send } from './pages/app';
+import { Transfer } from './pages/app';
 import { WalletVM } from './viewmodels/WalletVM';
 import { observer } from 'mobx-react-lite';
 
@@ -36,7 +36,7 @@ export default observer((args: { app: Application; mnVM: MnemonicVM; networksVM:
             <MainLayout {...args} />
           </Route>
           <Route path="/send">
-            <Send {...args} />
+            <Transfer {...args} />
           </Route>
 
           <Route path="*" component={Blank} />

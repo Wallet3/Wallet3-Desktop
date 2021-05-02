@@ -12,6 +12,7 @@
 .page.tx > .details > .form > div {
   display: flex;
   justify-content: space-between;
+  align-items: flex-end;
   overflow: hidden;
   max-width: 100%;
   box-sizing: border-box;
@@ -26,6 +27,32 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 50vw;
+}
+
+.page.tx > .details > .form > div img {
+  width: 12px;
+  margin-left: 2px;
+}
+
+.page.tx > .details > .form > div > div {
+  display: flex;
+  align-items: flex-end;
+}
+.page.tx > .details > .form > div input {
+  padding: 0;
+  margin: 0 0px;
+  margin-bottom: -1px;
+  width: 72px;
+  border: none;
+  background: none;
+  outline: none;
+  font-size: 16px;
+  font-weight: 100;
+  text-align: end;
+}
+
+.page.tx > .details > .form > div > div span {
+  margin-left: 4px;
 }
 
 .page.tx > .details > .actions {

@@ -1,4 +1,4 @@
-import './Send.css';
+import './Transfer.css';
 
 import { Menu, MenuButton, MenuItem } from '@szhsin/react-menu';
 import React, { useEffect, useRef, useState } from 'react';
@@ -42,7 +42,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
 
   return (
     <div className="page send">
-      <NavBar title="Send" onBackClick={() => app.history.goBack()} />
+      <NavBar title="Transfer" onBackClick={() => app.history.goBack()} />
 
       <div className="form">
         <div className="to">
@@ -73,7 +73,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
             className="balance"
             onClick={(_) => {
               amountInput.current.value = transferVM.selectedToken.amount.toString();
-              transferVM.amount = transferVM.selectedToken.amount.toString();
+              transferVM.setAmount(transferVM.selectedToken.amount.toString());
             }}
           >
             Max: <AnimatedNumber value={transferVM.selectedToken?.amount ?? 0} formatValue={(n) => formatNum(n, '')} />
@@ -183,14 +183,14 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
                 setActiveGas(3);
                 transferVM.setGasPrice(gasInput.current.valueAsNumber);
               }}
-              onChange={(e) => transferVM.setGasPrice(Number.parseInt(e.target.value))}
+              onChange={(e) => transferVM.setGasPrice(Number.parseInt(e.target.value) || 0)}
             />
           </div>
         </div>
       </div>
 
-      <button disabled={!transferVM.isValid} onClick={(_) => transferVM.sendTx()}>
-        Send
+      <button disabled={!transferVM.isValid || transferVM.insufficientFee} onClick={(_) => transferVM.sendTx()}>
+        {transferVM.insufficientFee ? 'INSUFFICIENT FEE' : 'Send'}
       </button>
     </div>
   );

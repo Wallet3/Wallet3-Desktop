@@ -46,6 +46,7 @@ export interface CreateSendTx {
     name?: string;
   };
   token: { symbol: string; decimals: number; amount: string };
+  nativeToken?: { amount: number; decimals: number };
 }
 
 export type PopupWindowTypes = 'connect' | 'signature' | 'sendTx';

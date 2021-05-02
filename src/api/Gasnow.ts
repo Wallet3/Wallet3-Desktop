@@ -11,10 +11,10 @@ export class GasnowHttp {
       const { fast, rapid, standard, slow } = resp.data?.data;
 
       return {
-        fast: fast / GasnowWs.gwei_1,
-        rapid: rapid / GasnowWs.gwei_1,
-        standard: standard / GasnowWs.gwei_1,
-        slow: standard / GasnowWs.gwei_1,
+        fast: Number.parseInt((fast / GasnowWs.gwei_1) as any),
+        rapid: Number.parseInt((rapid / GasnowWs.gwei_1) as any),
+        standard: Number.parseInt((standard / GasnowWs.gwei_1) as any),
+        slow: Number.parseInt((slow / GasnowWs.gwei_1) as any),
       };
     } catch (error) {
       return {
@@ -40,19 +40,19 @@ export class GasnowWs {
   slow = GasnowWs.gwei_1;
 
   get rapidGwei() {
-    return this.rapid / GasnowWs.gwei_1;
+    return Number.parseInt((this.rapid / GasnowWs.gwei_1) as any);
   }
 
   get fastGwei() {
-    return this.fast / GasnowWs.gwei_1;
+    return Number.parseInt((this.fast / GasnowWs.gwei_1) as any);
   }
 
   get standardGwei() {
-    return this.standard / GasnowWs.gwei_1;
+    return Number.parseInt((this.standard / GasnowWs.gwei_1) as any);
   }
 
   get slowGwei() {
-    return this.slow / GasnowWs.gwei_1;
+    return Number.parseInt((this.slow / GasnowWs.gwei_1) as any);
   }
 
   constructor() {

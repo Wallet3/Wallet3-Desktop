@@ -1,13 +1,13 @@
 import { GasnowHttp, GasnowWs } from '../../api/Gasnow';
 import Messages, { CreateSendTx } from '../../common/Messages';
 import { makeAutoObservable, reaction, runInAction } from 'mobx';
+import { parseEther, parseUnits } from 'ethers/lib/utils';
 
 import { AccountVM } from './AccountVM';
 import ERC20ABI from '../../abis/ERC20.json';
 import { ITokenBalance } from '../../api/Debank';
 import { ethers } from 'ethers';
 import ipc from '../ipc/Bridge';
-import { parseUnits } from 'ethers/lib/utils';
 import provider from '../../common/Provider';
 
 export class TransferVM {
@@ -40,6 +40,12 @@ export class TransferVM {
     } catch (error) {
       return false;
     }
+  }
+
+  get insufficientFee() {
+    const maxFee = BigInt(this.gasPrice || 0) * BigInt(this.gas || 0);
+    const balance = parseEther(this._accountVM?.nativeToken?.amount.toString() || '0');
+    return balance.lt(maxFee.toString());
   }
 
   get isERC20() {
@@ -188,6 +194,8 @@ export class TransferVM {
         symbol: this.selectedToken.display_symbol || this.selectedToken.symbol,
         decimals: this.selectedToken.decimals,
       },
+
+      nativeToken: this._accountVM.nativeToken,
     } as CreateSendTx);
   }
 }

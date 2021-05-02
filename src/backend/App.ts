@@ -136,8 +136,8 @@ class App {
     const popup = new BrowserWindow({
       width: 360,
       minWidth: 360,
-      height: 300,
-      minHeight: 300,
+      height: 315,
+      minHeight: 315,
       modal,
       parent,
       show: false,

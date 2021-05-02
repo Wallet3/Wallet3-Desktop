@@ -1,5 +1,5 @@
-import Send from './Send';
 import Settings from './Settings';
+import Transfer from './Transfer';
 import Wallet from './Wallet';
 
-export { Wallet, Settings, Send };
+export { Wallet, Settings, Transfer };
