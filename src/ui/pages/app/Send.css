@@ -3,6 +3,10 @@
   grid-template-rows: auto 1fr auto;
 }
 
+.page.send > .form {
+  position: relative;
+}
+
 .page.send > .form > .to {
   position: relative;
   height: 35px;
@@ -15,6 +19,7 @@
   bottom: 10px;
   width: 62px;
   text-align: end;
+  opacity: 0.45;
 }
 
 .page.send > .form > .to > svg {
@@ -42,6 +47,15 @@
   border: 1px solid var(--border-color);
   border-top: none;
   padding-bottom: 0;
+}
+
+.page.send > .form > .ens-resolve {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 8px !important;
+  position: fixed;
+  right: 12px;
+  opacity: 0.5;
 }
 
 .page.send > .form input {
@@ -74,6 +88,7 @@
   width: 62px;
   bottom: 8px;
   text-align: end;
+  opacity: 0.45;
 }
 
 .page.send > .form > .amount > span:last-child {
@@ -132,6 +147,7 @@
 
 .page.send > .form > .gas > div > span:first-child {
   margin-bottom: 8px;
+  font-size: 12px;
 }
 
 .page.send > .form > .gas > div > span:last-child {

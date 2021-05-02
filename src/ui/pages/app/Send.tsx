@@ -29,33 +29,11 @@ const AddressSearchStyle = {
   placeholderColor: '#d0d0d0',
 };
 
-const items = [
-  {
-    id: 0,
-    name: 'Cobol',
-  },
-  {
-    id: 1,
-    name: 'JavaScript',
-  },
-  {
-    id: 2,
-    name: 'Basic',
-  },
-  {
-    id: 3,
-    name: 'PHP',
-  },
-  {
-    id: 4,
-    name: 'Java',
-  },
-];
-
 export default observer(({ app, walletVM }: { app: Application; walletVM: WalletVM }) => {
   const [activeGas, setActiveGas] = useState(1);
   const { transferVM } = walletVM.currentAccount;
   const amountInput = useRef<HTMLInputElement>();
+  const gasInput = useRef<HTMLInputElement>();
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -70,13 +48,18 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
         <div className="to">
           <span>To:</span>
           <ReactSearchAutocomplete
-            items={items}
             showIcon={false}
+            inputDebounce={500}
+            items={transferVM.receipts}
             styling={AddressSearchStyle}
-            placeholder="Receipt Address"
+            placeholder="Receipt Address or ENS"
+            onSearch={(s, r) => transferVM.setReceipt(s)}
+            onSelect={(item) => transferVM.setReceipt(item.name)}
           />
           <Feather icon="edit" size={15} strokeWidth={2} className="edit-icon" />
         </div>
+
+        {transferVM.isEns ? <div className="ens-resolve">{transferVM.address}</div> : undefined}
 
         <div className="amount">
           <span>Amount:</span>
@@ -195,16 +178,20 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
           <div className={`${activeGas === 3 ? 'active' : ''}`} onClick={(_) => setActiveGas(3)}>
             <span>Cust.</span>
             <input
+              ref={gasInput}
               type="text"
               placeholder="20"
-              onClick={(_) => setActiveGas(3)}
+              onClick={(_) => {
+                setActiveGas(3);
+                transferVM.gasPrice = gasInput.current.valueAsNumber;
+              }}
               onChange={(e) => (transferVM.gasPrice = e.target.valueAsNumber)}
             />
           </div>
         </div>
       </div>
 
-      <button disabled>Send</button>
+      <button disabled={!transferVM.isValid}>Send</button>
     </div>
   );
 });

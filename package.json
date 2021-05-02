@@ -103,6 +103,7 @@
     "url-loader": "^4.1.1"
   },
   "dependencies": {
+    "@ensdomains/ensjs": "^2.0.1",
     "@szhsin/react-menu": "^1.9.1",
     "animejs": "^3.2.1",
     "axios": "^0.21.1",
