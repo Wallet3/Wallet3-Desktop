@@ -19,7 +19,7 @@
   bottom: 9px;
   width: 62px;
   text-align: end;
-  opacity: 0.45;
+  opacity: 0.3;
 }
 
 .page.send > .form > .to > svg {
@@ -55,16 +55,19 @@
   font-size: 8px !important;
   position: fixed;
   right: 12px;
-  opacity: 0.5;
+  margin-top: -4px;
+  opacity: 0.3;
 }
 
 .page.send > .form input {
   width: 100%;
   box-sizing: border-box;
   background: none;
-  padding: 8px 22px 6px 72px;
+  padding: 8px 22px 1.5px 72px;
   border: none;
   outline: none;
+  color: rgb(53, 53, 53);
+  font-weight: 500;
   border-bottom: 1px solid var(--border-color);
   outline: none;
   font-size: 16px;
@@ -86,14 +89,14 @@
 .page.send > .form > .amount > span:first-child {
   left: 0;
   width: 62px;
-  bottom: 8px;
+  bottom: 4px;
   text-align: end;
-  opacity: 0.45;
+  opacity: 0.3;
 }
 
 .page.send > .form > .amount > span:last-child {
   right: 0;
-  bottom: 8px;
+  bottom: 3px;
   color: #d0d0d0;
 }
 

@@ -30,7 +30,7 @@ const AddressSearchStyle = {
 };
 
 export default observer(({ app, walletVM }: { app: Application; walletVM: WalletVM }) => {
-  const [activeGas, setActiveGas] = useState(-1);
+  const [activeGas, setActiveGas] = useState(1);
   const { transferVM } = walletVM.currentAccount;
   const amountInput = useRef<HTMLInputElement>();
   const gasInput = useRef<HTMLInputElement>();
@@ -38,10 +38,6 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     transferVM.selectToken(params.get('token'));
-
-    return () => {
-      transferVM.clean();
-    };
   }, [app]);
 
   return (
@@ -179,7 +175,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
                 setActiveGas(3);
                 transferVM.setGasPrice(gasInput.current.valueAsNumber);
               }}
-              onChange={(e) => transferVM.setGasPrice(e.target.valueAsNumber)}
+              onChange={(e) => transferVM.setGasPrice(Number.parseInt(e.target.value))}
             />
           </div>
         </div>

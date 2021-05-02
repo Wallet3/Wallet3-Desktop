@@ -43,7 +43,7 @@ export class TransferVM {
     this._accountVM = accountVM;
     this.selectedToken = accountVM.tokens[0];
 
-    this.refreshGasPrice();
+    this.initGasPrice();
   }
 
   setToken(token: ITokenBalance) {
@@ -95,12 +95,13 @@ export class TransferVM {
     this.amount = amount;
   }
 
-  refreshGasPrice() {
+  initGasPrice() {
     GasnowHttp.refresh().then(({ fast, rapid, standard }) => {
       runInAction(() => {
         this.fast = fast;
         this.rapid = rapid;
         this.standard = standard;
+        this.gasPrice = fast;
       });
     });
   }
