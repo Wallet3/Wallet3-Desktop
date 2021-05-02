@@ -68,7 +68,7 @@
   outline: none;
   color: rgb(53, 53, 53);
   font-weight: 500;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px dashed var(--border-color);
   outline: none;
   font-size: 16px;
 }
@@ -117,12 +117,12 @@
 }
 
 .page.send > .form > .gas {
-  margin: 12px 0;
+  margin: 18px 0;
   display: grid;
   grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
   column-gap: 4px;
   padding: 8px;
-  border: 1px solid var(--border-color);
+  border: 1px dashed var(--border-color);
   border-radius: 5px;
 }
 

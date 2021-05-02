@@ -41,6 +41,11 @@ export interface CreateSendTx {
   gasPrice: number;
   nonce: number;
   data: string;
+  receipt?: {
+    address: string;
+    name?: string;
+  };
+  token: { symbol: string; decimals: number; amount: string };
 }
 
-export type PopupWindowTypes = 'connect' | 'signature' | 'approve' | 'sendTx';
+export type PopupWindowTypes = 'connect' | 'signature' | 'sendTx';

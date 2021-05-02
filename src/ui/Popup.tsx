@@ -2,8 +2,8 @@ import { Route, Router, Switch } from 'react-router-dom';
 
 import { ApplicationPopup } from './viewmodels/ApplicationPopup';
 import { Blank } from './pages/login/';
+import { ConfirmTx } from './pages/popup';
 import React from 'react';
-import { SendTx } from './pages/popup';
 import { observer } from 'mobx-react-lite';
 
 export default observer(({ app }: { app: ApplicationPopup }) => {
@@ -11,7 +11,7 @@ export default observer(({ app }: { app: ApplicationPopup }) => {
     <Router history={app.history}>
       <Switch>
         <Route path="/sendTx">
-          <SendTx />
+          <ConfirmTx app={app} />
         </Route>
 
         <Route path="*" component={Blank} />

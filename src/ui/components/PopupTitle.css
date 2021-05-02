@@ -2,5 +2,18 @@
   border-bottom: 1px solid var(--border-color);
   padding: 8px 0;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+}
+
+.pop-title > .title {
+  font-size: 19px;
+  padding: 0;
+  text-transform: capitalize;
+  display: flex;
+  color: rgb(21, 150, 255);
+  align-items: center;
+}
+
+.pop-title > .title span {
+  margin-left: 8px;
 }

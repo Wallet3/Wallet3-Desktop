@@ -82,10 +82,14 @@ export class TransferVM {
       });
 
       return;
+    } else {
+      this.receiptAddress = '';
     }
 
     if (ethers.utils.isAddress(addressOrName)) {
       this.receiptAddress = addressOrName;
+    } else {
+      this.receiptAddress = '';
     }
 
     this.isEns = false;
@@ -161,17 +165,29 @@ export class TransferVM {
 
   async sendTx() {
     const value = this.isERC20 ? 0 : this.amountBigInt.toString();
+    const to = this.isERC20 ? this.selectedToken.id : this.receiptAddress;
 
     const iface = new ethers.utils.Interface(ERC20ABI);
     const data = this.isERC20 ? '0x' : iface.encodeFunctionData('transfer', [this.receiptAddress, value]);
 
     await ipc.invokeSecure<void>(Messages.createSendTx, {
-      to: this.receiptAddress,
+      to,
       value,
       gas: this.gas,
       gasPrice: this.gasPrice * GasnowWs.gwei_1,
       nonce: this.nonce,
       data,
+
+      receipt: {
+        address: this.receiptAddress,
+        name: this.isEns ? this.receipt : '',
+      },
+
+      token: {
+        amount: this.amountBigInt.toString(),
+        symbol: this.selectedToken.display_symbol || this.selectedToken.symbol,
+        decimals: this.selectedToken.decimals,
+      },
     } as CreateSendTx);
   }
 }

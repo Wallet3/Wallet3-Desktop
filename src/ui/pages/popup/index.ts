@@ -1,3 +1,3 @@
-import SendTx from './ConfirmTx';
+import ConfirmTx from './ConfirmTx';
 
-export { SendTx };
+export { ConfirmTx };
