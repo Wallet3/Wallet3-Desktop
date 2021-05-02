@@ -59,7 +59,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
           <Feather icon="edit" size={15} strokeWidth={2} className="edit-icon" />
         </div>
 
-        {transferVM.isEns ? <div className="ens-resolve">{transferVM.address}</div> : undefined}
+        {transferVM.isEns ? <div className="ens-resolve">{transferVM.receiptAddress}</div> : undefined}
 
         <div className="amount">
           <span>Amount:</span>
@@ -109,13 +109,21 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
 
         <div className="amount">
           <span>Gas:</span>
-          <input type="text" placeholder="100000" onChange={(e) => transferVM.setGas(Number.parseInt(e.target.value))} />
+          <input
+            type="text"
+            placeholder={`${transferVM.gas}`}
+            onChange={(e) => transferVM.setGas(Number.parseInt(e.target.value))}
+          />
           <span></span>
         </div>
 
         <div className="amount">
           <span>Nonce:</span>
-          <input type="text" placeholder="1" onChange={(e) => transferVM.setNonce(Number.parseInt(e.target.value))} />
+          <input
+            type="text"
+            placeholder={`${transferVM.nonce}`}
+            onChange={(e) => transferVM.setNonce(Number.parseInt(e.target.value))}
+          />
           <span></span>
         </div>
 

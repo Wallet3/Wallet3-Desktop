@@ -1,6 +1,7 @@
 import { makeAutoObservable, reaction, runInAction } from 'mobx';
 
 import { AccountVM } from './AccountVM';
+import ERC20ABI from '../../abis/ERC20.json';
 import { GasnowHttp } from '../../api/Gasnow';
 import { ITokenBalance } from '../../api/Debank';
 import { ethers } from 'ethers';
@@ -10,9 +11,10 @@ import provider from '../../common/Provider';
 export class TransferVM {
   private readonly _accountVM: AccountVM;
 
+  self = '';
   receipt: string = '';
+  receiptAddress = '';
   isEns = false;
-  address = '';
   amount: string = '';
   gas: number = 0;
   nonce: number = 0;
@@ -24,7 +26,15 @@ export class TransferVM {
         parseUnits(this.selectedToken?.amount.toString() ?? '0', this.selectedToken?.decimals ?? 18)
       );
 
-      return this.address && this.receipt && validAmount && this.gas > 0 && this.nonce >= 0 && this.gasPrice > 0;
+      return (
+        this.receiptAddress &&
+        this.receipt &&
+        this.amount.length > 0 &&
+        validAmount &&
+        this.gas > 0 &&
+        this.nonce >= 0 &&
+        this.gasPrice > 0
+      );
     } catch (error) {
       return false;
     }
@@ -42,25 +52,22 @@ export class TransferVM {
     makeAutoObservable(this);
     this._accountVM = accountVM;
     this.selectedToken = accountVM.tokens[0];
+    this.self = accountVM.address;
 
     this.initGasPrice();
-  }
-
-  setToken(token: ITokenBalance) {
-    this.selectedToken = token;
-    this.amount = '';
+    this.initNonce();
   }
 
   setReceipt(addressOrName: string) {
     this.receipt = addressOrName;
 
-    if (addressOrName.toLowerCase().endsWith('.eth')) {
+    if (addressOrName.toLowerCase().endsWith('.eth') || addressOrName.toLowerCase().endsWith('.xyz')) {
       provider.resolveName(addressOrName).then((addr) => {
         if (!addr) return;
 
         runInAction(() => {
           this.isEns = true;
-          this.address = addr;
+          this.receiptAddress = addr;
         });
       });
 
@@ -68,7 +75,7 @@ export class TransferVM {
     }
 
     if (ethers.utils.isAddress(addressOrName)) {
-      this.address = addressOrName;
+      this.receiptAddress = addressOrName;
     }
 
     this.isEns = false;
@@ -77,6 +84,13 @@ export class TransferVM {
   selectToken(id: string) {
     const token = this._accountVM.tokens.find((t) => t.id === id);
     this.selectedToken = token ?? this._accountVM.tokens[0];
+    this.estimateGas();
+  }
+
+  setToken(token: ITokenBalance) {
+    this.selectedToken = token;
+    this.amount = '';
+    this.estimateGas();
   }
 
   setGasPrice(price: number) {
@@ -106,9 +120,32 @@ export class TransferVM {
     });
   }
 
-  clean() {
-    this.receipt = '';
-    this.isEns = false;
-    this.address = '';
+  initNonce() {
+    provider.getTransactionCount(this.self).then((nonce) => {
+      runInAction(() => (this.nonce = nonce));
+    });
+  }
+
+  estimateGas() {
+    if (!this.selectToken) {
+      this.gas = 21000;
+      return;
+    }
+
+    if (!this.selectedToken.id.startsWith('0x')) {
+      this.gas = 21000;
+      return;
+    }
+
+    const erc20 = new ethers.Contract(this.selectedToken.id, ERC20ABI, provider);
+    const amt = parseUnits(this.amount || '0', this.selectedToken.decimals || 18);
+    erc20.estimateGas
+      .transferFrom(this.self, this.receiptAddress || '0xD1b05E3AFEDcb11F29c5A560D098170bE26Fe5f5', amt)
+      .then((v) => {
+        runInAction(() => (this.gas = Number.parseInt((v.toNumber() * 1.5) as any)));
+      })
+      .catch(() => {
+        runInAction(() => (this.gas = 100_000));
+      });
   }
 }
