@@ -49,6 +49,10 @@
   font-weight: 400;
 }
 
+.page.main > .net-worth {
+  height: 79px;
+}
+
 .page.main > .net-worth > .value {
   font-size: 30px;
   font-weight: 500;

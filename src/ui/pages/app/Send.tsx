@@ -30,7 +30,7 @@ const AddressSearchStyle = {
 };
 
 export default observer(({ app, walletVM }: { app: Application; walletVM: WalletVM }) => {
-  const [activeGas, setActiveGas] = useState(1);
+  const [activeGas, setActiveGas] = useState(-1);
   const { transferVM } = walletVM.currentAccount;
   const amountInput = useRef<HTMLInputElement>();
   const gasInput = useRef<HTMLInputElement>();
@@ -38,6 +38,10 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     transferVM.selectToken(params.get('token'));
+
+    return () => {
+      transferVM.clean();
+    };
   }, [app]);
 
   return (
@@ -63,7 +67,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
 
         <div className="amount">
           <span>Amount:</span>
-          <input ref={amountInput} type="text" placeholder="1000" onChange={(e) => (transferVM.amount = e.target.value)} />
+          <input ref={amountInput} type="text" placeholder="1000" onChange={(e) => transferVM.setAmount(e.target.value)} />
           <span className="symbol">{transferVM.selectedToken.display_symbol || transferVM.selectedToken.symbol}</span>
         </div>
 
@@ -109,23 +113,13 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
 
         <div className="amount">
           <span>Gas:</span>
-          <input
-            type="text"
-            placeholder="100000"
-            defaultValue={transferVM.gas}
-            onChange={(e) => (transferVM.gas = e.target.valueAsNumber)}
-          />
+          <input type="text" placeholder="100000" onChange={(e) => transferVM.setGas(Number.parseInt(e.target.value))} />
           <span></span>
         </div>
 
         <div className="amount">
           <span>Nonce:</span>
-          <input
-            type="text"
-            placeholder="1"
-            defaultValue={transferVM.nonce}
-            onChange={(e) => (transferVM.nonce = e.target.valueAsNumber)}
-          />
+          <input type="text" placeholder="1" onChange={(e) => transferVM.setNonce(Number.parseInt(e.target.value))} />
           <span></span>
         </div>
 
@@ -134,7 +128,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
             className={`${activeGas === 0 ? 'active' : ''}`}
             onClick={(_) => {
               setActiveGas(0);
-              transferVM.gasPrice = transferVM.rapid;
+              transferVM.setGasPrice(transferVM.rapid);
             }}
           >
             <span>Rapid</span>
@@ -149,7 +143,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
             className={`${activeGas === 1 ? 'active' : ''}`}
             onClick={(_) => {
               setActiveGas(1);
-              transferVM.gasPrice = transferVM.fast;
+              transferVM.setGasPrice(transferVM.fast);
             }}
           >
             <span>Fast</span>
@@ -164,7 +158,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
             className={`${activeGas === 2 ? 'active' : ''}`}
             onClick={(_) => {
               setActiveGas(2);
-              transferVM.gasPrice = transferVM.standard;
+              transferVM.setGasPrice(transferVM.standard);
             }}
           >
             <span>Standard</span>
@@ -183,9 +177,9 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
               placeholder="20"
               onClick={(_) => {
                 setActiveGas(3);
-                transferVM.gasPrice = gasInput.current.valueAsNumber;
+                transferVM.setGasPrice(gasInput.current.valueAsNumber);
               }}
-              onChange={(e) => (transferVM.gasPrice = e.target.valueAsNumber)}
+              onChange={(e) => transferVM.setGasPrice(e.target.valueAsNumber)}
             />
           </div>
         </div>

@@ -4,6 +4,7 @@ import { AccountVM } from './AccountVM';
 import { GasnowHttp } from '../../api/Gasnow';
 import { ITokenBalance } from '../../api/Debank';
 import { ethers } from 'ethers';
+import { parseUnits } from 'ethers/lib/utils';
 import provider from '../../common/Provider';
 
 export class TransferVM {
@@ -13,12 +14,20 @@ export class TransferVM {
   isEns = false;
   address = '';
   amount: string = '';
-  gas: number = 100000;
-  nonce: number = 1;
-  gasPrice: number = 20; // Gwei
+  gas: number = 0;
+  nonce: number = 0;
+  gasPrice: number = -1; // Gwei
 
   get isValid() {
-    return this.address && Number.parseFloat(this.amount) > 0 && this.gas > 0 && this.nonce >= 0 && this.gasPrice > 0;
+    try {
+      const validAmount = parseUnits(this.amount || '0', this.selectedToken?.decimals ?? 18).lte(
+        parseUnits(this.selectedToken?.amount.toString() ?? '0', this.selectedToken?.decimals ?? 18)
+      );
+
+      return this.address && this.receipt && validAmount && this.gas > 0 && this.nonce >= 0 && this.gasPrice > 0;
+    } catch (error) {
+      return false;
+    }
   }
 
   selectedToken: ITokenBalance = null;
@@ -42,7 +51,9 @@ export class TransferVM {
     this.amount = '';
   }
 
-  async setReceipt(addressOrName: string) {
+  setReceipt(addressOrName: string) {
+    this.receipt = addressOrName;
+
     if (addressOrName.toLowerCase().endsWith('.eth')) {
       provider.resolveName(addressOrName).then((addr) => {
         if (!addr) return;
@@ -68,7 +79,23 @@ export class TransferVM {
     this.selectedToken = token ?? this._accountVM.tokens[0];
   }
 
-  async refreshGasPrice() {
+  setGasPrice(price: number) {
+    this.gasPrice = price;
+  }
+
+  setNonce(nonce: number) {
+    this.nonce = nonce;
+  }
+
+  setGas(gas: number) {
+    this.gas = gas;
+  }
+
+  setAmount(amount: string) {
+    this.amount = amount;
+  }
+
+  refreshGasPrice() {
     GasnowHttp.refresh().then(({ fast, rapid, standard }) => {
       runInAction(() => {
         this.fast = fast;
@@ -76,5 +103,11 @@ export class TransferVM {
         this.standard = standard;
       });
     });
+  }
+
+  clean() {
+    this.receipt = '';
+    this.isEns = false;
+    this.address = '';
   }
 }

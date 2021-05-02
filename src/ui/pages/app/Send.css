@@ -16,7 +16,7 @@
 
 .page.send > .form > .to > span {
   position: absolute;
-  bottom: 10px;
+  bottom: 9px;
   width: 62px;
   text-align: end;
   opacity: 0.45;
@@ -98,7 +98,7 @@
 }
 
 .page.send > .form > .tokens {
-  margin-top: 8px;
+  margin-top: 1px;
   font-size: 12px;
   display: grid;
   grid-template-columns: 1fr auto auto;
