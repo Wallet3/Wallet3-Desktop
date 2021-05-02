@@ -51,7 +51,7 @@ export class Application {
   }
 
   async promptTouchID() {
-    return await ipc.invoke<boolean>(MessageKeys.promptTouchID);
+    return await ipc.invokeSecure<boolean>(MessageKeys.promptTouchID, {});
   }
 }
 

@@ -42,14 +42,16 @@ class App {
       return { hasMnemonic: this.hasMnemonic, touchIDSupported: this.touchIDSupported };
     });
 
-    ipcMain.handle(MessageKeys.promptTouchID, async () => {
+    ipcMain.handle(`${MessageKeys.promptTouchID}-secure`, async (e, encrypted, winId) => {
       if (!this.touchIDSupported) return false;
+
+      const { iv, key } = this.ipcs.get(winId);
 
       try {
         await systemPreferences.promptTouchID('Unlock Wallet');
-        return true;
+        return this.encryptIpc(true, iv, key);
       } catch (error) {
-        return false;
+        return this.encryptIpc(false, iv, key);
       }
     });
 

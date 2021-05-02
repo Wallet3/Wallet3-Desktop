@@ -1,7 +1,8 @@
 import './Send.css';
 
 import { Menu, MenuButton, MenuItem } from '@szhsin/react-menu';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useParams, useRouteMatch } from 'react-router';
 
 import AnimatedNumber from 'react-animated-number';
 import { Application } from '../../viewmodels/Application';
@@ -54,6 +55,12 @@ const items = [
 export default observer(({ app, walletVM }: { app: Application; walletVM: WalletVM }) => {
   const [activeGas, setActiveGas] = useState(1);
   const { transferVM } = walletVM.currentAccount;
+  const amountInput = useRef<HTMLInputElement>();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    transferVM.selectToken(params.get('token'));
+  }, [app]);
 
   return (
     <div className="page send">
@@ -73,13 +80,19 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
 
         <div className="amount">
           <span>Amount:</span>
-          <input type="text" placeholder="1000" onChange={(e) => (transferVM.amount = e.target.value)} />
-          <span className="symbol">ETH</span>
+          <input ref={amountInput} type="text" placeholder="1000" onChange={(e) => (transferVM.amount = e.target.value)} />
+          <span className="symbol">{transferVM.selectedToken.display_symbol || transferVM.selectedToken.symbol}</span>
         </div>
 
         <div className="tokens">
           <span></span>
-          <span className="balance">
+          <span
+            className="balance"
+            onClick={(_) => {
+              amountInput.current.value = transferVM.selectedToken.amount.toString();
+              transferVM.amount = transferVM.selectedToken.amount.toString();
+            }}
+          >
             Max: <AnimatedNumber value={transferVM.selectedToken?.amount ?? 0} formatValue={(n) => formatNum(n, '')} />
           </span>
           <Menu
@@ -96,7 +109,14 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
           >
             {walletVM.currentAccount?.tokens.map((t) => {
               return (
-                <MenuItem key={t.id} styles={{ padding: '0.375rem 1rem' }} onClick={(_) => transferVM.setToken(t)}>
+                <MenuItem
+                  key={t.id}
+                  styles={{ padding: '0.375rem 1rem' }}
+                  onClick={(_) => {
+                    transferVM.setToken(t);
+                    amountInput.current.value = '';
+                  }}
+                >
                   <TokenLabel symbol={t.display_symbol || t.symbol} name={t.display_symbol || t.symbol} expand />
                 </MenuItem>
               );
@@ -106,39 +126,67 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
 
         <div className="amount">
           <span>Gas:</span>
-          <input type="text" placeholder="100000" />
+          <input
+            type="text"
+            placeholder="100000"
+            defaultValue={transferVM.gas}
+            onChange={(e) => (transferVM.gas = e.target.valueAsNumber)}
+          />
           <span></span>
         </div>
 
         <div className="amount">
           <span>Nonce:</span>
-          <input type="text" placeholder="1" />
+          <input
+            type="text"
+            placeholder="1"
+            defaultValue={transferVM.nonce}
+            onChange={(e) => (transferVM.nonce = e.target.valueAsNumber)}
+          />
           <span></span>
         </div>
 
         <div className="gas">
-          <div className={`${activeGas === 0 ? 'active' : ''}`} onClick={(_) => setActiveGas(0)}>
+          <div
+            className={`${activeGas === 0 ? 'active' : ''}`}
+            onClick={(_) => {
+              setActiveGas(0);
+              transferVM.gasPrice = transferVM.rapid;
+            }}
+          >
             <span>Rapid</span>
             <span style={{ color: '#2ecc71' }}>
-              <AnimatedNumber value={37} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
+              <AnimatedNumber value={transferVM.rapid} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
             </span>
           </div>
 
           <div className="separator" />
 
-          <div className={`${activeGas === 1 ? 'active' : ''}`} onClick={(_) => setActiveGas(1)}>
+          <div
+            className={`${activeGas === 1 ? 'active' : ''}`}
+            onClick={(_) => {
+              setActiveGas(1);
+              transferVM.gasPrice = transferVM.fast;
+            }}
+          >
             <span>Fast</span>
             <span style={{ color: 'orange' }}>
-              <AnimatedNumber value={32} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
+              <AnimatedNumber value={transferVM.fast} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
             </span>
           </div>
 
           <div className="separator" />
 
-          <div className={`${activeGas === 2 ? 'active' : ''}`} onClick={(_) => setActiveGas(2)}>
+          <div
+            className={`${activeGas === 2 ? 'active' : ''}`}
+            onClick={(_) => {
+              setActiveGas(2);
+              transferVM.gasPrice = transferVM.standard;
+            }}
+          >
             <span>Standard</span>
             <span style={{ color: 'deepskyblue' }}>
-              <AnimatedNumber value={27} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
+              <AnimatedNumber value={transferVM.standard} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
             </span>
           </div>
 
@@ -146,12 +194,17 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
 
           <div className={`${activeGas === 3 ? 'active' : ''}`} onClick={(_) => setActiveGas(3)}>
             <span>Cust.</span>
-            <input type="text" placeholder="20" onClick={(_) => setActiveGas(3)} />
+            <input
+              type="text"
+              placeholder="20"
+              onClick={(_) => setActiveGas(3)}
+              onChange={(e) => (transferVM.gasPrice = e.target.valueAsNumber)}
+            />
           </div>
         </div>
       </div>
 
-      <button>Send</button>
+      <button disabled>Send</button>
     </div>
   );
 });
