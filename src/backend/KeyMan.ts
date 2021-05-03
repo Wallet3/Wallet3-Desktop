@@ -17,6 +17,7 @@ class KeyMan {
   salt!: string;
   tmpMnemonic?: string;
   path = `m/44'/60'/0'/0`;
+  hasMnemonic = false;
 
   private getCorePassword(userPassword: string) {
     return `${this.salt}-${userPassword}`;
@@ -24,6 +25,7 @@ class KeyMan {
 
   async init() {
     this.salt = await keytar.getPassword(Keys.salt, Keys.account);
+    this.hasMnemonic = (await keytar.getPassword(Keys.mnemonic, Keys.account)) ? true : false;
   }
 
   async verifyPassword(userPassword: string) {
@@ -57,6 +59,7 @@ class KeyMan {
 
     await keytar.setPassword(Keys.mnemonic, Keys.account, `${iv.toString('hex')}:${encryptedMnemonic}`);
     this.tmpMnemonic = undefined;
+    this.hasMnemonic = true;
 
     return true;
   }
@@ -92,6 +95,7 @@ class KeyMan {
 
   reset(password: string) {
     this.salt = undefined;
+    this.hasMnemonic = false;
     [Keys.mnemonic, Keys.salt, Keys.mnemonic].forEach((key) => keytar.deletePassword(key, Keys.account));
   }
 }

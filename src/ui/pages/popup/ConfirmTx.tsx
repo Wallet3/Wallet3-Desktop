@@ -151,7 +151,7 @@ const AuthView = observer(({ app, onCancel }: { app: ApplicationPopup; onCancel?
   return (
     <div className="auth">
       <div className="panel">
-        {touchIDSupported && false ? <TouchIDView onAuth={authTouchID} /> : <PasscodeView onAuth={authPassword} />}
+        {touchIDSupported ? <TouchIDView onAuth={authTouchID} /> : <PasscodeView onAuth={authPassword} />}
       </div>
       <button onClick={(_) => onCancel?.()}>Cancel</button>
     </div>

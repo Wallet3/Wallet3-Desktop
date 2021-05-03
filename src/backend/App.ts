@@ -15,7 +15,7 @@ const AppKeys = {
 
 class App {
   touchIDSupported = false;
-  hasMnemonic = false;
+
   userPassword?: string; // keep password in memory for TouchID users
   ipcs = new Map<string, { iv: Buffer; key: Buffer }>();
   mainWindow?: BrowserWindow;
@@ -23,12 +23,10 @@ class App {
 
   constructor() {
     this.touchIDSupported = systemPreferences.canPromptTouchID();
-    this.hasMnemonic = systemPreferences.getUserDefault(AppKeys.hasMnemonic, 'boolean');
+    KeyMan.init();
 
     // KeyMan.reset('');
     // this.hasMnemonic = false;
-
-    KeyMan.init();
 
     ipcMain.handle(MessageKeys.exchangeDHKey, (e, dh) => {
       const { rendererEcdhKey, ipcSecureIv, windowId } = dh;
@@ -44,7 +42,7 @@ class App {
     });
 
     ipcMain.handle(MessageKeys.getInitStatus, () => {
-      return { hasMnemonic: this.hasMnemonic, touchIDSupported: this.touchIDSupported };
+      return { hasMnemonic: KeyMan.hasMnemonic, touchIDSupported: this.touchIDSupported };
     });
 
     ipcMain.handle(`${MessageKeys.promptTouchID}-secure`, async (e, encrypted, winId) => {
@@ -75,7 +73,7 @@ class App {
 
     ipcMain.handle(`${MessageKeys.setupMnemonic}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.ipcs.get(winId);
-      if (this.hasMnemonic) return this.encryptIpc({ success: false }, iv, key);
+      if (KeyMan.hasMnemonic) return this.encryptIpc({ success: false }, iv, key);
 
       const { password: userPassword } = this.decryptIpc(encrypted, iv, key);
 
@@ -83,9 +81,6 @@ class App {
       if (!(await KeyMan.saveMnemonic(userPassword))) return this.encryptIpc({ success: false }, iv, key);
 
       const addresses = await KeyMan.genAddresses(userPassword, 1);
-
-      systemPreferences.setUserDefault(AppKeys.hasMnemonic, 'boolean', true as never);
-      this.hasMnemonic = true;
 
       return this.encryptIpc({ addresses, success: true }, iv, key);
     });

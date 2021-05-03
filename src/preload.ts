@@ -83,9 +83,9 @@ contextBridge.exposeInMainWorld(WindowApi.API_KEY, new WindowApi());
 export class DesktopCapturerApi {
   static readonly API_KEY = 'wallet3_capturer';
 
-  getSources(options: SourcesOptions): Promise<DesktopCapturerSource[]> {
+  getSources = (options: SourcesOptions): Promise<DesktopCapturerSource[]> => {
     return desktopCapturer.getSources(options);
-  }
+  };
 }
 
 contextBridge.exposeInMainWorld(DesktopCapturerApi.API_KEY, new DesktopCapturerApi());

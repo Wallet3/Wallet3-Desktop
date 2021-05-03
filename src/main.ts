@@ -1,6 +1,7 @@
 import { BrowserWindow, TouchBar, TouchBarButton, app, nativeImage } from 'electron';
 
 import App from './backend/App';
+import Coingecko from './api/Coingecko';
 import GasnowWs from './api/Gasnow';
 import { reaction } from 'mobx';
 
@@ -42,13 +43,13 @@ const createTouchBar = (mainWindow: BrowserWindow) => {
   });
 
   const price = new TouchBar.TouchBarButton({
-    label: '$ 3100.00',
+    label: '...',
     iconPosition: 'left',
     icon: nativeImage.createFromDataURL(require('./assets/icons/touchbar/eth.png').default),
   });
 
   const gas = new TouchBar.TouchBarButton({
-    label: '27 | 25 | 20',
+    label: '...',
     iconPosition: 'left',
     icon: nativeImage.createFromDataURL(require('./assets/icons/touchbar/gas-station.png').default),
   });
@@ -96,6 +97,15 @@ app.on('ready', () => {
     () => {
       const { gas } = App.touchBarButtons || {};
       gas.label = `${GasnowWs.rapidGwei} | ${GasnowWs.fastGwei} | ${GasnowWs.standardGwei}`;
+    }
+  );
+
+  Coingecko.start();
+  reaction(
+    () => Coingecko.eth,
+    () => {
+      const { price } = App.touchBarButtons || {};
+      price.label = `$ ${Coingecko.eth}`;
     }
   );
 });

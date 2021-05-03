@@ -112,7 +112,6 @@
     "url-loader": "^4.1.1"
   },
   "dependencies": {
-    "@ensdomains/ensjs": "^2.0.1",
     "@szhsin/react-menu": "^1.9.1",
     "animejs": "^3.2.1",
     "axios": "^0.21.1",
@@ -125,6 +124,7 @@
     "mobx": "^6.3.0",
     "mobx-react-lite": "^3.2.0",
     "numeral": "^2.0.6",
+    "qr-scanner": "^1.2.0",
     "rc-progress": "^3.1.3",
     "react": "^17.0.2",
     "react-animated-number": "^0.4.4",
@@ -135,8 +135,6 @@
     "react-router-dom": "^5.2.0",
     "react-search-autocomplete": "^5.0.9",
     "react-select": "^4.3.0",
-    "screenshot-desktop": "^1.12.3",
-    "secure-enclave": "^0.4.1",
     "storejs": "^1.1.0",
     "ws": "^7.4.5"
   }
