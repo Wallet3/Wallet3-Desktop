@@ -4,7 +4,7 @@ import WalletVM from './WalletVM';
 import { createBrowserHistory } from 'history';
 import crypto from '../ipc/Crypto';
 import ipc from '../ipc/Bridge';
-import { makeAutoObservable } from 'mobx';
+import { makeObservable } from 'mobx';
 import store from 'storejs';
 
 export class Application {
@@ -15,14 +15,16 @@ export class Application {
   touchIDSupported = false;
 
   constructor() {
-    makeAutoObservable(this);
+    makeObservable(this, {});
   }
 
-  async init() {
+  async init(jump = true) {
     const { hasMnemonic, touchIDSupported } = await ipc.invoke<InitStatus>(MessageKeys.getInitStatus);
 
     this.hasMnemonic = hasMnemonic;
     this.touchIDSupported = touchIDSupported;
+
+    if (!jump) return;
 
     if (!hasMnemonic) {
       this.history.push('/welcome');

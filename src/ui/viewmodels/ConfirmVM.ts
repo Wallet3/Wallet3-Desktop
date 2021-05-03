@@ -1,6 +1,5 @@
-import Gasnow, { GasnowWs } from '../../api/Gasnow';
-
 import { CreateSendTx } from '../../common/Messages';
+import { GasnowWs } from '../../api/Gasnow';
 import { makeAutoObservable } from 'mobx';
 import { parseUnits } from '@ethersproject/units';
 import { utils } from 'ethers';
@@ -49,7 +48,7 @@ export class ConfirmVM {
   }
 
   get maxFee() {
-    return utils.formatEther((BigInt(this.args.gasPrice) * BigInt(this.args.gas)).toString());
+    return utils.formatEther((BigInt(this.gasPrice * GasnowWs.gwei_1 || 0) * BigInt(this.gas || 0)).toString());
   }
 
   get insufficientFee() {

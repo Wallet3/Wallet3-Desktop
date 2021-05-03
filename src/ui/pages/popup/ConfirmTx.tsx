@@ -1,31 +1,89 @@
 import './ConfirmTx.css';
 
-import { ApplicationPopup } from '../../viewmodels/ApplicationPopup';
+import * as Anime from '../../misc/Anime';
+
+import App, { ApplicationPopup } from '../../viewmodels/ApplicationPopup';
+
 import { ConfirmVM } from '../../viewmodels/ConfirmVM';
-import { CreateSendTx } from '../../../common/Messages';
-import { GasnowWs } from '../../../api/Gasnow';
 import Icons from '../../misc/Icons';
+import PasscodeView from '../../components/PasscodeView';
 import { PopupTitle } from '../../components';
 import React from 'react';
+import TouchIDView from '../../components/TouchIDView';
 import Window from '../../ipc/Window';
-import { formatNum } from '../../misc/Formatter';
+import anime from 'animejs';
 import { observer } from 'mobx-react-lite';
-import { utils } from 'ethers';
 
 interface Props {
   app: ApplicationPopup;
 }
 
+const authTouchID = async () => {
+  if (await App.promptTouchID()) {
+  } else {
+    Anime.vibrate('div.auth');
+  }
+};
+
+const authPassword = async (passcode: string) => {
+  const verified = await App.verifyPassword(passcode);
+
+  if (!verified) {
+    Anime.vibrate('div.auth');
+    return;
+  }
+};
+
 export default observer(({ app }: Props) => {
+  const onContinue = () => {
+    anime({
+      targets: '.page.confirm > .container > .details',
+      translateX: '-100vw',
+      easing: 'linear',
+      opacity: 0,
+      duration: 300,
+    });
+
+    anime({
+      targets: '.page.confirm > .container > .auth',
+      translateX: ['100vw', 0],
+      easing: 'linear',
+      opacity: [0, 1],
+      duration: 300,
+      complete: () => (App.touchIDSupported ? authTouchID() : undefined),
+    });
+  };
+
+  const onAuthCancel = () => {
+    anime({
+      targets: '.page.confirm > .container > .details',
+      translateX: ['-100vw', 0],
+      easing: 'linear',
+      opacity: 1,
+      duration: 300,
+    });
+
+    anime({
+      targets: '.page.confirm > .container > .auth',
+      translateX: [0, '100vw'],
+      easing: 'linear',
+      opacity: 0,
+      duration: 300,
+    });
+  };
+
   return (
-    <div className="page tx">
+    <div className="page confirm">
       <PopupTitle title="Transfer" icon="repeat" />
-      <TransferView implVM={app.implVM} />
+      <div className="container">
+        <TransferView implVM={app.implVM} onContinue={onContinue} />
+        <AuthView app={app} onCancel={onAuthCancel} />
+      </div>
     </div>
   );
 });
 
-const TransferView = observer(({ implVM }: { implVM: ConfirmVM }) => {
+const TransferView = observer(({ implVM, onContinue }: { implVM: ConfirmVM; onContinue?: () => void }) => {
   const { receiptAddress, receipt, amount, tokenSymbol, gas, gasPrice, maxFee, nonce } = implVM;
 
   return (
@@ -69,8 +127,23 @@ const TransferView = observer(({ implVM }: { implVM: ConfirmVM }) => {
 
       <div className="actions">
         <button onClick={(_) => Window.close()}>Cancel</button>
-        <button disabled={!implVM.isValid || implVM.insufficientFee}>Continue</button>
+        <button disabled={!implVM.isValid || implVM.insufficientFee} onClick={(_) => onContinue?.()}>
+          Continue
+        </button>
       </div>
+    </div>
+  );
+});
+
+const AuthView = observer(({ app, onCancel }: { app: ApplicationPopup; onCancel?: () => void }) => {
+  const { touchIDSupported } = app;
+
+  return (
+    <div className="auth">
+      <div className="panel">
+        {touchIDSupported ? <TouchIDView onAuth={authTouchID} /> : <PasscodeView onAuth={authPassword} />}
+      </div>
+      <button onClick={(_) => onCancel?.()}>Cancel</button>
     </div>
   );
 });

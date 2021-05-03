@@ -1,0 +1,30 @@
+div.touchid-view {
+  display: grid;
+  grid-template-rows: 72px 1fr;
+  height: 100%;
+  outline: none;
+  margin-top: 0;
+}
+
+div.touchid-view > p {
+  font-size: 15px;
+  color: var(--font-color-title);
+}
+
+div.touchid-view img {
+  width: 81px;
+  display: inline-block;
+  cursor: pointer;
+}
+
+div.touchid-view > div {
+  transition: all 0.3s;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+div.touchid-view > div:hover {
+  opacity: 0.5;
+}

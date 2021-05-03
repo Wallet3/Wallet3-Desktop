@@ -1,0 +1,16 @@
+div.passcode-view {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: -10vh;
+  align-items: center;
+}
+
+div.passcode-view > div {
+  margin-right: 2px;
+}
+
+div.passcode-view > p {
+  font-size: 15px;
+  color: var(--font-color-title);
+}

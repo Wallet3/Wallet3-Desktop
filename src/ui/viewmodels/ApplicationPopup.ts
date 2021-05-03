@@ -1,14 +1,17 @@
-import Messages, { CreateSendTx, PopupWindowTypes } from '../../common/Messages';
+import Messages, { CreateSendTx, InitStatus, PopupWindowTypes } from '../../common/Messages';
 
+import { Application } from './Application';
 import { ConfirmVM } from './ConfirmVM';
 import { createBrowserHistory } from 'history';
 import ipc from '../ipc/Bridge';
 
-export class ApplicationPopup {
+export class ApplicationPopup extends Application {
   readonly history = createBrowserHistory();
   type: PopupWindowTypes;
 
-  init() {
+  async init() {
+    super.init(false);
+
     ipc.once(Messages.initWindowType, (e, { type, args }: { type: PopupWindowTypes; args: CreateSendTx }) => {
       this.type = type;
 
