@@ -130,7 +130,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
             className={`${activeGas === 0 ? 'active' : ''}`}
             onClick={(_) => {
               setActiveGas(0);
-              transferVM.setGasPrice(transferVM.rapid);
+              transferVM.setGasLevel(0);
             }}
           >
             <span>Rapid</span>
@@ -145,7 +145,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
             className={`${activeGas === 1 ? 'active' : ''}`}
             onClick={(_) => {
               setActiveGas(1);
-              transferVM.setGasPrice(transferVM.fast);
+              transferVM.setGasLevel(1);
             }}
           >
             <span>Fast</span>
@@ -160,7 +160,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
             className={`${activeGas === 2 ? 'active' : ''}`}
             onClick={(_) => {
               setActiveGas(2);
-              transferVM.setGasPrice(transferVM.standard);
+              transferVM.setGasLevel(2);
             }}
           >
             <span>Standard</span>
@@ -179,7 +179,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
               placeholder="20"
               onClick={(_) => {
                 setActiveGas(3);
-                transferVM.setGasPrice(gasInput.current.valueAsNumber);
+                transferVM.setGasLevel(3);
               }}
               onChange={(e) => transferVM.setGasPrice(Number.parseInt(e.target.value) || 0)}
             />

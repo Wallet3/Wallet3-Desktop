@@ -61,6 +61,10 @@ export class ConfirmVM {
     return this.gas >= 21000 && this.gas <= 12_500_000 && this.gasPrice > 0 && this.nonce >= 0;
   }
 
+  get data() {
+    return this.args.data;
+  }
+
   setGasPrice(value: string) {
     const price = Number.parseFloat(value);
     this._gasPrice = price;

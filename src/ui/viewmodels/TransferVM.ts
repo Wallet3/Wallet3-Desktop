@@ -1,6 +1,6 @@
-import { GasnowHttp, GasnowWs } from '../../api/Gasnow';
+import Gasnow, { GasnowHttp, GasnowWs } from '../../api/Gasnow';
+import { IReactionDisposer, makeAutoObservable, reaction, runInAction } from 'mobx';
 import Messages, { CreateTransferTx } from '../../common/Messages';
-import { makeAutoObservable, reaction, runInAction } from 'mobx';
 import { parseEther, parseUnits } from 'ethers/lib/utils';
 
 import { AccountVM } from './AccountVM';
@@ -12,6 +12,7 @@ import provider from '../../common/Provider';
 
 export class TransferVM {
   private readonly _accountVM: AccountVM;
+  private gasnowDisposer: IReactionDisposer;
 
   self = '';
   receipt: string = '';
@@ -21,6 +22,7 @@ export class TransferVM {
   gas: number = 0;
   nonce: number = 0;
   gasPrice: number = -1; // Gwei
+  gasLevel = 1; // 0 - rapid, 1 - fast, 2 - standard, 4 - custom
 
   get isValid() {
     try {
@@ -126,19 +128,37 @@ export class TransferVM {
     this.gas = gas;
   }
 
+  setGasLevel(level: number) {
+    this.gasLevel = level;
+  }
+
   setAmount(amount: string) {
     this.amount = amount;
   }
 
   private initGasPrice() {
-    GasnowHttp.refresh().then(({ fast, rapid, standard }) => {
-      runInAction(() => {
-        this.fast = fast;
-        this.rapid = rapid;
-        this.standard = standard;
-        this.gasPrice = fast;
-      });
-    });
+    Gasnow.start();
+
+    this.gasnowDisposer = reaction(
+      () => Gasnow.fast,
+      () => {
+        this.rapid = Gasnow.rapidGwei;
+        this.fast = Gasnow.fastGwei;
+        this.standard = Gasnow.standardGwei;
+
+        switch (this.gasLevel) {
+          case 0:
+            this.gasPrice = this.rapid;
+            break;
+          case 1:
+            this.gasPrice = this.fast;
+            break;
+          case 2:
+            this.gasPrice = this.standard;
+            break;
+        }
+      }
+    );
   }
 
   private initNonce() {
@@ -170,12 +190,17 @@ export class TransferVM {
       });
   }
 
+  dispose() {
+    Gasnow.stop();
+    this.gasnowDisposer?.();
+  }
+
   async sendTx() {
     const value = this.isERC20 ? 0 : this.amountBigInt.toString();
     const to = this.isERC20 ? this.selectedToken.id : this.receiptAddress;
 
     const iface = new ethers.utils.Interface(ERC20ABI);
-    const data = this.isERC20 ? '0x' : iface.encodeFunctionData('transfer', [this.receiptAddress, value]);
+    const data = this.isERC20 ? iface.encodeFunctionData('transfer', [this.receiptAddress, value]) : '0x';
 
     await ipc.invokeSecure<void>(Messages.createTransferTx, {
       to,

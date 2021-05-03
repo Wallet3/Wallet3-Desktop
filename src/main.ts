@@ -1,6 +1,8 @@
-import { BrowserWindow, app } from 'electron';
+import { BrowserWindow, TouchBar, TouchBarButton, app, nativeImage } from 'electron';
 
 import App from './backend/App';
+import GasnowWs from './api/Gasnow';
+import { reaction } from 'mobx';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -10,6 +12,41 @@ if (require('electron-squirrel-startup')) {
   // eslint-disable-line global-require
   app.quit();
 }
+
+const createTouchBar = (mainWindow: BrowserWindow) => {
+  const newTouchBar = ({
+    walletConnect,
+    gas,
+    price,
+  }: {
+    walletConnect: TouchBarButton;
+    gas: TouchBarButton;
+    price?: TouchBarButton;
+  }) => {
+    const touchbar = new TouchBar({ items: [walletConnect, price, gas, new TouchBar.TouchBarSpacer({ size: 'flexible' })] });
+    mainWindow.setTouchBar(touchbar);
+  };
+
+  if (App.touchBarButtons) {
+    newTouchBar(App.touchBarButtons);
+    return;
+  }
+
+  const walletConnect = new TouchBar.TouchBarButton({ label: 'WalletConnect' });
+  const price = new TouchBar.TouchBarButton({
+    label: '$ 3100.00',
+    iconPosition: 'left',
+    icon: nativeImage.createFromDataURL(require('./assets/icons/touchbar/eth.png').default),
+  });
+  const gas = new TouchBar.TouchBarButton({
+    label: '27 | 25 | 20',
+    iconPosition: 'left',
+    icon: nativeImage.createFromDataURL(require('./assets/icons/touchbar/gas-station.png').default),
+  });
+
+  App.touchBarButtons = { walletConnect, gas, price };
+  newTouchBar(App.touchBarButtons);
+};
 
 const createWindow = async (): Promise<void> => {
   // Create the browser window.
@@ -34,13 +71,25 @@ const createWindow = async (): Promise<void> => {
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   App.mainWindow = mainWindow;
 
-  // await App.createPopupWindow('sendTx', { to: '' });
+  createTouchBar(mainWindow);
 };
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', () => {
+  createWindow();
+
+  GasnowWs.start(true);
+  GasnowWs.onError = () => GasnowWs.start(true);
+  reaction(
+    () => GasnowWs.fast,
+    () => {
+      const { gas } = App.touchBarButtons || {};
+      gas.label = `${GasnowWs.rapidGwei} | ${GasnowWs.fastGwei} | ${GasnowWs.standardGwei}`;
+    }
+  );
+});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits

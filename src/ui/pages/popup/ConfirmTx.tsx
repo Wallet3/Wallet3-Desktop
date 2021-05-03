@@ -37,6 +37,11 @@ const authPassword = async (passcode: string) => {
   Window.close();
 };
 
+const Methods = new Map<string, string[]>([
+  ['0xa9059cbb', ['Transfer', 'repeat']],
+  ['0x095ea7b3', ['Approve', 'shield']],
+]);
+
 export default observer(({ app }: Props) => {
   const onContinue = () => {
     anime({
@@ -75,9 +80,11 @@ export default observer(({ app }: Props) => {
     });
   };
 
+  const [title, icon] = Methods.get(app.implVM?.data?.substring(0, 10));
+
   return (
     <div className="page confirm">
-      <PopupTitle title="Transfer" icon="repeat" />
+      <PopupTitle title={title} icon={icon} />
       <div className="container">
         <TransferView implVM={app.implVM} onContinue={onContinue} />
         <AuthView app={app} onCancel={onAuthCancel} />
@@ -93,7 +100,7 @@ const TransferView = observer(({ implVM, onContinue }: { implVM: ConfirmVM; onCo
     <div className="details">
       <div className="form">
         <div>
-          <span>Receipt:</span>
+          <span>Recipient:</span>
           <span title={receiptAddress}>{receipt}</span>
         </div>
 

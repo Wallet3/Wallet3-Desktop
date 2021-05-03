@@ -1,6 +1,6 @@
 import * as Cipher from '../common/Cipher';
 
-import { BrowserWindow, ipcMain, systemPreferences } from 'electron';
+import { BrowserWindow, TouchBarButton, ipcMain, systemPreferences } from 'electron';
 import MessageKeys, { CreateTransferTx, PopupWindowTypes } from '../common/Messages';
 
 import KeyMan from './KeyMan';
@@ -19,6 +19,7 @@ class App {
   userPassword?: string; // keep password in memory for TouchID users
   ipcs = new Map<string, { iv: Buffer; key: Buffer }>();
   mainWindow?: BrowserWindow;
+  touchBarButtons?: { walletConnect: TouchBarButton; gas: TouchBarButton; price?: TouchBarButton };
 
   constructor() {
     this.touchIDSupported = systemPreferences.canPromptTouchID();

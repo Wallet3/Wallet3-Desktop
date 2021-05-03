@@ -1,6 +1,8 @@
 import axios, { AxiosResponse } from 'axios';
 import { makeAutoObservable, runInAction } from 'mobx';
 
+import ws from 'ws';
+
 export class GasnowHttp {
   static async refresh() {
     let resp: AxiosResponse;
@@ -31,9 +33,10 @@ export class GasnowWs {
   static readonly gwei_10 = 10000000000;
   static readonly gwei_200 = 200000000000;
   static readonly gwei_1 = 1000000000;
+  static readonly host = 'wss://www.gasnow.org/ws';
 
   onError?: () => void;
-  client: WebSocket;
+  client: WebSocket | ws;
   rapid = GasnowWs.gwei_10 * 2;
   fast = GasnowWs.gwei_10 * 2;
   standard = GasnowWs.gwei_10;
@@ -59,8 +62,9 @@ export class GasnowWs {
     makeAutoObservable(this);
   }
 
-  start() {
-    this.client = new WebSocket('wss://www.gasnow.org/ws');
+  start(native = false) {
+    this.client = native ? new ws(GasnowWs.host) : new WebSocket(GasnowWs.host);
+
     const onmessage = (evt) => {
       const data = JSON.parse(evt.data);
 
@@ -72,14 +76,22 @@ export class GasnowWs {
     const onerror = () => {
       try {
         this.client.close();
-        this.client.removeEventListener('error', onerror);
-        this.client.removeEventListener('message', onmessage);
+        this.client.onmessage = undefined;
+        this.client.onerror = undefined;
+        this.client = null;
         this.onError?.();
       } catch (error) {}
     };
 
     this.client.onmessage = onmessage;
     this.client.onerror = onerror;
+  }
+
+  stop() {
+    this.client.close(0, 'thanks');
+    this.client.onmessage = undefined;
+    this.client.onerror = undefined;
+    this.client = undefined;
   }
 
   updatePrices = (data) => {
