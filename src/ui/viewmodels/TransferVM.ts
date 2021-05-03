@@ -198,7 +198,5 @@ export class TransferVM {
 
       nativeToken: this._accountVM.nativeToken,
     } as CreateTransferTx);
-
-    console.log('hello tx');
   }
 }

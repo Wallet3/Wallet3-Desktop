@@ -22,7 +22,7 @@ const authTouchID = async () => {
   if (await App.promptTouchID('Send Tx')) {
     Window.close();
   } else {
-    Anime.vibrate('div.auth');
+    Anime.vibrate('div.auth > .panel');
   }
 };
 
@@ -30,7 +30,7 @@ const authPassword = async (passcode: string) => {
   const verified = await App.verifyPassword(passcode);
 
   if (!verified) {
-    Anime.vibrate('div.auth');
+    Anime.vibrate('div.auth > .panel');
     return;
   }
 
@@ -144,7 +144,7 @@ const AuthView = observer(({ app, onCancel }: { app: ApplicationPopup; onCancel?
   return (
     <div className="auth">
       <div className="panel">
-        {touchIDSupported ? <TouchIDView onAuth={authTouchID} /> : <PasscodeView onAuth={authPassword} />}
+        {touchIDSupported && false ? <TouchIDView onAuth={authTouchID} /> : <PasscodeView onAuth={authPassword} />}
       </div>
       <button onClick={(_) => onCancel?.()}>Cancel</button>
     </div>

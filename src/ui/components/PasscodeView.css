@@ -1,9 +1,11 @@
 div.passcode-view {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-top: -10vh;
-  align-items: center;
+  display: grid;
+  grid-template-rows: 72px 1fr;
+  margin-top: 0;
+  height: 100%;
+  text-align: center;
+  vertical-align: middle;
+  padding-right: 2px;
 }
 
 div.passcode-view > div {
@@ -12,5 +14,8 @@ div.passcode-view > div {
 
 div.passcode-view > p {
   font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--font-color-title);
 }
