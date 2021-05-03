@@ -9130,7 +9130,7 @@ pify@^4.0.1:
   resolved "https://registry.yarnpkg.com/pify/-/pify-4.0.1.tgz#4b2cd25c50d598735c50292224fd8c6df41e3231"
   integrity sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g==
 
-pinkie-promise@^2.0.0:
+pinkie-promise@^2.0.0, pinkie-promise@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/pinkie-promise/-/pinkie-promise-2.0.1.tgz#2135d6dfa7a358c069ac9b178776288228450ffa"
   integrity sha1-ITXW36ejWMBprJsXh3YogihFD/o=
@@ -10241,6 +10241,14 @@ schema-utils@^3.0.0:
     "@types/json-schema" "^7.0.6"
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
+
+screenshot-desktop@^1.12.3:
+  version "1.12.3"
+  resolved "https://registry.yarnpkg.com/screenshot-desktop/-/screenshot-desktop-1.12.3.tgz#49a84d6494c4c8711ab21099aa0b38dce3d66a93"
+  integrity sha512-lNUldOOSNbbz36OUR224tkpnBzViLVY+ohElubC8yqtfRXHuZucOcacmweKm9+yyGd+EuuYtrDhaAZ8jfh6V1A==
+  dependencies:
+    pinkie-promise "^2.0.1"
+    temp "^0.9.0"
 
 scrypt-js@3.0.1, scrypt-js@^3.0.0:
   version "3.0.1"

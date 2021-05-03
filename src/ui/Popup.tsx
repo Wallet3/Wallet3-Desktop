@@ -4,6 +4,7 @@ import { ApplicationPopup } from './viewmodels/ApplicationPopup';
 import { Blank } from './pages/login/';
 import { ConfirmTx } from './pages/popup';
 import React from 'react';
+import Screenshot from './pages/popup/Screenshot';
 import { observer } from 'mobx-react-lite';
 
 export default observer(({ app }: { app: ApplicationPopup }) => {
@@ -12,6 +13,10 @@ export default observer(({ app }: { app: ApplicationPopup }) => {
       <Switch>
         <Route path="/sendTx">
           <ConfirmTx app={app} />
+        </Route>
+
+        <Route path="/scanQR">
+          <Screenshot />
         </Route>
 
         <Route path="*" component={Blank} />

@@ -1,6 +1,14 @@
 import * as crypto from 'crypto';
 
-import { IpcRendererEvent, contextBridge, ipcRenderer, remote } from 'electron';
+import {
+  DesktopCapturerSource,
+  IpcRendererEvent,
+  SourcesOptions,
+  contextBridge,
+  desktopCapturer,
+  ipcRenderer,
+  remote,
+} from 'electron';
 import { decrypt, encrypt } from './common/Cipher';
 
 import IPCKeys from './common/Messages';
@@ -71,3 +79,13 @@ export class WindowApi {
 }
 
 contextBridge.exposeInMainWorld(WindowApi.API_KEY, new WindowApi());
+
+export class DesktopCapturerApi {
+  static readonly API_KEY = 'wallet3_capturer';
+
+  getSources(options: SourcesOptions): Promise<DesktopCapturerSource[]> {
+    return desktopCapturer.getSources(options);
+  }
+}
+
+contextBridge.exposeInMainWorld(DesktopCapturerApi.API_KEY, new DesktopCapturerApi());

@@ -3,7 +3,7 @@ import Messages, { CreateTransferTx, InitStatus, PopupWindowTypes } from '../../
 import { Application } from './Application';
 import { ConfirmVM } from './ConfirmVM';
 import { createBrowserHistory } from 'history';
-import ipc from '../ipc/Bridge';
+import ipc from '../bridges/IPC';
 
 export class ApplicationPopup extends Application {
   readonly history = createBrowserHistory();
@@ -19,6 +19,9 @@ export class ApplicationPopup extends Application {
         case 'sendTx':
           this.implVM = new ConfirmVM(args);
           this.history.push('/sendTx');
+          break;
+        case 'scanQR':
+          this.history.push('/scanQR');
           break;
       }
     });

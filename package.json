@@ -135,6 +135,7 @@
     "react-router-dom": "^5.2.0",
     "react-search-autocomplete": "^5.0.9",
     "react-select": "^4.3.0",
+    "screenshot-desktop": "^1.12.3",
     "secure-enclave": "^0.4.1",
     "storejs": "^1.1.0",
     "ws": "^7.4.5"

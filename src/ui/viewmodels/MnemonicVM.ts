@@ -2,8 +2,8 @@ import MessageKeys, { GenMnemonic, SetupMnemonic } from '../../common/Messages';
 import { action, makeAutoObservable, runInAction } from 'mobx';
 
 import WalletVM from './WalletVM';
-import crypto from '../ipc/Crypto';
-import ipc from '../ipc/Bridge';
+import crypto from '../bridges/Crypto';
+import ipc from '../bridges/IPC';
 
 export class MnemonicVM {
   phrases: string[] = [];

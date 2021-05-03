@@ -49,4 +49,4 @@ export interface CreateTransferTx {
   nativeToken?: { amount: number; decimals: number };
 }
 
-export type PopupWindowTypes = 'connect' | 'signature' | 'sendTx';
+export type PopupWindowTypes = 'connect' | 'signature' | 'sendTx' | 'scanQR';

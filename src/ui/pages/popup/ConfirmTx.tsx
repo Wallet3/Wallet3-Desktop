@@ -10,7 +10,7 @@ import PasscodeView from '../../components/PasscodeView';
 import { PopupTitle } from '../../components';
 import React from 'react';
 import TouchIDView from '../../components/TouchIDView';
-import Window from '../../ipc/Window';
+import Window from '../../bridges/Window';
 import anime from 'animejs';
 import { observer } from 'mobx-react-lite';
 

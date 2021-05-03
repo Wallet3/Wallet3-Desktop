@@ -2,8 +2,8 @@ import MessageKeys, { InitStatus, InitVerifyPassword } from '../../common/Messag
 
 import WalletVM from './WalletVM';
 import { createBrowserHistory } from 'history';
-import crypto from '../ipc/Crypto';
-import ipc from '../ipc/Bridge';
+import crypto from '../bridges/Crypto';
+import ipc from '../bridges/IPC';
 import { makeObservable } from 'mobx';
 import store from 'storejs';
 

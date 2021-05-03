@@ -7,7 +7,7 @@ import { AccountVM } from './AccountVM';
 import ERC20ABI from '../../abis/ERC20.json';
 import { ITokenBalance } from '../../api/Debank';
 import { ethers } from 'ethers';
-import ipc from '../ipc/Bridge';
+import ipc from '../bridges/IPC';
 import provider from '../../common/Provider';
 
 export class TransferVM {

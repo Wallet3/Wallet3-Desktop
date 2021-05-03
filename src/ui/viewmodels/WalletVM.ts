@@ -3,7 +3,7 @@ import { makeAutoObservable, runInAction, when } from 'mobx';
 import { AccountVM } from './AccountVM';
 import App from './Application';
 import MessageKeys from '../../common/Messages';
-import ipc from '../ipc/Bridge';
+import ipc from '../bridges/IPC';
 import store from 'storejs';
 
 const Keys = {

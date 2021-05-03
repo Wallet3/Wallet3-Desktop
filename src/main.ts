@@ -36,6 +36,9 @@ const createTouchBar = (mainWindow: BrowserWindow) => {
     label: 'WalletConnect',
     iconPosition: 'left',
     icon: nativeImage.createFromDataURL(require('./assets/icons/touchbar/scan.png').default),
+    click: () => {
+      App.createPopupWindow('scanQR', {});
+    },
   });
 
   const price = new TouchBar.TouchBarButton({
