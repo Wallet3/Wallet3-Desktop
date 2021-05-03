@@ -1,5 +1,5 @@
 import { GasnowHttp, GasnowWs } from '../../api/Gasnow';
-import Messages, { CreateSendTx } from '../../common/Messages';
+import Messages, { CreateTransferTx } from '../../common/Messages';
 import { makeAutoObservable, reaction, runInAction } from 'mobx';
 import { parseEther, parseUnits } from 'ethers/lib/utils';
 
@@ -33,7 +33,8 @@ export class TransferVM {
         this.receipt &&
         this.amount.length > 0 &&
         validAmount &&
-        this.gas > 0 &&
+        this.gas >= 21000 &&
+        this.gas < 12_500_000 &&
         this.nonce >= 0 &&
         this.gasPrice > 0
       );
@@ -176,7 +177,7 @@ export class TransferVM {
     const iface = new ethers.utils.Interface(ERC20ABI);
     const data = this.isERC20 ? '0x' : iface.encodeFunctionData('transfer', [this.receiptAddress, value]);
 
-    await ipc.invokeSecure<void>(Messages.createSendTx, {
+    await ipc.invokeSecure<void>(Messages.createTransferTx, {
       to,
       value,
       gas: this.gas,
@@ -196,6 +197,6 @@ export class TransferVM {
       },
 
       nativeToken: this._accountVM.nativeToken,
-    } as CreateSendTx);
+    } as CreateTransferTx);
   }
 }

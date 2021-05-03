@@ -8,7 +8,7 @@ export default {
   initVerifyPassword: 'msg-init-verify-password',
   promptTouchID: 'msg-prompt-touchid',
   resetSystem: 'msg-reset-system',
-  createSendTx: 'msg-create-send-tx',
+  createTransferTx: 'msg-create-transfer-tx',
   fetchAddresses: 'msg-fetch-addresses',
 
   initWindowType: 'msg-init-window-type',
@@ -34,7 +34,7 @@ export interface SetupMnemonic {
   addresses: string[];
 }
 
-export interface CreateSendTx {
+export interface CreateTransferTx {
   to: string;
   value: string;
   gas: number;

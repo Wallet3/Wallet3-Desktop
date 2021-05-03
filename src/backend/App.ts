@@ -1,7 +1,7 @@
 import * as Cipher from '../common/Cipher';
 
 import { BrowserWindow, ipcMain, systemPreferences } from 'electron';
-import MessageKeys, { CreateSendTx, PopupWindowTypes } from '../common/Messages';
+import MessageKeys, { CreateTransferTx, PopupWindowTypes } from '../common/Messages';
 
 import KeyMan from './KeyMan';
 import { createECDH } from 'crypto';
@@ -125,9 +125,9 @@ class App {
   };
 
   initPopupHandlers = () => {
-    ipcMain.handle(`${MessageKeys.createSendTx}-secure`, async (e, encrypted, winId) => {
+    ipcMain.handle(`${MessageKeys.createTransferTx}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.ipcs.get(winId);
-      const params: CreateSendTx = this.decryptIpc(encrypted, iv, key);
+      const params: CreateTransferTx = this.decryptIpc(encrypted, iv, key);
       await this.createPopupWindow('sendTx', params, true, this.mainWindow);
     });
   };
@@ -158,8 +158,9 @@ class App {
     return new Promise<void>((resolve) => {
       popup.webContents.once('did-finish-load', () => {
         popup.webContents.send(MessageKeys.initWindowType, { type, args });
-        resolve();
       });
+
+      popup.once('closed', () => resolve());
     });
   }
 }

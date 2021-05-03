@@ -2,7 +2,6 @@ import './Transfer.css';
 
 import { Menu, MenuButton, MenuItem } from '@szhsin/react-menu';
 import React, { useEffect, useRef, useState } from 'react';
-import { useParams, useRouteMatch } from 'react-router';
 
 import AnimatedNumber from 'react-animated-number';
 import { Application } from '../../viewmodels/Application';
@@ -10,7 +9,6 @@ import Feather from 'feather-icons-react';
 import { NavBar } from '../../components';
 import { ReactSearchAutocomplete } from 'react-search-autocomplete';
 import TokenLabel from '../../components/TokenLabel';
-import { TransferVM } from '../../viewmodels/TransferVM';
 import { WalletVM } from '../../viewmodels/WalletVM';
 import { formatNum } from '../../misc/Formatter';
 import { observer } from 'mobx-react-lite';
@@ -189,7 +187,10 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
         </div>
       </div>
 
-      <button disabled={!transferVM.isValid || transferVM.insufficientFee} onClick={(_) => transferVM.sendTx()}>
+      <button
+        disabled={!transferVM.isValid || transferVM.insufficientFee}
+        onClick={(_) => transferVM.sendTx().then(() => app.history.goBack())}
+      >
         {transferVM.insufficientFee ? 'INSUFFICIENT FEE' : 'Send'}
       </button>
     </div>

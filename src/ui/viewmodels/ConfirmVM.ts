@@ -1,13 +1,13 @@
-import { CreateSendTx } from '../../common/Messages';
+import { CreateTransferTx } from '../../common/Messages';
 import { GasnowWs } from '../../api/Gasnow';
 import { makeAutoObservable } from 'mobx';
 import { parseUnits } from '@ethersproject/units';
 import { utils } from 'ethers';
 
 export class ConfirmVM {
-  args: CreateSendTx;
+  args: CreateTransferTx;
 
-  constructor(args: CreateSendTx) {
+  constructor(args: CreateTransferTx) {
     makeAutoObservable(this);
 
     this.args = args;
