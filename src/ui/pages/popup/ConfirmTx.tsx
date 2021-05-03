@@ -10,7 +10,6 @@ import PasscodeView from '../../components/PasscodeView';
 import { PopupTitle } from '../../components';
 import React from 'react';
 import TouchIDView from '../../components/TouchIDView';
-import Window from '../../bridges/Window';
 import anime from 'animejs';
 import { observer } from 'mobx-react-lite';
 
@@ -20,7 +19,7 @@ interface Props {
 
 const authTouchID = async () => {
   if (await App.promptTouchID('Send Tx')) {
-    Window.close();
+    window.close();
   } else {
     Anime.vibrate('div.auth > .panel');
   }
@@ -34,7 +33,7 @@ const authPassword = async (passcode: string) => {
     return;
   }
 
-  Window.close();
+  window.close();
 };
 
 const Methods = new Map<string, string[]>([
@@ -136,7 +135,7 @@ const TransferView = observer(({ implVM, onContinue }: { implVM: ConfirmVM; onCo
       </div>
 
       <div className="actions">
-        <button onClick={(_) => Window.close()}>Cancel</button>
+        <button onClick={(_) => window.close()}>Cancel</button>
         <button disabled={!implVM.isValid || implVM.insufficientFee} onClick={(_) => onContinue?.()}>
           Continue
         </button>

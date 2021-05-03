@@ -7,7 +7,6 @@ import {
   contextBridge,
   desktopCapturer,
   ipcRenderer,
-  remote,
 } from 'electron';
 import { decrypt, encrypt } from './common/Cipher';
 
@@ -69,16 +68,6 @@ export class CryptoApi {
 }
 
 contextBridge.exposeInMainWorld(CryptoApi.API_KEY, new CryptoApi());
-
-export class WindowApi {
-  static readonly API_KEY = 'wallet3_window';
-
-  close = () => {
-    remote.getCurrentWindow().close();
-  };
-}
-
-contextBridge.exposeInMainWorld(WindowApi.API_KEY, new WindowApi());
 
 export class DesktopCapturerApi {
   static readonly API_KEY = 'wallet3_capturer';

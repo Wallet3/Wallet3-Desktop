@@ -1,6 +1,6 @@
 import * as Cipher from '../common/Cipher';
 
-import { BrowserWindow, TouchBarButton, ipcMain, systemPreferences } from 'electron';
+import { BrowserWindow, TouchBar, TouchBarButton, ipcMain, systemPreferences } from 'electron';
 import MessageKeys, { CreateTransferTx, PopupWindowTypes } from '../common/Messages';
 
 import KeyMan from './KeyMan';
@@ -8,10 +8,6 @@ import { createECDH } from 'crypto';
 
 declare const POPUP_WINDOW_WEBPACK_ENTRY: string;
 declare const POPUP_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
-
-const AppKeys = {
-  hasMnemonic: 'has-mnemonic',
-};
 
 class App {
   touchIDSupported = false;
@@ -145,9 +141,13 @@ class App {
         contextIsolation: true,
         nodeIntegration: false,
         webSecurity: true,
-        enableRemoteModule: true,
       },
     });
+
+    if (this.touchBarButtons) {
+      const { gas, price } = this.touchBarButtons || {};
+      popup.setTouchBar(new TouchBar({ items: [price, gas] }));
+    }
 
     popup.loadURL(POPUP_WINDOW_WEBPACK_ENTRY);
     popup.once('ready-to-show', () => popup.show());
