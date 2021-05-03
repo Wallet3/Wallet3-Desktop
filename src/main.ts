@@ -32,12 +32,18 @@ const createTouchBar = (mainWindow: BrowserWindow) => {
     return;
   }
 
-  const walletConnect = new TouchBar.TouchBarButton({ label: 'WalletConnect' });
+  const walletConnect = new TouchBar.TouchBarButton({
+    label: 'WalletConnect',
+    iconPosition: 'left',
+    icon: nativeImage.createFromDataURL(require('./assets/icons/touchbar/scan.png').default),
+  });
+
   const price = new TouchBar.TouchBarButton({
     label: '$ 3100.00',
     iconPosition: 'left',
     icon: nativeImage.createFromDataURL(require('./assets/icons/touchbar/eth.png').default),
   });
+
   const gas = new TouchBar.TouchBarButton({
     label: '27 | 25 | 20',
     iconPosition: 'left',
