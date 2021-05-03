@@ -52,8 +52,8 @@ export class Application {
     return await ipc.invokeSecure<boolean>(MessageKeys.verifyPassword, { password });
   }
 
-  async promptTouchID() {
-    return await ipc.invokeSecure<boolean>(MessageKeys.promptTouchID, {});
+  async promptTouchID(message?: string) {
+    return await ipc.invokeSecure<boolean>(MessageKeys.promptTouchID, { message });
   }
 }
 

@@ -19,7 +19,8 @@ interface Props {
 }
 
 const authTouchID = async () => {
-  if (await App.promptTouchID()) {
+  if (await App.promptTouchID('Send Tx')) {
+    Window.close();
   } else {
     Anime.vibrate('div.auth');
   }
@@ -32,6 +33,8 @@ const authPassword = async (passcode: string) => {
     Anime.vibrate('div.auth');
     return;
   }
+
+  Window.close();
 };
 
 export default observer(({ app }: Props) => {

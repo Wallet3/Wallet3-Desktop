@@ -50,9 +50,10 @@ class App {
       if (!this.touchIDSupported) return false;
 
       const { iv, key } = this.ipcs.get(winId);
+      const { message } = this.decryptIpc(encrypted, iv, key);
 
       try {
-        await systemPreferences.promptTouchID('Unlock Wallet');
+        await systemPreferences.promptTouchID(message ?? 'Unlock Wallet');
         return this.encryptIpc(true, iv, key);
       } catch (error) {
         return this.encryptIpc(false, iv, key);
@@ -128,7 +129,7 @@ class App {
     ipcMain.handle(`${MessageKeys.createTransferTx}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.ipcs.get(winId);
       const params: CreateTransferTx = this.decryptIpc(encrypted, iv, key);
-      await this.createPopupWindow('sendTx', params, true, this.mainWindow);
+      return this.encryptIpc(await this.createPopupWindow('sendTx', params, true, this.mainWindow), iv, key);
     });
   };
 
@@ -155,12 +156,12 @@ class App {
     popup.loadURL(POPUP_WINDOW_WEBPACK_ENTRY);
     popup.once('ready-to-show', () => popup.show());
 
-    return new Promise<void>((resolve) => {
+    return new Promise<boolean>((resolve) => {
       popup.webContents.once('did-finish-load', () => {
         popup.webContents.send(MessageKeys.initWindowType, { type, args });
       });
 
-      popup.once('closed', () => resolve());
+      popup.once('close', () => resolve(true));
     });
   }
 }
