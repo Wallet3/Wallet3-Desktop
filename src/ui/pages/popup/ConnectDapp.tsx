@@ -21,8 +21,23 @@ export default observer(({ app }: { app: ApplicationPopup }) => {
       </div>
 
       <div className="actions">
-        <button>Reject</button>
-        <button className="positive">Approve</button>
+        <button
+          onClick={(_) => {
+            vm.reject();
+            window.close();
+          }}
+        >
+          Reject
+        </button>
+        <button
+          className="positive"
+          onClick={(_) => {
+            vm.approve();
+            window.close();
+          }}
+        >
+          Approve
+        </button>
       </div>
     </div>
   );

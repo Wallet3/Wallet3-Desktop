@@ -1,11 +1,12 @@
+import { BigNumber, utils } from 'ethers';
+
 import { CreateTransferTx } from '../../common/Messages';
 import { GasnowWs } from '../../api/Gasnow';
 import { makeAutoObservable } from 'mobx';
 import { parseUnits } from '@ethersproject/units';
-import { utils } from 'ethers';
 
 export class ConfirmVM {
-  args: CreateTransferTx;
+  args: CreateTransferTx = null;
 
   constructor(args: CreateTransferTx) {
     makeAutoObservable(this);
@@ -52,7 +53,7 @@ export class ConfirmVM {
   }
 
   get insufficientFee() {
-    return parseUnits(`${this.args.nativeToken?.amount ?? 0}`, this.args.nativeToken?.decimals).lt(
+    return BigNumber.from(this.args.nativeToken?.amount ?? 0).lt(
       (BigInt(this.gasPrice * GasnowWs.gwei_1) * BigInt(this.gas)).toString()
     );
   }

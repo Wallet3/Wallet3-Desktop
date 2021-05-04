@@ -79,7 +79,7 @@ export default observer(({ app }: Props) => {
     });
   };
 
-  const [title, icon] = Methods.get(app.confirmVM?.data?.substring(0, 10));
+  const [title, icon] = Methods.get(app.confirmVM?.data?.substring(0, 10)) || ['Transfer', 'repeat'];
 
   return (
     <div className="page confirm">

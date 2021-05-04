@@ -25,13 +25,14 @@ export default (props) => {
       return { success: false, result: '' };
     });
 
+    if (window.closed) return;
     if (!uri) return;
 
     const result = await ipc.invokeSecure(Messages.connectWallet, { uri });
     if (result) {
       window.close();
     } else {
-      Anime.vibrate('.scan-area');
+      Anime.vibrate('.scan-area', () => setTimeout(() => window.close(), 1000));
     }
   };
 

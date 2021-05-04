@@ -38,6 +38,7 @@ const createTouchBar = (mainWindow: BrowserWindow) => {
     iconPosition: 'left',
     icon: nativeImage.createFromDataURL(require('./assets/icons/touchbar/scan.png').default),
     click: () => {
+      if (App.addresses.length === 0) return;
       App.createPopupWindow('scanQR', {});
     },
   });

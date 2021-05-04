@@ -75,6 +75,16 @@
   height: 100%;
   display: grid;
   grid-template-rows: 1fr auto;
-  transform: translateX(335.9px);
+  transform: translateX(332.9px);
   opacity: 0;
+}
+
+.page.confirm > .container > .auth > .panel {
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
+}
+
+.page.confirm > .container > .auth > .panel > .touchid-view {
+  margin-top: 6vh;
 }

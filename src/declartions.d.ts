@@ -3,6 +3,11 @@ declare module '*.svg' {
   export default content;
 }
 
+interface WCInternalEvent {
+  event: string;
+  params: any[];
+}
+
 interface WCClientMeta {
   description: string;
   url: string;
@@ -23,6 +28,23 @@ interface WCSessionRequestRequest {
   ];
 }
 
+interface WCCallRequest_eth_sendTransaction {
+  from: string;
+  to: string;
+  gasPrice: string;
+  gas: string;
+  value: string;
+  nonce: string;
+  data: string;
+}
+
+interface WCCallRequestRequest {
+  id: number;
+  jsonrpc: '2.0';
+  method: 'eth_sendTransaction' | 'eth_signTransaction' | 'eth_sign' | 'personal_sign' | 'eth_signTypedData';
+  params: WCCallRequest_eth_sendTransaction[];
+}
+
 interface WCSessionRequestResponse {
   id: number;
   jsonrpc: '2.0';
@@ -34,6 +56,7 @@ interface WCSessionRequestResponse {
     accounts: string[];
   };
 }
+
 interface WCSessionUpdateRequest {
   id: number;
   jsonrpc: '2.0';

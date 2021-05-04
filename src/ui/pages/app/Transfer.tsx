@@ -181,9 +181,10 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
               placeholder="20"
               onClick={(_) => {
                 setActiveGas(3);
+                transferVM.setGasPrice(Number.parseFloat(gasInput.current.value) || 0);
                 transferVM.setGasLevel(3);
               }}
-              onChange={(e) => transferVM.setGasPrice(Number.parseInt(e.target.value) || 0)}
+              onChange={(e) => transferVM.setGasPrice(Number.parseFloat(e.target.value) || 0)}
             />
           </div>
         </div>

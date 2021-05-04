@@ -16,6 +16,11 @@ export default {
   initWindowType: 'msg-init-window-type',
 };
 
+export const WcMessages = {
+  approveWcSession: (peerId: string) => `wc-approve-session-${peerId}`,
+  rejectWcSession: (peerId: string) => `wc-reject-session-${peerId}`,
+};
+
 export interface InitStatus {
   hasMnemonic: boolean;
   touchIDSupported: boolean;
@@ -40,7 +45,7 @@ export interface CreateTransferTx {
   to: string;
   value: string;
   gas: number;
-  gasPrice: number;
+  gasPrice: number; // wei
   nonce: number;
   data: string;
   receipt?: {
@@ -48,7 +53,10 @@ export interface CreateTransferTx {
     name?: string;
   };
   token: { symbol: string; decimals: number; amount: string };
-  nativeToken?: { amount: number; decimals: number };
+  nativeToken?: {
+    amount: string; // wei
+    decimals: number;
+  };
 }
 
 export type PopupWindowTypes = 'connectDapp' | 'signature' | 'sendTx' | 'scanQR';

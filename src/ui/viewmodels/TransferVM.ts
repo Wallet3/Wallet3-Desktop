@@ -1,12 +1,12 @@
 import Gasnow, { GasnowHttp, GasnowWs } from '../../api/Gasnow';
 import { IReactionDisposer, makeAutoObservable, reaction, runInAction } from 'mobx';
 import Messages, { CreateTransferTx } from '../../common/Messages';
+import { ethers, utils } from 'ethers';
 import { parseEther, parseUnits } from 'ethers/lib/utils';
 
 import { AccountVM } from './AccountVM';
 import ERC20ABI from '../../abis/ERC20.json';
 import { ITokenBalance } from '../../api/Debank';
-import { ethers } from 'ethers';
 import ipc from '../bridges/IPC';
 import provider from '../../common/Provider';
 
@@ -38,7 +38,8 @@ export class TransferVM {
         this.gas >= 21000 &&
         this.gas < 12_500_000 &&
         this.nonce >= 0 &&
-        this.gasPrice > 0
+        this.gasPrice > 0 &&
+        this.gasPrice <= 9007199 // MAX_SAFE_INTEGER * gwei_1
       );
     } catch (error) {
       return false;
@@ -46,7 +47,7 @@ export class TransferVM {
   }
 
   get insufficientFee() {
-    const maxFee = BigInt(this.gasPrice || 0) * BigInt(this.gas || 0);
+    const maxFee = Number.parseInt((this.gasPrice * GasnowWs.gwei_1 * this.gas || 0) as any);
     const balance = parseEther(this._accountVM?.nativeToken?.amount.toString() || '0');
     return balance.lt(maxFee.toString());
   }
@@ -179,7 +180,7 @@ export class TransferVM {
     }
 
     const erc20 = new ethers.Contract(this.selectedToken.id, ERC20ABI, provider);
-    const amt = parseUnits(this.amount || '0', this.selectedToken.decimals || 18);
+    const amt = this.amountBigInt;
     erc20.estimateGas
       .transferFrom(this.self, this.receiptAddress || '0xD1b05E3AFEDcb11F29c5A560D098170bE26Fe5f5', amt)
       .then((v) => {
@@ -191,7 +192,6 @@ export class TransferVM {
   }
 
   dispose() {
-    Gasnow.stop();
     this.gasnowDisposer?.();
   }
 
@@ -221,7 +221,15 @@ export class TransferVM {
         decimals: this.selectedToken.decimals,
       },
 
-      nativeToken: this._accountVM.nativeToken,
+      nativeToken: {
+        amount: parseUnits(
+          this._accountVM.nativeToken?.amount?.toString() || '0',
+          this._accountVM.nativeToken?.decimals ?? 18
+        )
+          .sub(10)
+          .toString(),
+        decimals: this._accountVM.nativeToken?.decimals ?? 18,
+      },
     } as CreateTransferTx);
   }
 }

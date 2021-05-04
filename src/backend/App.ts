@@ -17,6 +17,13 @@ class App {
   windows = new Map<string, { iv: Buffer; key: Buffer }>();
   mainWindow?: BrowserWindow;
   touchBarButtons?: { walletConnect: TouchBarButton; gas: TouchBarButton; price?: TouchBarButton };
+  currentAddressIndex = 0;
+  addresses: string[] = [];
+  chainId = 1;
+
+  get currentAddress() {
+    return this.addresses[this.currentAddressIndex];
+  }
 
   constructor() {
     this.touchIDSupported = systemPreferences.canPromptTouchID();
@@ -78,6 +85,7 @@ class App {
       if (!(await KeyMan.saveMnemonic(userPassword))) return this.encryptIpc({ success: false }, iv, key);
 
       const addresses = await KeyMan.genAddresses(userPassword, 1);
+      this.addresses = addresses;
 
       return this.encryptIpc({ addresses, success: true }, iv, key);
     });
@@ -92,14 +100,16 @@ class App {
       const { iv, key } = this.windows.get(winId);
       const { password, count } = this.decryptIpc(encrypted, iv, key);
       const verified = await KeyMan.verifyPassword(password);
-      const addresses: string[] = [];
 
-      if (verified && this.touchIDSupported) {
-        this.userPassword = password;
-        addresses.push(...(await KeyMan.genAddresses(password, count)));
+      if (verified) {
+        this.addresses.push(...(await KeyMan.genAddresses(password, count)));
       }
 
-      return this.encryptIpc({ verified, addresses }, iv, key);
+      if (this.touchIDSupported) {
+        this.userPassword = password;
+      }
+
+      return this.encryptIpc({ verified, addresses: this.addresses }, iv, key);
     });
 
     ipcMain.handle(`${MessageKeys.releaseWindow}-secure`, (e, encrypted, winId) => {
@@ -126,7 +136,13 @@ class App {
     ipcMain.handle(`${MessageKeys.createTransferTx}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
       const params: CreateTransferTx = this.decryptIpc(encrypted, iv, key);
-      return this.encryptIpc(await this.createPopupWindow('sendTx', params, true, this.mainWindow), iv, key);
+      const popup = await this.createPopupWindow('sendTx', params, true, this.mainWindow);
+
+      await new Promise<boolean>((resolve) => {
+        popup.once('close', () => resolve(true));
+      });
+
+      return this.encryptIpc(true, iv, key);
     });
 
     ipcMain.handle(`${MessageKeys.connectWallet}-secure`, async (e, encrypted, winId) => {
@@ -165,12 +181,11 @@ class App {
     popup.loadURL(POPUP_WINDOW_WEBPACK_ENTRY);
     popup.once('ready-to-show', () => popup.show());
 
-    return new Promise<boolean>((resolve) => {
+    return new Promise<BrowserWindow>((resolve) => {
       popup.webContents.once('did-finish-load', () => {
         popup.webContents.send(MessageKeys.initWindowType, { type, payload });
+        resolve(popup);
       });
-
-      popup.once('close', () => resolve(true));
     });
   }
 }

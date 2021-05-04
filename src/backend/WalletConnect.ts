@@ -1,6 +1,11 @@
+import { CreateTransferTx, WcMessages } from '../common/Messages';
+
 import App from './App';
 import EventEmitter from 'events';
+import { IpcMainInvokeEvent } from 'electron/main';
 import WalletConnector from '@walletconnect/client';
+import { ipcMain } from 'electron';
+import provider from '../common/Provider';
 
 export class WalletConnect extends EventEmitter {
   connector: WalletConnector;
@@ -22,9 +27,11 @@ export class WalletConnect extends EventEmitter {
     });
 
     this.connector.on('session_request', this.handleSessionRequest);
+    this.connector.on('call_request', this.handleCallRequest);
+    this.connector.on('disconnect', (error: Error) => this.emit('disconnect'));
   }
 
-  handleSessionRequest = (error: Error, payload: WCSessionRequestRequest) => {
+  handleSessionRequest = async (error: Error, payload: WCSessionRequestRequest) => {
     if (error) {
       this.emit('error', error);
       return;
@@ -37,11 +44,59 @@ export class WalletConnect extends EventEmitter {
 
     this.emit('sessionRequest', payload);
 
-    App.createPopupWindow('connectDapp', payload.params);
+    ipcMain.handleOnce(WcMessages.approveWcSession(this.peerId), this.handleApproveSession);
+    ipcMain.handleOnce(WcMessages.rejectWcSession(this.peerId), this.handleRejectSession);
+
+    await App.createPopupWindow('connectDapp', payload.params);
+  };
+
+  handleApproveSession = (e: IpcMainInvokeEvent) => {
+    this.connector.approveSession({ accounts: App.addresses, chainId: App.chainId });
+  };
+
+  handleRejectSession = (e: IpcMainInvokeEvent) => {
+    this.connector.rejectSession({ message: 'User cancelled' });
+    this.dispose();
+  };
+
+  handleCallRequest = async (error: Error, request: WCCallRequestRequest) => {
+    console.log(request.method);
+    console.log(request.params);
+
+    switch (request.method) {
+      case 'eth_sendTransaction':
+        const [param] = request.params as WCCallRequest_eth_sendTransaction[];
+        const balance = await provider.getBalance(App.currentAddress);
+
+        App.createPopupWindow('sendTx', {
+          to: param.to,
+          data: param.data,
+          gas: Number.parseInt(param.gas),
+          gasPrice: Number.parseInt(param.gasPrice),
+          nonce: Number.parseInt(param.nonce),
+          value: param.value,
+
+          nativeToken: {
+            amount: balance.toString(),
+            decimals: 18,
+          },
+        } as CreateTransferTx);
+        break;
+      case 'eth_sign':
+        break;
+      case 'eth_signTransaction':
+        break;
+      case 'personal_sign':
+        break;
+      case 'eth_signTypedData':
+        break;
+    }
   };
 
   dispose() {
     this.connector.killSession();
+    ipcMain.removeHandler(WcMessages.approveWcSession(this.peerId));
+    ipcMain.removeHandler(WcMessages.rejectWcSession(this.peerId));
     this.removeAllListeners();
   }
 }
@@ -51,19 +106,24 @@ export async function connectAndWaitSession(uri: string) {
 
   try {
     await new Promise<void>((resolve, reject) => {
-      setTimeout(() => reject(), 3000);
-      wc.once('sessionRequest', () => resolve());
-      wc.once('error', (error) => {
-        console.log('error', error);
-        reject();
+      const timer = setTimeout(() => reject(), 5000);
+
+      const rejectPromise = () => reject();
+
+      wc.once('error', rejectPromise);
+      wc.once('disconnect', rejectPromise);
+
+      wc.once('sessionRequest', () => {
+        clearTimeout(timer);
+        wc.removeAllListeners('error');
+        wc.removeAllListeners('disconnect');
+        resolve();
       });
     });
 
-    console.log('session requested');
     return wc;
   } catch (error) {
     wc.dispose(); // uri is expired
-    console.log('session expired');
     return undefined;
   }
 }
