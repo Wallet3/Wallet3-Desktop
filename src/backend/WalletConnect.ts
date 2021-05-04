@@ -1,9 +1,11 @@
 import { CreateTransferTx, WcMessages } from '../common/Messages';
 
 import App from './App';
+import ERC20ABI from '../abis/ERC20.json';
 import EventEmitter from 'events';
 import { IpcMainInvokeEvent } from 'electron/main';
 import WalletConnector from '@walletconnect/client';
+import { ethers } from 'ethers';
 import { ipcMain } from 'electron';
 import provider from '../common/Provider';
 
@@ -66,21 +68,7 @@ export class WalletConnect extends EventEmitter {
     switch (request.method) {
       case 'eth_sendTransaction':
         const [param] = request.params as WCCallRequest_eth_sendTransaction[];
-        const balance = await provider.getBalance(App.currentAddress);
 
-        App.createPopupWindow('sendTx', {
-          to: param.to,
-          data: param.data,
-          gas: Number.parseInt(param.gas),
-          gasPrice: Number.parseInt(param.gasPrice),
-          nonce: Number.parseInt(param.nonce),
-          value: param.value,
-
-          nativeToken: {
-            amount: balance.toString(),
-            decimals: 18,
-          },
-        } as CreateTransferTx);
         break;
       case 'eth_sign':
         break;
@@ -91,6 +79,29 @@ export class WalletConnect extends EventEmitter {
       case 'eth_signTypedData':
         break;
     }
+  };
+
+  eth_sendTransaction = async (param: WCCallRequest_eth_sendTransaction) => {
+    const balance = await provider.getBalance(App.currentAddress);
+
+    if (param.data?.startsWith('0xa9059cbb')) {
+      const iface = new ethers.utils.Interface(ERC20ABI);
+      const { dst, wad } = iface.decodeFunctionData('transfer', param.data);
+    }
+
+    App.createPopupWindow('sendTx', {
+      to: param.to,
+      data: param.data,
+      gas: Number.parseInt(param.gas),
+      gasPrice: Number.parseInt(param.gasPrice),
+      nonce: Number.parseInt(param.nonce),
+      value: param.value,
+
+      nativeToken: {
+        amount: balance.toString(),
+        decimals: 18,
+      },
+    } as CreateTransferTx);
   };
 
   dispose() {

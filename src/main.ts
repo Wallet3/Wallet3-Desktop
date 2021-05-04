@@ -36,6 +36,7 @@ const createTouchBar = (mainWindow: BrowserWindow) => {
   const walletConnect = new TouchBar.TouchBarButton({
     label: 'WalletConnect',
     iconPosition: 'left',
+    enabled: false,
     icon: nativeImage.createFromDataURL(require('./assets/icons/touchbar/scan.png').default),
     click: () => {
       if (App.addresses.length === 0) return;

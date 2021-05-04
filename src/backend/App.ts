@@ -103,10 +103,11 @@ class App {
 
       if (verified) {
         this.addresses.push(...(await KeyMan.genAddresses(password, count)));
-      }
+        if (this.touchBarButtons?.walletConnect) this.touchBarButtons.walletConnect.enabled = true;
 
-      if (this.touchIDSupported) {
-        this.userPassword = password;
+        if (this.touchIDSupported) {
+          this.userPassword = password;
+        }
       }
 
       return this.encryptIpc({ verified, addresses: this.addresses }, iv, key);
