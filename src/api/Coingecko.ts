@@ -29,7 +29,7 @@ class Coingecko {
         runInAction(() => (this.eth = ethereum.usd));
         setTimeout(() => this.start(), 15 * 1000);
       })
-      .catch(() => {});
+      .catch(() => setTimeout(() => this.start(), 15 * 1000));
   }
 }
 

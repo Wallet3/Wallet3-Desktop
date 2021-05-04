@@ -75,14 +75,8 @@
   height: 100%;
   display: grid;
   grid-template-rows: 1fr auto;
-  transform: translateX(332.9px);
+  transform: translateX(335.9px);
   opacity: 0;
-}
-
-.page.confirm > .container > .auth > .panel {
-  /* display: flex;
-  justify-content: center;
-  align-items: center; */
 }
 
 .page.confirm > .container > .auth > .panel > .touchid-view {

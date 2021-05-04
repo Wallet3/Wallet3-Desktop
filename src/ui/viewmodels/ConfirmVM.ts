@@ -5,11 +5,28 @@ import { GasnowWs } from '../../api/Gasnow';
 import { makeAutoObservable } from 'mobx';
 import { parseUnits } from '@ethersproject/units';
 
+const Methods = new Map<string, string[]>([
+  ['0xa9059cbb', ['Transfer', 'repeat']],
+  ['0x', ['Transfer', 'repeat']],
+  ['0x095ea7b3', ['Approve', 'shield']],
+]);
+
 export class ConfirmVM {
   args: CreateTransferTx = null;
+  method = '';
+  flag = '';
 
   constructor(args: CreateTransferTx) {
     makeAutoObservable(this);
+
+    if (Methods.has(args.data?.substring(0, 10))) {
+      const [method, icon] = Methods.get(args.data.substring(0, 10));
+      this.method = method;
+      this.flag = icon;
+    } else {
+      this.method = 'Contract Interaction';
+      this.flag = 'edit-2';
+    }
 
     this.args = args;
     this._gas = args.gas;

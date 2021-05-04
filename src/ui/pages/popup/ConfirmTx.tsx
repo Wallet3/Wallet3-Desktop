@@ -36,11 +36,6 @@ const authPassword = async (passcode: string) => {
   window.close();
 };
 
-const Methods = new Map<string, string[]>([
-  ['0xa9059cbb', ['Transfer', 'repeat']],
-  ['0x095ea7b3', ['Approve', 'shield']],
-]);
-
 export default observer(({ app }: Props) => {
   const onContinue = () => {
     anime({
@@ -79,11 +74,11 @@ export default observer(({ app }: Props) => {
     });
   };
 
-  const [title, icon] = Methods.get(app.confirmVM?.data?.substring(0, 10)) || ['Transfer', 'repeat'];
+  const { confirmVM } = app;
 
   return (
     <div className="page confirm">
-      <PopupTitle title={title} icon={icon} />
+      <PopupTitle title={confirmVM?.method} icon={confirmVM?.flag} />
       <div className="container">
         <TransferView implVM={app.confirmVM} onContinue={onContinue} />
         <AuthView app={app} onCancel={onAuthCancel} />
