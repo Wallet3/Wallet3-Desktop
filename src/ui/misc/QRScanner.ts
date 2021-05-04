@@ -74,6 +74,8 @@ async function scan(decoder: (imageData: string) => Promise<{ success: boolean; 
     } catch (e) {
       console.log(e);
     }
+
+    return undefined;
   }
 }
 

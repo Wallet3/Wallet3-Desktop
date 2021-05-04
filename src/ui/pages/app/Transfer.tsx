@@ -36,6 +36,8 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     transferVM.selectToken(params.get('token'));
+
+    return () => transferVM.dispose();
   }, [app]);
 
   return (

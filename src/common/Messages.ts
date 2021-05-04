@@ -10,7 +10,9 @@ export default {
   resetSystem: 'msg-reset-system',
   createTransferTx: 'msg-create-transfer-tx',
   fetchAddresses: 'msg-fetch-addresses',
+  releaseWindow: 'msg-release-window',
 
+  connectWallet: 'msg-connect-wallet',
   initWindowType: 'msg-init-window-type',
 };
 

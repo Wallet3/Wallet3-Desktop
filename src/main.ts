@@ -91,7 +91,7 @@ app.on('ready', () => {
   createWindow();
 
   GasnowWs.start(true);
-  GasnowWs.onError = () => GasnowWs.start(true);
+  GasnowWs.onClose = () => GasnowWs.start(true);
   reaction(
     () => GasnowWs.fast,
     () => {

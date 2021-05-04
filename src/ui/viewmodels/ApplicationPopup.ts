@@ -12,12 +12,12 @@ export class ApplicationPopup extends Application {
   async init() {
     super.init(false);
 
-    ipc.once(Messages.initWindowType, (e, { type, args }: { type: PopupWindowTypes; args: CreateTransferTx }) => {
+    ipc.once(Messages.initWindowType, (e, { type, payload }: { type: PopupWindowTypes; payload: CreateTransferTx }) => {
       this.type = type;
 
       switch (this.type) {
         case 'sendTx':
-          this.implVM = new ConfirmVM(args);
+          this.implVM = new ConfirmVM(payload);
           this.history.push('/sendTx');
           break;
         case 'scanQR':

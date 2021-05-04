@@ -13,7 +13,7 @@ class App {
   touchIDSupported = false;
 
   userPassword?: string; // keep password in memory for TouchID users
-  ipcs = new Map<string, { iv: Buffer; key: Buffer }>();
+  windows = new Map<string, { iv: Buffer; key: Buffer }>();
   mainWindow?: BrowserWindow;
   touchBarButtons?: { walletConnect: TouchBarButton; gas: TouchBarButton; price?: TouchBarButton };
 
@@ -32,7 +32,7 @@ class App {
 
       const ipcSecureKey = ecdh.computeSecret(rendererEcdhKey);
       const secret = { iv: ipcSecureIv, key: ipcSecureKey };
-      this.ipcs.set(windowId, secret);
+      this.windows.set(windowId, secret);
 
       return mainEcdhKey;
     });
@@ -44,7 +44,7 @@ class App {
     ipcMain.handle(`${MessageKeys.promptTouchID}-secure`, async (e, encrypted, winId) => {
       if (!this.touchIDSupported) return false;
 
-      const { iv, key } = this.ipcs.get(winId);
+      const { iv, key } = this.windows.get(winId);
       const { message } = this.decryptIpc(encrypted, iv, key);
 
       try {
@@ -56,19 +56,19 @@ class App {
     });
 
     ipcMain.handle(`${MessageKeys.genMnemonic}-secure`, (e, encrypted, winId) => {
-      const { key, iv } = this.ipcs.get(winId);
+      const { key, iv } = this.windows.get(winId);
       const { length } = this.decryptIpc(encrypted, iv, key);
       return this.encryptIpc(KeyMan.genMnemonic(length), iv, key);
     });
 
     ipcMain.handle(`${MessageKeys.saveTmpMnemonic}-secure`, (e, encrypted, winId) => {
-      const { iv, key } = this.ipcs.get(winId);
+      const { iv, key } = this.windows.get(winId);
       const { mnemonic } = this.decryptIpc(encrypted, iv, key);
       KeyMan.setTmpMnemonic(mnemonic);
     });
 
     ipcMain.handle(`${MessageKeys.setupMnemonic}-secure`, async (e, encrypted, winId) => {
-      const { iv, key } = this.ipcs.get(winId);
+      const { iv, key } = this.windows.get(winId);
       if (KeyMan.hasMnemonic) return this.encryptIpc({ success: false }, iv, key);
 
       const { password: userPassword } = this.decryptIpc(encrypted, iv, key);
@@ -82,13 +82,13 @@ class App {
     });
 
     ipcMain.handle(`${MessageKeys.verifyPassword}-secure`, async (e, encrypted, winId) => {
-      const { iv, key } = this.ipcs.get(winId);
+      const { iv, key } = this.windows.get(winId);
       const { password } = this.decryptIpc(encrypted, iv, key);
       return this.encryptIpc(await KeyMan.verifyPassword(password), iv, key);
     });
 
     ipcMain.handle(`${MessageKeys.initVerifyPassword}-secure`, async (e, encrypted, winId) => {
-      const { iv, key } = this.ipcs.get(winId);
+      const { iv, key } = this.windows.get(winId);
       const { password, count } = this.decryptIpc(encrypted, iv, key);
       const verified = await KeyMan.verifyPassword(password);
       const addresses: string[] = [];
@@ -99,6 +99,10 @@ class App {
       }
 
       return this.encryptIpc({ verified, addresses }, iv, key);
+    });
+
+    ipcMain.handle(`${MessageKeys.releaseWindow}-secure`, (e, encrypted, winId) => {
+      this.windows.delete(winId);
     });
 
     ipcMain.handle(`${MessageKeys.fetchAddresses}-secure`, (e, encrypted) => {
@@ -119,13 +123,18 @@ class App {
 
   initPopupHandlers = () => {
     ipcMain.handle(`${MessageKeys.createTransferTx}-secure`, async (e, encrypted, winId) => {
-      const { iv, key } = this.ipcs.get(winId);
+      const { iv, key } = this.windows.get(winId);
       const params: CreateTransferTx = this.decryptIpc(encrypted, iv, key);
       return this.encryptIpc(await this.createPopupWindow('sendTx', params, true, this.mainWindow), iv, key);
     });
+
+    ipcMain.handle(`${MessageKeys.connectWallet}-secure`, async (e, encrypted, winId) => {
+      const { iv, key } = this.windows.get(winId);
+      const { uri } = this.decryptIpc(encrypted, iv, key);
+    });
   };
 
-  createPopupWindow(type: PopupWindowTypes, args: any, modal = false, parent?: BrowserWindow) {
+  createPopupWindow(type: PopupWindowTypes, payload: any, modal = false, parent?: BrowserWindow) {
     const popup = new BrowserWindow({
       width: 360,
       minWidth: 360,
@@ -154,7 +163,7 @@ class App {
 
     return new Promise<boolean>((resolve) => {
       popup.webContents.once('did-finish-load', () => {
-        popup.webContents.send(MessageKeys.initWindowType, { type, args });
+        popup.webContents.send(MessageKeys.initWindowType, { type, payload });
       });
 
       popup.once('close', () => resolve(true));
