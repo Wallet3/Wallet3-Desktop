@@ -51,4 +51,4 @@ export interface CreateTransferTx {
   nativeToken?: { amount: number; decimals: number };
 }
 
-export type PopupWindowTypes = 'connect' | 'signature' | 'sendTx' | 'scanQR';
+export type PopupWindowTypes = 'connectDapp' | 'signature' | 'sendTx' | 'scanQR';

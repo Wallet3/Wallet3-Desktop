@@ -79,13 +79,13 @@ export default observer(({ app }: Props) => {
     });
   };
 
-  const [title, icon] = Methods.get(app.implVM?.data?.substring(0, 10));
+  const [title, icon] = Methods.get(app.confirmVM?.data?.substring(0, 10));
 
   return (
     <div className="page confirm">
       <PopupTitle title={title} icon={icon} />
       <div className="container">
-        <TransferView implVM={app.implVM} onContinue={onContinue} />
+        <TransferView implVM={app.confirmVM} onContinue={onContinue} />
         <AuthView app={app} onCancel={onAuthCancel} />
       </div>
     </div>

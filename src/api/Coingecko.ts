@@ -21,10 +21,15 @@ class Coingecko {
   }
 
   start() {
-    getPrice().then(({ ethereum }) => {
-      runInAction(() => (this.eth = ethereum.usd));
-      setTimeout(() => this.start(), 15 * 1000);
-    });
+    getPrice()
+      .then((data) => {
+        if (!data) return;
+
+        const { ethereum } = data;
+        runInAction(() => (this.eth = ethereum.usd));
+        setTimeout(() => this.start(), 15 * 1000);
+      })
+      .catch(() => {});
   }
 }
 

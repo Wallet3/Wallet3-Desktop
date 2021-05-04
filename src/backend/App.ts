@@ -2,6 +2,7 @@ import * as Cipher from '../common/Cipher';
 
 import { BrowserWindow, TouchBar, TouchBarButton, ipcMain, systemPreferences } from 'electron';
 import MessageKeys, { CreateTransferTx, PopupWindowTypes } from '../common/Messages';
+import { WalletConnect, connectAndWaitSession } from './WalletConnect';
 
 import KeyMan from './KeyMan';
 import { createECDH } from 'crypto';
@@ -131,6 +132,9 @@ class App {
     ipcMain.handle(`${MessageKeys.connectWallet}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
       const { uri } = this.decryptIpc(encrypted, iv, key);
+      if (!uri) return;
+
+      return this.encryptIpc((await connectAndWaitSession(uri)) ? true : false, iv, key);
     });
   };
 

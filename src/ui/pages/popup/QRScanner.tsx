@@ -1,5 +1,7 @@
 import './QRScanner.css';
 
+import * as Anime from '../../misc/Anime';
+
 import React, { useEffect } from 'react';
 
 import Messages from '../../../common/Messages';
@@ -15,7 +17,7 @@ export default (props) => {
     const uri = await scanQR(async (imgdata) => {
       try {
         const result = await qrscanner.scanImage(imgdata);
-        if (result.toLowerCase().startsWith('wc:')) {
+        if (result && result.toLowerCase().startsWith('wc:')) {
           return { success: true, result };
         }
       } catch (error) {}
@@ -23,8 +25,14 @@ export default (props) => {
       return { success: false, result: '' };
     });
 
-    await ipc.invokeSecure(Messages.connectWallet, { uri });
-    // window.close();
+    if (!uri) return;
+
+    const result = await ipc.invokeSecure(Messages.connectWallet, { uri });
+    if (result) {
+      window.close();
+    } else {
+      Anime.vibrate('.scan-area');
+    }
   };
 
   useEffect(() => {

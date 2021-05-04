@@ -1,10 +1,9 @@
+import { ConfirmTx, ConnectDapp, QRScanner } from './pages/popup';
 import { Route, Router, Switch } from 'react-router-dom';
 
 import { ApplicationPopup } from './viewmodels/ApplicationPopup';
 import { Blank } from './pages/login/';
-import { ConfirmTx } from './pages/popup';
 import React from 'react';
-import Screenshot from './pages/popup/QRScanner';
 import { observer } from 'mobx-react-lite';
 
 export default observer(({ app }: { app: ApplicationPopup }) => {
@@ -16,7 +15,11 @@ export default observer(({ app }: { app: ApplicationPopup }) => {
         </Route>
 
         <Route path="/scanQR">
-          <Screenshot />
+          <QRScanner />
+        </Route>
+
+        <Route path="/connectDapp">
+          <ConnectDapp app={app} />
         </Route>
 
         <Route path="*" component={Blank} />

@@ -46,37 +46,41 @@ async function scan(decoder: (imageData: string) => Promise<{ success: boolean; 
     return handler;
   };
 
-  const sources = await DesktopCapturer.getSources({ types: ['screen', 'window'] });
-  for (const source of sources) {
-    try {
-      const config: any = {
-        mandatory: {
-          chromeMediaSource: 'desktop',
-          chromeMediaSourceId: source.id,
-          minWidth: 0,
-          minHeight: 0,
-          maxWidth: 4000,
-          maxHeight: 4000,
-        },
-      };
+  return new Promise<string>((resolve) => {
+    DesktopCapturer.getSources({ types: ['screen', 'window'] }).then(async (sources) => {
+      for (const source of sources) {
+        try {
+          const config: any = {
+            mandatory: {
+              chromeMediaSource: 'desktop',
+              chromeMediaSourceId: source.id,
+              minWidth: 0,
+              minHeight: 0,
+              maxWidth: 4000,
+              maxHeight: 4000,
+            },
+          };
 
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: false,
-        video: config,
-      });
+          const stream = await navigator.mediaDevices.getUserMedia({
+            audio: false,
+            video: config,
+          });
 
-      const image = await handleStream(stream);
-      const { result, success } = await decoder(image);
+          const image = await handleStream(stream);
+          const { result, success } = await decoder(image);
 
-      if (success) {
-        return result;
+          if (success) {
+            resolve(result);
+            return;
+          }
+        } catch (e) {
+          console.log(e);
+        }
       }
-    } catch (e) {
-      console.log(e);
-    }
 
-    return undefined;
-  }
+      resolve(undefined);
+    });
+  });
 }
 
 export default scan;

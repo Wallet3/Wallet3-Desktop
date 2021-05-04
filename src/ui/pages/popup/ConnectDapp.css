@@ -1,0 +1,35 @@
+.page.connectdapp {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.page.connectdapp > .content {
+  text-align: center;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: var(--font-color-title);
+}
+
+.page.connectdapp > .content > * {
+  margin-bottom: 4px;
+  max-width: 70vw;
+  overflow: hidden;
+  text-overflow: clip;
+  white-space: nowrap;
+}
+
+.page.connectdapp > .content img {
+  width: 48px;
+  border: 3px solid white;
+  border-radius: 50%;
+  margin-bottom: 12px;
+}
+
+.page.connectdapp > .actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 8px;
+}

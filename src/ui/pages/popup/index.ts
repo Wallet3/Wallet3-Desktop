@@ -1,3 +1,5 @@
 import ConfirmTx from './ConfirmTx';
+import ConnectDapp from './ConnectDapp';
+import QRScanner from './QRScanner';
 
-export { ConfirmTx };
+export { ConfirmTx, QRScanner, ConnectDapp };

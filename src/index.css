@@ -79,6 +79,12 @@ a.button {
   box-sizing: border-box;
 }
 
+button.positive {
+  border-color: deepskyblue;
+  background-color: deepskyblue;
+  color: white;
+}
+
 button:hover,
 a.button:hover {
   color: white;
