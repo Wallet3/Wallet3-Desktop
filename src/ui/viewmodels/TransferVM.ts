@@ -206,12 +206,6 @@ export class TransferVM {
     const iface = new ethers.utils.Interface(ERC20ABI);
     const data = this.isERC20 ? iface.encodeFunctionData('transfer', [this.receiptAddress, this.amountBigInt]) : '0x';
 
-    let balance = '';
-    if (this.isERC20) {
-      const erc20 = new ethers.Contract(this.selectedToken.id, ERC20ABI, provider);
-      balance = (await erc20.balanceOf(this._accountVM.address)).toString();
-    }
-
     await ipc.invokeSecure<void>(Messages.createTransferTx, {
       from: this._accountVM.address,
       to,
@@ -231,7 +225,6 @@ export class TransferVM {
         ? {
             symbol: this.selectedToken.display_symbol || this.selectedToken.symbol,
             decimals: this.selectedToken.decimals,
-            balance,
           }
         : undefined,
     } as CreateTransferTx);

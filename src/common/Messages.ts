@@ -54,7 +54,7 @@ export interface CreateTransferTx {
     address: string;
     name?: string;
   };
-  transferToken?: { symbol: string; decimals: number; balance: string };
+  transferToken?: { symbol: string; decimals: number };
 }
 
 export type PopupWindowTypes = 'connectDapp' | 'signature' | 'sendTx' | 'scanQR';

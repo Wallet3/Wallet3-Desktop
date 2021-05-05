@@ -21,7 +21,7 @@ export class ConfirmVM {
   flag = '';
   chainId = 1;
   nativeBalance = BigNumber.from(0);
-  transferToken: { symbol: string; transferAmount: BigNumber; balance: BigNumber; decimals: number; to: string } = undefined;
+  transferToken: { symbol: string; transferAmount: BigNumber; decimals: number; to: string } = undefined;
 
   private _value = '';
 
@@ -41,7 +41,6 @@ export class ConfirmVM {
       this.transferToken = {
         symbol: '',
         transferAmount: BigNumber.from(0),
-        balance: BigNumber.from(0),
         decimals: 18,
         to: '',
       };
@@ -49,7 +48,6 @@ export class ConfirmVM {
       this.initTransferToken(args, !args.transferToken);
 
       if (args.transferToken) {
-        this.transferToken.balance = BigNumber.from(args.transferToken.balance);
         this.transferToken.decimals = args.transferToken.decimals;
         this.transferToken.symbol = args.transferToken.symbol;
       }
@@ -81,11 +79,11 @@ export class ConfirmVM {
   }
 
   get value() {
-    return utils.formatEther(this._value);
+    return formatEther(this._value);
   }
 
   get totalValue() {
-    return utils.formatEther(BigNumber.from(this.args.value).add(parseUnits(this.maxFee, 18)));
+    return formatEther(BigNumber.from(this.args.value).add(parseUnits(this.maxFee, 18)));
   }
 
   private _gas = 0;
@@ -108,7 +106,7 @@ export class ConfirmVM {
   }
 
   get maxFee() {
-    return utils.formatEther((BigInt(this.gasPrice * GasnowWs.gwei_1 || 0) * BigInt(this.gas || 0)).toString());
+    return formatEther((BigInt(this.gasPrice * GasnowWs.gwei_1 || 0) * BigInt(this.gas || 0)).toString());
   }
 
   get insufficientFee() {
@@ -152,12 +150,10 @@ export class ConfirmVM {
     if (!needMore) return;
 
     const symbol = await c.symbol();
-    const balance: BigNumber = await c.balanceOf(params.from);
     const decimals: number = await c.decimals();
 
     runInAction(() => {
       this.transferToken.symbol = symbol;
-      this.transferToken.balance = balance;
       this.transferToken.decimals = decimals;
     });
   }
