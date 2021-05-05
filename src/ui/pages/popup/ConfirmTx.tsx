@@ -3,12 +3,12 @@ import './ConfirmTx.css';
 import * as Anime from '../../misc/Anime';
 
 import App, { ApplicationPopup } from '../../viewmodels/ApplicationPopup';
+import React, { useEffect } from 'react';
 
 import { ConfirmVM } from '../../viewmodels/ConfirmVM';
 import Icons from '../../misc/Icons';
 import PasscodeView from '../../components/PasscodeView';
 import { PopupTitle } from '../../components';
-import React from 'react';
 import TouchIDView from '../../components/TouchIDView';
 import anime from 'animejs';
 import { observer } from 'mobx-react-lite';
@@ -74,6 +74,20 @@ export default observer(({ app }: Props) => {
     });
   };
 
+  useEffect(() => {
+    anime({
+      targets: '.page.confirm > .container > .details',
+      duration: 1,
+      translateX: '0px',
+    });
+
+    anime({
+      targets: '.page.confirm > .container > .auth',
+      duration: 1,
+      translateX: '100vw',
+    });
+  }, []);
+
   const { confirmVM } = app;
 
   return (
@@ -88,7 +102,7 @@ export default observer(({ app }: Props) => {
 });
 
 const TransferView = observer(({ implVM, onContinue }: { implVM: ConfirmVM; onContinue?: () => void }) => {
-  const { receiptAddress, receipt, amount, tokenSymbol, gas, gasPrice, maxFee, nonce } = implVM;
+  const { receiptAddress, receipt, amount, tokenSymbol, gas, gasPrice, maxFee, nonce, totalValue } = implVM;
 
   return (
     <div className="details">
@@ -127,11 +141,16 @@ const TransferView = observer(({ implVM, onContinue }: { implVM: ConfirmVM; onCo
           <span>Max Fee:</span>
           <span>{maxFee} ETH</span>
         </div>
+
+        <div>
+          <span>Total:</span>
+          <span>{totalValue} ETH</span>
+        </div>
       </div>
 
       <div className="actions">
         <button onClick={(_) => window.close()}>Cancel</button>
-        <button disabled={!implVM.isValid || implVM.insufficientFee} onClick={(_) => onContinue?.()}>
+        <button className="positive" disabled={!implVM.isValid || implVM.insufficientFee} onClick={(_) => onContinue?.()}>
           Continue
         </button>
       </div>

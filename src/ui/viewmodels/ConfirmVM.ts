@@ -1,9 +1,10 @@
 import { BigNumber, utils } from 'ethers';
+import { makeAutoObservable, runInAction } from 'mobx';
 
 import { CreateTransferTx } from '../../common/Messages';
 import { GasnowWs } from '../../api/Gasnow';
-import { makeAutoObservable } from 'mobx';
 import { parseUnits } from '@ethersproject/units';
+import provider from '../../common/Provider';
 
 const Methods = new Map<string, string[]>([
   ['0xa9059cbb', ['Transfer', 'repeat']],
@@ -15,6 +16,7 @@ export class ConfirmVM {
   args: CreateTransferTx = null;
   method = '';
   flag = '';
+  nativeBalance = BigNumber.from(0);
 
   constructor(args: CreateTransferTx) {
     makeAutoObservable(this);
@@ -32,18 +34,31 @@ export class ConfirmVM {
     this._gas = args.gas;
     this._gasPrice = args.gasPrice / GasnowWs.gwei_1;
     this._nonce = args.nonce;
+
+    provider
+      .getBalance(args.from)
+      .then((v) => runInAction(() => (this.nativeBalance = v)))
+      .catch(() => console.log('balance error'));
   }
 
   get receipt() {
-    return this.args.receipt?.name ?? this.args.receipt?.address ?? this.args.to;
+    return this.args.receipient?.name ?? this.args.receipient?.address ?? this.args.to;
   }
 
   get receiptAddress() {
-    return this.args.receipt.address || this.args.to;
+    return this.args.receipient?.address || this.args.to;
   }
 
   get amount() {
-    return utils.formatUnits(this.args.value || this.args.token.amount, this.args.token.decimals);
+    return utils.formatUnits(this.args.token.amount, this.args.token.decimals);
+  }
+
+  get value() {
+    return utils.formatEther(this.args.value);
+  }
+
+  get totalValue() {
+    return utils.formatEther(BigNumber.from(this.args.value).add(parseUnits(this.maxFee, 18)));
   }
 
   private _gas = 0;
@@ -70,9 +85,7 @@ export class ConfirmVM {
   }
 
   get insufficientFee() {
-    return BigNumber.from(this.args.nativeToken?.amount ?? 0).lt(
-      (BigInt(this.gasPrice * GasnowWs.gwei_1) * BigInt(this.gas)).toString()
-    );
+    return this.nativeBalance.lt((BigInt(this.gasPrice * GasnowWs.gwei_1) * BigInt(this.gas)).toString());
   }
 
   get isValid() {

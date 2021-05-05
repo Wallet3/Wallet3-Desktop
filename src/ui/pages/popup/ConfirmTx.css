@@ -7,14 +7,13 @@
 .page.confirm > .container {
   position: relative;
   display: grid;
-  grid-template-rows: 1fr;
   overflow: hidden;
 }
 
 .page.confirm > .container > .details {
   display: grid;
   grid-template-rows: 1fr auto;
-  margin-top: 12px;
+  padding-top: 12px;
 }
 
 .page.confirm > .container > .details > .form > div {
@@ -67,6 +66,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 8px;
+  z-index: 2;
 }
 
 .page.confirm > .container > .auth {
@@ -75,10 +75,15 @@
   height: 100%;
   display: grid;
   grid-template-rows: 1fr auto;
-  transform: translateX(335.9px);
   opacity: 0;
 }
 
+.page.confirm > .container > .auth > .panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .page.confirm > .container > .auth > .panel > .touchid-view {
-  margin-top: 6vh;
+  margin-top: -5vh;
 }

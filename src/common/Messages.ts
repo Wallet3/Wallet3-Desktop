@@ -42,21 +42,18 @@ export interface SetupMnemonic {
 }
 
 export interface CreateTransferTx {
+  from: string;
   to: string;
   value: string;
   gas: number;
   gasPrice: number; // wei
   nonce: number;
   data: string;
-  receipt?: {
+  receipient?: {
     address: string;
     name?: string;
   };
   token: { symbol: string; decimals: number; amount: string };
-  nativeToken?: {
-    amount: string; // wei
-    decimals: number;
-  };
 }
 
 export type PopupWindowTypes = 'connectDapp' | 'signature' | 'sendTx' | 'scanQR';

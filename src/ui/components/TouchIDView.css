@@ -1,9 +1,9 @@
 div.touchid-view {
   display: grid;
-  grid-template-rows: 72px 1fr;
-  height: 100%;
+  grid-template-rows: auto 1fr;
   outline: none;
   margin-top: 0;
+  box-sizing: border-box;
 }
 
 div.touchid-view > p {

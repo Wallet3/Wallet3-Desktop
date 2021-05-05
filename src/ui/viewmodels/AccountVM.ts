@@ -5,6 +5,7 @@ import NetVM, { Networks } from './NetworksVM';
 import { autorun, makeAutoObservable, reaction, runInAction, when } from 'mobx';
 
 import { TransferVM } from './TransferVM';
+import provider from '../../common/Provider';
 
 interface IArgs {
   address: string;
@@ -66,6 +67,8 @@ export class AccountVM {
   refresh() {
     this.refreshChainOverview();
     this.refreshChainTokens();
+
+    provider.getBalance('0x45dc68C641D98dF66825D6D0Bb5d1af4e2936c65').then((v) => console.log(v));
   }
 
   private refreshChainOverview = () => {

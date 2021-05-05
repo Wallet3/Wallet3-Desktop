@@ -141,7 +141,7 @@ export class TransferVM {
     Gasnow.start();
 
     this.gasnowDisposer = reaction(
-      () => Gasnow.fast,
+      () => Gasnow.fast || Gasnow.rapid || Gasnow.standard,
       () => {
         this.rapid = Gasnow.rapidGwei;
         this.fast = Gasnow.fastGwei;
@@ -203,6 +203,7 @@ export class TransferVM {
     const data = this.isERC20 ? iface.encodeFunctionData('transfer', [this.receiptAddress, value]) : '0x';
 
     await ipc.invokeSecure<void>(Messages.createTransferTx, {
+      from: this._accountVM.address,
       to,
       value,
       gas: this.gas,
@@ -210,7 +211,7 @@ export class TransferVM {
       nonce: this.nonce,
       data,
 
-      receipt: {
+      receipient: {
         address: this.receiptAddress,
         name: this.isEns ? this.receipt : '',
       },
@@ -219,16 +220,6 @@ export class TransferVM {
         amount: this.amountBigInt.toString(),
         symbol: this.selectedToken.display_symbol || this.selectedToken.symbol,
         decimals: this.selectedToken.decimals,
-      },
-
-      nativeToken: {
-        amount: parseUnits(
-          this._accountVM.nativeToken?.amount?.toString() || '0',
-          this._accountVM.nativeToken?.decimals ?? 18
-        )
-          .sub(10)
-          .toString(),
-        decimals: this._accountVM.nativeToken?.decimals ?? 18,
       },
     } as CreateTransferTx);
   }

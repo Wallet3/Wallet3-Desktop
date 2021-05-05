@@ -68,7 +68,7 @@ export class WalletConnect extends EventEmitter {
     switch (request.method) {
       case 'eth_sendTransaction':
         const [param] = request.params as WCCallRequest_eth_sendTransaction[];
-
+        this.eth_sendTransaction(param);
         break;
       case 'eth_sign':
         break;
@@ -82,14 +82,23 @@ export class WalletConnect extends EventEmitter {
   };
 
   eth_sendTransaction = async (param: WCCallRequest_eth_sendTransaction) => {
-    const balance = await provider.getBalance(App.currentAddress);
+    const receipient: { address: string; name: string } = undefined;
+    const token = { amount: param.value, symbol: 'ETH', decimals: 18 };
 
     if (param.data?.startsWith('0xa9059cbb')) {
       const iface = new ethers.utils.Interface(ERC20ABI);
       const { dst, wad } = iface.decodeFunctionData('transfer', param.data);
+      receipient.address = dst;
+
+      const c = new ethers.Contract(param.to, ERC20ABI, provider);
+      token.decimals = (await c.decimals()).toNumber();
+      token.symbol = await c.symbol();
+      token.amount = wad;
     }
 
+    console.log(receipient, token);
     App.createPopupWindow('sendTx', {
+      from: App.currentAddress,
       to: param.to,
       data: param.data,
       gas: Number.parseInt(param.gas),
@@ -97,10 +106,8 @@ export class WalletConnect extends EventEmitter {
       nonce: Number.parseInt(param.nonce),
       value: param.value,
 
-      nativeToken: {
-        amount: balance.toString(),
-        decimals: 18,
-      },
+      receipient,
+      token,
     } as CreateTransferTx);
   };
 
@@ -117,7 +124,7 @@ export async function connectAndWaitSession(uri: string) {
 
   try {
     await new Promise<void>((resolve, reject) => {
-      const timer = setTimeout(() => reject(), 5000);
+      const timer = setTimeout(() => reject(), 7000);
 
       const rejectPromise = () => reject();
 

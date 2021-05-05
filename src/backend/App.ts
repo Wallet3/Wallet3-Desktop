@@ -6,6 +6,7 @@ import { WalletConnect, connectAndWaitSession } from './WalletConnect';
 
 import KeyMan from './KeyMan';
 import { createECDH } from 'crypto';
+import provider from '../common/Provider';
 
 declare const POPUP_WINDOW_WEBPACK_ENTRY: string;
 declare const POPUP_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -156,11 +157,12 @@ class App {
   };
 
   createPopupWindow(type: PopupWindowTypes, payload: any, modal = false, parent?: BrowserWindow) {
+    const height = modal ? 340 : 315;
     const popup = new BrowserWindow({
       width: 360,
       minWidth: 360,
-      height: 315,
-      minHeight: 315,
+      height,
+      minHeight: height,
       modal,
       parent,
       show: false,
