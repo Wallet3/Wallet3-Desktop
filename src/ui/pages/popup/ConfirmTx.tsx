@@ -90,73 +90,80 @@ export default observer(({ app }: Props) => {
 
   const { confirmVM } = app;
 
+  const reject = () => {
+    window.close();
+    confirmVM.rejectRequest();
+  };
+
   return (
     <div className="page confirm">
       <PopupTitle title={confirmVM?.method} icon={confirmVM?.flag} />
       <div className="container">
-        <TransferView implVM={app.confirmVM} onContinue={onContinue} />
+        <TransferView implVM={app.confirmVM} onContinue={onContinue} onReject={reject} />
         <AuthView app={app} onCancel={onAuthCancel} />
       </div>
     </div>
   );
 });
 
-const TransferView = observer(({ implVM, onContinue }: { implVM: ConfirmVM; onContinue?: () => void }) => {
-  const { receiptAddress, receipt, amount, tokenSymbol, gas, gasPrice, maxFee, nonce, totalValue } = implVM;
+const TransferView = observer(
+  ({ implVM, onContinue, onReject }: { implVM: ConfirmVM; onContinue?: () => void; onReject?: () => void }) => {
+    const { receiptAddress, receipt, amount, tokenSymbol, gas, gasPrice, maxFee, nonce, totalValue } = implVM;
 
-  return (
-    <div className="details">
-      <div className="form">
-        <div>
-          <span>Recipient:</span>
-          <span title={receiptAddress}>{receipt}</span>
-        </div>
-
-        <div>
-          <span>Amount:</span>
-          <span>
-            {amount} <img src={Icons(tokenSymbol)} alt={tokenSymbol} /> {tokenSymbol}
-          </span>
-        </div>
-
-        <div>
-          <span>Gas Limit:</span>
-          <input type="text" defaultValue={gas} onChange={(e) => implVM.setGas(e.target.value)} />
-        </div>
-
-        <div>
-          <span>Gas Price:</span>
+    return (
+      <div className="details">
+        <div className="form">
           <div>
-            <input type="text" defaultValue={gasPrice} onChange={(e) => implVM.setGasPrice(e.target.value)} />
-            <span>Gwei</span>
+            <span>Recipient:</span>
+            <span title={receiptAddress}>{receipt}</span>
+          </div>
+
+          <div>
+            <span>Amount:</span>
+            <span>
+              {amount} <img src={Icons(tokenSymbol)} alt={tokenSymbol} /> {tokenSymbol}
+            </span>
+          </div>
+
+          <div>
+            <span>Gas Limit:</span>
+            <input type="text" defaultValue={gas} onChange={(e) => implVM.setGas(e.target.value)} />
+          </div>
+
+          <div>
+            <span>Gas Price:</span>
+            <div>
+              <input type="text" defaultValue={gasPrice} onChange={(e) => implVM.setGasPrice(e.target.value)} />
+              <span>Gwei</span>
+            </div>
+          </div>
+
+          <div>
+            <span>Nonce:</span>
+            <input type="text" defaultValue={nonce} onChange={(e) => implVM.setNonce(e.target.value)} />
+          </div>
+
+          <div>
+            <span>Max Fee:</span>
+            <span>{maxFee} ETH</span>
+          </div>
+
+          <div>
+            <span>Total:</span>
+            <span>{totalValue} ETH</span>
           </div>
         </div>
 
-        <div>
-          <span>Nonce:</span>
-          <input type="text" defaultValue={nonce} onChange={(e) => implVM.setNonce(e.target.value)} />
-        </div>
-
-        <div>
-          <span>Max Fee:</span>
-          <span>{maxFee} ETH</span>
-        </div>
-
-        <div>
-          <span>Total:</span>
-          <span>{totalValue} ETH</span>
+        <div className="actions">
+          <button onClick={(_) => onReject?.()}>Cancel</button>
+          <button className="positive" disabled={!implVM.isValid || implVM.insufficientFee} onClick={(_) => onContinue?.()}>
+            {implVM.insufficientFee ? 'Insufficient Fee' : 'Continue'}
+          </button>
         </div>
       </div>
-
-      <div className="actions">
-        <button onClick={(_) => window.close()}>Cancel</button>
-        <button className="positive" disabled={!implVM.isValid || implVM.insufficientFee} onClick={(_) => onContinue?.()}>
-          {implVM.insufficientFee ? 'Insufficient Fee' : 'Continue'}
-        </button>
-      </div>
-    </div>
-  );
-});
+    );
+  }
+);
 
 const AuthView = observer(({ app, onCancel }: { app: ApplicationPopup; onCancel?: () => void }) => {
   const { touchIDSupported } = app;
@@ -164,7 +171,7 @@ const AuthView = observer(({ app, onCancel }: { app: ApplicationPopup; onCancel?
   return (
     <div className="auth">
       <div className="panel">
-        {touchIDSupported && false ? <TouchIDView onAuth={authTouchID} /> : <PasscodeView onAuth={authPassword} />}
+        {touchIDSupported ? <TouchIDView onAuth={authTouchID} /> : <PasscodeView onAuth={authPassword} />}
       </div>
       <button onClick={(_) => onCancel?.()}>Cancel</button>
     </div>

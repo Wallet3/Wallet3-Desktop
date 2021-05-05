@@ -100,7 +100,7 @@ export class WalletConnect extends EventEmitter {
     );
 
     ipcMain.handleOnce(WcMessages.rejectWcCallRequest(this.peerId, request.id), () =>
-      this.connector.rejectRequest({ id: request.id })
+      this.connector.rejectRequest({ id: request.id, error: { message: 'User rejected' } })
     );
 
     App.createPopupWindow('sendTx', {

@@ -1,12 +1,13 @@
-import { BigNumber, ethers, utils } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
+import { ConfirmSendTx, WcMessages } from '../../common/Messages';
 import { formatEther, parseUnits } from '@ethersproject/units';
 import { makeAutoObservable, runInAction } from 'mobx';
 
-import { ConfirmSendTx } from '../../common/Messages';
 import ERC20ABI from '../../abis/ERC20.json';
 import { GasnowWs } from '../../api/Gasnow';
 import { Networks } from './NetworksVM';
 import { formatUnits } from 'ethers/lib/utils';
+import ipc from '../bridges/IPC';
 import provider from '../../common/Provider';
 
 const Methods = new Map<string, string[]>([
@@ -139,7 +140,7 @@ export class ConfirmVM {
     this.args.nonce = nonce;
   }
 
-  async initTransferToken(params: ConfirmSendTx, needMore = true) {
+  private async initTransferToken(params: ConfirmSendTx, needMore = true) {
     const c = new ethers.Contract(params.to, ERC20ABI, provider);
     const iface = new ethers.utils.Interface(ERC20ABI);
     const { dst, wad } = iface.decodeFunctionData('transfer', params.data);
@@ -156,5 +157,19 @@ export class ConfirmVM {
       this.transferToken.symbol = symbol;
       this.transferToken.decimals = decimals;
     });
+  }
+
+  approveRequest() {
+    if (!this.args.walletConnect) return;
+    const { peerId, reqid } = this.args.walletConnect;
+
+    ipc.invoke(`${WcMessages.approveWcCallRequest(peerId, reqid)}`);
+  }
+
+  rejectRequest() {
+    if (!this.args.walletConnect) return;
+    const { peerId, reqid } = this.args.walletConnect;
+
+    ipc.invoke(`${WcMessages.rejectWcCallRequest(peerId, reqid)}`);
   }
 }
