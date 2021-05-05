@@ -19,6 +19,8 @@ export default {
 export const WcMessages = {
   approveWcSession: (peerId: string) => `wc-approve-session-${peerId}`,
   rejectWcSession: (peerId: string) => `wc-reject-session-${peerId}`,
+  approveWcCallRequest: (peerId: string, reqid: number) => `wc-approve-call-${reqid}-${peerId}`,
+  rejectWcCallRequest: (peerId: string, reqid: number) => `wc-reject-call-${reqid}-${peerId}`,
 };
 
 export interface InitStatus {
@@ -41,7 +43,7 @@ export interface SetupMnemonic {
   addresses: string[];
 }
 
-export interface CreateTransferTx {
+export interface ConfirmSendTx {
   chainId: number;
   from: string;
   to: string;
@@ -55,6 +57,7 @@ export interface CreateTransferTx {
     name?: string;
   };
   transferToken?: { symbol: string; decimals: number };
+  walletConnect?: { peerId: string; reqid: number };
 }
 
 export type PopupWindowTypes = 'connectDapp' | 'signature' | 'sendTx' | 'scanQR';

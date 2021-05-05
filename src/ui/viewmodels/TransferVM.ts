@@ -1,6 +1,6 @@
 import Gasnow, { GasnowHttp, GasnowWs } from '../../api/Gasnow';
 import { IReactionDisposer, makeAutoObservable, reaction, runInAction } from 'mobx';
-import Messages, { CreateTransferTx } from '../../common/Messages';
+import Messages, { ConfirmSendTx } from '../../common/Messages';
 import { ethers, utils } from 'ethers';
 import { parseEther, parseUnits } from 'ethers/lib/utils';
 
@@ -227,7 +227,7 @@ export class TransferVM {
             decimals: this.selectedToken.decimals,
           }
         : undefined,
-    } as CreateTransferTx);
+    } as ConfirmSendTx);
 
     this.sending = false;
   }

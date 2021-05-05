@@ -1,4 +1,4 @@
-import { CreateTransferTx, WcMessages } from '../common/Messages';
+import { ConfirmSendTx, WcMessages } from '../common/Messages';
 
 import App from './App';
 import ERC20ABI from '../abis/ERC20.json';
@@ -45,6 +45,7 @@ export class WalletConnect extends EventEmitter {
     this.peerMeta = peerMeta;
 
     this.emit('sessionRequest', payload);
+    console.log(peerId);
 
     ipcMain.handleOnce(WcMessages.approveWcSession(this.peerId), this.handleApproveSession);
     ipcMain.handleOnce(WcMessages.rejectWcSession(this.peerId), this.handleRejectSession);
@@ -68,7 +69,7 @@ export class WalletConnect extends EventEmitter {
     switch (request.method) {
       case 'eth_sendTransaction':
         const [param] = request.params as WCCallRequest_eth_sendTransaction[];
-        this.eth_sendTransaction(param);
+        this.eth_sendTransaction(request, param);
         break;
       case 'eth_sign':
         break;
@@ -81,7 +82,7 @@ export class WalletConnect extends EventEmitter {
     }
   };
 
-  eth_sendTransaction = async (param: WCCallRequest_eth_sendTransaction) => {
+  eth_sendTransaction = async (request: WCCallRequestRequest, param: WCCallRequest_eth_sendTransaction) => {
     const receipient: { address: string; name: string } = undefined;
     let transferToken: { balance: string; symbol: string; decimals: number } = undefined;
 
@@ -93,6 +94,14 @@ export class WalletConnect extends EventEmitter {
 
       transferToken = { decimals, symbol, balance };
     }
+
+    ipcMain.handleOnce(WcMessages.approveWcCallRequest(this.peerId, request.id), () =>
+      this.connector.approveRequest({ id: request.id })
+    );
+
+    ipcMain.handleOnce(WcMessages.rejectWcCallRequest(this.peerId, request.id), () =>
+      this.connector.rejectRequest({ id: request.id })
+    );
 
     App.createPopupWindow('sendTx', {
       chainId: App.chainId,
@@ -106,7 +115,8 @@ export class WalletConnect extends EventEmitter {
 
       receipient,
       transferToken,
-    } as CreateTransferTx);
+      walletConnect: { peerId: this.peerId, reqid: request.id },
+    } as ConfirmSendTx);
   };
 
   dispose() {

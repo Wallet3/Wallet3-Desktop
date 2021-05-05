@@ -2,7 +2,7 @@ import { BigNumber, ethers, utils } from 'ethers';
 import { formatEther, parseUnits } from '@ethersproject/units';
 import { makeAutoObservable, runInAction } from 'mobx';
 
-import { CreateTransferTx } from '../../common/Messages';
+import { ConfirmSendTx } from '../../common/Messages';
 import ERC20ABI from '../../abis/ERC20.json';
 import { GasnowWs } from '../../api/Gasnow';
 import { Networks } from './NetworksVM';
@@ -16,7 +16,7 @@ const Methods = new Map<string, string[]>([
 ]);
 
 export class ConfirmVM {
-  args: CreateTransferTx = null;
+  args: ConfirmSendTx = null;
   method = '';
   flag = '';
   chainId = 1;
@@ -25,7 +25,7 @@ export class ConfirmVM {
 
   private _value = '';
 
-  constructor(args: CreateTransferTx) {
+  constructor(args: ConfirmSendTx) {
     makeAutoObservable(this);
 
     if (Methods.has(args.data?.substring(0, 10))) {
@@ -139,7 +139,7 @@ export class ConfirmVM {
     this.args.nonce = nonce;
   }
 
-  async initTransferToken(params: CreateTransferTx, needMore = true) {
+  async initTransferToken(params: ConfirmSendTx, needMore = true) {
     const c = new ethers.Contract(params.to, ERC20ABI, provider);
     const iface = new ethers.utils.Interface(ERC20ABI);
     const { dst, wad } = iface.decodeFunctionData('transfer', params.data);

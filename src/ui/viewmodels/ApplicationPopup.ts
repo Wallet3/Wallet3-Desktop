@@ -1,4 +1,4 @@
-import Messages, { CreateTransferTx, InitStatus, PopupWindowTypes } from '../../common/Messages';
+import Messages, { ConfirmSendTx, InitStatus, PopupWindowTypes } from '../../common/Messages';
 
 import { Application } from './Application';
 import { ConfirmVM } from './ConfirmVM';
@@ -18,7 +18,7 @@ export class ApplicationPopup extends Application {
 
       switch (this.type) {
         case 'sendTx':
-          this.confirmVM = new ConfirmVM(payload as CreateTransferTx);
+          this.confirmVM = new ConfirmVM(payload as ConfirmSendTx);
           this.history.push('/sendTx');
           break;
         case 'scanQR':

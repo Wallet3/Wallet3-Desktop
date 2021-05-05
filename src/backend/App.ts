@@ -1,7 +1,7 @@
 import * as Cipher from '../common/Cipher';
 
 import { BrowserWindow, TouchBar, TouchBarButton, ipcMain, systemPreferences } from 'electron';
-import MessageKeys, { CreateTransferTx, PopupWindowTypes } from '../common/Messages';
+import MessageKeys, { ConfirmSendTx, PopupWindowTypes } from '../common/Messages';
 import { WalletConnect, connectAndWaitSession } from './WalletConnect';
 
 import KeyMan from './KeyMan';
@@ -137,7 +137,7 @@ class App {
   initPopupHandlers = () => {
     ipcMain.handle(`${MessageKeys.createTransferTx}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
-      const params: CreateTransferTx = this.decryptIpc(encrypted, iv, key);
+      const params: ConfirmSendTx = this.decryptIpc(encrypted, iv, key);
       const popup = await this.createPopupWindow('sendTx', params, true, this.mainWindow);
 
       await new Promise<boolean>((resolve) => {
