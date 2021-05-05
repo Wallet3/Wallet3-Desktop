@@ -15,7 +15,7 @@ export class TransferVM {
   private gasnowDisposer: IReactionDisposer;
 
   self = '';
-  receipt: string = '';
+  receipient: string = '';
   receiptAddress = '';
   isEns = false;
   amount: string = '';
@@ -32,7 +32,7 @@ export class TransferVM {
 
       return (
         this.receiptAddress &&
-        this.receipt &&
+        this.receipient &&
         this.amount.length > 0 &&
         validAmount &&
         this.gas >= 21000 &&
@@ -61,7 +61,7 @@ export class TransferVM {
   }
 
   selectedToken: ITokenBalance = null;
-  receipts: { id: number; name: string }[] = [];
+  receipients: { id: number; name: string }[] = [];
 
   // Gwei
   rapid = 0;
@@ -78,8 +78,8 @@ export class TransferVM {
     this.initNonce();
   }
 
-  setReceipt(addressOrName: string) {
-    this.receipt = addressOrName;
+  setReceipient(addressOrName: string) {
+    this.receipient = addressOrName;
 
     if (addressOrName.toLowerCase().endsWith('.eth') || addressOrName.toLowerCase().endsWith('.xyz')) {
       provider.resolveName(addressOrName).then((addr) => {
@@ -213,7 +213,7 @@ export class TransferVM {
 
       receipient: {
         address: this.receiptAddress,
-        name: this.isEns ? this.receipt : '',
+        name: this.isEns ? this.receipient : '',
       },
 
       token: {

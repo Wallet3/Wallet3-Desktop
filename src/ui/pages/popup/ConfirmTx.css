@@ -87,3 +87,8 @@
 .page.confirm > .container > .auth > .panel > .touchid-view {
   margin-top: -5vh;
 }
+
+.page.confirm > .container > .auth > .panel > .passcode-view {
+  width: 100%;
+  padding-top: 10vh;
+}

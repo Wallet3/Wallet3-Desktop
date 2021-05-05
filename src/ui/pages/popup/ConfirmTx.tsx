@@ -151,7 +151,7 @@ const TransferView = observer(({ implVM, onContinue }: { implVM: ConfirmVM; onCo
       <div className="actions">
         <button onClick={(_) => window.close()}>Cancel</button>
         <button className="positive" disabled={!implVM.isValid || implVM.insufficientFee} onClick={(_) => onContinue?.()}>
-          Continue
+          {implVM.insufficientFee ? 'Insufficient Fee' : 'Continue'}
         </button>
       </div>
     </div>
@@ -164,7 +164,7 @@ const AuthView = observer(({ app, onCancel }: { app: ApplicationPopup; onCancel?
   return (
     <div className="auth">
       <div className="panel">
-        {touchIDSupported ? <TouchIDView onAuth={authTouchID} /> : <PasscodeView onAuth={authPassword} />}
+        {touchIDSupported && false ? <TouchIDView onAuth={authTouchID} /> : <PasscodeView onAuth={authPassword} />}
       </div>
       <button onClick={(_) => onCancel?.()}>Cancel</button>
     </div>

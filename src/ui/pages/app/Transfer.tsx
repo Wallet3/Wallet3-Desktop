@@ -50,11 +50,11 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
           <ReactSearchAutocomplete
             showIcon={false}
             inputDebounce={500}
-            items={transferVM.receipts}
+            items={transferVM.receipients}
             styling={AddressSearchStyle}
             placeholder="Receipt Address or ENS"
-            onSearch={(s, r) => transferVM.setReceipt(s)}
-            onSelect={(item) => transferVM.setReceipt(item.name)}
+            onSearch={(s, r) => transferVM.setReceipient(s)}
+            onSelect={(item) => transferVM.setReceipient(item.name)}
           />
           <Feather icon="edit" size={15} strokeWidth={2} className="edit-icon" />
         </div>
