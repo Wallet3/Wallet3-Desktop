@@ -42,6 +42,7 @@ export interface SetupMnemonic {
 }
 
 export interface CreateTransferTx {
+  chainId: number;
   from: string;
   to: string;
   value: string;
@@ -53,7 +54,7 @@ export interface CreateTransferTx {
     address: string;
     name?: string;
   };
-  token: { symbol: string; decimals: number; amount: string };
+  transferToken?: { symbol: string; decimals: number; balance: string };
 }
 
 export type PopupWindowTypes = 'connectDapp' | 'signature' | 'sendTx' | 'scanQR';

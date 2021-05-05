@@ -23,6 +23,7 @@ export class TransferVM {
   nonce: number = 0;
   gasPrice: number = -1; // Gwei
   gasLevel = 1; // 0 - rapid, 1 - fast, 2 - standard, 4 - custom
+  sending = false;
 
   get isValid() {
     try {
@@ -196,11 +197,20 @@ export class TransferVM {
   }
 
   async sendTx() {
+    if (this.sending) return;
+    this.sending = true;
+
     const value = this.isERC20 ? 0 : this.amountBigInt.toString();
     const to = this.isERC20 ? this.selectedToken.id : this.receiptAddress;
 
     const iface = new ethers.utils.Interface(ERC20ABI);
-    const data = this.isERC20 ? iface.encodeFunctionData('transfer', [this.receiptAddress, value]) : '0x';
+    const data = this.isERC20 ? iface.encodeFunctionData('transfer', [this.receiptAddress, this.amountBigInt]) : '0x';
+
+    let balance = '';
+    if (this.isERC20) {
+      const erc20 = new ethers.Contract(this.selectedToken.id, ERC20ABI, provider);
+      balance = (await erc20.balanceOf(this._accountVM.address)).toString();
+    }
 
     await ipc.invokeSecure<void>(Messages.createTransferTx, {
       from: this._accountVM.address,
@@ -210,17 +220,22 @@ export class TransferVM {
       gasPrice: this.gasPrice * GasnowWs.gwei_1,
       nonce: this.nonce,
       data,
+      chainId: this._accountVM.chainId,
 
       receipient: {
         address: this.receiptAddress,
         name: this.isEns ? this.receipient : '',
       },
 
-      token: {
-        amount: this.amountBigInt.toString(),
-        symbol: this.selectedToken.display_symbol || this.selectedToken.symbol,
-        decimals: this.selectedToken.decimals,
-      },
+      transferToken: this.isERC20
+        ? {
+            symbol: this.selectedToken.display_symbol || this.selectedToken.symbol,
+            decimals: this.selectedToken.decimals,
+            balance,
+          }
+        : undefined,
     } as CreateTransferTx);
+
+    this.sending = false;
   }
 }

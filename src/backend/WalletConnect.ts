@@ -83,21 +83,19 @@ export class WalletConnect extends EventEmitter {
 
   eth_sendTransaction = async (param: WCCallRequest_eth_sendTransaction) => {
     const receipient: { address: string; name: string } = undefined;
-    const token = { amount: param.value, symbol: 'ETH', decimals: 18 };
+    let transferToken: { balance: string; symbol: string; decimals: number } = undefined;
 
     if (param.data?.startsWith('0xa9059cbb')) {
-      const iface = new ethers.utils.Interface(ERC20ABI);
-      const { dst, wad } = iface.decodeFunctionData('transfer', param.data);
-      receipient.address = dst;
-
       const c = new ethers.Contract(param.to, ERC20ABI, provider);
-      token.decimals = (await c.decimals()).toNumber();
-      token.symbol = await c.symbol();
-      token.amount = wad;
+      const decimals = (await c.decimals()).toNumber();
+      const symbol = await c.symbol();
+      const balance = (await c.balanceOf(App.currentAddress)).toString();
+
+      transferToken = { decimals, symbol, balance };
     }
 
-    console.log(receipient, token);
     App.createPopupWindow('sendTx', {
+      chainId: App.chainId,
       from: App.currentAddress,
       to: param.to,
       data: param.data,
@@ -107,7 +105,7 @@ export class WalletConnect extends EventEmitter {
       value: param.value,
 
       receipient,
-      token,
+      transferToken,
     } as CreateTransferTx);
   };
 
@@ -122,26 +120,23 @@ export class WalletConnect extends EventEmitter {
 export async function connectAndWaitSession(uri: string) {
   const wc = new WalletConnect(uri);
 
-  try {
-    await new Promise<void>((resolve, reject) => {
-      const timer = setTimeout(() => reject(), 7000);
+  return await new Promise<WalletConnect>((resolve) => {
+    const timer = setTimeout(() => rejectPromise(), 7000);
 
-      const rejectPromise = () => reject();
+    const rejectPromise = () => {
+      clearTimeout(timer);
+      resolve(undefined);
+      wc.dispose(); // uri is expired
+    };
 
-      wc.once('error', rejectPromise);
-      wc.once('disconnect', rejectPromise);
+    wc.once('error', rejectPromise);
+    wc.once('disconnect', rejectPromise);
 
-      wc.once('sessionRequest', () => {
-        clearTimeout(timer);
-        wc.removeAllListeners('error');
-        wc.removeAllListeners('disconnect');
-        resolve();
-      });
+    wc.once('sessionRequest', () => {
+      clearTimeout(timer);
+      wc.removeAllListeners('error');
+      wc.removeAllListeners('disconnect');
+      resolve(wc);
     });
-
-    return wc;
-  } catch (error) {
-    wc.dispose(); // uri is expired
-    return undefined;
-  }
+  });
 }

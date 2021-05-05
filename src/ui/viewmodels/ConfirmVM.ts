@@ -1,9 +1,12 @@
-import { BigNumber, utils } from 'ethers';
+import { BigNumber, ethers, utils } from 'ethers';
+import { formatEther, parseUnits } from '@ethersproject/units';
 import { makeAutoObservable, runInAction } from 'mobx';
 
 import { CreateTransferTx } from '../../common/Messages';
+import ERC20ABI from '../../abis/ERC20.json';
 import { GasnowWs } from '../../api/Gasnow';
-import { parseUnits } from '@ethersproject/units';
+import { Networks } from './NetworksVM';
+import { formatUnits } from 'ethers/lib/utils';
 import provider from '../../common/Provider';
 
 const Methods = new Map<string, string[]>([
@@ -16,7 +19,11 @@ export class ConfirmVM {
   args: CreateTransferTx = null;
   method = '';
   flag = '';
+  chainId = 1;
   nativeBalance = BigNumber.from(0);
+  transferToken: { symbol: string; transferAmount: BigNumber; balance: BigNumber; decimals: number; to: string } = undefined;
+
+  private _value = '';
 
   constructor(args: CreateTransferTx) {
     makeAutoObservable(this);
@@ -30,10 +37,30 @@ export class ConfirmVM {
       this.flag = 'edit-2';
     }
 
+    if (args.data?.toLowerCase().startsWith('0xa9059cbb')) {
+      this.transferToken = {
+        symbol: '',
+        transferAmount: BigNumber.from(0),
+        balance: BigNumber.from(0),
+        decimals: 18,
+        to: '',
+      };
+
+      this.initTransferToken(args, !args.transferToken);
+
+      if (args.transferToken) {
+        this.transferToken.balance = BigNumber.from(args.transferToken.balance);
+        this.transferToken.decimals = args.transferToken.decimals;
+        this.transferToken.symbol = args.transferToken.symbol;
+      }
+    }
+
     this.args = args;
+    this.chainId = args.chainId;
     this._gas = args.gas;
     this._gasPrice = args.gasPrice / GasnowWs.gwei_1;
     this._nonce = args.nonce;
+    this._value = args.value;
 
     provider
       .getBalance(args.from)
@@ -50,11 +77,11 @@ export class ConfirmVM {
   }
 
   get amount() {
-    return utils.formatUnits(this.args.token.amount, this.args.token.decimals);
+    return this.transferToken ? formatUnits(this.transferToken.transferAmount, this.transferToken.decimals) : this.value;
   }
 
   get value() {
-    return utils.formatEther(this.args.value);
+    return utils.formatEther(this._value);
   }
 
   get totalValue() {
@@ -72,7 +99,7 @@ export class ConfirmVM {
   }
 
   get tokenSymbol() {
-    return this.args.token.symbol;
+    return this.transferToken?.symbol ?? Networks.find((n) => n.chainId === this.chainId).symbol;
   }
 
   private _nonce = -1;
@@ -112,5 +139,26 @@ export class ConfirmVM {
     const nonce = Number.parseInt(value);
     this._nonce = nonce;
     this.args.nonce = nonce;
+  }
+
+  async initTransferToken(params: CreateTransferTx, needMore = true) {
+    const c = new ethers.Contract(params.to, ERC20ABI, provider);
+    const iface = new ethers.utils.Interface(ERC20ABI);
+    const { dst, wad } = iface.decodeFunctionData('transfer', params.data);
+
+    this.transferToken.to = dst;
+    this.transferToken.transferAmount = BigNumber.from(wad);
+
+    if (!needMore) return;
+
+    const symbol = await c.symbol();
+    const balance: BigNumber = await c.balanceOf(params.from);
+    const decimals: number = await c.decimals();
+
+    runInAction(() => {
+      this.transferToken.symbol = symbol;
+      this.transferToken.balance = balance;
+      this.transferToken.decimals = decimals;
+    });
   }
 }

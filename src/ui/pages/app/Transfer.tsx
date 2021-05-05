@@ -191,7 +191,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
       </div>
 
       <button
-        disabled={!transferVM.isValid || transferVM.insufficientFee}
+        disabled={!transferVM.isValid || transferVM.insufficientFee || transferVM.sending}
         onClick={(_) => transferVM.sendTx().then(() => app.history.goBack())}
       >
         {transferVM.insufficientFee ? 'INSUFFICIENT FEE' : 'Send'}

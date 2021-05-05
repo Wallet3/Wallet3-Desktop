@@ -9,6 +9,7 @@ import provider from '../../common/Provider';
 
 interface IArgs {
   address: string;
+  // chainId: number;
 }
 
 interface ChainOverview {
@@ -18,7 +19,8 @@ interface ChainOverview {
 }
 
 export class AccountVM {
-  address: string;
+  address: string = '';
+  chainId = 1;
 
   tokens: Debank.ITokenBalance[] = [];
   chains: Debank.IChainBalance[] = [];
@@ -67,8 +69,6 @@ export class AccountVM {
   refresh() {
     this.refreshChainOverview();
     this.refreshChainTokens();
-
-    provider.getBalance('0x45dc68C641D98dF66825D6D0Bb5d1af4e2936c65').then((v) => console.log(v));
   }
 
   private refreshChainOverview = () => {
