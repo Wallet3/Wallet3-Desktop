@@ -29,6 +29,22 @@
   font-weight: 300;
 }
 
+.page.confirm > .container > .details > .form > div.attention {
+  font-size: 12px;
+  padding-bottom: 8px;
+}
+
+.page.confirm > .container > .details > .form .funds-limit {
+  max-width: 60vw;
+  text-align: end;
+  min-width: 32vw;
+  -webkit-app-region: no-drag;
+}
+
+.page.confirm > .container > .details > .form .funds-limit.max {
+  color: deeppink;
+}
+
 .page.confirm > .container > .details > .form > div span {
   overflow: hidden;
   text-overflow: ellipsis;

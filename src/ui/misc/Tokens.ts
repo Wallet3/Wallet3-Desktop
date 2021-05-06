@@ -285,7 +285,12 @@ export const DeFiTokens = [CRV, UNI, SUSHI, YFI, COMP, SNX];
 const all = [...Stablecoins, ...ETHTokens, ...BTCTokens, ...AlgorithmStablecoins, ...DeFiTokens];
 export default all;
 
-export function findToken(symbol: string) {
+export function findTokenBySymbol(symbol: string) {
   const upper = symbol.toUpperCase();
   return all.find((t) => t.symbol === upper);
+}
+
+export function findTokenByAddress(address: string) {
+  const upper = address.toUpperCase();
+  return all.find((t) => t.address.toUpperCase() === upper);
 }

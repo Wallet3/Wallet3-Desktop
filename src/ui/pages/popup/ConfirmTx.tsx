@@ -103,6 +103,10 @@ export default observer(({ app }: Props) => {
           <TransferView implVM={app.confirmVM} onContinue={onContinue} onReject={reject} />
         ) : undefined}
 
+        {confirmVM.method === 'Approve' ? (
+          <ApproveView confirmVM={app.confirmVM} onContinue={onContinue} onReject={reject} />
+        ) : undefined}
+
         <AuthView app={app} onCancel={onAuthCancel} />
       </div>
     </div>
@@ -181,56 +185,78 @@ const AuthView = observer(({ app, onCancel }: { app: ApplicationPopup; onCancel?
   );
 });
 
-const ApproveView = ({ confirmVM }: { confirmVM: ConfirmVM }) => {
-  const { receiptAddress, receipt, amount, tokenSymbol, gas, gasPrice, maxFee, nonce, totalValue } = confirmVM;
+const ApproveView = observer(
+  ({ confirmVM, onReject, onContinue }: { confirmVM: ConfirmVM; onReject?: () => void; onContinue?: () => void }) => {
+    const { receiptAddress, receipt, approveToken, tokenSymbol, gas, gasPrice, maxFee, nonce, totalValue } = confirmVM;
 
-  return (
-    <div className="details">
-      <div className="form">
-        <div className="attention">
-          By granting this transaction, the spender can spend your funds without your knowledge. Please be careful to check
-          the granting limit below.
-        </div>
+    useEffect(() => {
+      window.resizeTo(360, 375);
+    }, []);
 
-        <div>
-          <span>Spender:</span>
-          <span></span>
-        </div>
+    return (
+      <div className="details">
+        <div className="form">
+          <div className="attention">
+            By granting this transaction, the spender can spend your funds without your knowledge. Please be careful to check
+            the granting limit below.
+          </div>
 
-        <div>
-          <span>Limit:</span>
-          <input type="text" />
-        </div>
-
-        <div>
-          <span>Gas Limit:</span>
-          <input type="text" defaultValue={gas} onChange={(e) => confirmVM.setGas(e.target.value)} />
-        </div>
-
-        <div>
-          <span>Gas Price:</span>
           <div>
-            <input type="text" defaultValue={gasPrice} onChange={(e) => confirmVM.setGasPrice(e.target.value)} />
-            <span>Gwei</span>
+            <span>Spender:</span>
+            <span>{confirmVM.approveToken.spender}</span>
+          </div>
+
+          <div>
+            <span>Funds Limit:</span>
+            <span>
+              <input
+                type="text"
+                className={`funds-limit ${approveToken.isMax ? 'max' : ''}`}
+                defaultValue={confirmVM.approveToken.limitAmount}
+              />
+              <img src={Icons(tokenSymbol)} alt={tokenSymbol} /> {tokenSymbol}
+            </span>
+          </div>
+
+          <div>
+            <span>Gas Limit:</span>
+            <input type="text" defaultValue={gas} onChange={(e) => confirmVM.setGas(e.target.value)} />
+          </div>
+
+          <div>
+            <span>Gas Price:</span>
+            <div>
+              <input type="text" defaultValue={gasPrice} onChange={(e) => confirmVM.setGasPrice(e.target.value)} />
+              <span>Gwei</span>
+            </div>
+          </div>
+
+          <div>
+            <span>Nonce:</span>
+            <input type="text" defaultValue={nonce} onChange={(e) => confirmVM.setNonce(e.target.value)} />
+          </div>
+
+          <div>
+            <span>Max Fee:</span>
+            <span>{maxFee} ETH</span>
+          </div>
+
+          <div>
+            <span>Total:</span>
+            <span>{totalValue} ETH</span>
           </div>
         </div>
-
-        <div>
-          <span>Nonce:</span>
-          <input type="text" defaultValue={nonce} onChange={(e) => confirmVM.setNonce(e.target.value)} />
-        </div>
-
-        <div>
-          <span>Max Fee:</span>
-          <span>{maxFee} ETH</span>
-        </div>
-
-        <div>
-          <span>Total:</span>
-          <span>{totalValue} ETH</span>
+        <div className="actions">
+          <button onClick={(_) => onReject?.()}>Cancel</button>
+          <button
+            className="positive"
+            onClick={(_) => onContinue?.()}
+            disabled={!confirmVM.isValid || confirmVM.insufficientFee}
+          >
+            Continue
+          </button>
         </div>
       </div>
-      <div className="actions"></div>
-    </div>
-  );
-};
+    );
+  }
+);

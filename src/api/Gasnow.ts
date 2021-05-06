@@ -31,7 +31,7 @@ export class GasnowHttp {
 
 export class GasnowWs {
   static readonly gwei_10 = 10000000000;
-  static readonly gwei_200 = 200000000000;
+  static readonly gwei_20 = 20000000000;
   static readonly gwei_1 = 1000000000;
   static readonly host = 'wss://www.gasnow.org/ws';
 

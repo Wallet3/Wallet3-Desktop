@@ -3,6 +3,7 @@ import { ConfirmSendTx, WcMessages } from '../common/Messages';
 import App from './App';
 import ERC20ABI from '../abis/ERC20.json';
 import EventEmitter from 'events';
+import { GasnowWs } from '../api/Gasnow';
 import { IpcMainInvokeEvent } from 'electron/main';
 import WalletConnector from '@walletconnect/client';
 import { ethers } from 'ethers';
@@ -107,11 +108,11 @@ export class WalletConnect extends EventEmitter {
       chainId: App.chainId,
       from: App.currentAddress,
       to: param.to,
-      data: param.data,
-      gas: Number.parseInt(param.gas),
-      gasPrice: Number.parseInt(param.gasPrice),
-      nonce: Number.parseInt(param.nonce),
-      value: param.value,
+      data: param.data || '0x',
+      gas: Number.parseInt(param.gas) || 21000,
+      gasPrice: Number.parseInt(param.gasPrice) || GasnowWs.gwei_20,
+      nonce: Number.parseInt(param.nonce) || 0,
+      value: param.value || 0,
 
       receipient,
       transferToken,

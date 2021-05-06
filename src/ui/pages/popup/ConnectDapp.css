@@ -17,14 +17,22 @@
   margin-bottom: 4px;
   max-width: 70vw;
   overflow: hidden;
-  text-overflow: clip;
+  text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.page.connectdapp > .content > .desc {
+  margin-top: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: unset;
+  line-height: 1.5em;
+  max-height: 3em;
 }
 
 .page.connectdapp > .content img {
   width: 48px;
   border: none;
-  border-radius: 50%;
   margin-bottom: 12px;
 }
 

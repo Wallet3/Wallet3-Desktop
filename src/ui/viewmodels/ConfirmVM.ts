@@ -6,6 +6,7 @@ import { makeAutoObservable, runInAction } from 'mobx';
 import ERC20ABI from '../../abis/ERC20.json';
 import { GasnowWs } from '../../api/Gasnow';
 import { Networks } from './NetworksVM';
+import { findTokenByAddress } from '../misc/Tokens';
 import { formatUnits } from 'ethers/lib/utils';
 import ipc from '../bridges/IPC';
 import provider from '../../common/Provider';
@@ -26,9 +27,16 @@ export class ConfirmVM {
   chainId = 1;
   nativeBalance = BigNumber.from(0);
   transferToken?: { symbol: string; transferAmount: BigNumber; decimals: number; to: string } = undefined;
-  approveToken?: { spender: string; limit: BigNumber } = undefined;
+  approveToken?: {
+    symbol: string;
+    decimals: number;
+    spender: string;
+    limitWei: BigNumber;
+    limitAmount: string;
+    isMax?: boolean;
+  } = undefined;
 
-  private _value = '';
+  private _value: string | number = '';
 
   constructor(params: ConfirmSendTx) {
     makeAutoObservable(this);
@@ -57,15 +65,17 @@ export class ConfirmVM {
         this.transferToken.symbol = params.transferToken.symbol;
       }
     } else if (params.data?.toLowerCase().startsWith(Approve)) {
-      this.approveToken = { limit: BigNumber.from(0), spender: '' };
+      this.approveToken = { limitWei: BigNumber.from(0), spender: '', decimals: 18, symbol: '', limitAmount: '' };
+
+      this.initApproveToken(params);
     }
 
     this.args = params;
     this.chainId = params.chainId;
     this._gas = params.gas;
     this._gasPrice = params.gasPrice / GasnowWs.gwei_1;
-    this._nonce = params.nonce;
-    this._value = params.value;
+    this._nonce = params.nonce ?? 0;
+    this._value = params.value || 0;
 
     provider
       .getBalance(params.from)
@@ -90,7 +100,7 @@ export class ConfirmVM {
   }
 
   get totalValue() {
-    return formatEther(BigNumber.from(this.args.value).add(parseUnits(this.maxFee, 18)));
+    return formatEther(BigNumber.from(this.args.value || 0).add(parseUnits(this.maxFee, 18)));
   }
 
   private _gas = 0;
@@ -104,7 +114,9 @@ export class ConfirmVM {
   }
 
   get tokenSymbol() {
-    return this.transferToken?.symbol ?? Networks.find((n) => n.chainId === this.chainId).symbol;
+    return (
+      (this.transferToken?.symbol || this.approveToken?.symbol) ?? Networks.find((n) => n.chainId === this.chainId).symbol
+    );
   }
 
   private _nonce = -1;
@@ -147,7 +159,6 @@ export class ConfirmVM {
   }
 
   private async initTransferToken(params: ConfirmSendTx, needMore = true) {
-    const c = new ethers.Contract(params.to, ERC20ABI, provider);
     const iface = new ethers.utils.Interface(ERC20ABI);
     const { dst, wad } = iface.decodeFunctionData('transfer', params.data);
 
@@ -156,6 +167,14 @@ export class ConfirmVM {
 
     if (!needMore) return;
 
+    const token = findTokenByAddress(params.to);
+    if (token) {
+      this.transferToken.symbol = token.symbol;
+      this.transferToken.decimals = token.decimals;
+      return;
+    }
+
+    const c = new ethers.Contract(params.to, ERC20ABI, provider);
     const symbol = await c.symbol();
     const decimals: number = await c.decimals();
 
@@ -170,7 +189,26 @@ export class ConfirmVM {
     const { guy, wad } = iface.decodeFunctionData('approve', params.data);
 
     this.approveToken.spender = guy;
-    this.approveToken.limit = BigNumber.from(wad);
+    this.approveToken.limitWei = wad;
+    this.approveToken.isMax = wad.eq('115792089237316195423570985008687907853269984665640564039457584007913129639935');
+
+    const token = findTokenByAddress(params.to);
+    if (token) {
+      this.approveToken.symbol = token.symbol;
+      this.approveToken.decimals = token.decimals;
+      this.approveToken.limitAmount = formatUnits(wad, token.decimals);
+      return;
+    }
+
+    const c = new ethers.Contract(params.to, ERC20ABI, provider);
+    const symbol = await c.symbol();
+    const decimals: number = await c.decimals();
+
+    runInAction(() => {
+      this.approveToken.symbol = symbol;
+      this.approveToken.decimals = decimals;
+      this.approveToken.limitAmount = formatUnits(wad, decimals);
+    });
   }
 
   approveRequest() {

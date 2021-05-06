@@ -16,7 +16,9 @@ export default observer(({ app }: { app: ApplicationPopup }) => {
       <div className="content">
         <img src={vm.icon} alt={vm.appName} />
         <div>{vm.appName}</div>
-        <div>{vm.desc}</div>
+        <div className="desc" title={vm.desc}>
+          {vm.desc}
+        </div>
         <div>{vm.url}</div>
       </div>
 

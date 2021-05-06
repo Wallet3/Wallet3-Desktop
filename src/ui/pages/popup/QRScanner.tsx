@@ -37,7 +37,7 @@ export default () => {
     if (result) {
       window.close();
     } else {
-      Anime.vibrate('.scan-area');
+      Anime.vibrate('.scan-area', () => window.close());
     }
   };
 
