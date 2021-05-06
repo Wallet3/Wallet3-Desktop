@@ -11,7 +11,9 @@ export default {
   createTransferTx: 'msg-create-transfer-tx',
   fetchAddresses: 'msg-fetch-addresses',
   releaseWindow: 'msg-release-window',
+  clearHistory: 'msg-clear-history',
 
+  scanQR: 'msg-scan-qr',
   connectWallet: 'msg-connect-wallet',
   initWindowType: 'msg-init-window-type',
 };
@@ -43,7 +45,7 @@ export interface SetupMnemonic {
   addresses: string[];
 }
 
-export interface ConfirmSendTx {
+export interface TxParams {
   chainId: number;
   from: string;
   to: string;
@@ -52,6 +54,9 @@ export interface ConfirmSendTx {
   gasPrice: number; // wei
   nonce: number;
   data: string;
+}
+
+export interface ConfirmSendTx extends TxParams {
   receipient?: {
     address: string;
     name?: string;

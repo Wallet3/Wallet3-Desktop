@@ -2,7 +2,7 @@ import './QRScanner.css';
 
 import * as Anime from '../../misc/Anime';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Messages from '../../../common/Messages';
 import { PopupTitle } from '../../components';
@@ -12,8 +12,12 @@ import ipc from '../../bridges/IPC';
 import qrscanner from 'qr-scanner';
 import scanQR from '../../misc/QRScanner';
 
-export default (props) => {
+export default () => {
+  const [scanning, setScanning] = useState(false);
+
   const scanWalletConnect = async () => {
+    setScanning(true);
+
     const uri = await scanQR(async (imgdata) => {
       try {
         const result = await qrscanner.scanImage(imgdata);
@@ -25,6 +29,7 @@ export default (props) => {
       return { success: false, result: '' };
     });
 
+    setScanning(false);
     if (window.closed) return;
     if (!uri) return;
 
@@ -32,7 +37,7 @@ export default (props) => {
     if (result) {
       window.close();
     } else {
-      Anime.vibrate('.scan-area', () => setTimeout(() => window.close(), 1000));
+      Anime.vibrate('.scan-area');
     }
   };
 
@@ -72,7 +77,9 @@ export default (props) => {
       </div>
       <div className="actions">
         <button onClick={(_) => window.close()}>Cancel</button>
-        <button onClick={(_) => scanWalletConnect()}>Try Again</button>
+        <button disabled={scanning} onClick={(_) => scanWalletConnect()}>
+          Try Again
+        </button>
       </div>
     </div>
   );

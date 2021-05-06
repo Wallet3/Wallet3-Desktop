@@ -163,13 +163,13 @@ export class ConfirmVM {
     if (!this.args.walletConnect) return;
     const { peerId, reqid } = this.args.walletConnect;
 
-    ipc.invoke(`${WcMessages.approveWcCallRequest(peerId, reqid)}`);
+    ipc.invokeSecure(`${WcMessages.approveWcCallRequest(peerId, reqid)}`, {});
   }
 
   rejectRequest() {
     if (!this.args.walletConnect) return;
     const { peerId, reqid } = this.args.walletConnect;
 
-    ipc.invoke(`${WcMessages.rejectWcCallRequest(peerId, reqid)}`);
+    ipc.invokeSecure(`${WcMessages.rejectWcCallRequest(peerId, reqid)}`);
   }
 }

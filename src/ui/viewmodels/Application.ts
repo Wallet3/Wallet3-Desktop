@@ -55,6 +55,14 @@ export class Application {
   async promptTouchID(message?: string) {
     return await ipc.invokeSecure<boolean>(MessageKeys.promptTouchID, { message });
   }
+
+  clearHistory() {
+    return ipc.invoke(MessageKeys.clearHistory);
+  }
+
+  scanQR() {
+    return ipc.invoke(MessageKeys.scanQR);
+  }
 }
 
 export default new Application();

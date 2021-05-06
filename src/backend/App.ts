@@ -1,6 +1,6 @@
 import * as Cipher from '../common/Cipher';
 
-import { BrowserWindow, TouchBar, TouchBarButton, ipcMain, systemPreferences } from 'electron';
+import { BrowserWindow, TouchBar, TouchBarButton, app, ipcMain, systemPreferences } from 'electron';
 import MessageKeys, { ConfirmSendTx, PopupWindowTypes } from '../common/Messages';
 import { WalletConnect, connectAndWaitSession } from './WalletConnect';
 
@@ -48,6 +48,16 @@ class App {
 
     ipcMain.handle(MessageKeys.getInitStatus, () => {
       return { hasMnemonic: KeyMan.hasMnemonic, touchIDSupported: this.touchIDSupported };
+    });
+
+    ipcMain.handle(MessageKeys.scanQR, () => {
+      if (this.addresses.length === 0) return false;
+      this.createPopupWindow('scanQR', {}, true, this.mainWindow);
+      return true;
+    });
+
+    ipcMain.handle(MessageKeys.clearHistory, () => {
+      this.mainWindow?.webContents.clearHistory();
     });
 
     ipcMain.handle(`${MessageKeys.promptTouchID}-secure`, async (e, encrypted, winId) => {

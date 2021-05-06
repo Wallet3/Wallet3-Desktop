@@ -95,11 +95,11 @@ export class WalletConnect extends EventEmitter {
       transferToken = { decimals, symbol, balance };
     }
 
-    ipcMain.handleOnce(WcMessages.approveWcCallRequest(this.peerId, request.id), () =>
+    ipcMain.handleOnce(`${WcMessages.approveWcCallRequest(this.peerId, request.id)}-secure`, () =>
       this.connector.approveRequest({ id: request.id })
     );
 
-    ipcMain.handleOnce(WcMessages.rejectWcCallRequest(this.peerId, request.id), () =>
+    ipcMain.handleOnce(`${WcMessages.rejectWcCallRequest(this.peerId, request.id)}-secure`, () =>
       this.connector.rejectRequest({ id: request.id, error: { message: 'User rejected' } })
     );
 
