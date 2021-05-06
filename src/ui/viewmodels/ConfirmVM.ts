@@ -10,10 +10,13 @@ import { formatUnits } from 'ethers/lib/utils';
 import ipc from '../bridges/IPC';
 import provider from '../../common/Provider';
 
+const Transfer = '0xa9059cbb';
+const Approve = '0x095ea7b3';
+
 const Methods = new Map<string, string[]>([
-  ['0xa9059cbb', ['Transfer', 'repeat']],
+  [Transfer, ['Transfer', 'repeat']],
   ['0x', ['Transfer', 'repeat']],
-  ['0x095ea7b3', ['Approve', 'shield']],
+  [Approve, ['Approve', 'shield']],
 ]);
 
 export class ConfirmVM {
@@ -22,15 +25,16 @@ export class ConfirmVM {
   flag = '';
   chainId = 1;
   nativeBalance = BigNumber.from(0);
-  transferToken: { symbol: string; transferAmount: BigNumber; decimals: number; to: string } = undefined;
+  transferToken?: { symbol: string; transferAmount: BigNumber; decimals: number; to: string } = undefined;
+  approveToken?: { spender: string; limit: BigNumber } = undefined;
 
   private _value = '';
 
-  constructor(args: ConfirmSendTx) {
+  constructor(params: ConfirmSendTx) {
     makeAutoObservable(this);
 
-    if (Methods.has(args.data?.substring(0, 10))) {
-      const [method, icon] = Methods.get(args.data.substring(0, 10));
+    if (Methods.has(params.data?.substring(0, 10))) {
+      const [method, icon] = Methods.get(params.data.substring(0, 10));
       this.method = method;
       this.flag = icon;
     } else {
@@ -38,7 +42,7 @@ export class ConfirmVM {
       this.flag = 'edit-2';
     }
 
-    if (args.data?.toLowerCase().startsWith('0xa9059cbb')) {
+    if (params.data?.toLowerCase().startsWith(Transfer)) {
       this.transferToken = {
         symbol: '',
         transferAmount: BigNumber.from(0),
@@ -46,23 +50,25 @@ export class ConfirmVM {
         to: '',
       };
 
-      this.initTransferToken(args, !args.transferToken);
+      this.initTransferToken(params, !params.transferToken);
 
-      if (args.transferToken) {
-        this.transferToken.decimals = args.transferToken.decimals;
-        this.transferToken.symbol = args.transferToken.symbol;
+      if (params.transferToken) {
+        this.transferToken.decimals = params.transferToken.decimals;
+        this.transferToken.symbol = params.transferToken.symbol;
       }
+    } else if (params.data?.toLowerCase().startsWith(Approve)) {
+      this.approveToken = { limit: BigNumber.from(0), spender: '' };
     }
 
-    this.args = args;
-    this.chainId = args.chainId;
-    this._gas = args.gas;
-    this._gasPrice = args.gasPrice / GasnowWs.gwei_1;
-    this._nonce = args.nonce;
-    this._value = args.value;
+    this.args = params;
+    this.chainId = params.chainId;
+    this._gas = params.gas;
+    this._gasPrice = params.gasPrice / GasnowWs.gwei_1;
+    this._nonce = params.nonce;
+    this._value = params.value;
 
     provider
-      .getBalance(args.from)
+      .getBalance(params.from)
       .then((v) => runInAction(() => (this.nativeBalance = v)))
       .catch(() => console.log('balance error'));
   }
@@ -157,6 +163,14 @@ export class ConfirmVM {
       this.transferToken.symbol = symbol;
       this.transferToken.decimals = decimals;
     });
+  }
+
+  private async initApproveToken(params: ConfirmSendTx) {
+    const iface = new ethers.utils.Interface(ERC20ABI);
+    const { guy, wad } = iface.decodeFunctionData('approve', params.data);
+
+    this.approveToken.spender = guy;
+    this.approveToken.limit = BigNumber.from(wad);
   }
 
   approveRequest() {

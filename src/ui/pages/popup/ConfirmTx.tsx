@@ -99,7 +99,10 @@ export default observer(({ app }: Props) => {
     <div className="page confirm">
       <PopupTitle title={confirmVM?.method} icon={confirmVM?.flag} />
       <div className="container">
-        <TransferView implVM={app.confirmVM} onContinue={onContinue} onReject={reject} />
+        {confirmVM.method === 'Transfer' ? (
+          <TransferView implVM={app.confirmVM} onContinue={onContinue} onReject={reject} />
+        ) : undefined}
+
         <AuthView app={app} onCancel={onAuthCancel} />
       </div>
     </div>
@@ -177,3 +180,57 @@ const AuthView = observer(({ app, onCancel }: { app: ApplicationPopup; onCancel?
     </div>
   );
 });
+
+const ApproveView = ({ confirmVM }: { confirmVM: ConfirmVM }) => {
+  const { receiptAddress, receipt, amount, tokenSymbol, gas, gasPrice, maxFee, nonce, totalValue } = confirmVM;
+
+  return (
+    <div className="details">
+      <div className="form">
+        <div className="attention">
+          By granting this transaction, the spender can spend your funds without your knowledge. Please be careful to check
+          the granting limit below.
+        </div>
+
+        <div>
+          <span>Spender:</span>
+          <span></span>
+        </div>
+
+        <div>
+          <span>Limit:</span>
+          <input type="text" />
+        </div>
+
+        <div>
+          <span>Gas Limit:</span>
+          <input type="text" defaultValue={gas} onChange={(e) => confirmVM.setGas(e.target.value)} />
+        </div>
+
+        <div>
+          <span>Gas Price:</span>
+          <div>
+            <input type="text" defaultValue={gasPrice} onChange={(e) => confirmVM.setGasPrice(e.target.value)} />
+            <span>Gwei</span>
+          </div>
+        </div>
+
+        <div>
+          <span>Nonce:</span>
+          <input type="text" defaultValue={nonce} onChange={(e) => confirmVM.setNonce(e.target.value)} />
+        </div>
+
+        <div>
+          <span>Max Fee:</span>
+          <span>{maxFee} ETH</span>
+        </div>
+
+        <div>
+          <span>Total:</span>
+          <span>{totalValue} ETH</span>
+        </div>
+      </div>
+      <div className="actions"></div>
+    </div>
+  );
+};

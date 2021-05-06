@@ -21,3 +21,13 @@ test('getBalance', async () => {
   const balance = await provider.getBalance('0x3afd8a3ffD64712F523Af8788763EE0C718614A2');
   expect(balance.gte(0)).toBe(true);
 });
+
+test('decode approve', () => {
+  const data =
+    '0x095ea7b3000000000000000000000000e592427a0aece92de3edee1f18e0157c05861564ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
+
+  const iface = new ethers.utils.Interface(ERC20ABI);
+  const { guy, wad } = iface.decodeFunctionData('approve', data);
+  expect(guy).toBe('0xE592427A0AEce92De3Edee1F18E0157C05861564');
+  expect(wad.toString()).toBe(115792089237316195423570985008687907853269984665640564039457584007913129639935);
+});
