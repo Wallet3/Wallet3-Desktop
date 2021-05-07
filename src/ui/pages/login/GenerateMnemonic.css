@@ -32,14 +32,16 @@
 }
 
 .page.generate > div.seeds > .actions > .addr {
-  display: inline-block;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  display: flex;
   overflow: hidden;
 }
 
 .page.generate > div.seeds > .actions > .addr > .addr-value {
   user-select: text;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 50vw;
 }
 
 .page.generate > div.seeds > .actions > .switch,

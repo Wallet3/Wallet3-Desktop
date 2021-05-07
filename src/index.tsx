@@ -9,6 +9,7 @@ import networksVM, { NetworksVM } from './ui/viewmodels/NetworksVM';
 import walletVM, { WalletVM } from './ui/viewmodels/WalletVM';
 
 import AppPage from './ui/App';
+import Coingecko from './api/Coingecko';
 import { observer } from 'mobx-react-lite';
 
 interface ViewModels {
@@ -28,5 +29,6 @@ function render() {
 render();
 
 document.addEventListener('visibilitychange', (ev) => {
-  console.log(ev.type, ev);
+  if (document.hidden) return;
+  Coingecko.start();
 });
