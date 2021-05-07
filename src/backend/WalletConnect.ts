@@ -1,4 +1,4 @@
-import { ConfirmSendTx, WcMessages } from '../common/Messages';
+import { ConfirmSendTx, RequestSignMessage, WcMessages } from '../common/Messages';
 
 import App from './App';
 import ERC20ABI from '../abis/ERC20.json';
@@ -118,6 +118,13 @@ export class WalletConnect extends EventEmitter {
       transferToken,
       walletConnect: { peerId: this.peerId, reqid: request.id },
     } as ConfirmSendTx);
+  };
+
+  personal_sign = async (request: WCCallRequestRequest, params: string[]) => {
+    App.createPopupWindow('sign', {
+      raw: params,
+      walletConnect: { peerId: this.peerId, reqid: request.id },
+    } as RequestSignMessage);
   };
 
   dispose() {

@@ -3,6 +3,7 @@ import Messages, { ConfirmSendTx, InitStatus, PopupWindowTypes } from '../../com
 import { Application } from './Application';
 import { ConfirmVM } from './ConfirmVM';
 import { ConnectDappVM } from './ConnectDappVM';
+import { SignVM } from './SignVM';
 import { createBrowserHistory } from 'history';
 import ipc from '../bridges/IPC';
 
@@ -28,12 +29,16 @@ export class ApplicationPopup extends Application {
           this.connectDappVM = new ConnectDappVM(payload);
           this.history.push('/connectDapp');
           break;
+        case 'sign':
+          this.signVM = new SignVM(payload);
+          this.history.push('/sign')
       }
     });
   }
 
-  confirmVM: ConfirmVM;
-  connectDappVM: ConnectDappVM;
+  confirmVM?: ConfirmVM;
+  connectDappVM?: ConnectDappVM;
+  signVM?: SignVM;
 }
 
 export default new ApplicationPopup();

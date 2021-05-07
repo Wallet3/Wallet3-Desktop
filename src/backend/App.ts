@@ -28,8 +28,8 @@ class App {
 
   constructor() {
     this.touchIDSupported = systemPreferences.canPromptTouchID();
-    
-    KeyMan.reset('');
+
+    // KeyMan.reset('');
     KeyMan.init();
 
     ipcMain.handle(MessageKeys.exchangeDHKey, (e, dh) => {
@@ -96,6 +96,7 @@ class App {
 
       const addresses = await KeyMan.genAddresses(userPassword, 1);
       this.addresses = addresses;
+      if (this.touchBarButtons?.walletConnect) this.touchBarButtons.walletConnect.enabled = true;
 
       return this.encryptIpc({ addresses, success: true }, iv, key);
     });

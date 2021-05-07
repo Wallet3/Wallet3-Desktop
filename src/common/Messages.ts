@@ -56,13 +56,23 @@ export interface TxParams {
   data: string;
 }
 
+export interface WCParams {
+  peerId: string;
+  reqid: number;
+}
+
 export interface ConfirmSendTx extends TxParams {
   receipient?: {
     address: string;
     name?: string;
   };
   transferToken?: { symbol: string; decimals: number };
-  walletConnect?: { peerId: string; reqid: number };
+  walletConnect?: WCParams;
 }
 
-export type PopupWindowTypes = 'connectDapp' | 'signature' | 'sendTx' | 'scanQR';
+export interface RequestSignMessage {
+  raw: string[];
+  walletConnect: WCParams;
+}
+
+export type PopupWindowTypes = 'connectDapp' | 'sign' | 'sendTx' | 'scanQR';
