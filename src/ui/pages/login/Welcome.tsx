@@ -8,7 +8,7 @@ export default () => {
   return (
     <div className="page welcome">
       <div className="brand">
-        <Logo />
+        <Logo width={128} height={72} />
         <div className="slogan">A Wallet for Bankless Era</div>
       </div>
 

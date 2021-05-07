@@ -15,21 +15,27 @@ export async function getPrice(ids = 'ethereum', currencies = 'usd') {
 
 class Coingecko {
   eth: number = 0;
+  timer?: NodeJS.Timeout;
 
   constructor() {
     makeAutoObservable(this);
   }
 
   start() {
+    const run = () => {
+      this.timer = setTimeout(() => this.start(), 15 * 1000);
+    };
+
+    clearTimeout(this.timer);
     getPrice()
       .then((data) => {
         if (!data) return;
 
         const { ethereum } = data;
         runInAction(() => (this.eth = ethereum.usd));
-        setTimeout(() => this.start(), 15 * 1000);
+        run();
       })
-      .catch(() => setTimeout(() => this.start(), 15 * 1000));
+      .catch(() => run());
   }
 }
 

@@ -28,10 +28,9 @@ class App {
 
   constructor() {
     this.touchIDSupported = systemPreferences.canPromptTouchID();
+    
+    KeyMan.reset('');
     KeyMan.init();
-
-    // KeyMan.reset('');
-    // this.hasMnemonic = false;
 
     ipcMain.handle(MessageKeys.exchangeDHKey, (e, dh) => {
       const { rendererEcdhKey, ipcSecureIv, windowId } = dh;

@@ -26,3 +26,7 @@ function render() {
 }
 
 render();
+
+document.addEventListener('visibilitychange', (ev) => {
+  console.log(ev.type, ev);
+});
