@@ -22,6 +22,10 @@ export default observer(({ app }: { app: ApplicationPopup }) => {
           <ConnectDapp app={app} />
         </Route>
 
+        <Route path="/sign">
+          <ConfirmTx app={app} />
+        </Route>
+
         <Route path="*" component={Blank} />
       </Switch>
     </Router>

@@ -1,0 +1,6 @@
+.form.sign-msg {
+  word-wrap: break-word;
+  overflow: hidden;
+  font-size: 12px;
+  max-height: 195px;
+}

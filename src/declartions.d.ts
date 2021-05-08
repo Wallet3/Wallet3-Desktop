@@ -42,7 +42,7 @@ interface WCCallRequestRequest {
   id: number;
   jsonrpc: '2.0';
   method: 'eth_sendTransaction' | 'eth_signTransaction' | 'eth_sign' | 'personal_sign' | 'eth_signTypedData';
-  params: WCCallRequest_eth_sendTransaction[];
+  params: any;
 }
 
 interface WCSessionRequestResponse {

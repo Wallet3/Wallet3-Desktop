@@ -7,11 +7,8 @@ import React, { useEffect } from 'react';
 
 import ApproveView from './confirms/ApproveView';
 import AuthView from './confirms/AuthView';
-import { ConfirmVM } from '../../viewmodels/ConfirmVM';
-import Icons from '../../misc/Icons';
-import PasscodeView from '../../components/PasscodeView';
 import { PopupTitle } from '../../components';
-import TouchIDView from '../../components/TouchIDView';
+import SignView from './confirms/SignView';
 import TransferView from './confirms/TransferView';
 import anime from 'animejs';
 import { observer } from 'mobx-react-lite';
@@ -91,24 +88,28 @@ export default observer(({ app }: Props) => {
     });
   }, []);
 
-  const { confirmVM } = app;
+  const { confirmVM, signVM } = app;
 
   const reject = () => {
     window.close();
-    confirmVM.rejectRequest();
+    confirmVM?.rejectRequest();
+    signVM?.reject();
   };
 
   return (
     <div className="page confirm">
-      <PopupTitle title={confirmVM?.method} icon={confirmVM?.flag} />
+      <PopupTitle title={confirmVM?.method ?? signVM?.method} icon={confirmVM?.flag ?? signVM?.flag} />
+
       <div className="container">
-        {confirmVM.method === 'Transfer' ? (
+        {confirmVM?.method === 'Transfer' ? (
           <TransferView implVM={app.confirmVM} onContinue={onContinue} onReject={reject} />
         ) : undefined}
 
-        {confirmVM.method === 'Approve' ? (
+        {confirmVM?.method === 'Approve' ? (
           <ApproveView confirmVM={app.confirmVM} onContinue={onContinue} onReject={reject} />
         ) : undefined}
+
+        {signVM ? <SignView signVM={signVM} onReject={reject} onContinue={onContinue} /> : undefined}
 
         <AuthView app={app} onCancel={onAuthCancel} onAuthTouchID={authTouchID} onAuthPasscode={authPassword} />
       </div>

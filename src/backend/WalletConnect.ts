@@ -77,6 +77,7 @@ export class WalletConnect extends EventEmitter {
       case 'eth_signTransaction':
         break;
       case 'personal_sign':
+        this.personal_sign(request, request.params);
         break;
       case 'eth_signTypedData':
         break;
@@ -96,13 +97,20 @@ export class WalletConnect extends EventEmitter {
       transferToken = { decimals, symbol, balance };
     }
 
-    ipcMain.handleOnce(`${WcMessages.approveWcCallRequest(this.peerId, request.id)}-secure`, () =>
-      this.connector.approveRequest({ id: request.id })
-    );
+    const clearHandlers = () => {
+      ipcMain.removeHandler(`${WcMessages.approveWcCallRequest(this.peerId, request.id)}-secure`);
+      ipcMain.removeHandler(`${WcMessages.rejectWcCallRequest(this.peerId, request.id)}-secure`);
+    };
 
-    ipcMain.handleOnce(`${WcMessages.rejectWcCallRequest(this.peerId, request.id)}-secure`, () =>
-      this.connector.rejectRequest({ id: request.id, error: { message: 'User rejected' } })
-    );
+    ipcMain.handleOnce(`${WcMessages.approveWcCallRequest(this.peerId, request.id)}-secure`, () => {
+      this.connector.approveRequest({ id: request.id });
+      clearHandlers();
+    });
+
+    ipcMain.handleOnce(`${WcMessages.rejectWcCallRequest(this.peerId, request.id)}-secure`, () => {
+      this.connector.rejectRequest({ id: request.id, error: { message: 'User rejected' } });
+      clearHandlers();
+    });
 
     App.createPopupWindow('sendTx', {
       chainId: App.chainId,
@@ -121,6 +129,18 @@ export class WalletConnect extends EventEmitter {
   };
 
   personal_sign = async (request: WCCallRequestRequest, params: string[]) => {
+    const clearHandlers = () => {
+      ipcMain.removeHandler(`${WcMessages.approveWcCallRequest(this.peerId, request.id)}`);
+      ipcMain.removeHandler(`${WcMessages.rejectWcCallRequest(this.peerId, request.id)}`);
+    };
+
+    ipcMain.handleOnce(`${WcMessages.approveWcCallRequest(this.peerId, request.id)}`, () => {});
+    
+    ipcMain.handleOnce(`${WcMessages.rejectWcCallRequest(this.peerId, request.id)}`, () => {
+      this.connector.rejectRequest({ id: request.id, error: { message: 'User rejected' } });
+      clearHandlers();
+    });
+
     App.createPopupWindow('sign', {
       raw: params,
       walletConnect: { peerId: this.peerId, reqid: request.id },
