@@ -17,26 +17,30 @@ interface Props {
   app: ApplicationPopup;
 }
 
-const authTouchID = async () => {
-  if (await App.promptTouchID('Send Tx')) {
-    window.close();
-  } else {
-    Anime.vibrate('div.auth > .panel');
-  }
-};
-
-const authPassword = async (passcode: string) => {
-  const verified = await App.verifyPassword(passcode);
-
-  if (!verified) {
-    Anime.vibrate('div.auth > .panel');
-    return;
-  }
-
-  window.close();
-};
-
 export default observer(({ app }: Props) => {
+  const { confirmVM, signVM } = app;
+
+  const authTouchID = async () => {
+    if (await App.promptTouchID('Send Tx')) {
+      (confirmVM ?? signVM).approveRequest({ viaTouchID: true });
+      window.close();
+    } else {
+      Anime.vibrate('div.auth > .panel');
+    }
+  };
+
+  const authPassword = async (passcode: string) => {
+    const verified = await App.verifyPassword(passcode);
+
+    if (!verified) {
+      Anime.vibrate('div.auth > .panel');
+      return;
+    }
+
+    (confirmVM ?? signVM).approveRequest({ passcode });
+    window.close();
+  };
+
   const onContinue = () => {
     anime({
       targets: '.page.confirm > .container > .details',
@@ -54,6 +58,12 @@ export default observer(({ app }: Props) => {
       duration: 300,
       complete: () => (App.touchIDSupported ? authTouchID() : undefined),
     });
+  };
+
+  const onReject = () => {
+    window.close();
+    confirmVM?.rejectRequest();
+    signVM?.rejectRequest();
   };
 
   const onAuthCancel = () => {
@@ -88,28 +98,20 @@ export default observer(({ app }: Props) => {
     });
   }, []);
 
-  const { confirmVM, signVM } = app;
-
-  const reject = () => {
-    window.close();
-    confirmVM?.rejectRequest();
-    signVM?.reject();
-  };
-
   return (
     <div className="page confirm">
       <PopupTitle title={confirmVM?.method ?? signVM?.method} icon={confirmVM?.flag ?? signVM?.flag} />
 
       <div className="container">
         {confirmVM?.method === 'Transfer' ? (
-          <TransferView implVM={app.confirmVM} onContinue={onContinue} onReject={reject} />
+          <TransferView implVM={app.confirmVM} onContinue={onContinue} onReject={onReject} />
         ) : undefined}
 
         {confirmVM?.method === 'Approve' ? (
-          <ApproveView confirmVM={app.confirmVM} onContinue={onContinue} onReject={reject} />
+          <ApproveView confirmVM={app.confirmVM} onContinue={onContinue} onReject={onReject} />
         ) : undefined}
 
-        {signVM ? <SignView signVM={signVM} onReject={reject} onContinue={onContinue} /> : undefined}
+        {signVM ? <SignView signVM={signVM} onReject={onReject} onContinue={onContinue} /> : undefined}
 
         <AuthView app={app} onCancel={onAuthCancel} onAuthTouchID={authTouchID} onAuthPasscode={authPassword} />
       </div>

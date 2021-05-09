@@ -16,13 +16,13 @@ export class SignVM {
     this.params = params;
   }
 
-  reject() {
-    ipc.invokeSecure(`${WcMessages.rejectWcCallRequest(this.params.walletConnect.peerId, this.params.walletConnect.reqid)}`);
-  }
-
-  approve() {
+  approveRequest({ passcode, viaTouchID }: { passcode?: string; viaTouchID?: boolean }) {
     ipc.invokeSecure(
       `${WcMessages.approveWcCallRequest(this.params.walletConnect.peerId, this.params.walletConnect.reqid)}`
     );
+  }
+
+  rejectRequest() {
+    ipc.invokeSecure(`${WcMessages.rejectWcCallRequest(this.params.walletConnect.peerId, this.params.walletConnect.reqid)}`);
   }
 }

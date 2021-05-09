@@ -106,6 +106,8 @@ app.on('ready', () => {
     () => GasnowWs.fast,
     () => {
       const { gas } = App.touchBarButtons || {};
+      if (!gas) return;
+
       gas.label = `${GasnowWs.rapidGwei} | ${GasnowWs.fastGwei} | ${GasnowWs.standardGwei}`;
       tray?.setTitle(gas.label);
     }
@@ -116,6 +118,8 @@ app.on('ready', () => {
     () => Coingecko.eth,
     () => {
       const { price } = App.touchBarButtons || {};
+      if (!price) return;
+      
       price.label = `$ ${Coingecko.eth}`;
     }
   );

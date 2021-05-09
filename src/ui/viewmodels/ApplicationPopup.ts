@@ -31,7 +31,7 @@ export class ApplicationPopup extends Application {
           break;
         case 'sign':
           this.signVM = new SignVM(payload);
-          this.history.push('/sign')
+          this.history.push('/sign');
       }
     });
   }
@@ -39,6 +39,7 @@ export class ApplicationPopup extends Application {
   confirmVM?: ConfirmVM;
   connectDappVM?: ConnectDappVM;
   signVM?: SignVM;
+
 }
 
 export default new ApplicationPopup();

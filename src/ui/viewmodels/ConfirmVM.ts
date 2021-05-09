@@ -3,6 +3,7 @@ import { ConfirmSendTx, WcMessages } from '../../common/Messages';
 import { formatEther, parseUnits } from '@ethersproject/units';
 import { makeAutoObservable, runInAction } from 'mobx';
 
+import App from './Application';
 import ERC20ABI from '../../abis/ERC20.json';
 import { GasnowWs } from '../../api/Gasnow';
 import { Networks } from './NetworksVM';
@@ -211,8 +212,12 @@ export class ConfirmVM {
     });
   }
 
-  approveRequest() {
+  approveRequest({ passcode, viaTouchID }: { passcode?: string; viaTouchID?: boolean }) {
     if (!this.args.walletConnect) return;
+
+    if(passcode) {
+      
+    }
     const { peerId, reqid } = this.args.walletConnect;
 
     ipc.invokeSecure(`${WcMessages.approveWcCallRequest(peerId, reqid)}`, {});
