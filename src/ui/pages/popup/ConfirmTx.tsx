@@ -62,8 +62,7 @@ export default observer(({ app }: Props) => {
 
   const onReject = () => {
     window.close();
-    confirmVM?.rejectRequest();
-    signVM?.rejectRequest();
+    (confirmVM ?? signVM).rejectRequest();
   };
 
   const onAuthCancel = () => {

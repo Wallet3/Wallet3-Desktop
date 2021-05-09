@@ -34,37 +34,46 @@ export class WalletConnect extends EventEmitter {
     this.connector.on('disconnect', (error: Error) => this.emit('disconnect'));
   }
 
-  handleSessionRequest = async (error: Error, payload: WCSessionRequestRequest) => {
+  handleSessionRequest = async (error: Error, request: WCSessionRequestRequest) => {
     if (error) {
       this.emit('error', error);
       return;
     }
 
-    const [{ peerMeta, chainId, peerId }] = payload.params;
+    const [{ peerMeta, chainId, peerId }] = request.params;
     this.peerId = peerId;
     this.chainId = chainId;
     this.peerMeta = peerMeta;
 
-    this.emit('sessionRequest', payload);
-    console.log(peerId);
+    this.emit('sessionRequest', request);
 
-    ipcMain.handleOnce(WcMessages.approveWcSession(this.peerId), this.handleApproveSession);
-    ipcMain.handleOnce(WcMessages.rejectWcSession(this.peerId), this.handleRejectSession);
+    const clearHandlers = () => {
+      ipcMain.removeHandler(WcMessages.approveWcSession(this.peerId, request.id));
+      ipcMain.removeHandler(WcMessages.rejectWcSession(this.peerId, request.id));
+    };
 
-    await App.createPopupWindow('connectDapp', payload.params);
-  };
+    ipcMain.handleOnce(WcMessages.approveWcSession(this.peerId, request.id), () => {
+      clearHandlers();
+      this.connector.approveSession({ accounts: App.addresses, chainId: App.chainId });
+    });
 
-  handleApproveSession = (e: IpcMainInvokeEvent) => {
-    this.connector.approveSession({ accounts: App.addresses, chainId: App.chainId });
-  };
+    ipcMain.handleOnce(WcMessages.rejectWcSession(this.peerId, request.id), () => {
+      clearHandlers();
+      this.connector.rejectSession({ message: 'User cancelled' });
+      this.dispose();
+    });
 
-  handleRejectSession = (e: IpcMainInvokeEvent) => {
-    this.connector.rejectSession({ message: 'User cancelled' });
-    this.dispose();
+    await App.createPopupWindow('connectDapp', request.params);
   };
 
   handleCallRequest = async (error: Error, request: WCCallRequestRequest) => {
+    if (error) {
+      this.emit('error', error);
+      return;
+    }
+    
     console.log(request.method);
+    console.log(request.id);
     console.log(request.params);
 
     switch (request.method) {
@@ -131,13 +140,13 @@ export class WalletConnect extends EventEmitter {
 
   sign = async (request: WCCallRequestRequest, params: any, type: 'personal_sign' | 'signTypedData') => {
     const clearHandlers = () => {
-      ipcMain.removeHandler(`${WcMessages.approveWcCallRequest(this.peerId, request.id)}`);
-      ipcMain.removeHandler(`${WcMessages.rejectWcCallRequest(this.peerId, request.id)}`);
+      ipcMain.removeHandler(`${WcMessages.approveWcCallRequest(this.peerId, request.id)}-secure`);
+      ipcMain.removeHandler(`${WcMessages.rejectWcCallRequest(this.peerId, request.id)}-secure`);
     };
 
-    ipcMain.handleOnce(`${WcMessages.approveWcCallRequest(this.peerId, request.id)}`, () => {
+    ipcMain.handleOnce(`${WcMessages.approveWcCallRequest(this.peerId, request.id)}-secure`, (e, encrypted) => {
       clearHandlers();
-      
+
       switch (type) {
         case 'personal_sign':
           break;
@@ -146,7 +155,7 @@ export class WalletConnect extends EventEmitter {
       }
     });
 
-    ipcMain.handleOnce(`${WcMessages.rejectWcCallRequest(this.peerId, request.id)}`, () => {
+    ipcMain.handleOnce(`${WcMessages.rejectWcCallRequest(this.peerId, request.id)}-secure`, () => {
       clearHandlers();
       this.connector.rejectRequest({ id: request.id, error: { message: 'User rejected' } });
     });
@@ -159,8 +168,6 @@ export class WalletConnect extends EventEmitter {
 
   dispose() {
     this.connector.killSession();
-    ipcMain.removeHandler(WcMessages.approveWcSession(this.peerId));
-    ipcMain.removeHandler(WcMessages.rejectWcSession(this.peerId));
     this.removeAllListeners();
   }
 }
