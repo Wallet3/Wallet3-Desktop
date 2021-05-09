@@ -48,16 +48,16 @@ export class WalletConnect extends EventEmitter {
     this.emit('sessionRequest', request);
 
     const clearHandlers = () => {
-      ipcMain.removeHandler(WcMessages.approveWcSession(this.peerId, request.id));
-      ipcMain.removeHandler(WcMessages.rejectWcSession(this.peerId, request.id));
+      ipcMain.removeHandler(WcMessages.approveWcSession(this.peerId));
+      ipcMain.removeHandler(WcMessages.rejectWcSession(this.peerId));
     };
 
-    ipcMain.handleOnce(WcMessages.approveWcSession(this.peerId, request.id), () => {
+    ipcMain.handleOnce(WcMessages.approveWcSession(this.peerId), () => {
       clearHandlers();
       this.connector.approveSession({ accounts: App.addresses, chainId: App.chainId });
     });
 
-    ipcMain.handleOnce(WcMessages.rejectWcSession(this.peerId, request.id), () => {
+    ipcMain.handleOnce(WcMessages.rejectWcSession(this.peerId), () => {
       clearHandlers();
       this.connector.rejectSession({ message: 'User cancelled' });
       this.dispose();
@@ -71,7 +71,7 @@ export class WalletConnect extends EventEmitter {
       this.emit('error', error);
       return;
     }
-    
+
     console.log(request.method);
     console.log(request.id);
     console.log(request.params);

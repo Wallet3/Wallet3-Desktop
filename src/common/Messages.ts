@@ -19,8 +19,8 @@ export default {
 };
 
 export const WcMessages = {
-  approveWcSession: (peerId: string, reqid: number) => `wc-approve-session-${peerId}-${reqid}`,
-  rejectWcSession: (peerId: string, reqid: number) => `wc-reject-session-${peerId}-${reqid}`,
+  approveWcSession: (peerId: string) => `wc-approve-session-${peerId}`,
+  rejectWcSession: (peerId: string) => `wc-reject-session-${peerId}`,
   approveWcCallRequest: (peerId: string, reqid: number) => `wc-approve-call-${peerId}-${reqid}`,
   rejectWcCallRequest: (peerId: string, reqid: number) => `wc-reject-call-${peerId}-${reqid}`,
 };
