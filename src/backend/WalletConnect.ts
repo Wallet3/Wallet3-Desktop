@@ -77,9 +77,10 @@ export class WalletConnect extends EventEmitter {
       case 'eth_signTransaction':
         break;
       case 'personal_sign':
-        this.personal_sign(request, request.params);
+        this.sign(request, request.params, 'personal_sign');
         break;
       case 'eth_signTypedData':
+        this.sign(request, request.params, 'signTypedData');
         break;
     }
   };
@@ -103,13 +104,13 @@ export class WalletConnect extends EventEmitter {
     };
 
     ipcMain.handleOnce(`${WcMessages.approveWcCallRequest(this.peerId, request.id)}-secure`, () => {
-      this.connector.approveRequest({ id: request.id });
       clearHandlers();
+      this.connector.approveRequest({ id: request.id });
     });
 
     ipcMain.handleOnce(`${WcMessages.rejectWcCallRequest(this.peerId, request.id)}-secure`, () => {
-      this.connector.rejectRequest({ id: request.id, error: { message: 'User rejected' } });
       clearHandlers();
+      this.connector.rejectRequest({ id: request.id, error: { message: 'User rejected' } });
     });
 
     App.createPopupWindow('sendTx', {
@@ -119,7 +120,7 @@ export class WalletConnect extends EventEmitter {
       data: param.data || '0x',
       gas: Number.parseInt(param.gas) || 21000,
       gasPrice: Number.parseInt(param.gasPrice) || GasnowWs.gwei_20,
-      nonce: Number.parseInt(param.nonce) || 0,
+      nonce: Number.parseInt(param.nonce) || (await provider.getTransactionCount(App.currentAddress)),
       value: param.value || 0,
 
       receipient,
@@ -128,17 +129,24 @@ export class WalletConnect extends EventEmitter {
     } as ConfirmSendTx);
   };
 
-  personal_sign = async (request: WCCallRequestRequest, params: string[]) => {
+  sign = async (request: WCCallRequestRequest, params: any, type: 'personal_sign' | 'signTypedData') => {
     const clearHandlers = () => {
       ipcMain.removeHandler(`${WcMessages.approveWcCallRequest(this.peerId, request.id)}`);
       ipcMain.removeHandler(`${WcMessages.rejectWcCallRequest(this.peerId, request.id)}`);
     };
 
-    ipcMain.handleOnce(`${WcMessages.approveWcCallRequest(this.peerId, request.id)}`, () => {});
-    
+    ipcMain.handleOnce(`${WcMessages.approveWcCallRequest(this.peerId, request.id)}`, () => {
+      switch (type) {
+        case 'personal_sign':
+          break;
+        case 'signTypedData':
+          break;
+      }
+    });
+
     ipcMain.handleOnce(`${WcMessages.rejectWcCallRequest(this.peerId, request.id)}`, () => {
-      this.connector.rejectRequest({ id: request.id, error: { message: 'User rejected' } });
       clearHandlers();
+      this.connector.rejectRequest({ id: request.id, error: { message: 'User rejected' } });
     });
 
     App.createPopupWindow('sign', {
