@@ -136,6 +136,8 @@ export class WalletConnect extends EventEmitter {
     };
 
     ipcMain.handleOnce(`${WcMessages.approveWcCallRequest(this.peerId, request.id)}`, () => {
+      clearHandlers();
+      
       switch (type) {
         case 'personal_sign':
           break;

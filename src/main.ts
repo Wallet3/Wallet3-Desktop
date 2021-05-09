@@ -1,4 +1,4 @@
-import { BrowserWindow, TouchBar, TouchBarButton, app, nativeImage } from 'electron';
+import { BrowserWindow, Menu, TouchBar, TouchBarButton, Tray, app, nativeImage } from 'electron';
 
 import App from './backend/App';
 import Coingecko from './api/Coingecko';
@@ -60,6 +60,13 @@ const createTouchBar = (mainWindow: BrowserWindow) => {
   newTouchBar(App.touchBarButtons);
 };
 
+let tray: Tray;
+const createTray = async () => {
+  tray = new Tray(nativeImage.createFromDataURL(require('./assets/icons/app/tray.png').default));
+  const menu = Menu.buildFromTemplate([{ label: 'Wallet Connect' }]);
+  tray.setContextMenu(menu);
+};
+
 const createWindow = async (): Promise<void> => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -84,6 +91,7 @@ const createWindow = async (): Promise<void> => {
   App.mainWindow = mainWindow;
 
   createTouchBar(mainWindow);
+  createTray();
 };
 
 // This method will be called when Electron has finished
@@ -99,6 +107,7 @@ app.on('ready', () => {
     () => {
       const { gas } = App.touchBarButtons || {};
       gas.label = `${GasnowWs.rapidGwei} | ${GasnowWs.fastGwei} | ${GasnowWs.standardGwei}`;
+      tray?.setTitle(gas.label);
     }
   );
 
