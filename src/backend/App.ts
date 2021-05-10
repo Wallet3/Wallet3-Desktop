@@ -109,7 +109,7 @@ class App {
     ipcMain.handle(`${MessageKeys.setDerivationPath}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
       const { fullPath } = this.decryptIpc(encrypted, iv, key);
-      await KeyMan.setPath(fullPath);
+      await KeyMan.setFullPath(fullPath);
     });
 
     ipcMain.handle(`${MessageKeys.verifyPassword}-secure`, async (e, encrypted, winId) => {

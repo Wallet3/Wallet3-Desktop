@@ -23,7 +23,7 @@ test(
     await KeyMan.savePassword('');
     await KeyMan.saveMnemonic('');
 
-    KeyMan.setPath(`m/44'/60'/5'/2/0`);
+    KeyMan.setFullPath(`m/44'/60'/5'/2/0`);
     expect(KeyMan.basePath).toBe(`m/44'/60'/5'/2`);
     expect(KeyMan.pathIndex).toBe(0);
 

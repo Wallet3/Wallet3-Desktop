@@ -37,7 +37,7 @@ class KeyMan {
     return user === (await keytar.getPassword(Keys.password, Keys.account));
   }
 
-  async setPath(fullPath: string) {
+  async setFullPath(fullPath: string) {
     const lastSlash = fullPath.lastIndexOf('/');
     this.basePath = fullPath.substring(0, lastSlash);
     this.pathIndex = Number.parseInt(fullPath.substring(lastSlash + 1)) || 0;
@@ -101,8 +101,7 @@ class KeyMan {
     if (!mnemonic) return undefined;
 
     const hd = ethers.utils.HDNode.fromMnemonic(mnemonic);
-    const main = hd.derivePath(`${this.basePath}/${this.pathIndex}`);
-    const addresses = [main.address];
+    const addresses = [hd.derivePath(`${this.basePath}/${this.pathIndex}`).address];
 
     for (let i = 1; i < count; i++) {
       addresses.push(hd.derivePath(`${this.basePath}/${this.pathIndex + i}`).address);
