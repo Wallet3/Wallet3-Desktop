@@ -50,6 +50,7 @@ class App {
         hasMnemonic: KeyMan.hasMnemonic,
         touchIDSupported: this.touchIDSupported,
         initVerified: this.addresses.length > 0,
+        addresses: this.addresses,
       } as InitStatus;
     });
 

@@ -29,6 +29,7 @@ export interface InitStatus {
   hasMnemonic: boolean;
   touchIDSupported: boolean;
   initVerified: boolean;
+  addresses?: string[];
 }
 
 export interface InitVerifyPassword {

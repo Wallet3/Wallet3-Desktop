@@ -19,10 +19,17 @@ export class Application {
   }
 
   async init(jump = true) {
-    const { hasMnemonic, touchIDSupported, initVerified } = await ipc.invoke<InitStatus>(MessageKeys.getInitStatus);
+    const { hasMnemonic, touchIDSupported, initVerified, addresses } = await ipc.invoke<InitStatus>(
+      MessageKeys.getInitStatus
+    );
 
     this.hasMnemonic = hasMnemonic;
     this.touchIDSupported = touchIDSupported;
+    this.initVerified = initVerified;
+
+    if (addresses?.length > 0) {
+      WalletVM.initAccounts(addresses);
+    }
 
     if (!jump) return;
 
