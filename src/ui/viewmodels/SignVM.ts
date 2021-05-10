@@ -4,7 +4,7 @@ import ipc from '../bridges/IPC';
 import { makeAutoObservable } from 'mobx';
 
 export class SignVM {
-  signMsg: string = '';
+  signMsg: string[] = [];
   method = 'Sign';
   flag = 'edit';
 
@@ -12,7 +12,7 @@ export class SignVM {
 
   constructor(params: RequestSignMessage) {
     makeAutoObservable(this);
-    this.signMsg = JSON.stringify(params.raw);
+    this.signMsg = params.raw;
     this.params = params;
   }
 
