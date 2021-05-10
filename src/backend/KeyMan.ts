@@ -6,7 +6,8 @@ import * as keytar from 'keytar';
 const Keys = {
   salt: 'salt',
   password: 'password',
-  path: 'path',
+  basePath: 'basePath',
+  pathIndex: 'pathIndex',
   account: 'master',
   mnemonic: 'mnemonic',
 };
@@ -16,7 +17,8 @@ const sha256 = (text: string) => crypto.createHash('sha256').update(text).digest
 class KeyMan {
   salt!: string;
   tmpMnemonic?: string;
-  path = `m/44'/60'/0'/0`;
+  basePath = `m/44'/60'/0'/0`;
+  pathIndex = 0;
   hasMnemonic = false;
 
   private getCorePassword(userPassword: string) {
@@ -26,11 +28,22 @@ class KeyMan {
   async init() {
     this.salt = await keytar.getPassword(Keys.salt, Keys.account);
     this.hasMnemonic = (await keytar.getPassword(Keys.mnemonic, Keys.account)) ? true : false;
+    this.basePath = (await keytar.getPassword(Keys.basePath, Keys.account)) || `m/44'/60'/0'/0`;
+    this.pathIndex = Number.parseInt((await keytar.getPassword(Keys.pathIndex, Keys.account)) || '0');
   }
 
   async verifyPassword(userPassword: string) {
     const user = sha256(this.getCorePassword(userPassword));
     return user === (await keytar.getPassword(Keys.password, Keys.account));
+  }
+
+  async setPath(fullPath: string) {
+    const lastSlash = fullPath.lastIndexOf('/');
+    this.basePath = fullPath.substring(0, lastSlash);
+    this.pathIndex = Number.parseInt(fullPath.substring(lastSlash + 1)) || 0;
+
+    await keytar.setPassword(Keys.basePath, Keys.account, this.basePath);
+    await keytar.setPassword(Keys.pathIndex, Keys.account, `${this.pathIndex}`);
   }
 
   genMnemonic(length = 12) {
@@ -88,11 +101,11 @@ class KeyMan {
     if (!mnemonic) return undefined;
 
     const hd = ethers.utils.HDNode.fromMnemonic(mnemonic);
-    const main = hd.derivePath(`${this.path}/${0}`);
+    const main = hd.derivePath(`${this.basePath}/${this.pathIndex}`);
     const addresses = ['0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B']; // [main.address];
 
     for (let i = 1; i < count; i++) {
-      addresses.push(hd.derivePath(`${this.path}/${i}`).address);
+      addresses.push(hd.derivePath(`${this.basePath}/${this.pathIndex + i}`).address);
     }
 
     return addresses;
@@ -101,7 +114,9 @@ class KeyMan {
   reset(password: string) {
     this.salt = undefined;
     this.hasMnemonic = false;
-    [Keys.mnemonic, Keys.salt, Keys.mnemonic].forEach((key) => keytar.deletePassword(key, Keys.account));
+    this.basePath = `m/44'/60'/0'/0`;
+    this.pathIndex = 0;
+    [(Keys.mnemonic, Keys.salt, Keys.mnemonic, Keys.basePath)].forEach((key) => keytar.deletePassword(key, Keys.account));
   }
 }
 
