@@ -3,6 +3,7 @@ export default {
   getInitStatus: 'msg-get-init-status',
   genMnemonic: 'msg-gen-mnemonic',
   saveTmpMnemonic: 'msg-save-tmp-mnemonic',
+  setDerivationPath: 'msg-set-derivation-path',
   setupMnemonic: 'msg-setup-mnemonic',
   verifyPassword: 'msg-verify-password',
   initVerifyPassword: 'msg-init-verify-password',

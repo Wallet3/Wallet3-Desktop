@@ -34,7 +34,12 @@ export default observer(({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) 
 
         <div className="derivation-path">
           <span>Derivation Path</span>
-          <input className="path" type="text" defaultValue="m/44'/60'/0'/0/0" />
+          <input
+            className="path"
+            type="text"
+            defaultValue="m/44'/60'/0'/0/0"
+            onChange={(e) => mnVM.setPath(e.target.value)}
+          />
         </div>
         <span className="path-desc">If you are not sure what this is, please ignore it</span>
       </div>

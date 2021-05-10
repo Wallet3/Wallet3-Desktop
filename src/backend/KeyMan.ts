@@ -102,7 +102,7 @@ class KeyMan {
 
     const hd = ethers.utils.HDNode.fromMnemonic(mnemonic);
     const main = hd.derivePath(`${this.basePath}/${this.pathIndex}`);
-    const addresses = ['0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B']; // [main.address];
+    const addresses = [main.address];
 
     for (let i = 1; i < count; i++) {
       addresses.push(hd.derivePath(`${this.basePath}/${this.pathIndex + i}`).address);
@@ -111,12 +111,14 @@ class KeyMan {
     return addresses;
   }
 
-  reset(password: string) {
+  async reset(password: string) {
     this.salt = undefined;
     this.hasMnemonic = false;
     this.basePath = `m/44'/60'/0'/0`;
     this.pathIndex = 0;
-    [(Keys.mnemonic, Keys.salt, Keys.mnemonic, Keys.basePath)].forEach((key) => keytar.deletePassword(key, Keys.account));
+    await Promise.all(
+      [(Keys.mnemonic, Keys.salt, Keys.mnemonic, Keys.basePath)].map((key) => keytar.deletePassword(key, Keys.account))
+    );
   }
 }
 

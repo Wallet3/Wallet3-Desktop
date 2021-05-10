@@ -33,6 +33,14 @@ export class MnemonicVM {
 
     return success;
   }
+
+  private _delayTimer: NodeJS.Timer;
+  setPath(fullPath: string) {
+    clearTimeout(this._delayTimer);
+    this._delayTimer = setTimeout(() => {
+      ipc.invokeSecure(MessageKeys.setDerivationPath, { fullPath });
+    }, 500);
+  }
 }
 
 export default new MnemonicVM();

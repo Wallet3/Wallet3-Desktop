@@ -106,6 +106,12 @@ class App {
       return this.encryptIpc({ addresses, success: true }, iv, key);
     });
 
+    ipcMain.handle(`${MessageKeys.setDerivationPath}-secure`, async (e, encrypted, winId) => {
+      const { iv, key } = this.windows.get(winId);
+      const { fullPath } = this.decryptIpc(encrypted, iv, key);
+      await KeyMan.setPath(fullPath);
+    });
+
     ipcMain.handle(`${MessageKeys.verifyPassword}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
       const { password } = this.decryptIpc(encrypted, iv, key);
