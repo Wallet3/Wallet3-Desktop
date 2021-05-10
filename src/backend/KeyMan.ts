@@ -73,6 +73,11 @@ class KeyMan {
     return Cipher.decrypt(Buffer.from(iv, 'hex'), enMnemonic, this.getCorePassword(userPassword));
   }
 
+  async signTx(userPassword: string, accountIndex = 0) {
+    const mnemonic = await this.readMnemonic(userPassword);
+    if (!mnemonic) return undefined;
+  }
+
   setTmpMnemonic(mnemonic: string) {
     if (!ethers.utils.isValidMnemonic(mnemonic)) return;
     this.tmpMnemonic = mnemonic;

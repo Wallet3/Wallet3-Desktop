@@ -1,5 +1,5 @@
 import { BigNumber, ethers } from 'ethers';
-import { ConfirmSendTx, WcMessages } from '../../common/Messages';
+import Messages, { ConfirmSendTx, SendTxParams, WcMessages } from '../../common/Messages';
 import { formatEther, parseUnits } from '@ethersproject/units';
 import { makeAutoObservable, runInAction } from 'mobx';
 
@@ -7,6 +7,8 @@ import App from './Application';
 import ERC20ABI from '../../abis/ERC20.json';
 import { GasnowWs } from '../../api/Gasnow';
 import { Networks } from './NetworksVM';
+import WalletVM from './WalletVM';
+import crypto from '../bridges/Crypto';
 import { findTokenByAddress } from '../misc/Tokens';
 import { formatUnits } from 'ethers/lib/utils';
 import ipc from '../bridges/IPC';
@@ -229,6 +231,11 @@ export class ConfirmVM {
       const { peerId, reqid } = this.args.walletConnect;
       ipc.invokeSecure(`${WcMessages.approveWcCallRequest(peerId, reqid)}`, {});
     } else {
+      ipc.invokeSecure(`${Messages.sendTx}`, {
+        ...this.args,
+        password: crypto.sha256(passcode),
+        accountIndex: WalletVM.accountIndex,
+      } as SendTxParams);
     }
 
     return true;

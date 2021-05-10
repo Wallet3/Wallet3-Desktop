@@ -33,6 +33,8 @@ export class SignVM {
     ipc.invokeSecure(
       `${WcMessages.approveWcCallRequest(this.params.walletConnect.peerId, this.params.walletConnect.reqid)}`
     );
+
+    return true;
   }
 
   rejectRequest() {

@@ -14,6 +14,10 @@ export class WalletVM {
   accounts: AccountVM[];
   currentAccount: AccountVM;
 
+  get accountIndex() {
+    return this.accounts.indexOf(this.currentAccount);
+  }
+
   constructor() {
     makeAutoObservable(this);
   }

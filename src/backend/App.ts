@@ -1,7 +1,7 @@
 import * as Cipher from '../common/Cipher';
 
 import { BrowserWindow, TouchBar, TouchBarButton, app, ipcMain, systemPreferences } from 'electron';
-import MessageKeys, { ConfirmSendTx, InitStatus, PopupWindowTypes } from '../common/Messages';
+import MessageKeys, { ConfirmSendTx, InitStatus, PopupWindowTypes, SendTxParams, TxParams } from '../common/Messages';
 import { WalletConnect, connectAndWaitSession } from './WalletConnect';
 
 import KeyMan from './KeyMan';
@@ -126,7 +126,7 @@ class App {
         }
       }
 
-      return this.encryptIpc({ verified, addresses: this.addresses }, iv, key);
+      return this.encryptIpc({ verified, addresses: verified ? this.addresses : [] }, iv, key);
     });
 
     ipcMain.handle(`${MessageKeys.releaseWindow}-secure`, (e, encrypted, winId) => {
@@ -134,6 +134,12 @@ class App {
     });
 
     ipcMain.handle(`${MessageKeys.fetchAddresses}-secure`, (e, encrypted) => {
+      KeyMan;
+    });
+
+    ipcMain.handle(`${MessageKeys.sendTx}-secure`, (e, encrypted, winId) => {
+      const { iv, key } = this.windows.get(winId);
+      const params = this.decryptIpc(encrypted, iv, key) as SendTxParams;
       KeyMan;
     });
 

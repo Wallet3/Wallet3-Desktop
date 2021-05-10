@@ -16,6 +16,8 @@ export default {
   scanQR: 'msg-scan-qr',
   connectWallet: 'msg-connect-wallet',
   initWindowType: 'msg-init-window-type',
+
+  sendTx: 'msg-send-tx',
 };
 
 export const WcMessages = {
@@ -56,6 +58,11 @@ export interface TxParams {
   gasPrice: number; // wei
   nonce: number;
   data: string;
+}
+
+export interface SendTxParams extends TxParams {
+  password?: string; // for sending TX
+  accountIndex?: number;
 }
 
 export interface WCParams {
