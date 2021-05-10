@@ -62,6 +62,8 @@ const createTouchBar = (mainWindow: BrowserWindow) => {
 
 let tray: Tray;
 const createTray = async () => {
+  if (tray) return;
+  
   tray = new Tray(nativeImage.createFromDataURL(require('./assets/icons/app/tray.png').default));
   const menu = Menu.buildFromTemplate([{ label: 'Wallet Connect' }]);
   tray.setContextMenu(menu);
@@ -119,7 +121,7 @@ app.on('ready', () => {
     () => {
       const { price } = App.touchBarButtons || {};
       if (!price) return;
-      
+
       price.label = `$ ${Coingecko.eth}`;
     }
   );

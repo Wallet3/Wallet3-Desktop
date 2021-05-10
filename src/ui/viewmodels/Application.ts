@@ -19,7 +19,7 @@ export class Application {
   }
 
   async init(jump = true) {
-    const { hasMnemonic, touchIDSupported } = await ipc.invoke<InitStatus>(MessageKeys.getInitStatus);
+    const { hasMnemonic, touchIDSupported, initVerified } = await ipc.invoke<InitStatus>(MessageKeys.getInitStatus);
 
     this.hasMnemonic = hasMnemonic;
     this.touchIDSupported = touchIDSupported;
@@ -29,7 +29,7 @@ export class Application {
     if (!hasMnemonic) {
       this.history.push('/welcome');
     } else {
-      this.history.push('/locking');
+      this.history.push(initVerified ? '/app' : '/locking');
     }
   }
 

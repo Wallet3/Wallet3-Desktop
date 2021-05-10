@@ -1,7 +1,7 @@
 import * as Cipher from '../common/Cipher';
 
 import { BrowserWindow, TouchBar, TouchBarButton, app, ipcMain, systemPreferences } from 'electron';
-import MessageKeys, { ConfirmSendTx, PopupWindowTypes } from '../common/Messages';
+import MessageKeys, { ConfirmSendTx, InitStatus, PopupWindowTypes } from '../common/Messages';
 import { WalletConnect, connectAndWaitSession } from './WalletConnect';
 
 import KeyMan from './KeyMan';
@@ -46,7 +46,11 @@ class App {
     });
 
     ipcMain.handle(MessageKeys.getInitStatus, () => {
-      return { hasMnemonic: KeyMan.hasMnemonic, touchIDSupported: this.touchIDSupported };
+      return {
+        hasMnemonic: KeyMan.hasMnemonic,
+        touchIDSupported: this.touchIDSupported,
+        initVerified: this.addresses.length > 0,
+      } as InitStatus;
     });
 
     ipcMain.handle(MessageKeys.scanQR, () => {
