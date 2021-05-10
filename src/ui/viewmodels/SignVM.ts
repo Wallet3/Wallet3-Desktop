@@ -1,5 +1,6 @@
 import { RequestSignMessage, WcMessages } from '../../common/Messages';
 
+import App from './Application';
 import ipc from '../bridges/IPC';
 import { makeAutoObservable } from 'mobx';
 
@@ -16,7 +17,19 @@ export class SignVM {
     this.params = params;
   }
 
-  approveRequest({ passcode, viaTouchID }: { passcode?: string; viaTouchID?: boolean }) {
+  async approveRequest(via: 'touchid' | 'passcode', passcode?: string) {
+    let verified = false;
+    switch (via) {
+      case 'touchid':
+        verified = await App.promptTouchID('Send Tx');
+        break;
+      case 'passcode':
+        verified = await App.verifyPassword(passcode);
+        break;
+    }
+
+    if (!verified) return false;
+
     ipc.invokeSecure(
       `${WcMessages.approveWcCallRequest(this.params.walletConnect.peerId, this.params.walletConnect.reqid)}`
     );

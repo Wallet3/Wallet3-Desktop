@@ -20,24 +20,22 @@ interface Props {
 export default observer(({ app }: Props) => {
   const { confirmVM, signVM } = app;
 
-  const authTouchID = async () => {
-    if (await App.promptTouchID('Send Tx')) {
-      (confirmVM ?? signVM).approveRequest({ viaTouchID: true });
+  const authViaTouchID = async () => {
+    if (await (confirmVM ?? signVM).approveRequest('touchid')) {
       window.close();
     } else {
       Anime.vibrate('div.auth > .panel');
     }
   };
 
-  const authPassword = async (passcode: string) => {
-    const verified = await App.verifyPassword(passcode);
+  const authViaPassword = async (passcode: string) => {
+    const verified = await (confirmVM ?? signVM).approveRequest('passcode', passcode);
 
     if (!verified) {
       Anime.vibrate('div.auth > .panel');
       return;
     }
 
-    (confirmVM ?? signVM).approveRequest({ passcode });
     window.close();
   };
 
@@ -56,7 +54,7 @@ export default observer(({ app }: Props) => {
       easing: 'linear',
       opacity: [0, 1],
       duration: 300,
-      complete: () => (App.touchIDSupported ? authTouchID() : undefined),
+      complete: () => (App.touchIDSupported ? authViaTouchID() : undefined),
     });
   };
 
@@ -112,7 +110,7 @@ export default observer(({ app }: Props) => {
 
         {signVM ? <SignView signVM={signVM} onReject={onReject} onContinue={onContinue} /> : undefined}
 
-        <AuthView app={app} onCancel={onAuthCancel} onAuthTouchID={authTouchID} onAuthPasscode={authPassword} />
+        <AuthView app={app} onCancel={onAuthCancel} onAuthTouchID={authViaTouchID} onAuthPasscode={authViaPassword} />
       </div>
     </div>
   );

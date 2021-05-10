@@ -212,15 +212,26 @@ export class ConfirmVM {
     });
   }
 
-  approveRequest({ passcode, viaTouchID }: { passcode?: string; viaTouchID?: boolean }) {
-    if (!this.args.walletConnect) return;
-
-    if(passcode) {
-      
+  async approveRequest(via: 'touchid' | 'passcode', passcode?: string) {
+    let verified = false;
+    switch (via) {
+      case 'touchid':
+        verified = await App.promptTouchID('Send Tx');
+        break;
+      case 'passcode':
+        verified = await App.verifyPassword(passcode);
+        break;
     }
-    const { peerId, reqid } = this.args.walletConnect;
 
-    ipc.invokeSecure(`${WcMessages.approveWcCallRequest(peerId, reqid)}`, {});
+    if (!verified) return false;
+
+    if (this.args.walletConnect) {
+      const { peerId, reqid } = this.args.walletConnect;
+      ipc.invokeSecure(`${WcMessages.approveWcCallRequest(peerId, reqid)}`, {});
+    } else {
+    }
+
+    return true;
   }
 
   rejectRequest() {
