@@ -227,16 +227,18 @@ export class ConfirmVM {
 
     if (!verified) return false;
 
+    const params = {
+      ...this.args,
+      password: via === 'passcode' ? crypto.sha256(passcode) : undefined,
+      accountIndex: WalletVM.accountIndex,
+      viaTouchID: via === 'touchid',
+    } as SendTxParams;
+
     if (this.args.walletConnect) {
       const { peerId, reqid } = this.args.walletConnect;
-      ipc.invokeSecure(`${WcMessages.approveWcCallRequest(peerId, reqid)}`, {});
+      ipc.invokeSecure(`${WcMessages.approveWcCallRequest(peerId, reqid)}`, params);
     } else {
-      ipc.invokeSecure(`${Messages.sendTx}`, {
-        ...this.args,
-        password: via === 'passcode' ? crypto.sha256(passcode) : undefined,
-        accountIndex: WalletVM.accountIndex,
-        viaTouchID: via === 'touchid',
-      } as SendTxParams);
+      ipc.invokeSecure(`${Messages.sendTx}`, params);
     }
 
     return true;

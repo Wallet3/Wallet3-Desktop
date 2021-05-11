@@ -39,13 +39,12 @@ export class ContextBridgeApi {
     return ipcRenderer.invoke(channel, argObj);
   };
 
-  invokeSecure = async (channel: string, argObj: any = {}) => {
+  invokeSecure = async <T>(channel: string, argObj: any = {}) => {
     const serialized = JSON.stringify(argObj);
     const encrypted = encrypt(ipcSecureIv, serialized, ipcSecureKey);
     const returned = await ipcRenderer.invoke(`${channel}-secure`, encrypted, windowId);
-    const ret = JSON.parse(decrypt(ipcSecureIv, returned, ipcSecureKey));
 
-    return ret;
+    return returned ? (JSON.parse(decrypt(ipcSecureIv, returned, ipcSecureKey)) as T) : undefined;
   };
 
   on = (channel: string, listener: (event: IpcRendererEvent, ...arg: any[]) => void) => {

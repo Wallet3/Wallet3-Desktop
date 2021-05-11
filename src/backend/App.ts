@@ -6,6 +6,7 @@ import { WalletConnect, connectAndWaitSession } from './WalletConnect';
 
 import KeyMan from './KeyMan';
 import { createECDH } from 'crypto';
+import { ethers } from 'ethers';
 import provider from '../common/Provider';
 
 declare const POPUP_WINDOW_WEBPACK_ENTRY: string;
@@ -147,9 +148,13 @@ export class App {
 
     ipcMain.handle(`${MessageKeys.sendTx}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
-      const params = App.decryptIpc(encrypted, iv, key) as SendTxParams;
+      const params: SendTxParams = App.decryptIpc(encrypted, iv, key);
       const hexTx = await KeyMan.signTx(params.password, this.currentAddressIndex, params);
-      if (!hexTx) return;
+      if (!hexTx) return App.encryptIpc('', iv, key);
+
+      provider.sendTransaction(hexTx);
+
+      return App.encryptIpc(ethers.utils.parseTransaction(hexTx).hash!, iv, key);
     });
 
     this.initPopupHandlers();

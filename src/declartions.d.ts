@@ -75,3 +75,18 @@ interface WCEncryptionPayload {
   hmac: string;
   iv: string;
 }
+
+////////////////////////ethers///////////////////////
+
+interface TypedDataDomain {
+  name?: string;
+  version?: string;
+  chainId?: BigNumberish;
+  verifyingContract?: string;
+  salt?: BytesLike;
+}
+
+interface TypedDataField {
+  name: string;
+  type: string;
+}

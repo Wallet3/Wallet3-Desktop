@@ -29,15 +29,12 @@ export class SignVM {
         break;
     }
 
-    console.log(verified, via, passcode);
     if (!verified) return false;
 
     await ipc.invokeSecure(
       `${WcMessages.approveWcCallRequest(this.params.walletConnect.peerId, this.params.walletConnect.reqid)}`,
       { password: via === 'passcode' ? crypto.sha256(passcode) : undefined, viaTouchID: via === 'touchid' }
     );
-
-    console.log('sign processed');
 
     return true;
   }

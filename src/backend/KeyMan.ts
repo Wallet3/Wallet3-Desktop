@@ -32,11 +32,6 @@ class KeyMan {
     console.log(this.salt, this.hasMnemonic, this.basePath, this.pathIndex);
   }
 
-  async verifyPassword(userPassword: string) {
-    const user = sha256(this.getCorePassword(userPassword));
-    return user === (await keytar.getPassword(Keys.password, Keys.account));
-  }
-
   async setFullPath(fullPath: string) {
     const lastSlash = fullPath.lastIndexOf('/');
     this.basePath = fullPath.substring(0, lastSlash);
@@ -44,6 +39,19 @@ class KeyMan {
 
     await keytar.setPassword(Keys.basePath, Keys.account, this.basePath);
     await keytar.setPassword(Keys.pathIndex, Keys.account, `${this.pathIndex}`);
+  }
+
+  async verifyPassword(userPassword: string) {
+    const user = sha256(this.getCorePassword(userPassword));
+    return user === (await keytar.getPassword(Keys.password, Keys.account));
+  }
+
+  async savePassword(userPassword: string) {
+    this.salt = Cipher.generateIv().toString('hex');
+    await keytar.setPassword(Keys.salt, Keys.account, this.salt);
+
+    const pwHash = sha256(this.getCorePassword(userPassword));
+    await keytar.setPassword(Keys.password, Keys.account, pwHash);
   }
 
   genMnemonic(length = 12) {
@@ -54,12 +62,9 @@ class KeyMan {
     return { mnemonic: this.tmpMnemonic, address: wallet.address };
   }
 
-  async savePassword(userPassword: string) {
-    this.salt = Cipher.generateIv().toString('hex');
-    await keytar.setPassword(Keys.salt, Keys.account, this.salt);
-
-    const pwHash = sha256(this.getCorePassword(userPassword));
-    await keytar.setPassword(Keys.password, Keys.account, pwHash);
+  setTmpMnemonic(mnemonic: string) {
+    if (!ethers.utils.isValidMnemonic(mnemonic)) return;
+    this.tmpMnemonic = mnemonic;
   }
 
   async saveMnemonic(userPassword: string) {
@@ -94,7 +99,7 @@ class KeyMan {
     return await signer.signTransaction(txParams);
   }
 
-  async signMessage(userPassword: string, accountIndex = 0, msg: string | ethers.utils.Bytes) {
+  async personalSignMessage(userPassword: string, accountIndex = 0, msg: string | ethers.utils.Bytes) {
     const privKey = await this.getPrivateKey(userPassword, accountIndex);
     if (!privKey) return '';
 
@@ -102,9 +107,16 @@ class KeyMan {
     return await signer.signMessage(typeof msg === 'string' ? ethers.utils.arrayify(msg) : msg);
   }
 
-  setTmpMnemonic(mnemonic: string) {
-    if (!ethers.utils.isValidMnemonic(mnemonic)) return;
-    this.tmpMnemonic = mnemonic;
+  async signTypedData(
+    userPassword: string,
+    accountIndex = 0,
+    msg: { domain: TypedDataDomain; types: Record<string, Array<TypedDataField>>; message: Record<string, any> }
+  ) {
+    const privKey = await this.getPrivateKey(userPassword, accountIndex);
+    if (!privKey) return '';
+
+    const signer = new ethers.Wallet(privKey);
+    return await signer._signTypedData(msg.domain, msg.types, msg.message);
   }
 
   async genAddresses(userPassword: string, count: number) {

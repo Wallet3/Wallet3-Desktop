@@ -1,5 +1,6 @@
 import App, { App as Application } from './App';
-import { AuthParams, ConfirmSendTx, RequestSignMessage, WcMessages } from '../common/Messages';
+import { AuthParams, ConfirmSendTx, RequestSignMessage, SendTxParams, WcMessages } from '../common/Messages';
+import { ethers, utils } from 'ethers';
 
 import ERC20ABI from '../abis/ERC20.json';
 import EventEmitter from 'events';
@@ -7,7 +8,6 @@ import { GasnowWs } from '../api/Gasnow';
 import { IpcMainInvokeEvent } from 'electron/main';
 import KeyMan from './KeyMan';
 import WalletConnector from '@walletconnect/client';
-import { ethers } from 'ethers';
 import { ipcMain } from 'electron';
 import provider from '../common/Provider';
 
@@ -113,9 +113,20 @@ export class WalletConnect extends EventEmitter {
       ipcMain.removeHandler(`${WcMessages.rejectWcCallRequest(this.peerId, request.id)}-secure`);
     };
 
-    ipcMain.handleOnce(`${WcMessages.approveWcCallRequest(this.peerId, request.id)}-secure`, () => {
+    ipcMain.handleOnce(`${WcMessages.approveWcCallRequest(this.peerId, request.id)}-secure`, async (e, encrypted, winId) => {
       clearHandlers();
-      this.connector.approveRequest({ id: request.id });
+
+      const { iv, key } = App.windows.get(winId);
+      const params: SendTxParams = Application.decryptIpc(encrypted, iv, key);
+      const txHex = await KeyMan.signTx(params.password, App.currentAddressIndex, params);
+      if (!txHex) {
+        this.connector.rejectRequest({ id: request.id, error: { message: 'Invalid data' } });
+        return;
+      }
+
+      const { hash } = utils.parseTransaction(txHex);
+
+      this.connector.approveRequest({ id: request.id, result: hash });
     });
 
     ipcMain.handleOnce(`${WcMessages.rejectWcCallRequest(this.peerId, request.id)}-secure`, () => {
@@ -158,11 +169,13 @@ export class WalletConnect extends EventEmitter {
         return Application.encryptIpc(false, iv, key);
       }
 
+      let msg: any;
+      let signed = '';
+
       switch (type) {
         case 'personal_sign':
-          const msg = params[0];
-          const signed = await KeyMan.signMessage(password, App.currentAddressIndex, msg);
-          console.log('signed', signed);
+          msg = params[0];
+          signed = await KeyMan.personalSignMessage(password, App.currentAddressIndex, msg);
 
           if (!signed) {
             this.connector.rejectRequest({ id: request.id, error: { message: 'Permission Denied' } });
@@ -172,7 +185,22 @@ export class WalletConnect extends EventEmitter {
           this.connector.approveRequest({ id: request.id, result: signed });
           return Application.encryptIpc(true, iv, key);
         case 'signTypedData':
-          break;
+          msg = params[1];
+          try {
+            const typedData = JSON.parse(msg);
+            signed = await KeyMan.signTypedData(password, App.currentAddressIndex, typedData);
+          } catch (error) {
+            this.connector.rejectRequest({ id: request.id, error: { message: 'Invalid Typed Data' } });
+            return Application.encryptIpc(false, iv, key);
+          }
+
+          if (!signed) {
+            this.connector.rejectRequest({ id: request.id, error: { message: 'Permission Denied' } });
+            return Application.encryptIpc(false, iv, key);
+          }
+
+          this.connector.approveRequest({ id: request.id, result: signed });
+          return Application.encryptIpc(true, iv, key);
       }
 
       return Application.encryptIpc(false, iv, key);
