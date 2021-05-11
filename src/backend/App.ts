@@ -11,7 +11,7 @@ import provider from '../common/Provider';
 declare const POPUP_WINDOW_WEBPACK_ENTRY: string;
 declare const POPUP_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
-class App {
+export class App {
   touchIDSupported = false;
 
   userPassword?: string; // keep password in memory for TouchID users
@@ -68,59 +68,59 @@ class App {
       if (!this.touchIDSupported) return false;
 
       const { iv, key } = this.windows.get(winId);
-      const { message } = this.decryptIpc(encrypted, iv, key);
+      const { message } = App.decryptIpc(encrypted, iv, key);
 
       try {
         await systemPreferences.promptTouchID(message ?? 'Unlock Wallet');
-        return this.encryptIpc(true, iv, key);
+        return App.encryptIpc(true, iv, key);
       } catch (error) {
-        return this.encryptIpc(false, iv, key);
+        return App.encryptIpc(false, iv, key);
       }
     });
 
     ipcMain.handle(`${MessageKeys.genMnemonic}-secure`, (e, encrypted, winId) => {
       const { key, iv } = this.windows.get(winId);
-      const { length } = this.decryptIpc(encrypted, iv, key);
-      return this.encryptIpc(KeyMan.genMnemonic(length), iv, key);
+      const { length } = App.decryptIpc(encrypted, iv, key);
+      return App.encryptIpc(KeyMan.genMnemonic(length), iv, key);
     });
 
     ipcMain.handle(`${MessageKeys.saveTmpMnemonic}-secure`, (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
-      const { mnemonic } = this.decryptIpc(encrypted, iv, key);
+      const { mnemonic } = App.decryptIpc(encrypted, iv, key);
       KeyMan.setTmpMnemonic(mnemonic);
     });
 
     ipcMain.handle(`${MessageKeys.setupMnemonic}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
-      if (KeyMan.hasMnemonic) return this.encryptIpc({ success: false }, iv, key);
+      if (KeyMan.hasMnemonic) return App.encryptIpc({ success: false }, iv, key);
 
-      const { password: userPassword } = this.decryptIpc(encrypted, iv, key);
+      const { password: userPassword } = App.decryptIpc(encrypted, iv, key);
 
       await KeyMan.savePassword(userPassword);
-      if (!(await KeyMan.saveMnemonic(userPassword))) return this.encryptIpc({ success: false }, iv, key);
+      if (!(await KeyMan.saveMnemonic(userPassword))) return App.encryptIpc({ success: false }, iv, key);
 
       const addresses = await KeyMan.genAddresses(userPassword, 1);
       this.addresses = addresses;
       if (this.touchBarButtons?.walletConnect) this.touchBarButtons.walletConnect.enabled = true;
 
-      return this.encryptIpc({ addresses, success: true }, iv, key);
+      return App.encryptIpc({ addresses, success: true }, iv, key);
     });
 
     ipcMain.handle(`${MessageKeys.setDerivationPath}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
-      const { fullPath } = this.decryptIpc(encrypted, iv, key);
+      const { fullPath } = App.decryptIpc(encrypted, iv, key);
       await KeyMan.setFullPath(fullPath);
     });
 
     ipcMain.handle(`${MessageKeys.verifyPassword}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
-      const { password } = this.decryptIpc(encrypted, iv, key);
-      return this.encryptIpc(await KeyMan.verifyPassword(password), iv, key);
+      const { password } = App.decryptIpc(encrypted, iv, key);
+      return App.encryptIpc(await KeyMan.verifyPassword(password), iv, key);
     });
 
     ipcMain.handle(`${MessageKeys.initVerifyPassword}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
-      const { password, count } = this.decryptIpc(encrypted, iv, key);
+      const { password, count } = App.decryptIpc(encrypted, iv, key);
       const verified = await KeyMan.verifyPassword(password);
 
       if (verified) {
@@ -132,7 +132,7 @@ class App {
         }
       }
 
-      return this.encryptIpc({ verified, addresses: verified ? this.addresses : [] }, iv, key);
+      return App.encryptIpc({ verified, addresses: verified ? this.addresses : [] }, iv, key);
     });
 
     ipcMain.handle(`${MessageKeys.releaseWindow}-secure`, (e, encrypted, winId) => {
@@ -143,43 +143,44 @@ class App {
       KeyMan;
     });
 
-    ipcMain.handle(`${MessageKeys.sendTx}-secure`, (e, encrypted, winId) => {
+    ipcMain.handle(`${MessageKeys.sendTx}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
-      const params = this.decryptIpc(encrypted, iv, key) as SendTxParams;
-      KeyMan;
+      const params = App.decryptIpc(encrypted, iv, key) as SendTxParams;
+      const hexTx = await KeyMan.signTx(params.password, this.currentAddressIndex, params);
+      if (!hexTx) return;
     });
 
     this.initPopupHandlers();
   }
 
-  decryptIpc = (encrypted: string, iv: Buffer, key: Buffer) => {
+  static readonly decryptIpc = (encrypted: string, iv: Buffer, key: Buffer) => {
     const serialized = Cipher.decrypt(iv, encrypted, key);
     return JSON.parse(serialized);
   };
 
-  encryptIpc = (obj: any, iv: Buffer, key: Buffer) => {
+  static readonly encryptIpc = (obj: any, iv: Buffer, key: Buffer) => {
     return Cipher.encrypt(iv, JSON.stringify(obj), key);
   };
 
   initPopupHandlers = () => {
     ipcMain.handle(`${MessageKeys.createTransferTx}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
-      const params: ConfirmSendTx = this.decryptIpc(encrypted, iv, key);
+      const params: ConfirmSendTx = App.decryptIpc(encrypted, iv, key);
       const popup = await this.createPopupWindow('sendTx', params, true, this.mainWindow);
 
       await new Promise<boolean>((resolve) => {
         popup.once('close', () => resolve(true));
       });
 
-      return this.encryptIpc(true, iv, key);
+      return App.encryptIpc(true, iv, key);
     });
 
     ipcMain.handle(`${MessageKeys.connectWallet}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
-      const { uri } = this.decryptIpc(encrypted, iv, key);
+      const { uri } = App.decryptIpc(encrypted, iv, key);
       if (!uri) return;
 
-      return this.encryptIpc((await connectAndWaitSession(uri)) ? true : false, iv, key);
+      return App.encryptIpc((await connectAndWaitSession(uri)) ? true : false, iv, key);
     });
   };
 

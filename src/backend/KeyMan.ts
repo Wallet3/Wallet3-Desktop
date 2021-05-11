@@ -3,6 +3,8 @@ import * as crypto from 'crypto';
 import * as ethers from 'ethers';
 import * as keytar from 'keytar';
 
+import { TxParams } from '../common/Messages';
+
 const Keys = {
   salt: 'salt',
   password: 'password',
@@ -20,10 +22,6 @@ class KeyMan {
   basePath = `m/44'/60'/0'/0`;
   pathIndex = 0;
   hasMnemonic = false;
-
-  private getCorePassword(userPassword: string) {
-    return `${this.salt}-${userPassword}`;
-  }
 
   async init() {
     this.salt = await keytar.getPassword(Keys.salt, Keys.account);
@@ -86,9 +84,20 @@ class KeyMan {
     return Cipher.decrypt(Buffer.from(iv, 'hex'), enMnemonic, this.getCorePassword(userPassword));
   }
 
-  async signTx(userPassword: string, accountIndex = 0) {
-    const mnemonic = await this.readMnemonic(userPassword);
-    if (!mnemonic) return undefined;
+  async signTx(userPassword: string, accountIndex = 0, txParams: TxParams) {
+    const privKey = await this.getPrivateKey(userPassword, accountIndex);
+    if (!privKey) return '';
+
+    const signer = new ethers.Wallet(privKey);
+    return await signer.signTransaction(txParams);
+  }
+
+  async signMessage(userPassword: string, accountIndex = 0, msg: string) {
+    const privKey = await this.getPrivateKey(userPassword, accountIndex);
+    if (!privKey) return '';
+
+    const signer = new ethers.Wallet(privKey);
+    return await signer.signMessage(msg);
   }
 
   setTmpMnemonic(mnemonic: string) {
@@ -118,6 +127,19 @@ class KeyMan {
     await Promise.all(
       [(Keys.mnemonic, Keys.salt, Keys.mnemonic, Keys.basePath)].map((key) => keytar.deletePassword(key, Keys.account))
     );
+  }
+
+  private async getPrivateKey(userPassword: string, accountIndex = 0) {
+    const mnemonic = await this.readMnemonic(userPassword);
+    if (!mnemonic) return undefined;
+
+    const root = ethers.utils.HDNode.fromMnemonic(mnemonic);
+    const account = root.derivePath(`${this.basePath}/${this.pathIndex + accountIndex}`);
+    return account.privateKey;
+  }
+
+  private getCorePassword(userPassword: string) {
+    return `${this.salt}-${userPassword}`;
   }
 }
 

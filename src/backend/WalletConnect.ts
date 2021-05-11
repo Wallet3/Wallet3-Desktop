@@ -1,10 +1,11 @@
+import App, { App as Application } from './App';
 import { ConfirmSendTx, RequestSignMessage, WcMessages } from '../common/Messages';
 
-import App from './App';
 import ERC20ABI from '../abis/ERC20.json';
 import EventEmitter from 'events';
 import { GasnowWs } from '../api/Gasnow';
 import { IpcMainInvokeEvent } from 'electron/main';
+import KeyMan from './KeyMan';
 import WalletConnector from '@walletconnect/client';
 import { ethers } from 'ethers';
 import { ipcMain } from 'electron';
@@ -144,11 +145,16 @@ export class WalletConnect extends EventEmitter {
       ipcMain.removeHandler(`${WcMessages.rejectWcCallRequest(this.peerId, request.id)}-secure`);
     };
 
-    ipcMain.handleOnce(`${WcMessages.approveWcCallRequest(this.peerId, request.id)}-secure`, (e, encrypted) => {
+    ipcMain.handleOnce(`${WcMessages.approveWcCallRequest(this.peerId, request.id)}-secure`, async (e, encrypted, winId) => {
       clearHandlers();
+
+      const { iv, key } = App.windows.get(winId);
+      const { msg } = Application.decryptIpc(encrypted, iv, key);
 
       switch (type) {
         case 'personal_sign':
+          await KeyMan.signMessage(msg, App.currentAddressIndex, msg);
+
           break;
         case 'signTypedData':
           break;

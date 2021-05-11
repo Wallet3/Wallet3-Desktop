@@ -19,6 +19,7 @@ export default {
   initWindowType: 'msg-init-window-type',
 
   sendTx: 'msg-send-tx',
+  signMsg: 'msg-sign-msg',
 };
 
 export const WcMessages = {
@@ -61,9 +62,14 @@ export interface TxParams {
   data: string;
 }
 
-export interface SendTxParams extends TxParams {
-  password?: string; // for sending TX
-  accountIndex?: number;
+interface AuthParams {
+  password: string;
+}
+
+export interface SendTxParams extends TxParams, AuthParams {}
+
+export interface SignMessage extends AuthParams {
+  msg: string;
 }
 
 export interface WCParams {
