@@ -1,5 +1,5 @@
 import App, { App as Application } from './App';
-import { ConfirmSendTx, RequestSignMessage, WcMessages } from '../common/Messages';
+import { AuthParams, ConfirmSendTx, RequestSignMessage, WcMessages } from '../common/Messages';
 
 import ERC20ABI from '../abis/ERC20.json';
 import EventEmitter from 'events';
@@ -149,16 +149,33 @@ export class WalletConnect extends EventEmitter {
       clearHandlers();
 
       const { iv, key } = App.windows.get(winId);
-      const { msg } = Application.decryptIpc(encrypted, iv, key);
+      let { password, viaTouchID }: AuthParams = Application.decryptIpc(encrypted, iv, key);
+
+      password = password ?? (viaTouchID ? App.userPassword : undefined);
+
+      if (!password) {
+        this.connector.rejectRequest({ id: request.id, error: { message: 'Permission Denied' } });
+        return Application.encryptIpc(false, iv, key);
+      }
 
       switch (type) {
         case 'personal_sign':
-          await KeyMan.signMessage(msg, App.currentAddressIndex, msg);
+          const msg = params[0];
+          const signed = await KeyMan.signMessage(password, App.currentAddressIndex, msg);
+          console.log('signed', signed);
 
-          break;
+          if (!signed) {
+            this.connector.rejectRequest({ id: request.id, error: { message: 'Permission Denied' } });
+            return Application.encryptIpc(false, iv, key);
+          }
+
+          this.connector.approveRequest({ id: request.id, result: signed });
+          return Application.encryptIpc(true, iv, key);
         case 'signTypedData':
           break;
       }
+
+      return Application.encryptIpc(false, iv, key);
     });
 
     ipcMain.handleOnce(`${WcMessages.rejectWcCallRequest(this.peerId, request.id)}-secure`, () => {

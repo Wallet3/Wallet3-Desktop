@@ -62,8 +62,9 @@ export interface TxParams {
   data: string;
 }
 
-interface AuthParams {
-  password: string;
+export interface AuthParams {
+  password?: string;
+  viaTouchID: boolean;
 }
 
 export interface SendTxParams extends TxParams, AuthParams {}

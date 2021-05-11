@@ -11,6 +11,17 @@ test('derive path', () => {
   expect(no2.address).toEqual('0xB842b2cAA21579FFE5A6865821a9b6284b6966de');
 });
 
+test('personal_sign', () => {
+  const hd = ethers.utils.HDNode.fromMnemonic(mnemonic);
+  const no3 = hd.derivePath(`m/44'/60'/0'/0/3`);
+
+  expect(no3.address).toEqual('0x211593b7E9446220C4F77fa844faa9beB28307F0');
+  expect(no3.privateKey).toEqual('0xac0f53728b8244fc7d05ad661c73020757b95a9bdb5f1784e5f19013f4c82ab4');
+
+  // const w = new ethers.Wallet(no3.privateKey);
+  // w.signMessage('')
+});
+
 test(
   'custom path',
   async () => {

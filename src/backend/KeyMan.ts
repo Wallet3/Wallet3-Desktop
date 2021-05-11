@@ -28,6 +28,8 @@ class KeyMan {
     this.hasMnemonic = (await keytar.getPassword(Keys.mnemonic, Keys.account)) ? true : false;
     this.basePath = (await keytar.getPassword(Keys.basePath, Keys.account)) || `m/44'/60'/0'/0`;
     this.pathIndex = Number.parseInt((await keytar.getPassword(Keys.pathIndex, Keys.account)) || '0');
+
+    console.log(this.salt, this.hasMnemonic, this.basePath, this.pathIndex);
   }
 
   async verifyPassword(userPassword: string) {
@@ -92,12 +94,12 @@ class KeyMan {
     return await signer.signTransaction(txParams);
   }
 
-  async signMessage(userPassword: string, accountIndex = 0, msg: string) {
+  async signMessage(userPassword: string, accountIndex = 0, msg: string | ethers.utils.Bytes) {
     const privKey = await this.getPrivateKey(userPassword, accountIndex);
     if (!privKey) return '';
 
     const signer = new ethers.Wallet(privKey);
-    return await signer.signMessage(msg);
+    return await signer.signMessage(typeof msg === 'string' ? ethers.utils.arrayify(msg) : msg);
   }
 
   setTmpMnemonic(mnemonic: string) {
@@ -119,14 +121,17 @@ class KeyMan {
     return addresses;
   }
 
-  async reset(password: string) {
+  reset(password: string) {
     this.salt = undefined;
     this.hasMnemonic = false;
     this.basePath = `m/44'/60'/0'/0`;
     this.pathIndex = 0;
-    await Promise.all(
-      [(Keys.mnemonic, Keys.salt, Keys.mnemonic, Keys.basePath)].map((key) => keytar.deletePassword(key, Keys.account))
+
+    const tasks = [Keys.mnemonic, Keys.salt, Keys.mnemonic, Keys.basePath, Keys.pathIndex].map((key) =>
+      keytar.deletePassword(key, Keys.account)
     );
+
+    return Promise.all(tasks);
   }
 
   private async getPrivateKey(userPassword: string, accountIndex = 0) {

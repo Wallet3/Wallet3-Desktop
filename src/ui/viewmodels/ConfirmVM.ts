@@ -233,8 +233,9 @@ export class ConfirmVM {
     } else {
       ipc.invokeSecure(`${Messages.sendTx}`, {
         ...this.args,
-        password: crypto.sha256(passcode),
+        password: via === 'passcode' ? crypto.sha256(passcode) : undefined,
         accountIndex: WalletVM.accountIndex,
+        viaTouchID: via === 'touchid',
       } as SendTxParams);
     }
 

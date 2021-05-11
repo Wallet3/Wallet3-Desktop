@@ -29,7 +29,9 @@ export class App {
   constructor() {
     this.touchIDSupported = systemPreferences.canPromptTouchID();
 
-    // KeyMan.reset('');
+    // KeyMan.reset('').then((v) => {
+    //   console.log(v);
+    // });
     KeyMan.init();
 
     ipcMain.handle(MessageKeys.exchangeDHKey, (e, dh) => {
