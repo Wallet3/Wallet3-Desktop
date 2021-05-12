@@ -229,6 +229,6 @@ export class TransferVM {
         : undefined,
     } as ConfirmSendTx);
 
-    this.sending = false;
+    runInAction(() => (this.sending = false));
   }
 }

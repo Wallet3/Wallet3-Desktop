@@ -4,7 +4,7 @@ import * as ethers from 'ethers';
 // For bsc
 // https://bscproject.org/#/rpcserver
 
-const cache = new Map<number, ethers.providers.Provider>();
+const cache = new Map<number, ethers.providers.BaseProvider>();
 
 export function getProviderByChainId(chainId: number) {
   if (cache.has(chainId)) {
@@ -16,7 +16,7 @@ export function getProviderByChainId(chainId: number) {
     throw new Error(`Unsupported chain:${chainId}`);
   }
 
-  const provider = new ethers.providers.JsonRpcProvider(list[0], chainId);
+  const provider = ethers.providers.getDefaultProvider(list[0]);
   cache.set(chainId, provider);
   return provider;
 }

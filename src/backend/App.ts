@@ -3,10 +3,10 @@ import * as Cipher from '../common/Cipher';
 import { BrowserWindow, TouchBar, TouchBarButton, app, ipcMain, systemPreferences } from 'electron';
 import MessageKeys, { ConfirmSendTx, InitStatus, PopupWindowTypes, SendTxParams, TxParams } from '../common/Messages';
 import { WalletConnect, connectAndWaitSession } from './WalletConnect';
+import { ethers, utils } from 'ethers';
 
 import KeyMan from './KeyMan';
 import { createECDH } from 'crypto';
-import { ethers } from 'ethers';
 import { getProviderByChainId } from '../common/Provider';
 
 declare const POPUP_WINDOW_WEBPACK_ENTRY: string;
@@ -150,18 +150,29 @@ export class App {
       KeyMan;
     });
 
-    ipcMain.handle(`${MessageKeys.changeChainId}`, (e, id) => {
+    ipcMain.handle(`${MessageKeys.changeChainId}`, async (e, id) => {
       this.chainId = id;
+      this.chainProvider.ready;
     });
 
     ipcMain.handle(`${MessageKeys.sendTx}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
       const params: SendTxParams = App.decryptIpc(encrypted, iv, key);
-      const hexTx = await KeyMan.signTx(params.password, this.currentAddressIndex, params);
-      if (!hexTx) return App.encryptIpc('', iv, key);
+      const password = params.viaTouchID ? this.userPassword : params.password;
+      if (!password) return App.encryptIpc('', iv, key);
+
+      if (params.from.toLowerCase() !== this.currentAddress.toLowerCase()) {
+        return App.encryptIpc('', iv, key);
+      }
+
+      const hexTx = await KeyMan.signTx(password, this.currentAddressIndex, params);
+
+      if (!hexTx) {
+        return App.encryptIpc('', iv, key);
+      }
 
       this.chainProvider.sendTransaction(hexTx);
-      return App.encryptIpc(ethers.utils.parseTransaction(hexTx).hash!, iv, key);
+      return App.encryptIpc(hexTx, iv, key);
     });
 
     this.initPopupHandlers();

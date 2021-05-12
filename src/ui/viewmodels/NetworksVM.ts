@@ -36,6 +36,7 @@ export class NetworksVM {
     if (this.currentChainId === value) return;
 
     this.currentChainId = value;
+    this.currentProvider.ready;
     store.set(Keys.currentNetworkId, value);
     ipc.invoke(Messages.changeChainId, value);
   }

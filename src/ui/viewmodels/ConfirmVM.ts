@@ -9,6 +9,7 @@ import ERC20ABI from '../../abis/ERC20.json';
 import { GasnowWs } from '../../api/Gasnow';
 import WalletVM from './WalletVM';
 import crypto from '../bridges/Crypto';
+import delay from 'delay';
 import { findTokenByAddress } from '../misc/Tokens';
 import { formatUnits } from 'ethers/lib/utils';
 import ipc from '../bridges/IPC';
@@ -76,7 +77,7 @@ export class ConfirmVM {
     this.chainId = params.chainId;
     this._gas = params.gas;
     this._gasPrice = params.gasPrice / GasnowWs.gwei_1;
-    this._nonce = params.nonce ?? 0;
+    this._nonce = params.nonce || 0;
     this._value = params.value || 0;
 
     NetworksVM.currentProvider
@@ -86,7 +87,7 @@ export class ConfirmVM {
   }
 
   get receipt() {
-    return this.args.receipient?.name ?? this.args.receipient?.address ?? this.args.to;
+    return this.args.receipient?.name || this.args.receipient?.address || this.args.to;
   }
 
   get receiptAddress() {
@@ -117,7 +118,7 @@ export class ConfirmVM {
 
   get tokenSymbol() {
     return (
-      (this.transferToken?.symbol || this.approveToken?.symbol) ?? Networks.find((n) => n?.chainId === this.chainId).symbol
+      this.transferToken?.symbol || this.approveToken?.symbol || Networks.find((n) => n?.chainId === this.chainId).symbol
     );
   }
 
@@ -227,17 +228,31 @@ export class ConfirmVM {
     if (!verified) return false;
 
     const params = {
-      ...this.args,
+      chainId: this.args.chainId,
+      from: this.args.from,
+      to: this.args.to,
+      value: this.args.value,
+      gas: this.args.gas,
+      gasPrice: this.args.gasPrice, // wei
+      nonce: this.args.nonce,
+      data: this.args.data,
+
       password: via === 'passcode' ? crypto.sha256(passcode) : undefined,
       accountIndex: WalletVM.accountIndex,
       viaTouchID: via === 'touchid',
     } as SendTxParams;
 
+    let txHex = '';
     if (this.args.walletConnect) {
       const { peerId, reqid } = this.args.walletConnect;
-      ipc.invokeSecure(`${WcMessages.approveWcCallRequest(peerId, reqid)}`, params);
+      txHex = await ipc.invokeSecure(`${WcMessages.approveWcCallRequest(peerId, reqid)}`, params);
     } else {
-      ipc.invokeSecure(`${Messages.sendTx}`, params);
+      txHex = await ipc.invokeSecure(`${Messages.sendTx}`, params);
+    }
+
+    if (txHex) {
+      NetworksVM.currentProvider.sendTransaction(txHex).catch(console.error);
+      await delay(200);
     }
 
     return true;

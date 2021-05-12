@@ -98,7 +98,15 @@ class KeyMan {
     if (!privKey) return '';
 
     const signer = new ethers.Wallet(privKey);
-    return await signer.signTransaction(txParams);
+    return await signer.signTransaction({
+      to: txParams.to,
+      chainId: txParams.chainId,
+      data: txParams.data,
+      nonce: txParams.nonce,
+      gasLimit: ethers.BigNumber.from(txParams.gas),
+      gasPrice: ethers.BigNumber.from(txParams.gasPrice),
+      value: ethers.BigNumber.from(txParams.value),
+    });
   }
 
   async personalSignMessage(userPassword: string, accountIndex = 0, msg: string | ethers.utils.Bytes) {
