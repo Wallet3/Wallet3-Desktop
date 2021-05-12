@@ -1,0 +1,42 @@
+.page.account {
+  display: grid;
+  grid-template-rows: auto 1fr 7vh;
+}
+
+.page.account > .content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+}
+
+.page.account > .content > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.page.account > .content .addr {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.page.account > .content .addr span {
+  max-width: 135px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.page.account > .content .addr span:hover {
+  opacity: 0.5;
+}
+
+.page.account > .content .addr img {
+  width: 11px;
+  height: 11px;
+  margin-bottom: -1px;
+  margin-left: 4px;
+}

@@ -64,7 +64,11 @@ export default observer(
             })}
           </Menu>
 
-          <button className="icon-button" title={accountVM?.address ?? 'Show Address'} onClick={(_) => console.log('click')}>
+          <button
+            className="icon-button"
+            title={accountVM?.address ?? 'Show Address'}
+            onClick={(_) => app.history.push('/account')}
+          >
             <Feather icon="user" size={18} strokeWidth={1} />
           </button>
         </div>

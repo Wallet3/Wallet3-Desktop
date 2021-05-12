@@ -1,5 +1,6 @@
 import './App.css';
 
+import { Account, Transfer } from './pages/app';
 import { Blank, Generate, Import, Locking, SetupPasscode, Welcome } from './pages/login/';
 import { Route, Router, Switch } from 'react-router-dom';
 
@@ -8,7 +9,6 @@ import MainLayout from './pages/layouts/MainLayout';
 import { MnemonicVM } from './viewmodels/MnemonicVM';
 import { NetworksVM } from './viewmodels/NetworksVM';
 import React from 'react';
-import { Transfer } from './pages/app';
 import { WalletVM } from './viewmodels/WalletVM';
 import { observer } from 'mobx-react-lite';
 
@@ -37,6 +37,9 @@ export default observer((args: { app: Application; mnVM: MnemonicVM; networksVM:
           </Route>
           <Route path="/send">
             <Transfer {...args} />
+          </Route>
+          <Route path="/account" exact>
+            <Account {...args} />
           </Route>
 
           <Route path="*" component={Blank} />

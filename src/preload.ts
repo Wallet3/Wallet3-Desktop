@@ -4,9 +4,11 @@ import {
   DesktopCapturerSource,
   IpcRendererEvent,
   SourcesOptions,
+  clipboard,
   contextBridge,
   desktopCapturer,
   ipcRenderer,
+  shell,
 } from 'electron';
 import { decrypt, encrypt } from './common/Cipher';
 
@@ -32,7 +34,7 @@ async function initSecureContext() {
 
 initSecureContext();
 
-export class ContextBridgeApi {
+export class IpcBridgeApi {
   static readonly API_KEY = 'wallet3_ipc';
 
   invoke = (channel: string, argObj: any) => {
@@ -56,7 +58,7 @@ export class ContextBridgeApi {
   };
 }
 
-contextBridge.exposeInMainWorld(ContextBridgeApi.API_KEY, new ContextBridgeApi());
+contextBridge.exposeInMainWorld(IpcBridgeApi.API_KEY, new IpcBridgeApi());
 
 export class CryptoApi {
   static readonly API_KEY = 'wallet3_crypto';
@@ -77,3 +79,23 @@ export class DesktopCapturerApi {
 }
 
 contextBridge.exposeInMainWorld(DesktopCapturerApi.API_KEY, new DesktopCapturerApi());
+
+export class ClipboardApi {
+  static readonly API_KEY = 'wallet3_clipboard';
+
+  writeText = (text: string) => {
+    clipboard.writeText(text);
+  };
+}
+
+contextBridge.exposeInMainWorld(ClipboardApi.API_KEY, new ClipboardApi());
+
+export class ShellApi {
+  static readonly API_KEY = 'wallet3_shell';
+
+  open = (url: string) => {
+    shell.openExternal(url);
+  };
+}
+
+contextBridge.exposeInMainWorld(ShellApi.API_KEY, new ShellApi());
