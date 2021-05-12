@@ -150,6 +150,10 @@ export class App {
       KeyMan;
     });
 
+    ipcMain.handle(`${MessageKeys.changeChainId}`, (e, id) => {
+      this.chainId = id;
+    });
+
     ipcMain.handle(`${MessageKeys.sendTx}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
       const params: SendTxParams = App.decryptIpc(encrypted, iv, key);

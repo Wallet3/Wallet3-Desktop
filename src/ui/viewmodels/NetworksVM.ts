@@ -1,4 +1,6 @@
+import Messages from '../../common/Messages';
 import { getProviderByChainId } from '../../common/Provider';
+import ipc from '../bridges/IPC';
 import { makeAutoObservable } from 'mobx';
 import store from 'storejs';
 
@@ -17,7 +19,7 @@ const Keys = {
 export class NetworksVM {
   currentChainId: number = store.get(Keys.currentNetworkId) || 1;
   get currentNetwork() {
-    return Networks.find((n) => n.chainId === this.currentChainId);
+    return Networks.find((n) => n?.chainId === this.currentChainId);
   }
 
   get currentProvider() {
@@ -33,6 +35,7 @@ export class NetworksVM {
 
     this.currentChainId = value;
     store.set(Keys.currentNetworkId, value);
+    ipc.invoke(Messages.changeChainId, value);
   }
 }
 
@@ -61,6 +64,7 @@ export const Networks: INetwork[] = [
     chainId: 100,
     color: '#48A9A6',
   },
+  null,
   {
     symbol: 'ETH',
     network: 'Ropsten Testnet',

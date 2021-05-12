@@ -117,7 +117,7 @@ export class ConfirmVM {
 
   get tokenSymbol() {
     return (
-      (this.transferToken?.symbol || this.approveToken?.symbol) ?? Networks.find((n) => n.chainId === this.chainId).symbol
+      (this.transferToken?.symbol || this.approveToken?.symbol) ?? Networks.find((n) => n?.chainId === this.chainId).symbol
     );
   }
 

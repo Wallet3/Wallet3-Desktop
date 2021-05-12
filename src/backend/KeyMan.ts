@@ -14,6 +14,10 @@ const Keys = {
   mnemonic: 'mnemonic',
 };
 
+export function setTest() {
+  Keys.account = 'test';
+}
+
 const sha256 = (text: string) => crypto.createHash('sha256').update(text).digest().toString('hex');
 
 class KeyMan {
@@ -28,8 +32,6 @@ class KeyMan {
     this.hasMnemonic = (await keytar.getPassword(Keys.mnemonic, Keys.account)) ? true : false;
     this.basePath = (await keytar.getPassword(Keys.basePath, Keys.account)) || `m/44'/60'/0'/0`;
     this.pathIndex = Number.parseInt((await keytar.getPassword(Keys.pathIndex, Keys.account)) || '0');
-
-    console.log(this.salt, this.hasMnemonic, this.basePath, this.pathIndex);
   }
 
   async setFullPath(fullPath: string) {

@@ -2,7 +2,7 @@ import './Wallet.css';
 import '@szhsin/react-menu/dist/index.css';
 
 import { Link, useRouteMatch } from 'react-router-dom';
-import { Menu, MenuButton, MenuItem } from '@szhsin/react-menu';
+import { Menu, MenuButton, MenuDivider, MenuItem } from '@szhsin/react-menu';
 import { Networks, NetworksVM } from '../../viewmodels/NetworksVM';
 import React, { useEffect, useState } from 'react';
 
@@ -32,9 +32,7 @@ export default observer(
       rowTokens.push(row);
     }
 
-    useEffect(() => {
-      
-    }, []);
+    useEffect(() => {}, []);
 
     return (
       <div className="page main">
@@ -54,7 +52,7 @@ export default observer(
             arrow
           >
             {Networks.map((item) => {
-              return (
+              return item ? (
                 <MenuItem
                   key={item.chainId}
                   styles={{ padding: '8px 12px' }}
@@ -62,6 +60,8 @@ export default observer(
                 >
                   <NetworkLabel expand chainId={item.chainId} />
                 </MenuItem>
+              ) : (
+                <MenuDivider />
               );
             })}
           </Menu>

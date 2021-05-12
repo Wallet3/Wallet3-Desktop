@@ -37,7 +37,7 @@ export class AccountVM {
 
   get chainsOverview(): ChainOverview[] {
     return this.chains.map((chain) => {
-      const network = Networks.find((n) => n.symbol.toLowerCase() === chain.id);
+      const network = Networks.find((n) => n?.symbol.toLowerCase() === chain.id);
       return {
         name: network.network,
         value: chain.usd_value,
@@ -83,7 +83,7 @@ export class AccountVM {
   };
 
   private refreshChainTokens = () => {
-    const nativeSymbols = Networks.map((n) => n.symbol.toLowerCase());
+    const nativeSymbols = Networks.map((n) => n?.symbol.toLowerCase());
 
     Debank.getTokenBalances(this.address, NetVM.currentNetwork.symbol).then((tokens) => {
       const assets = tokens
