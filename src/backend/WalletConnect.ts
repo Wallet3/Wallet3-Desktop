@@ -9,7 +9,6 @@ import { IpcMainInvokeEvent } from 'electron/main';
 import KeyMan from './KeyMan';
 import WalletConnector from '@walletconnect/client';
 import { ipcMain } from 'electron';
-import provider from '../common/Provider';
 
 export class WalletConnect extends EventEmitter {
   connector: WalletConnector;
@@ -100,7 +99,7 @@ export class WalletConnect extends EventEmitter {
     let transferToken: { balance: string; symbol: string; decimals: number } = undefined;
 
     if (param.data?.startsWith('0xa9059cbb')) {
-      const c = new ethers.Contract(param.to, ERC20ABI, provider);
+      const c = new ethers.Contract(param.to, ERC20ABI, App.chainProvider);
       const decimals = (await c.decimals()).toNumber();
       const symbol = await c.symbol();
       const balance = (await c.balanceOf(App.currentAddress)).toString();
@@ -125,6 +124,7 @@ export class WalletConnect extends EventEmitter {
       }
 
       const { hash } = utils.parseTransaction(txHex);
+      App.chainProvider.sendTransaction(txHex);
 
       this.connector.approveRequest({ id: request.id, result: hash });
     });
@@ -141,7 +141,7 @@ export class WalletConnect extends EventEmitter {
       data: param.data || '0x',
       gas: Number.parseInt(param.gas) || 21000,
       gasPrice: Number.parseInt(param.gasPrice) || GasnowWs.gwei_20,
-      nonce: Number.parseInt(param.nonce) || (await provider.getTransactionCount(App.currentAddress)),
+      nonce: Number.parseInt(param.nonce) || (await App.chainProvider.getTransactionCount(App.currentAddress)),
       value: param.value || 0,
 
       receipient,

@@ -7,7 +7,7 @@ import { WalletConnect, connectAndWaitSession } from './WalletConnect';
 import KeyMan from './KeyMan';
 import { createECDH } from 'crypto';
 import { ethers } from 'ethers';
-import provider from '../common/Provider';
+import { getProviderByChainId } from '../common/Provider';
 
 declare const POPUP_WINDOW_WEBPACK_ENTRY: string;
 declare const POPUP_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -22,6 +22,10 @@ export class App {
   currentAddressIndex = 0;
   addresses: string[] = [];
   chainId = 1;
+
+  get chainProvider() {
+    return getProviderByChainId(this.chainId);
+  }
 
   get currentAddress() {
     return this.addresses[this.currentAddressIndex];
@@ -152,7 +156,7 @@ export class App {
       const hexTx = await KeyMan.signTx(params.password, this.currentAddressIndex, params);
       if (!hexTx) return App.encryptIpc('', iv, key);
 
-      provider.sendTransaction(hexTx);
+      this.chainProvider.sendTransaction(hexTx);
 
       return App.encryptIpc(ethers.utils.parseTransaction(hexTx).hash!, iv, key);
     });

@@ -29,7 +29,10 @@ class Coingecko {
     clearTimeout(this.timer);
     getPrice()
       .then((data) => {
-        if (!data) return;
+        if (!data) {
+          run();
+          return;
+        }
 
         const { ethereum } = data;
         runInAction(() => (this.eth = ethereum.usd));

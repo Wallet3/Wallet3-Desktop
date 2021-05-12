@@ -13,7 +13,7 @@ import { WalletVM } from './viewmodels/WalletVM';
 import { observer } from 'mobx-react-lite';
 
 export default observer((args: { app: Application; mnVM: MnemonicVM; networksVM: NetworksVM; walletVM: WalletVM }) => {
-  const { app, walletVM } = args;
+  const { app } = args;
 
   return (
     <Router history={app.history}>
