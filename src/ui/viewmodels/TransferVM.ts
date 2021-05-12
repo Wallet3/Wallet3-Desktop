@@ -214,7 +214,7 @@ export class TransferVM {
       gasPrice: this.gasPrice * GasnowWs.gwei_1,
       nonce: this.nonce,
       data,
-      chainId: this._accountVM.chainId,
+      chainId: NetworksVM.currentChainId,
 
       receipient: {
         address: this.receiptAddress,

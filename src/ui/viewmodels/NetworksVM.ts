@@ -9,6 +9,7 @@ interface INetwork {
   network: string;
   chainId: number;
   color: string;
+  test?: boolean;
 }
 
 const Keys = {
@@ -17,7 +18,7 @@ const Keys = {
 };
 
 export class NetworksVM {
-  currentChainId: number = store.get(Keys.currentNetworkId) || 1;
+  currentChainId = 1;
   get currentNetwork() {
     return Networks.find((n) => n?.chainId === this.currentChainId);
   }
@@ -28,6 +29,7 @@ export class NetworksVM {
 
   constructor() {
     makeAutoObservable(this);
+    this.setCurrentChainId(store.get(Keys.currentNetworkId) || 1);
   }
 
   setCurrentChainId(value: number) {
@@ -70,24 +72,28 @@ export const Networks: INetwork[] = [
     network: 'Ropsten Testnet',
     chainId: 3,
     color: '#6186ff',
+    test: true,
   },
   {
     symbol: 'ETH',
     network: 'Rinkeby Testnet',
     chainId: 4,
     color: '#6186ff',
+    test: true,
   },
   {
     symbol: 'ETH',
     network: 'Goerli Testnet',
     chainId: 5,
     color: '#6186ff',
+    test: true,
   },
   {
     symbol: 'ETH',
     network: 'Kovan Testnet',
     chainId: 42,
     color: '#6186ff',
+    test: true,
   },
   // {
   //   symbol: 'FTM',

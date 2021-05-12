@@ -1,18 +1,15 @@
-import { makeAutoObservable, runInAction, when } from 'mobx';
+import NetVM, { Networks } from './NetworksVM';
+import { makeAutoObservable, reaction, runInAction, when } from 'mobx';
 
 import { AccountVM } from './AccountVM';
-import App from './Application';
-import MessageKeys from '../../common/Messages';
-import ipc from '../bridges/IPC';
-import store from 'storejs';
 
 const Keys = {
   addressCount: 'AddressCount',
 };
 
 export class WalletVM {
-  accounts: AccountVM[];
-  currentAccount: AccountVM;
+  accounts: AccountVM[] = [];
+  currentAccount: AccountVM = null;
 
   get accountIndex() {
     return this.accounts.indexOf(this.currentAccount);
@@ -20,6 +17,11 @@ export class WalletVM {
 
   constructor() {
     makeAutoObservable(this);
+
+    reaction(
+      () => NetVM.currentChainId,
+      () => this.currentAccount?.refresh()
+    );
   }
 
   initAccounts(addresses: string[]) {

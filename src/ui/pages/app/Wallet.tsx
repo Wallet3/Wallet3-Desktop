@@ -32,8 +32,6 @@ export default observer(
       rowTokens.push(row);
     }
 
-    useEffect(() => {}, []);
-
     return (
       <div className="page main">
         <div className="utility-bar">
@@ -61,7 +59,7 @@ export default observer(
                   <NetworkLabel expand chainId={item.chainId} />
                 </MenuItem>
               ) : (
-                <MenuDivider />
+                <MenuDivider key={Math.random()} />
               );
             })}
           </Menu>
