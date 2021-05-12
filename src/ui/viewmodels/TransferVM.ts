@@ -7,8 +7,8 @@ import { parseEther, parseUnits } from 'ethers/lib/utils';
 import { AccountVM } from './AccountVM';
 import ERC20ABI from '../../abis/ERC20.json';
 import { ITokenBalance } from '../../api/Debank';
+import NetworksVM from './NetworksVM';
 import ipc from '../bridges/IPC';
-import provider from '../../common/Provider';
 
 export class TransferVM {
   private readonly _accountVM: AccountVM;
@@ -83,7 +83,7 @@ export class TransferVM {
     this.receipient = addressOrName;
 
     if (addressOrName.toLowerCase().endsWith('.eth') || addressOrName.toLowerCase().endsWith('.xyz')) {
-      provider.resolveName(addressOrName).then((addr) => {
+      NetworksVM.currentProvider.resolveName(addressOrName).then((addr) => {
         if (!addr) return;
 
         runInAction(() => {
@@ -164,7 +164,7 @@ export class TransferVM {
   }
 
   private initNonce() {
-    provider.getTransactionCount(this.self).then((nonce) => {
+    NetworksVM.currentProvider.getTransactionCount(this.self).then((nonce) => {
       runInAction(() => (this.nonce = nonce));
     });
   }
@@ -180,7 +180,7 @@ export class TransferVM {
       return;
     }
 
-    const erc20 = new ethers.Contract(this.selectedToken.id, ERC20ABI, provider);
+    const erc20 = new ethers.Contract(this.selectedToken.id, ERC20ABI, NetworksVM.currentProvider);
     const amt = this.amountBigInt;
     erc20.estimateGas
       .transferFrom(this.self, this.receiptAddress || '0xD1b05E3AFEDcb11F29c5A560D098170bE26Fe5f5', amt)

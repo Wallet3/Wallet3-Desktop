@@ -5,7 +5,6 @@ import { ethers, utils } from 'ethers';
 import ERC20ABI from '../abis/ERC20.json';
 import EventEmitter from 'events';
 import { GasnowWs } from '../api/Gasnow';
-import { IpcMainInvokeEvent } from 'electron/main';
 import KeyMan from './KeyMan';
 import WalletConnector from '@walletconnect/client';
 import { ipcMain } from 'electron';

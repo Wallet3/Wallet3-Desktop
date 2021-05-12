@@ -6,6 +6,11 @@ import { observer } from 'mobx-react-lite';
 
 const SVGs = new Map([
   [1, [Icons('eth'), 'Ethereum']],
+  [3, [Icons('eth'), 'Ropsten']],
+  [4, [Icons('eth'), 'Rinkeby']],
+  [5, [Icons('eth'), 'Goerli']],
+  [42, [Icons('eth'), 'Kovan']],
+
   [137, [Icons('polygon'), 'Polygon']],
   [100, [Icons('xdai'), 'xDAI']],
   [250, [Icons('ftm'), 'Fantom']],

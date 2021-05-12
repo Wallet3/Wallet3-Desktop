@@ -3,6 +3,7 @@ import MessageKeys, { InitStatus, InitVerifyPassword } from '../../common/Messag
 import WalletVM from './WalletVM';
 import { createBrowserHistory } from 'history';
 import crypto from '../bridges/Crypto';
+import { getProviderByChainId } from '../../common/Provider';
 import ipc from '../bridges/IPC';
 import { makeObservable } from 'mobx';
 import store from 'storejs';

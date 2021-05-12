@@ -157,7 +157,6 @@ export class App {
       if (!hexTx) return App.encryptIpc('', iv, key);
 
       this.chainProvider.sendTransaction(hexTx);
-
       return App.encryptIpc(ethers.utils.parseTransaction(hexTx).hash!, iv, key);
     });
 

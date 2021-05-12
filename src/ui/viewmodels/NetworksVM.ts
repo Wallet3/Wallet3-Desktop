@@ -1,3 +1,4 @@
+import { getProviderByChainId } from '../../common/Provider';
 import { makeAutoObservable } from 'mobx';
 import store from 'storejs';
 
@@ -17,6 +18,10 @@ export class NetworksVM {
   currentChainId: number = store.get(Keys.currentNetworkId) || 1;
   get currentNetwork() {
     return Networks.find((n) => n.chainId === this.currentChainId);
+  }
+
+  get currentProvider() {
+    return getProviderByChainId(this.currentChainId);
   }
 
   constructor() {
@@ -55,6 +60,30 @@ export const Networks: INetwork[] = [
     network: 'xDAI',
     chainId: 100,
     color: '#48A9A6',
+  },
+  {
+    symbol: 'ETH',
+    network: 'Ropsten Testnet',
+    chainId: 3,
+    color: '#6186ff',
+  },
+  {
+    symbol: 'ETH',
+    network: 'Rinkeby Testnet',
+    chainId: 4,
+    color: '#6186ff',
+  },
+  {
+    symbol: 'ETH',
+    network: 'Goerli Testnet',
+    chainId: 5,
+    color: '#6186ff',
+  },
+  {
+    symbol: 'ETH',
+    network: 'Kovan Testnet',
+    chainId: 42,
+    color: '#6186ff',
   },
   // {
   //   symbol: 'FTM',

@@ -1,25 +1,24 @@
 import { BigNumber, ethers } from 'ethers';
 import Messages, { ConfirmSendTx, SendTxParams, WcMessages } from '../../common/Messages';
+import NetworksVM, { Networks } from './NetworksVM';
 import { formatEther, parseUnits } from '@ethersproject/units';
 import { makeAutoObservable, runInAction } from 'mobx';
 
 import App from './Application';
 import ERC20ABI from '../../abis/ERC20.json';
 import { GasnowWs } from '../../api/Gasnow';
-import { Networks } from './NetworksVM';
 import WalletVM from './WalletVM';
 import crypto from '../bridges/Crypto';
 import { findTokenByAddress } from '../misc/Tokens';
 import { formatUnits } from 'ethers/lib/utils';
 import ipc from '../bridges/IPC';
-import provider from '../../common/Provider';
 
 const Transfer = '0xa9059cbb';
 const Approve = '0x095ea7b3';
 
 const Methods = new Map<string, string[]>([
-  [Transfer, ['Transfer', 'repeat']],
   ['0x', ['Transfer', 'repeat']],
+  [Transfer, ['Transfer', 'repeat']],
   [Approve, ['Approve', 'shield']],
 ]);
 
@@ -80,7 +79,7 @@ export class ConfirmVM {
     this._nonce = params.nonce ?? 0;
     this._value = params.value || 0;
 
-    provider
+    NetworksVM.currentProvider
       .getBalance(params.from)
       .then((v) => runInAction(() => (this.nativeBalance = v)))
       .catch(() => console.log('balance error'));
@@ -177,7 +176,7 @@ export class ConfirmVM {
       return;
     }
 
-    const c = new ethers.Contract(params.to, ERC20ABI, provider);
+    const c = new ethers.Contract(params.to, ERC20ABI, NetworksVM.currentProvider);
     const symbol = await c.symbol();
     const decimals: number = await c.decimals();
 
@@ -203,7 +202,7 @@ export class ConfirmVM {
       return;
     }
 
-    const c = new ethers.Contract(params.to, ERC20ABI, provider);
+    const c = new ethers.Contract(params.to, ERC20ABI, NetworksVM.currentProvider);
     const symbol = await c.symbol();
     const decimals: number = await c.decimals();
 

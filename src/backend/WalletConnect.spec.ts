@@ -1,6 +1,8 @@
 import ERC20ABI from '../abis/ERC20.json';
 import { ethers } from 'ethers';
-import provider from '../common/Provider';
+import { getProviderByChainId } from '../common/Provider';
+
+const provider = getProviderByChainId(1);
 
 test('decode function', () => {
   const data =

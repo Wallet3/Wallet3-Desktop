@@ -5,7 +5,6 @@ import NetVM, { Networks } from './NetworksVM';
 import { autorun, makeAutoObservable, reaction, runInAction, when } from 'mobx';
 
 import { TransferVM } from './TransferVM';
-import provider from '../../common/Provider';
 
 interface IArgs {
   address: string;
