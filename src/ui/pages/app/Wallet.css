@@ -36,8 +36,8 @@
 
 .page.main > .utility-bar > button.icon-button {
   color: var(--theme-color);
-  margin-right: 5px;
-  padding: 0 5px !important;
+  margin-right: 6px;
+  padding: 0 6px !important;
 }
 
 .page.main h3.title {
