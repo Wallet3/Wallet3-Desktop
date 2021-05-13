@@ -12,7 +12,8 @@ import { Application } from '../../viewmodels/Application';
 import Feather from 'feather-icons-react';
 import HSBar from 'react-horizontal-stacked-bar-chart';
 import { ITokenBalance } from '../../../api/Debank';
-import NetworkLabel from '../../components/NetworkLabel';
+import NetworkLabel from './components/NetworkLabel';
+import PendingTxIndicator from './components/PendingTxIndicator';
 import Skeleton from 'react-loading-skeleton';
 import findIcon from '../../misc/Icons';
 import { formatNum } from '../../misc/Formatter';
@@ -35,7 +36,17 @@ export default observer(
     return (
       <div className="page main">
         <div className="utility-bar">
-          <div></div>
+          <Menu
+            menuButton={() => (
+              <MenuButton className="menu-button">
+                <PendingTxIndicator pendingCount={1} />
+              </MenuButton>
+            )}
+            direction="bottom"
+            overflow="auto"
+            position="anchor"
+            arrow
+          ></Menu>
 
           <Menu
             menuButton={() => (

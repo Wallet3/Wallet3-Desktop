@@ -1,6 +1,6 @@
 import './NetworkLabel.css';
 
-import Icons from '../misc/Icons';
+import Icons from '../../../misc/Icons';
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 

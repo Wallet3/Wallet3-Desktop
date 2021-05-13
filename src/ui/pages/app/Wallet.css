@@ -5,11 +5,9 @@
 }
 
 .page.main > .utility-bar {
-  display: grid;
-  grid-template-columns: 1fr auto auto auto;
-  grid-template-rows: auto;
+  display: flex;
   justify-content: flex-end;
-  column-gap: 4px;
+  column-gap: 2px;
   margin-top: -5px;
 }
 
@@ -28,7 +26,7 @@
 }
 
 .page.main > .utility-bar > button.menu-button {
-  padding: 5px 8px;
+  padding: 5px 5px;
 }
 
 .page.main > .utility-bar > button.menu-button:hover {
