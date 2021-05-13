@@ -108,6 +108,10 @@ export default observer(({ app }: Props) => {
           <ApproveView confirmVM={app.confirmVM} onContinue={onContinue} onReject={onReject} />
         ) : undefined}
 
+        {confirmVM?.method === 'Contract Interaction' ? (
+          <TransferView implVM={app.confirmVM} onContinue={onContinue} onReject={onReject} />
+        ) : undefined}
+
         {signVM ? <SignView signVM={signVM} onReject={onReject} onContinue={onContinue} /> : undefined}
 
         <AuthView app={app} onCancel={onAuthCancel} onAuthTouchID={authViaTouchID} onAuthPasscode={authViaPassword} />

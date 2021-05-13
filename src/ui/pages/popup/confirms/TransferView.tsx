@@ -23,16 +23,16 @@ export default observer(
           </div>
 
           <div>
-            <span>Gas Limit:</span>
-            <input type="text" defaultValue={gas} onChange={(e) => implVM.setGas(e.target.value)} />
-          </div>
-
-          <div>
             <span>Gas Price:</span>
             <div>
               <input type="text" defaultValue={gasPrice} onChange={(e) => implVM.setGasPrice(e.target.value)} />
               <span>Gwei</span>
             </div>
+          </div>
+
+          <div>
+            <span>Gas Limit:</span>
+            <input type="text" defaultValue={gas} onChange={(e) => implVM.setGas(e.target.value)} />
           </div>
 
           <div>

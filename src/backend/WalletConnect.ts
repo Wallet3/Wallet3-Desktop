@@ -1,6 +1,7 @@
 import App, { App as Application } from './App';
 import { AuthParams, ConfirmSendTx, RequestSignMessage, SendTxParams, WcMessages } from '../common/Messages';
 import { ethers, utils } from 'ethers';
+import { getTransactionCount, sendTransaction } from '../common/Provider';
 
 import ERC20ABI from '../abis/ERC20.json';
 import EventEmitter from 'events';
@@ -8,7 +9,6 @@ import { GasnowWs } from '../api/Gasnow';
 import KeyMan from './KeyMan';
 import WalletConnector from '@walletconnect/client';
 import { ipcMain } from 'electron';
-import { sendTransaction } from '../common/Provider';
 
 export class WalletConnect extends EventEmitter {
   connector: WalletConnector;
@@ -145,7 +145,7 @@ export class WalletConnect extends EventEmitter {
       data: param.data || '0x',
       gas: Number.parseInt(param.gas) || 21000,
       gasPrice: Number.parseInt(param.gasPrice) || GasnowWs.gwei_20,
-      nonce: Number.parseInt(param.nonce) || (await App.chainProvider.getTransactionCount(App.currentAddress)),
+      nonce: Number.parseInt(param.nonce) || (await getTransactionCount(App.chainId, App.currentAddress)),
       value: param.value || 0,
 
       receipient,

@@ -39,3 +39,21 @@ export async function sendTransaction(chainId: number, txHex: string) {
     return '';
   }
 }
+
+export async function getTransactionCount(chainId: number, address: string) {
+  const [url] = Providers[`${chainId}`] as string[];
+
+  try {
+    const resp = await axios.post(url, {
+      jsonrpc: '2.0',
+      method: 'eth_getTransactionCount',
+      params: [address, 'latest'],
+      id: Date.now(),
+    });
+
+    const { result } = resp.data as { id: number; result: string };
+    return Number.parseInt(result);
+  } catch (error) {
+    return 0;
+  }
+}

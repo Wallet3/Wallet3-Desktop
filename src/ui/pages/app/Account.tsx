@@ -1,12 +1,12 @@
 import './Account.css';
 
+import { Logo, NavBar } from '../../components';
 import React, { useEffect, useState } from 'react';
 
 import { Application } from '../../viewmodels/Application';
 import CheckIcon from '../../../assets/icons/app/check.svg';
 import Clipboard from '../../bridges/Clipboard';
 import CopyIcon from '../../../assets/icons/app/copy.svg';
-import { NavBar } from '../../components';
 import QRCode from 'qrcode.react';
 import Shell from '../../bridges/Shell';
 import { WalletVM } from '../../viewmodels/WalletVM';
@@ -41,6 +41,10 @@ export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => 
             )}
           </div>
         </div>
+      </div>
+
+      <div className="footer">
+        <Logo width={64} fill={'#00000020'} />
       </div>
     </div>
   );
