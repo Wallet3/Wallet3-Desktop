@@ -32,6 +32,7 @@ export default observer(
                 type="text"
                 className={`funds-limit ${approveToken.isMax ? 'max' : ''}`}
                 defaultValue={confirmVM.approveToken.limitAmount}
+                onChange={(e) => confirmVM.setApproveAmount(e.target.value)}
               />
               <img src={Icons(tokenSymbol)} alt={tokenSymbol} /> {tokenSymbol}
             </span>

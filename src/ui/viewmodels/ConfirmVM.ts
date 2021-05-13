@@ -1,4 +1,4 @@
-import { BigNumber, ethers } from 'ethers';
+import { BigNumber, ethers, utils } from 'ethers';
 import Messages, { ConfirmSendTx, SendTxParams, WcMessages } from '../../common/Messages';
 import NetworksVM, { Networks } from './NetworksVM';
 import { formatEther, parseUnits } from '@ethersproject/units';
@@ -37,9 +37,11 @@ export class ConfirmVM {
     limitWei: BigNumber;
     limitAmount: string;
     isMax?: boolean;
+    iface?: ethers.utils.Interface;
   } = undefined;
 
   private _value: string | number = '';
+  private _data: string = '';
 
   constructor(params: ConfirmSendTx) {
     makeAutoObservable(this);
@@ -79,6 +81,7 @@ export class ConfirmVM {
     this._gasPrice = params.gasPrice / GasnowWs.gwei_1;
     this._nonce = params.nonce || 0;
     this._value = params.value || 0;
+    this._data = params.data;
 
     NetworksVM.currentProvider
       .getBalance(params.from)
@@ -140,11 +143,16 @@ export class ConfirmVM {
   }
 
   get isValid() {
-    return this.gas >= 21000 && this.gas <= 12_500_000 && this.gasPrice > 0 && this.nonce >= 0;
+    return this.gas >= 21000 && this.gas <= 12_500_000 && this.gasPrice > 0 && this.nonce >= 0 && this.data;
   }
 
   get data() {
-    return this.args.data;
+    return this._data;
+  }
+
+  set data(value: string) {
+    this._data = value;
+    this.args.data = value;
   }
 
   setGasPrice(value: string) {
@@ -157,6 +165,16 @@ export class ConfirmVM {
     const max = Math.min(Number.parseInt(value) || 0, 15_000_000);
     this.args.gas = max;
     this._gas = max;
+  }
+
+  setApproveAmount(value: string) {
+    try {
+      const wad = utils.parseUnits(value || '', this.approveToken.decimals);
+      const data = this.approveToken.iface?.encodeFunctionData('approve', [this.approveToken.spender, wad.toString()]);
+      this.data = data;
+    } catch (error) {
+      this.data = '';
+    }
   }
 
   setNonce(value: string) {
@@ -195,6 +213,7 @@ export class ConfirmVM {
     const iface = new ethers.utils.Interface(ERC20ABI);
     const { guy, wad } = iface.decodeFunctionData('approve', params.data);
 
+    this.approveToken.iface = iface;
     this.approveToken.spender = guy;
     this.approveToken.limitWei = wad;
     this.approveToken.isMax = wad.eq('115792089237316195423570985008687907853269984665640564039457584007913129639935');
