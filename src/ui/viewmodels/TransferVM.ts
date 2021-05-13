@@ -27,9 +27,10 @@ export class TransferVM {
 
   get isValid() {
     try {
-      const validAmount = this.amountBigInt.lte(
-        parseUnits(this.selectedToken?.amount.toString() ?? '0', this.selectedToken?.decimals ?? 18)
-      );
+      const validAmount =
+        this.amountBigInt.lte(
+          parseUnits(this.selectedToken?.amount.toString() ?? '0', this.selectedToken?.decimals ?? 18)
+        ) && Number.parseFloat(this.amount) >= 0;
 
       return (
         this.receiptAddress &&

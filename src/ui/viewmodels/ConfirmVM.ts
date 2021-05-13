@@ -154,7 +154,7 @@ export class ConfirmVM {
   }
 
   setGas(value: string) {
-    const max = Math.min(Number.parseInt(value) || 0, 12_000_000);
+    const max = Math.min(Number.parseInt(value) || 0, 15_000_000);
     this.args.gas = max;
     this._gas = max;
   }
