@@ -4,10 +4,10 @@ import { BrowserWindow, TouchBar, TouchBarButton, app, ipcMain, systemPreference
 import MessageKeys, { ConfirmSendTx, InitStatus, PopupWindowTypes, SendTxParams, TxParams } from '../common/Messages';
 import { WalletConnect, connectAndWaitSession } from './WalletConnect';
 import { ethers, utils } from 'ethers';
+import { getProviderByChainId, sendTransaction } from '../common/Provider';
 
 import KeyMan from './KeyMan';
 import { createECDH } from 'crypto';
-import { getProviderByChainId } from '../common/Provider';
 
 declare const POPUP_WINDOW_WEBPACK_ENTRY: string;
 declare const POPUP_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -158,12 +158,8 @@ export class App {
     ipcMain.handle(`${MessageKeys.sendTx}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
       const params: SendTxParams = App.decryptIpc(encrypted, iv, key);
-      const password = params.viaTouchID ? this.userPassword : params.password;
+      const password = this.extractPassword(params);
       if (!password) return App.encryptIpc('', iv, key);
-
-      if (params.from.toLowerCase() !== this.currentAddress.toLowerCase()) {
-        return App.encryptIpc('', iv, key);
-      }
 
       const hexTx = await KeyMan.signTx(password, this.currentAddressIndex, params);
 
@@ -171,7 +167,7 @@ export class App {
         return App.encryptIpc('', iv, key);
       }
 
-      this.chainProvider.sendTransaction(hexTx);
+      sendTransaction(this.chainId, hexTx);
       return App.encryptIpc(hexTx, iv, key);
     });
 
@@ -185,6 +181,15 @@ export class App {
 
   static readonly encryptIpc = (obj: any, iv: Buffer, key: Buffer) => {
     return Cipher.encrypt(iv, JSON.stringify(obj), key);
+  };
+
+  readonly extractPassword = (params: SendTxParams) => {
+    const password = params.viaTouchID ? this.userPassword : params.password;
+    if (params.from.toLowerCase() !== this.currentAddress.toLowerCase()) {
+      return '';
+    }
+
+    return password;
   };
 
   initPopupHandlers = () => {

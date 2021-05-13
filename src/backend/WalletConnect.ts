@@ -8,6 +8,7 @@ import { GasnowWs } from '../api/Gasnow';
 import KeyMan from './KeyMan';
 import WalletConnector from '@walletconnect/client';
 import { ipcMain } from 'electron';
+import { sendTransaction } from '../common/Provider';
 
 export class WalletConnect extends EventEmitter {
   connector: WalletConnector;
@@ -116,14 +117,18 @@ export class WalletConnect extends EventEmitter {
 
       const { iv, key } = App.windows.get(winId);
       const params: SendTxParams = Application.decryptIpc(encrypted, iv, key);
-      const txHex = await KeyMan.signTx(params.password, App.currentAddressIndex, params);
+
+      const password = App.extractPassword(params);
+      if (!password) return Application.encryptIpc('', iv, key);
+
+      const txHex = await KeyMan.signTx(password, App.currentAddressIndex, params);
       if (!txHex) {
         this.connector.rejectRequest({ id: request.id, error: { message: 'Invalid data' } });
         return;
       }
 
       const { hash } = utils.parseTransaction(txHex);
-      App.chainProvider.sendTransaction(txHex);
+      sendTransaction(App.chainId, txHex);
 
       this.connector.approveRequest({ id: request.id, result: hash });
     });

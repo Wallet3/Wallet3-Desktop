@@ -252,7 +252,6 @@ export class ConfirmVM {
 
     if (txHex) {
       NetworksVM.currentProvider.sendTransaction(txHex).catch(console.error);
-      await delay(200);
     }
 
     return true;
