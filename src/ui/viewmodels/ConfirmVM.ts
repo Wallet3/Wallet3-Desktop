@@ -111,9 +111,13 @@ export class ConfirmVM {
     return this._gas;
   }
 
-  private _gasPrice = 0;
+  private _gasPrice = 0; // Gwei
   get gasPrice() {
     return this._gasPrice;
+  }
+
+  get gasPriceWei() {
+    return BigNumber.from(Number.parseInt((this.gasPrice * GasnowWs.gwei_1) as any) || 0);
   }
 
   get tokenSymbol() {
@@ -128,11 +132,11 @@ export class ConfirmVM {
   }
 
   get maxFee() {
-    return formatEther((BigInt(this.gasPrice * GasnowWs.gwei_1 || 0) * BigInt(this.gas || 0)).toString());
+    return formatEther(this.gasPriceWei.mul(this.gas).toString());
   }
 
   get insufficientFee() {
-    return this.nativeBalance.lt((BigInt(this.gasPrice * GasnowWs.gwei_1) * BigInt(this.gas)).toString());
+    return this.nativeBalance.lt(this.gasPriceWei.mul(this.gas).toString());
   }
 
   get isValid() {
@@ -144,19 +148,19 @@ export class ConfirmVM {
   }
 
   setGasPrice(value: string) {
-    const price = Number.parseFloat(value);
-    this._gasPrice = price;
-    this.args.gasPrice = price * GasnowWs.gwei_1;
+    const price = Number.parseFloat(value) || 0;
+    this._gasPrice = Math.min(price, 10000000000);
+    this.args.gasPrice = this.gasPriceWei.toNumber();
   }
 
   setGas(value: string) {
-    const max = Number.parseInt(value);
+    const max = Math.min(Number.parseInt(value) || 0, 12_000_000);
     this.args.gas = max;
     this._gas = max;
   }
 
   setNonce(value: string) {
-    const nonce = Number.parseInt(value);
+    const nonce = Number.parseInt(value) || -1;
     this._nonce = nonce;
     this.args.nonce = nonce;
   }
