@@ -36,14 +36,6 @@ export default observer(
     return (
       <div className="page main">
         <div className="utility-bar">
-          <button
-            className="icon-button"
-            title={accountVM?.address ?? 'Show Address'}
-            onClick={(_) => app.history.push('/account')}
-          >
-            <Feather icon="user" size={16} strokeWidth={1} />
-          </button>
-
           <Menu
             menuButton={() => (
               <MenuButton className="menu-button">
@@ -82,6 +74,14 @@ export default observer(
               );
             })}
           </Menu>
+
+          <button
+            className="icon-button"
+            title={accountVM?.address ?? 'Show Address'}
+            onClick={(_) => app.history.push('/account')}
+          >
+            <Feather icon="user" size={16} strokeWidth={1} />
+          </button>
         </div>
 
         <div className="net-worth">

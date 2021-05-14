@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity()
-export class Transaction {
+export default class Transaction {
   @PrimaryColumn()
   hash: string;
 

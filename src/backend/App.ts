@@ -34,11 +34,6 @@ export class App {
   constructor() {
     this.touchIDSupported = systemPreferences.canPromptTouchID();
 
-    KeyMan.reset('').then((v) => {
-      KeyMan.init();
-      console.log(v);
-    });
-
     ipcMain.handle(MessageKeys.exchangeDHKey, (e, dh) => {
       const { rendererEcdhKey, ipcSecureIv, windowId } = dh;
 
@@ -172,6 +167,13 @@ export class App {
     });
 
     this.initPopupHandlers();
+  }
+
+  async init() {
+    // KeyMan.reset('').then((v) => {
+    //   console.log(v);
+    // });
+    await KeyMan.init();
   }
 
   static readonly decryptIpc = (encrypted: string, iv: Buffer, key: Buffer) => {

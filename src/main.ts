@@ -3,6 +3,7 @@ import { BrowserWindow, Menu, TouchBar, TouchBarButton, Tray, app, nativeImage }
 import App from './backend/App';
 import Coingecko from './api/Coingecko';
 import GasnowWs from './api/Gasnow';
+import TxMan from './backend/TxMan';
 import { reaction } from 'mobx';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
@@ -63,7 +64,7 @@ const createTouchBar = (mainWindow: BrowserWindow) => {
 let tray: Tray;
 const createTray = async () => {
   if (tray) return;
-  
+
   tray = new Tray(nativeImage.createFromDataURL(require('./assets/icons/app/tray.png').default));
   const menu = Menu.buildFromTemplate([{ label: 'Wallet Connect' }]);
   tray.setContextMenu(menu);
@@ -99,7 +100,10 @@ const createWindow = async (): Promise<void> => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', () => {
+app.on('ready', async () => {
+  await App.init();
+  await TxMan.init();
+
   createWindow();
 
   GasnowWs.start(true);

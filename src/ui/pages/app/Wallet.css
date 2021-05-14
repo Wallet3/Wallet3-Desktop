@@ -36,7 +36,7 @@
 
 .page.main > .utility-bar > button.icon-button {
   color: var(--theme-color);
-  margin-right: 6px;
+  margin-right: -2px;
   padding: 0 6px !important;
 }
 
