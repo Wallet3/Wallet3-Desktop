@@ -21,6 +21,8 @@ export default {
 
   sendTx: 'msg-send-tx',
   signMsg: 'msg-sign-msg',
+
+  pendingTxsChanged: 'msg-pendingtxs-changed',
 };
 
 export const WcMessages = {

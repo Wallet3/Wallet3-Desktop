@@ -1,9 +1,8 @@
-import MessageKeys, { InitStatus, InitVerifyPassword } from '../../common/Messages';
+import MessageKeys, { InitStatus, InitVerifyPassword, TxParams } from '../../common/Messages';
 
 import WalletVM from './WalletVM';
 import { createBrowserHistory } from 'history';
 import crypto from '../bridges/Crypto';
-import { getProviderByChainId } from '../../common/Provider';
 import ipc from '../bridges/IPC';
 import { makeObservable } from 'mobx';
 import store from 'storejs';
@@ -14,6 +13,7 @@ export class Application {
   initVerified = false;
   hasMnemonic = false;
   touchIDSupported = false;
+  pendingTxs: TxParams[] = [];
 
   constructor() {
     makeObservable(this, {});
@@ -31,6 +31,10 @@ export class Application {
     if (addresses?.length > 0) {
       WalletVM.initAccounts(addresses);
     }
+
+    ipc.on(MessageKeys.pendingTxsChanged, (e, content: string) => {
+      console.log(content);
+    });
 
     if (!jump) return;
 

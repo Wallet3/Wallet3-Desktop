@@ -10,6 +10,7 @@ import KeyMan from './KeyMan';
 import Transaction from './models/Transaction';
 import TxMan from './TxMan';
 import { createECDH } from 'crypto';
+import { reaction } from 'mobx';
 
 declare const POPUP_WINDOW_WEBPACK_ENTRY: string;
 declare const POPUP_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -158,32 +159,16 @@ export class App {
       const password = this.extractPassword(params);
       if (!password) return App.encryptIpc('', iv, key);
 
-      const hexTx = await KeyMan.signTx(password, this.currentAddressIndex, params);
+      const txHex = await KeyMan.signTx(password, this.currentAddressIndex, params);
 
-      if (!hexTx) {
+      if (!txHex) {
         return App.encryptIpc('', iv, key);
       }
 
-      sendTransaction(this.chainId, hexTx);
+      sendTransaction(this.chainId, txHex);
+      App.saveTx(params, txHex);
 
-      const tx = utils.parseTransaction(hexTx);
-
-      if ((await TxMan.findTxs({ where: { hash: tx.hash } })).length === 0) {
-        const t = new Transaction();
-        t.chainId = params.chainId;
-        t.from = params.from;
-        t.to = params.to;
-        t.data = params.data;
-        t.gas = params.gas;
-        t.gasPrice = params.gasPrice;
-        t.hash = tx.hash;
-        t.nonce = params.nonce;
-        t.value = params.value;
-
-        TxMan.save(t);
-      }
-
-      return App.encryptIpc(hexTx, iv, key);
+      return App.encryptIpc(txHex, iv, key);
     });
 
     this.initPopupHandlers();
@@ -194,6 +179,13 @@ export class App {
     //   console.log(v);
     // });
     await KeyMan.init();
+
+    reaction(
+      () => TxMan.pendingTxs,
+      () => {
+        this.mainWindow?.webContents.send(MessageKeys.pendingTxsChanged, JSON.stringify(TxMan.pendingTxs));
+      }
+    );
   }
 
   static readonly decryptIpc = (encrypted: string, iv: Buffer, key: Buffer) => {
@@ -205,13 +197,34 @@ export class App {
     return Cipher.encrypt(iv, JSON.stringify(obj), key);
   };
 
-  readonly extractPassword = (params: SendTxParams) => {
+  extractPassword = (params: SendTxParams) => {
     const password = params.viaTouchID ? this.userPassword : params.password;
     if (params.from.toLowerCase() !== this.currentAddress.toLowerCase()) {
       return '';
     }
 
     return password;
+  };
+
+  static readonly saveTx = async (params: TxParams, txHex: string) => {
+    const tx = utils.parseTransaction(txHex);
+
+    if ((await TxMan.findTxs({ where: { hash: tx.hash } })).length === 0) {
+      const t = new Transaction();
+      t.chainId = params.chainId;
+      t.from = params.from;
+      t.to = params.to;
+      t.data = params.data;
+      t.gas = params.gas;
+      t.gasPrice = params.gasPrice;
+      t.hash = tx.hash;
+      t.nonce = params.nonce;
+      t.value = params.value;
+
+      TxMan.save(t);
+    }
+
+    return tx;
   };
 
   initPopupHandlers = () => {

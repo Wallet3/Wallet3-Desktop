@@ -33,6 +33,8 @@ class TxMan {
     this.#txRepo = this.#connection.getRepository(Transaction);
 
     this.pendingTxs.push(...(await this.findTxs({ where: { height: null } })));
+
+    this.checkPendingTxs();
   }
 
   async findTxs(conditions: FindManyOptions<Transaction>) {

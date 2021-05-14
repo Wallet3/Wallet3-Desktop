@@ -127,8 +127,8 @@ export class WalletConnect extends EventEmitter {
         return;
       }
 
-      const { hash } = utils.parseTransaction(txHex);
       sendTransaction(App.chainId, txHex);
+      const { hash } = await Application.saveTx(params, txHex);
 
       this.connector.approveRequest({ id: request.id, result: hash });
     });
