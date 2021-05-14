@@ -69,9 +69,9 @@ export async function getTransactionReceipt(chainId: number, hash: string) {
       id: Date.now(),
     });
 
-    if (!resp.data) return null;
+    if (!resp.data.result) return null;
 
-    return resp.data as {
+    return resp.data.result as {
       transactionHash: string;
       transactionIndex: string;
       blockNumber: string;

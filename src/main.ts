@@ -1,10 +1,11 @@
 import { BrowserWindow, Menu, TouchBar, TouchBarButton, Tray, app, nativeImage } from 'electron';
+import { autorun, reaction } from 'mobx';
 
 import App from './backend/App';
 import Coingecko from './api/Coingecko';
 import GasnowWs from './api/Gasnow';
+import Messages from './common/Messages';
 import TxMan from './backend/TxMan';
-import { reaction } from 'mobx';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -105,6 +106,10 @@ app.on('ready', async () => {
 
   App.init();
   TxMan.init();
+
+  autorun(() => {
+    App.mainWindow?.webContents.send(Messages.pendingTxsChanged, JSON.stringify(TxMan.pendingTxs));
+  });
 
   GasnowWs.start(true);
   GasnowWs.onClose = () => GasnowWs.start(true);

@@ -1,28 +1,29 @@
 import * as path from 'path';
 
 import { Connection, FindManyOptions, Repository, createConnection } from 'typeorm';
-import { action, makeObservable, observable, runInAction } from 'mobx';
+import { makeAutoObservable, observable, runInAction } from 'mobx';
 
 import Transaction from './models/Transaction';
 import { app } from 'electron';
 import { getTransactionReceipt } from '../common/Provider';
 
 class TxMan {
-  #connection: Connection;
-  #txRepo: Repository<Transaction>;
   pendingTxs: Transaction[] = [];
 
+  private connection: Connection;
+  private txRepo: Repository<Transaction>;
+
   constructor() {
-    makeObservable(this, { pendingTxs: observable, findTxs: action });
+    makeAutoObservable(this);
   }
 
   async init() {
-    if (this.#connection) return;
+    if (this.connection) return;
 
     const userData = app.getPath('userData');
     const dbPath = path.join(userData, 'data/app.sqlite');
 
-    this.#connection = await createConnection({
+    this.connection = await createConnection({
       type: 'sqlite',
       database: dbPath,
       entities: [Transaction],
@@ -30,23 +31,26 @@ class TxMan {
       logging: false,
     });
 
-    this.#txRepo = this.#connection.getRepository(Transaction);
+    this.txRepo = this.connection.getRepository(Transaction);
 
-    this.pendingTxs.push(...(await this.findTxs({ where: { height: null } })));
+    const pendingTxs = await this.findTxs({ where: { blockNumber: null } });
+    runInAction(async () => {
+      this.pendingTxs.push(...pendingTxs);
+    });
 
     this.checkPendingTxs();
   }
 
   async findTxs(conditions: FindManyOptions<Transaction>) {
-    return await this.#txRepo.find(conditions);
+    return await this.txRepo.find(conditions);
   }
 
   async save(tx: Transaction) {
     if (!tx.blockNumber) {
-      this.pendingTxs.push(tx);
+      runInAction(() => this.pendingTxs.push(tx));
     }
 
-    return await this.#txRepo.save(tx);
+    return await this.txRepo.save(tx);
   }
 
   private async checkPendingTxs() {

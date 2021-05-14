@@ -179,13 +179,6 @@ export class App {
     //   console.log(v);
     // });
     await KeyMan.init();
-
-    reaction(
-      () => TxMan.pendingTxs,
-      () => {
-        this.mainWindow?.webContents.send(MessageKeys.pendingTxsChanged, JSON.stringify(TxMan.pendingTxs));
-      }
-    );
   }
 
   static readonly decryptIpc = (encrypted: string, iv: Buffer, key: Buffer) => {

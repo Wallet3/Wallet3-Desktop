@@ -46,7 +46,9 @@ export default observer(
             overflow="auto"
             position="anchor"
             arrow
-          ></Menu>
+          >
+            <MenuItem></MenuItem>
+          </Menu>
 
           <Menu
             menuButton={() => (
