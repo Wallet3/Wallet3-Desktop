@@ -34,10 +34,10 @@ export class App {
   constructor() {
     this.touchIDSupported = systemPreferences.canPromptTouchID();
 
-    // KeyMan.reset('').then((v) => {
-    //   console.log(v);
-    // });
-    KeyMan.init();
+    KeyMan.reset('').then((v) => {
+      KeyMan.init();
+      console.log(v);
+    });
 
     ipcMain.handle(MessageKeys.exchangeDHKey, (e, dh) => {
       const { rendererEcdhKey, ipcSecureIv, windowId } = dh;

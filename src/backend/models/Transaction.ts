@@ -1,15 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity()
 export class Transaction {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryColumn()
+  hash: string;
 
   @Column()
   chainId: number;
-
-  @Column()
-  hash: string;
 
   @Column()
   from: string;
