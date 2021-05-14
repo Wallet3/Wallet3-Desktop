@@ -57,3 +57,30 @@ export async function getTransactionCount(chainId: number, address: string) {
     return 0;
   }
 }
+
+export async function getTransactionReceipt(chainId: number, hash: string) {
+  const [url] = Providers[`${chainId}`] as string[];
+
+  try {
+    const resp = await axios.post(url, {
+      jsonrpc: '2.0',
+      method: 'eth_getTransactionReceipt',
+      params: [hash],
+      id: Date.now(),
+    });
+
+    if (!resp.data) return null;
+
+    return resp.data as {
+      transactionHash: string;
+      transactionIndex: string;
+      blockNumber: string;
+      blockHash: string;
+      contractAddress: string;
+      status: string;
+      gasUsed: string;
+    };
+  } catch (error) {
+    return null;
+  }
+}

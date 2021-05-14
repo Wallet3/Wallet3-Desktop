@@ -7,6 +7,8 @@ import { ethers, utils } from 'ethers';
 import { getProviderByChainId, sendTransaction } from '../common/Provider';
 
 import KeyMan from './KeyMan';
+import Transaction from './models/Transaction';
+import TxMan from './TxMan';
 import { createECDH } from 'crypto';
 
 declare const POPUP_WINDOW_WEBPACK_ENTRY: string;
@@ -163,6 +165,24 @@ export class App {
       }
 
       sendTransaction(this.chainId, hexTx);
+
+      const tx = utils.parseTransaction(hexTx);
+
+      if ((await TxMan.findTxs({ where: { hash: tx.hash } })).length === 0) {
+        const t = new Transaction();
+        t.chainId = params.chainId;
+        t.from = params.from;
+        t.to = params.to;
+        t.data = params.data;
+        t.gas = params.gas;
+        t.gasPrice = params.gasPrice;
+        t.hash = tx.hash;
+        t.nonce = params.nonce;
+        t.value = params.value;
+
+        TxMan.save(t);
+      }
+
       return App.encryptIpc(hexTx, iv, key);
     });
 

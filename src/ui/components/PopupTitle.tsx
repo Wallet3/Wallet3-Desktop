@@ -11,7 +11,7 @@ export default ({ title, icon }: { title?: string; icon?: string }) => {
         {icon ? <Feather icon={icon} size={15} /> : undefined}
         <span>{title}</span>
       </div>
-      <Logo width={72} fill="#333" />
+      <Logo width={72} fill="#00000020" />
     </div>
   );
 };

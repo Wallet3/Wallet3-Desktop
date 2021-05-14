@@ -101,10 +101,10 @@ const createWindow = async (): Promise<void> => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-  await App.init();
-  await TxMan.init();
-
   createWindow();
+
+  App.init();
+  TxMan.init();
 
   GasnowWs.start(true);
   GasnowWs.onClose = () => GasnowWs.start(true);

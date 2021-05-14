@@ -1,7 +1,7 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity()
-export default class Transaction {
+export default class Transaction extends BaseEntity {
   @PrimaryColumn()
   hash: string;
 
@@ -30,5 +30,17 @@ export default class Transaction {
   data: string;
 
   @Column({ nullable: true })
-  height: number;
+  blockNumber: number;
+
+  @Column({ nullable: true })
+  blockHash: string;
+
+  @Column({ nullable: true })
+  status: boolean;
+
+  @Column({ nullable: true })
+  transactionIndex: number;
+
+  @Column({ nullable: true })
+  gasUsed: number;
 }
