@@ -67,6 +67,8 @@ class TxMan {
       tx.blockHash = receipt.blockHash;
       await tx.save();
       removeTxs.push(tx);
+
+      console.log(tx.hash, tx.blockNumber)
     }
 
     runInAction(() => {
@@ -75,7 +77,7 @@ class TxMan {
       }
     });
 
-    setTimeout(async () => await this.checkPendingTxs(), 30 * 1000);
+    setTimeout(async () => await this.checkPendingTxs(), 12 * 1000);
   }
 }
 

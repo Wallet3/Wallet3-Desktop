@@ -108,6 +108,7 @@ app.on('ready', async () => {
   TxMan.init();
 
   autorun(() => {
+    console.log('pending', TxMan.pendingTxs.length);
     App.mainWindow?.webContents.send(Messages.pendingTxsChanged, JSON.stringify(TxMan.pendingTxs));
   });
 

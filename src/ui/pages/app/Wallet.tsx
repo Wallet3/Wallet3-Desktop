@@ -33,13 +33,15 @@ export default observer(
       rowTokens.push(row);
     }
 
+    const { pendingTxCount } = networksVM;
+
     return (
       <div className="page main">
         <div className="utility-bar">
           <Menu
             menuButton={() => (
               <MenuButton className="menu-button">
-                <PendingTxIndicator pendingCount={1} />
+                <PendingTxIndicator pendingCount={pendingTxCount} />
               </MenuButton>
             )}
             direction="bottom"
@@ -47,7 +49,9 @@ export default observer(
             position="anchor"
             arrow
           >
-            <MenuItem></MenuItem>
+            <MenuItem>
+              <span></span>
+            </MenuItem>
           </Menu>
 
           <Menu

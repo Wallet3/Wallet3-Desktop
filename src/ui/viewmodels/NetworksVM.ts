@@ -1,7 +1,8 @@
-import Messages from '../../common/Messages';
+import Messages, { TxParams } from '../../common/Messages';
+import { makeAutoObservable, runInAction } from 'mobx';
+
 import { getProviderByChainId } from '../../common/Provider';
 import ipc from '../bridges/IPC';
-import { makeAutoObservable } from 'mobx';
 import store from 'storejs';
 
 interface INetwork {
@@ -19,6 +20,7 @@ const Keys = {
 
 export class NetworksVM {
   currentChainId = 1;
+  
   get currentNetwork() {
     return Networks.find((n) => n?.chainId === this.currentChainId);
   }
@@ -27,9 +29,26 @@ export class NetworksVM {
     return getProviderByChainId(this.currentChainId);
   }
 
+  pendingTxs: TxParams[] = [];
+
+  get pendingTxCount() {
+    return this.pendingTxs.length;
+  }
+
   constructor() {
     makeAutoObservable(this);
     this.setCurrentChainId(store.get(Keys.currentNetworkId) || 1);
+
+    ipc.on(Messages.pendingTxsChanged, (e, content: string) => {
+      console.log('pending', content);
+      try {
+        runInAction(() => {
+          // this.pendingTxs.splice(0);
+          // this.pendingTxs.push(...(JSON.parse(content) as TxParams[]));
+          this.pendingTxs = JSON.parse(content);
+        });
+      } catch (error) {}
+    });
   }
 
   setCurrentChainId(value: number) {
