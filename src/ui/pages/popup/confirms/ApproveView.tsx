@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 
 import { ConfirmVM } from '../../../viewmodels/ConfirmVM';
+import Feather from 'feather-icons-react';
 import Icons from '../../../misc/Icons';
 import { observer } from 'mobx-react-lite';
 
@@ -39,21 +40,33 @@ export default observer(
           </div>
 
           <div>
-            <span>Gas Limit:</span>
-            <input type="text" defaultValue={gas} onChange={(e) => confirmVM.setGas(e.target.value)} />
-          </div>
-
-          <div>
             <span>Gas Price:</span>
             <div>
               <input type="text" defaultValue={gasPrice} onChange={(e) => confirmVM.setGasPrice(e.target.value)} />
-              <span>Gwei</span>
+              <span>
+                Gwei <Feather icon="edit-3" size={12} />
+              </span>
+            </div>
+          </div>
+
+          <div>
+            <span>Gas Limit:</span>
+            <div>
+              <input type="text" defaultValue={gas} onChange={(e) => confirmVM.setGas(e.target.value)} />
+              <span>
+                <Feather icon="edit-3" size={12} />
+              </span>
             </div>
           </div>
 
           <div>
             <span>Nonce:</span>
-            <input type="text" defaultValue={nonce} onChange={(e) => confirmVM.setNonce(e.target.value)} />
+            <div>
+              <input type="text" defaultValue={nonce} onChange={(e) => confirmVM.setNonce(e.target.value)} />
+              <span>
+                <Feather icon="edit-3" size={12} />
+              </span>
+            </div>
           </div>
 
           <div>
