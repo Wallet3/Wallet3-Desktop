@@ -31,7 +31,10 @@ export class WalletConnect extends EventEmitter {
 
     this.connector.on('session_request', this.handleSessionRequest);
     this.connector.on('call_request', this.handleCallRequest);
-    this.connector.on('disconnect', (error: Error) => this.emit('disconnect'));
+    this.connector.on('disconnect', (error: Error) => {
+      console.log('discconnect');
+      this.dispose();
+    });
   }
 
   handleSessionRequest = async (error: Error, request: WCSessionRequestRequest) => {

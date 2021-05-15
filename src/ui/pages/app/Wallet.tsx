@@ -129,7 +129,7 @@ export default observer(
             <Feather icon="camera" size={14} strokeWidth={2} />
             <span>Connect</span>
           </button>
-          <Link className="button" to="/send">
+          <Link className={`button ${accountVM && accountVM.nativeToken ? '' : 'disabled'}`} to="/send">
             <Feather icon="send" size={14} strokeWidth={2} />
             <span>Send</span>
           </Link>
