@@ -97,7 +97,11 @@ export default observer(({ app }: Props) => {
 
   return (
     <div className="page confirm">
-      <PopupTitle title={confirmVM?.method ?? signVM?.method} icon={confirmVM?.flag ?? signVM?.flag} />
+      <PopupTitle
+        title={confirmVM?.method ?? signVM?.method}
+        icon={confirmVM?.flag ?? signVM?.flag}
+        chainId={confirmVM.chainId}
+      />
 
       <div className="container">
         {confirmVM?.method === 'Transfer' ? (

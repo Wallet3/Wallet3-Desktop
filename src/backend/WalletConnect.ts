@@ -42,7 +42,6 @@ export class WalletConnect extends EventEmitter {
 
     const [{ peerMeta, chainId, peerId }] = request.params;
     this.peerId = peerId;
-    this.chainId = chainId;
     this.peerMeta = peerMeta;
 
     this.emit('sessionRequest', request);
@@ -55,6 +54,7 @@ export class WalletConnect extends EventEmitter {
     ipcMain.handleOnce(WcMessages.approveWcSession(this.peerId), () => {
       clearHandlers();
       this.connector.approveSession({ accounts: App.addresses, chainId: App.chainId });
+      this.chainId = App.chainId;
     });
 
     ipcMain.handleOnce(WcMessages.rejectWcSession(this.peerId), () => {
@@ -127,7 +127,7 @@ export class WalletConnect extends EventEmitter {
         return;
       }
 
-      sendTransaction(App.chainId, txHex);
+      sendTransaction(this.chainId, txHex);
       const { hash } = await Application.saveTx(params, txHex);
 
       this.connector.approveRequest({ id: request.id, result: hash });
@@ -139,13 +139,13 @@ export class WalletConnect extends EventEmitter {
     });
 
     App.createPopupWindow('sendTx', {
-      chainId: App.chainId,
+      chainId: this.chainId,
       from: App.currentAddress,
       to: param.to,
       data: param.data || '0x',
       gas: Number.parseInt(param.gas) || 21000,
       gasPrice: Number.parseInt(param.gasPrice) || GasnowWs.gwei_20,
-      nonce: Number.parseInt(param.nonce) || (await getTransactionCount(App.chainId, App.currentAddress)),
+      nonce: Number.parseInt(param.nonce) || (await getTransactionCount(this.chainId, App.currentAddress)),
       value: param.value || 0,
 
       receipient,

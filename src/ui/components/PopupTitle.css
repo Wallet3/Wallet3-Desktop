@@ -17,3 +17,13 @@
 .pop-title > .title span {
   margin-left: 8px;
 }
+
+.pop-title > .network {
+  font-size: 19px;
+  display: flex;
+  align-items: center;
+}
+
+.pop-title > .network > img {
+  margin-right: 4px;
+}
