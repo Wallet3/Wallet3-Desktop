@@ -1,10 +1,11 @@
 import * as path from 'path';
 
 import { Connection, FindManyOptions, Repository, createConnection } from 'typeorm';
+import { Notification, app, shell } from 'electron';
 import { makeAutoObservable, observable, runInAction } from 'mobx';
 
 import Transaction from './models/Transaction';
-import { app } from 'electron';
+import { convertTxToUrl } from '../misc/Url';
 import { getTransactionReceipt } from '../common/Provider';
 
 class TxMan {
@@ -68,7 +69,14 @@ class TxMan {
       await tx.save();
       removeTxs.push(tx);
 
-      console.log(tx.hash, tx.blockNumber)
+      const notification = new Notification({
+        title: 'Transaction Confirmed',
+        body: `Transaction ${tx.nonce} was confirmed, view it on Etherscan`,
+      }).once('click', () => {
+        shell.openExternal(convertTxToUrl(tx));
+      });
+
+      notification.show();
     }
 
     runInAction(() => {

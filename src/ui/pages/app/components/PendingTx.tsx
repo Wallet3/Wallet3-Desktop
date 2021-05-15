@@ -10,7 +10,8 @@ import { observer } from 'mobx-react-lite';
 import { utils } from 'ethers';
 
 export default observer(({ tx, rapid, fast, standard }: { tx: TxParams; rapid: number; fast: number; standard: number }) => {
-  const level = tx.gasPrice >= rapid ? 'rapid' : tx.gasPrice >= fast ? 'fast' : tx.gasPrice >= standard ? 'st' : 'slow';
+  const level =
+    tx.gasPrice >= rapid ? 'rapid' : tx.gasPrice >= fast ? 'fast' : tx.gasPrice >= standard ? 'standard' : 'slow';
 
   return (
     <div className="pendingtx">
