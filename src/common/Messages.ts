@@ -63,6 +63,8 @@ export interface TxParams {
   gasPrice: number; // wei
   nonce: number;
   data: string;
+  hash?: string;
+  timestamp?: number;
 }
 
 export interface AuthParams {

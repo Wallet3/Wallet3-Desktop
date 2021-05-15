@@ -29,6 +29,9 @@ export default class Transaction extends BaseEntity {
   @Column('text')
   data: string;
 
+  @Column()
+  timestamp: number;
+
   @Column({ nullable: true })
   blockNumber: number;
 

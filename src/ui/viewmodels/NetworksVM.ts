@@ -20,7 +20,7 @@ const Keys = {
 
 export class NetworksVM {
   currentChainId = 1;
-  
+
   get currentNetwork() {
     return Networks.find((n) => n?.chainId === this.currentChainId);
   }
@@ -43,7 +43,6 @@ export class NetworksVM {
       console.log('pending', content);
       try {
         runInAction(() => {
-          // this.pendingTxs.splice(0);
           // this.pendingTxs.push(...(JSON.parse(content) as TxParams[]));
           this.pendingTxs = JSON.parse(content);
         });
@@ -58,6 +57,40 @@ export class NetworksVM {
     this.currentProvider.ready;
     store.set(Keys.currentNetworkId, value);
     ipc.invoke(Messages.changeChainId, value);
+  }
+
+  static toExplorerUrl(tx: TxParams) {
+    let url = '';
+
+    switch (tx.chainId) {
+      case 1:
+        url = `https://etherscan.io/tx/${tx.hash}`;
+        break;
+      case 3:
+        url = `https://ropsten.etherscan.io/tx/${tx.hash}`;
+        break;
+      case 4:
+        url = `https://rinkeby.etherscan.io/tx/${tx.hash}`;
+        break;
+      case 5:
+        url = `https://goerli.etherscan.io/tx/${tx.hash}`;
+        break;
+      case 42:
+        url = `https://kovan.etherscan.io/tx/${tx.hash}`;
+        break;
+      case 56:
+        url = `https://bscscan.io/tx/${tx.hash}`;
+        break;
+      case 100:
+        url = `https://blockscout.com/xdai/mainnet/tx/${tx.hash}`;
+        break;
+
+      case 137:
+        url = `https://polygon-explorer-mainnet.chainstacklabs.com/tx/${tx.hash}`;
+        break;
+    }
+
+    return url;
   }
 }
 

@@ -10,10 +10,13 @@ import { AccountVM } from '../../viewmodels/AccountVM';
 import AnimatedNumber from 'react-animated-number';
 import { Application } from '../../viewmodels/Application';
 import Feather from 'feather-icons-react';
+import GasnowWs from '../../../api/Gasnow';
 import HSBar from 'react-horizontal-stacked-bar-chart';
 import { ITokenBalance } from '../../../api/Debank';
 import NetworkLabel from './components/NetworkLabel';
+import PendingTx from './components/PendingTx';
 import PendingTxIndicator from './components/PendingTxIndicator';
+import Shell from '../../bridges/Shell';
 import Skeleton from 'react-loading-skeleton';
 import findIcon from '../../misc/Icons';
 import { formatNum } from '../../misc/Formatter';
@@ -33,26 +36,38 @@ export default observer(
       rowTokens.push(row);
     }
 
-    const { pendingTxCount } = networksVM;
+    const { pendingTxCount, pendingTxs } = networksVM;
 
     return (
       <div className="page main">
         <div className="utility-bar">
-          <Menu
-            menuButton={() => (
-              <MenuButton className="menu-button">
-                <PendingTxIndicator pendingCount={pendingTxCount} />
-              </MenuButton>
-            )}
-            direction="bottom"
-            overflow="auto"
-            position="anchor"
-            arrow
-          >
-            <MenuItem>
-              <span></span>
-            </MenuItem>
-          </Menu>
+          {pendingTxCount > 0 ? (
+            <Menu
+              menuButton={() => (
+                <MenuButton className="menu-button">
+                  <PendingTxIndicator pendingCount={pendingTxCount} />
+                </MenuButton>
+              )}
+              direction="bottom"
+              overflow="auto"
+              position="anchor"
+              arrow
+            >
+              {pendingTxs.map((item) => {
+                return (
+                  <MenuItem
+                    key={item.hash}
+                    styles={{ padding: '8px 12px' }}
+                    onClick={(_) => {
+                      Shell.open(NetworksVM.toExplorerUrl(item));
+                    }}
+                  >
+                    <PendingTx tx={item} {...GasnowWs} />
+                  </MenuItem>
+                );
+              })}
+            </Menu>
+          ) : undefined}
 
           <Menu
             menuButton={() => (

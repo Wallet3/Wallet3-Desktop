@@ -1,0 +1,60 @@
+.pendingtx {
+  display: grid;
+  grid-template-rows: auto auto;
+  width: 220px;
+  overflow: hidden;
+  font-size: 12px;
+}
+
+.pendingtx > .title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.pendingtx > .title > div {
+  display: flex;
+  align-items: center;
+}
+
+.pendingtx > .title > div > span {
+  max-width: 100px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 120px;
+}
+
+.pendingtx > .title > div > .gas {
+  margin-right: 4px;
+  border-radius: 5px;
+  padding: 2px 8px;
+  color: white;
+  font-weight: 500;
+  text-transform: capitalize;
+  font-size: 8px;
+}
+
+.pendingtx > .title > div > .gas.rapid {
+  background-color: yellowgreen;
+}
+
+.pendingtx > .title > div > .gas.fast {
+  background-color: orange;
+}
+
+.pendingtx > .title > div > .gas.st {
+  background-color: deepskyblue;
+}
+
+.pendingtx > .title > div > .gas.slow {
+  background-color: rgb(219, 0, 219);
+}
+
+.pendingtx > .extra {
+  font-size: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

@@ -213,6 +213,7 @@ export class App {
       t.hash = tx.hash;
       t.nonce = params.nonce;
       t.value = params.value;
+      t.timestamp = Date.now();
 
       TxMan.save(t);
     }
