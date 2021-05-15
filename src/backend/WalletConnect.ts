@@ -225,7 +225,6 @@ export class WalletConnect extends EventEmitter {
   };
 
   dispose() {
-    this.connector.killSession();
     this.removeAllListeners();
   }
 }

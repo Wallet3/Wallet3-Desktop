@@ -18,26 +18,29 @@ export default () => {
   const scanWalletConnect = async () => {
     setScanning(true);
 
-    const uri = await scanQR(async (imgdata) => {
-      try {
-        const result = await qrscanner.scanImage(imgdata);
-        if (result && result.toLowerCase().startsWith('wc:')) {
-          return { success: true, result };
-        }
-      } catch (error) {}
+    try {
+      const uri = await scanQR(async (imgdata) => {
+        try {
+          const result = await qrscanner.scanImage(imgdata);
+          if (result && result.toLowerCase().startsWith('wc:')) {
+            return { success: true, result };
+          }
+        } catch (error) {}
 
-      return { success: false, result: '' };
-    });
+        return { success: false, result: '' };
+      });
 
-    setScanning(false);
-    if (window.closed) return;
-    if (!uri) return;
+      if (window.closed) return;
+      if (!uri) return;
 
-    const result = await ipc.invokeSecure(Messages.connectWallet, { uri });
-    if (result) {
-      window.close();
-    } else {
-      Anime.vibrate('.scan-area', () => window.close());
+      const result = await ipc.invokeSecure(Messages.connectWallet, { uri });
+      if (result) {
+        window.close();
+      } else {
+        Anime.vibrate('.scan-area', () => window.close());
+      }
+    } finally {
+      setScanning(false);
     }
   };
 

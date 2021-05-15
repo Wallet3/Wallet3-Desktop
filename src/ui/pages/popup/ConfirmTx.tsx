@@ -100,7 +100,7 @@ export default observer(({ app }: Props) => {
       <PopupTitle
         title={confirmVM?.method ?? signVM?.method}
         icon={confirmVM?.flag ?? signVM?.flag}
-        chainId={confirmVM.chainId}
+        chainId={confirmVM?.chainId}
       />
 
       <div className="container">
