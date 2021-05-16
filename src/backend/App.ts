@@ -1,6 +1,6 @@
 import * as Cipher from '../common/Cipher';
 
-import { BrowserWindow, TouchBar, TouchBarButton, app, ipcMain, systemPreferences } from 'electron';
+import { BrowserWindow, Notification, TouchBar, TouchBarButton, app, ipcMain, systemPreferences } from 'electron';
 import MessageKeys, { ConfirmSendTx, InitStatus, PopupWindowTypes, SendTxParams, TxParams } from '../common/Messages';
 import { WalletConnect, connectAndWaitSession } from './WalletConnect';
 import { ethers, utils } from 'ethers';
@@ -165,11 +165,7 @@ export class App {
         return App.encryptIpc('', iv, key);
       }
 
-      sendTransaction(this.chainId, txHex).then(({ result }) => {
-        console.log('send', result);
-        if (!result) return;
-        App.saveTx(params, txHex);
-      });
+      App.sendTx(this.chainId, params, txHex);
 
       return App.encryptIpc(txHex, iv, key);
     });
@@ -200,6 +196,21 @@ export class App {
     }
 
     return password;
+  };
+
+  static readonly sendTx = async (chainId: number, params: TxParams, txHex: string) => {
+    const { result } = await sendTransaction(chainId, txHex);
+    if (!result) {
+      new Notification({
+        title: `Transaction ${params.nonce} Failed`,
+        body: `Transaction ${params.nonce} failed, please try again. Gas price to low or insufficient balance.`,
+      }).show();
+      return undefined;
+    }
+
+    App.saveTx(params, txHex);
+    
+    return result;
   };
 
   static readonly saveTx = async (params: TxParams, txHex: string) => {

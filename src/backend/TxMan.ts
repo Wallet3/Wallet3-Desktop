@@ -71,7 +71,9 @@ class TxMan {
       await tx.save();
       removeTxs.push(tx);
 
-      removeTxs.push(...(await this.findTxs({ where: { nonce: LessThan(tx.nonce), blockNumber: null } })));
+      const invalidTxs = await this.findTxs({ where: { nonce: LessThan(tx.nonce), blockNumber: null } });
+      Promise.all(invalidTxs.map((t) => t.remove()));
+      removeTxs.push(...invalidTxs);
 
       const notification = new Notification({
         title: tx.status ? 'Transaction Confirmed' : 'Transaction Failed',

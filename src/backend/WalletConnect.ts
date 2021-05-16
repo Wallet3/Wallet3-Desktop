@@ -130,12 +130,12 @@ export class WalletConnect extends EventEmitter {
         return;
       }
 
-      sendTransaction(this.chainId, txHex).then(({ result }) => {
-        if (!result) return;
-        Application.saveTx(params, txHex);
-      });
-      
-      const { hash } = utils.parseTransaction(txHex);
+      const hash = await Application.sendTx(this.chainId, params, txHex);
+
+      if (!hash) {
+        this.connector.rejectRequest({ id: request.id, error: { message: 'Transaction failed' } });
+        return;
+      }
 
       this.connector.approveRequest({ id: request.id, result: hash });
     });
