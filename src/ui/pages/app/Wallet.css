@@ -125,6 +125,15 @@
   padding: 0 5px;
 }
 
+/* skeleton loading */
+.page.main > .assets > table td > span {
+  width: 100%;
+  padding: 0 4px;
+  margin-bottom: 2px;
+  display: inline-block;
+  box-sizing: border-box;
+}
+
 .page.main > .assets > table td .button {
   border: none;
   padding: 2px 7px;

@@ -25,7 +25,15 @@ import { observer } from 'mobx-react-lite';
 export default observer(
   ({ networksVM, accountVM, app }: { app: Application; networksVM: NetworksVM; accountVM?: AccountVM }) => {
     const rows = accountVM.chainTokens.length / 2;
-    const rowTokens: ITokenBalance[][] = [];
+    const rowTokens: ITokenBalance[][] =
+      accountVM.chainTokens.length === 0
+        ? [
+            [null, null],
+            [null, null],
+            [null, null],
+            [null, null],
+          ]
+        : [];
 
     for (let i = 0; i < rows && i < 7; i++) {
       const row: ITokenBalance[] = [];
@@ -37,8 +45,6 @@ export default observer(
     }
 
     const { pendingTxCount, pendingTxs } = networksVM;
-
-    console.log('network', accountVM.netWorth);
 
     return (
       <div className="page main">
@@ -146,6 +152,7 @@ export default observer(
                 return (
                   <tr key={i}>
                     {row.map((token, j) => {
+                      console.log(token);
                       return (
                         <td key={`${i}-${j}`}>
                           {token ? (
@@ -161,6 +168,8 @@ export default observer(
                                 <span className="amount">{formatNum(token.amount, '')}</span>
                               </div>
                             </Link>
+                          ) : token === null ? (
+                            <Skeleton height={20} />
                           ) : undefined}
                         </td>
                       );
