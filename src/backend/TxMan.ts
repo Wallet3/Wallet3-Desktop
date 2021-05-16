@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import { Connection, FindManyOptions, Repository, createConnection } from 'typeorm';
+import { Connection, FindManyOptions, LessThan, Repository, createConnection } from 'typeorm';
 import { Notification, app, shell } from 'electron';
 import { makeAutoObservable, observable, runInAction } from 'mobx';
 
@@ -59,7 +59,9 @@ class TxMan {
 
     for (let tx of this.pendingTxs) {
       const receipt = await getTransactionReceipt(tx.chainId, tx.hash);
-      if (!receipt) continue;
+      if (!receipt) {
+        continue;
+      }
 
       tx.gasUsed = Number.parseInt(receipt.gasUsed);
       tx.status = Number.parseInt(receipt.status) === 1;
@@ -68,6 +70,8 @@ class TxMan {
       tx.blockHash = receipt.blockHash;
       await tx.save();
       removeTxs.push(tx);
+
+      removeTxs.push(...(await this.findTxs({ where: { nonce: LessThan(tx.nonce), blockNumber: null } })));
 
       const notification = new Notification({
         title: tx.status ? 'Transaction Confirmed' : 'Transaction Failed',
@@ -81,7 +85,9 @@ class TxMan {
 
     runInAction(() => {
       for (let tx of removeTxs) {
-        this.pendingTxs.splice(this.pendingTxs.indexOf(tx), 1);
+        const index = this.pendingTxs.findIndex((t) => t.hash === tx.hash);
+        if (index < 0) continue;
+        this.pendingTxs.splice(index, 1);
       }
     });
 

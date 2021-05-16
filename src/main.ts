@@ -92,6 +92,9 @@ const createWindow = async (): Promise<void> => {
 
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  mainWindow.once('ready-to-show', () =>
+    mainWindow?.webContents.send(Messages.pendingTxsChanged, JSON.stringify(TxMan.pendingTxs))
+  );
   App.mainWindow = mainWindow;
 
   createTouchBar(mainWindow);

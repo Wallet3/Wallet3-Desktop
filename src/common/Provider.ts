@@ -84,6 +84,6 @@ export async function getTransactionReceipt(chainId: number, hash: string) {
       gasUsed: string;
     };
   } catch (error) {
-    return null;
+    return undefined;
   }
 }
