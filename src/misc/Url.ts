@@ -25,9 +25,11 @@ export function convertTxToUrl(tx: TxParams) {
     case 100:
       url = `https://blockscout.com/xdai/mainnet/tx/${tx.hash}`;
       break;
-
     case 137:
-      url = `https://polygon-explorer-mainnet.chainstacklabs.com/tx/${tx.hash}`;
+      url = `https://explorer-mainnet.maticvigil.com/tx/${tx.hash}`;
+      break;
+    case 128:
+      url = `https://hecoinfo.com/tx/${tx.hash}`;
       break;
   }
 

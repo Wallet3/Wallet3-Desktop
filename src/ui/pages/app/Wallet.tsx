@@ -159,7 +159,7 @@ export default observer(
                             <Link
                               className="button"
                               to={`/send?token=${token.id}`}
-                              title={`${token.display_symbol || token.symbol}: $${token.amount * token.price}`}
+                              title={`${token.display_symbol || token.symbol}: $${token.amount * token.price || 0}`}
                             >
                               <div>
                                 <img className="token-icon" src={findIcon(token.display_symbol || token.symbol)} alt="" />

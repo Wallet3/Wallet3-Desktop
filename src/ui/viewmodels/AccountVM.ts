@@ -23,7 +23,7 @@ export class AccountVM {
   tokens: Debank.ITokenBalance[] = [];
   chains: Debank.IChainBalance[] = [];
 
-  nativeToken: Debank.ITokenBalance;
+  nativeToken: Debank.ITokenBalance = null;
 
   get netWorth() {
     if (this.chains.length === 0) return undefined;
@@ -61,6 +61,10 @@ export class AccountVM {
   }
 
   refresh() {
+    this.chains = [];
+    this.tokens = [];
+    this.nativeToken = null;
+
     this.refreshChainOverview();
     this.refreshChainTokens();
   }
