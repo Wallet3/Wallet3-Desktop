@@ -1,7 +1,7 @@
+import { BigNumber, ethers, utils } from 'ethers';
 import Gasnow, { GasnowHttp, GasnowWs } from '../../api/Gasnow';
 import { IReactionDisposer, makeAutoObservable, reaction, runInAction } from 'mobx';
 import Messages, { ConfirmSendTx } from '../../common/Messages';
-import { ethers, utils } from 'ethers';
 import { parseEther, parseUnits } from 'ethers/lib/utils';
 
 import { AccountVM } from './AccountVM';
@@ -201,11 +201,18 @@ export class TransferVM {
     if (this.sending) return;
     this.sending = true;
 
-    const value = this.isERC20 ? 0 : this.amountBigInt.toString();
+    let value = this.isERC20 ? 0 : this.amountBigInt.toString();
     const to = this.isERC20 ? this.selectedToken.id : this.receiptAddress;
 
     const iface = new ethers.utils.Interface(ERC20ABI);
     const data = this.isERC20 ? iface.encodeFunctionData('transfer', [this.receiptAddress, this.amountBigInt]) : '0x';
+
+    const fee = BigNumber.from(this.gasPrice * GasnowWs.gwei_1 * this.gas);
+    if (!this.isERC20 && fee.add(BigNumber.from(value)).gt(BigNumber.from(this.selectedToken.wei || 0))) {
+      value = BigNumber.from(this.selectedToken.wei || 0)
+        .sub(fee)
+        .toString();
+    }
 
     await ipc.invokeSecure<void>(Messages.createTransferTx, {
       from: this._accountVM.address,

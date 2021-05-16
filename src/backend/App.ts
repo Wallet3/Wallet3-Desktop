@@ -165,7 +165,7 @@ export class App {
         return App.encryptIpc('', iv, key);
       }
 
-      sendTransaction(this.chainId, txHex);
+      sendTransaction(this.chainId, txHex).then(({ result }) => {});
       App.saveTx(params, txHex);
 
       return App.encryptIpc(txHex, iv, key);

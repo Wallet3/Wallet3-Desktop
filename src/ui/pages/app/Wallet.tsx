@@ -152,7 +152,6 @@ export default observer(
                 return (
                   <tr key={i}>
                     {row.map((token, j) => {
-                      console.log(token);
                       return (
                         <td key={`${i}-${j}`}>
                           {token ? (

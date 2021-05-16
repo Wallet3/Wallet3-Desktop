@@ -50,6 +50,7 @@ export interface ITokenBalance {
   is_wallet?: boolean;
   time_at?: number;
   amount: number;
+  wei?: string;
 }
 
 interface ITotalBalance {

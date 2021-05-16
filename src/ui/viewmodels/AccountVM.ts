@@ -108,6 +108,7 @@ export class AccountVM {
           name: NetVM.currentNetwork.symbol,
           symbol: NetVM.currentNetwork.symbol,
           is_wallet: true,
+          wei: balance.toString(),
         });
       }
 

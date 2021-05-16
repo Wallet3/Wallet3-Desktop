@@ -36,7 +36,7 @@ export async function sendTransaction(chainId: number, txHex: string) {
 
     return resp.data as { id: number; result: string };
   } catch (error) {
-    return '';
+    return undefined;
   }
 }
 
@@ -69,7 +69,10 @@ export async function getTransactionReceipt(chainId: number, hash: string) {
       id: Date.now(),
     });
 
-    if (!resp.data.result) return null;
+    if (!resp.data.result) {
+      console.log(resp.data);
+      return null;
+    }
 
     return resp.data.result as {
       transactionHash: string;
