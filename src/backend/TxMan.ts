@@ -70,8 +70,8 @@ class TxMan {
       removeTxs.push(tx);
 
       const notification = new Notification({
-        title: 'Transaction Confirmed',
-        body: `Transaction ${tx.nonce} was confirmed, view it on Etherscan`,
+        title: tx.status ? 'Transaction Confirmed' : 'Transaction Failed',
+        body: `Transaction ${tx.nonce} ${tx.status ? 'confirmed' : 'failed'}, view it on Etherscan`,
       }).once('click', () => {
         shell.openExternal(convertTxToUrl(tx));
       });

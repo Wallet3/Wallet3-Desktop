@@ -21,7 +21,7 @@ export default observer(
     return (
       <div className="auth">
         <div className="panel">
-          {touchIDSupported && false ? <TouchIDView onAuth={onAuthTouchID} /> : <PasscodeView onAuth={onAuthPasscode} />}
+          {touchIDSupported ? <TouchIDView onAuth={onAuthTouchID} /> : <PasscodeView onAuth={onAuthPasscode} />}
         </div>
         <button onClick={(_) => onCancel?.()}>Cancel</button>
       </div>

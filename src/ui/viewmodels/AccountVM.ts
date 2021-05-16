@@ -85,10 +85,11 @@ export class AccountVM {
     const nativeSymbols = Networks.map((n) => n?.symbol.toLowerCase());
 
     Debank.getTokenBalances(this.address, NetVM.currentNetwork.symbol).then(async (tokens) => {
-      const assets = tokens
-        .filter((t) => t.amount * (t.price || 0) > 0.1 && !nativeSymbols.includes(t.id))
-        .sort((a, b) => (a.symbol > b.symbol ? 1 : -1))
-        .sort((a, b) => b.amount * b.price - a.amount * a.price);
+      const assets =
+        tokens
+          ?.filter((t) => t.amount * (t.price || 0) > 0.1 && !nativeSymbols.includes(t.id))
+          .sort((a, b) => (a.symbol > b.symbol ? 1 : -1))
+          .sort((a, b) => b.amount * b.price - a.amount * a.price) ?? [];
 
       const nativeToken = tokens.find((t) => nativeSymbols.includes(t.id));
       if (nativeToken) {
