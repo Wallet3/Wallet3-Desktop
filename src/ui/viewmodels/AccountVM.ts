@@ -26,6 +26,8 @@ export class AccountVM {
   nativeToken: Debank.ITokenBalance;
 
   get netWorth() {
+    if (this.chains.length === 0) return undefined;
+
     const usd = this.chains.find((c) => c.community_id === NetVM.currentChainId)?.usd_value;
     if (this.chains.length > 0 && usd === undefined) {
       return 0;
@@ -65,6 +67,10 @@ export class AccountVM {
 
   private refreshChainOverview = () => {
     Debank.fetchChainsOverview(this.address).then((overview) => {
+      if (!overview) {
+        return;
+      }
+
       const chains = overview.chain_list.filter((c) => c.usd_value > 0);
       if (chains.length === 0) {
         overview.chain_list.forEach((c) => (c.usd_value = 0.000001));

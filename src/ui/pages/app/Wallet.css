@@ -57,6 +57,10 @@
   font-weight: 500;
 }
 
+.page.main > .net-worth > .value > span {
+  width: 100%;
+}
+
 .page.main > .net-worth > .asset-percent {
   font-size: 11px;
   padding-right: 1px;

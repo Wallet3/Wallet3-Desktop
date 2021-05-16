@@ -38,6 +38,8 @@ export default observer(
 
     const { pendingTxCount, pendingTxs } = networksVM;
 
+    console.log('network', accountVM.netWorth);
+
     return (
       <div className="page main">
         <div className="utility-bar">
