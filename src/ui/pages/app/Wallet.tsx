@@ -6,13 +6,11 @@ import { Menu, MenuButton, MenuDivider, MenuItem } from '@szhsin/react-menu';
 import { Networks, NetworksVM } from '../../viewmodels/NetworksVM';
 import React, { useEffect, useState } from 'react';
 
-import { AccountVM } from '../../viewmodels/AccountVM';
 import AnimatedNumber from 'react-animated-number';
 import { Application } from '../../viewmodels/Application';
 import Feather from 'feather-icons-react';
 import GasnowWs from '../../../api/Gasnow';
 import HSBar from 'react-horizontal-stacked-bar-chart';
-import { ITokenBalance } from '../../../api/Debank';
 import NetworkLabel from './components/NetworkLabel';
 import PendingTx from './components/PendingTx';
 import PendingTxIndicator from './components/PendingTxIndicator';
@@ -27,18 +25,11 @@ import { observer } from 'mobx-react-lite';
 
 export default observer(
   ({ networksVM, app, walletVM }: { app: Application; networksVM: NetworksVM; walletVM: WalletVM }) => {
-    const { currentAccount: accountVM } = walletVM;
+    const { currentAccount: accountVM, pendingTxCount, pendingTxs } = walletVM;
+    const { url } = useRouteMatch();
 
     const rows = accountVM.chainTokens.length / 2;
-    const rowTokens: UserToken[][] =
-      accountVM.chainTokens.length === 0
-        ? [
-            [null, null],
-            [null, null],
-            [null, null],
-            [null, null],
-          ]
-        : [];
+    const rowTokens: UserToken[][] = accountVM.chainTokens.length === 0 ? new Array(7).fill([null, null]) : [];
 
     for (let i = 0; i < rows && i < 7; i++) {
       const row: UserToken[] = [];
@@ -48,8 +39,6 @@ export default observer(
       }
       rowTokens.push(row);
     }
-
-    const { pendingTxCount, pendingTxs } = walletVM;
 
     return (
       <div className="page main">
@@ -111,7 +100,7 @@ export default observer(
 
           <button
             className="icon-button"
-            title={accountVM?.address ?? 'Show Address'}
+            title={(accountVM?.ens || accountVM?.address) ?? 'Show Address'}
             onClick={(_) => app.history.push('/account')}
           >
             <Feather icon="user" size={16} strokeWidth={1} />
@@ -149,7 +138,12 @@ export default observer(
         </div>
 
         <div className="assets">
-          <h3 className="title">Assets</h3>
+          <div className="nav-title">
+            <h3 className="title">Assets</h3>
+            <Link to={`${url}/tokens`}>
+              <h3 className="title">Custom {'>'}</h3>
+            </Link>
+          </div>
 
           <table>
             <tbody>

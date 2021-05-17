@@ -114,6 +114,20 @@
   margin-top: 12px;
 }
 
+.page.main > .assets > .nav-title {
+  display: flex;
+  justify-content: space-between;
+}
+
+.page.main > .assets > .nav-title > a h3 {
+  opacity: 0.5;
+  transition: all 0.3s;
+}
+
+.page.main > .assets > .nav-title > a h3:hover {
+  opacity: 1;
+}
+
 .page.main > .assets > table {
   margin: 0 -12px;
   margin-top: 8px;

@@ -25,6 +25,7 @@ interface ChainOverview {
 
 export class AccountVM {
   address: string = '';
+  ens = '';
 
   allTokens: UserToken[] = [];
   chains: Debank.IChainBalance[] = [];
@@ -64,6 +65,7 @@ export class AccountVM {
   constructor(args: IArgs) {
     makeAutoObservable(this);
     this.address = args.address;
+    NetVM.currentProvider.lookupAddress(this.address).then((v) => runInAction(() => (this.ens = v)));
   }
 
   refresh() {

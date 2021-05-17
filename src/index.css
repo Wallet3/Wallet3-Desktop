@@ -85,6 +85,10 @@ button.positive {
   color: white;
 }
 
+a {
+  text-decoration: none;
+}
+
 button:hover,
 a.button:hover {
   color: white;
