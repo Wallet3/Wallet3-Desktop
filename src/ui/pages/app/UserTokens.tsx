@@ -41,7 +41,7 @@ export default observer(({ accountVM, app }: { accountVM?: AccountVM; app: Appli
                           >
                             <img src={Icons(t.symbol)} alt={t.symbol} />
                             <div className="desc">
-                              <div>{t.name}</div>
+                              <div>{t.symbol}</div>
                               <div className="amount">{t.amount}</div>
                             </div>
 
@@ -51,7 +51,7 @@ export default observer(({ accountVM, app }: { accountVM?: AccountVM; app: Appli
                               rightBorderColor="#6186ffa0"
                               rightKnobColor="#6186ffa0"
                               borderWidth="1px"
-                              width="42px"
+                              width="39px"
                             />
                           </div>
                         );

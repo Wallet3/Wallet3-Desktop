@@ -215,6 +215,12 @@ export class TransferVM {
         .toString();
     }
 
+    if (this.isERC20) {
+      const erc20 = new ethers.Contract(this.selectedToken.id, ERC20ABI, NetworksVM.currentProvider);
+      const balance: BigNumber = await erc20.balanceOf(this._accountVM.address);
+      value = balance.lt(value) ? balance.toString() : value;
+    }
+
     await ipc.invokeSecure<void>(Messages.createTransferTx, {
       from: this._accountVM.address,
       to,

@@ -105,9 +105,9 @@ const createWindow = async (): Promise<void> => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
+  App.init();
   createWindow();
 
-  App.init();
   TxMan.init();
 
   autorun(() => {

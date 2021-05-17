@@ -8,13 +8,14 @@
 
 .page.tokens > .content {
   overflow: auto;
+  scrollbar-color: dark;
   margin: 0 -12px;
   -webkit-app-region: no-drag;
 }
 
 .page.tokens > .content .tokens .token {
   display: grid;
-  grid-template-columns: 32px 1fr 45px;
+  grid-template-columns: 32px 1fr 42px;
   padding: 0px 12px;
   padding-bottom: 8px;
   align-items: center;
