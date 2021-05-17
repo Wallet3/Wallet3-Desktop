@@ -140,8 +140,8 @@ export default observer(
         <div className="assets">
           <div className="nav-title">
             <h3 className="title">Assets</h3>
-            <Link to={`${url}/tokens`}>
-              <h3 className="title">Custom {'>'}</h3>
+            <Link to={`/userTokens`}>
+              <h3 className="title">{'Custom >'}</h3>
             </Link>
           </div>
 

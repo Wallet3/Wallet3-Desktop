@@ -1,6 +1,6 @@
 import './App.css';
 
-import { Account, Transfer } from './pages/app';
+import { Account, Transfer, UserTokens } from './pages/app';
 import { Blank, Generate, Import, Locking, SetupPasscode, Welcome } from './pages/login/';
 import { Route, Router, Switch } from 'react-router-dom';
 
@@ -13,7 +13,7 @@ import { WalletVM } from './viewmodels/WalletVM';
 import { observer } from 'mobx-react-lite';
 
 export default observer((args: { app: Application; mnVM: MnemonicVM; networksVM: NetworksVM; walletVM: WalletVM }) => {
-  const { app } = args;
+  const { app, walletVM } = args;
 
   return (
     <Router history={app.history}>
@@ -40,6 +40,9 @@ export default observer((args: { app: Application; mnVM: MnemonicVM; networksVM:
           </Route>
           <Route path="/account" exact>
             <Account {...args} />
+          </Route>
+          <Route path={`/userTokens`}>
+            <UserTokens {...args} accountVM={walletVM.currentAccount} />
           </Route>
 
           <Route path="*" component={Blank} />
