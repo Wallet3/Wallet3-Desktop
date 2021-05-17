@@ -116,6 +116,7 @@
   "dependencies": {
     "@szhsin/react-menu": "^1.10.0",
     "@walletconnect/client": "^1.4.1",
+    "add": "^2.0.6",
     "animejs": "^3.2.1",
     "axios": "^0.21.1",
     "delay": "^5.0.0",
@@ -141,9 +142,11 @@
     "react-search-autocomplete": "^5.2.2",
     "react-select": "^4.3.1",
     "react-spinners": "^0.10.6",
+    "react-toggle-component": "^3.0.8",
     "sqlite3": "^5.0.2",
     "storejs": "^1.1.0",
     "typeorm": "^0.2.32",
-    "ws": "^7.4.5"
+    "ws": "^7.4.5",
+    "yarn": "^1.22.10"
   }
 }

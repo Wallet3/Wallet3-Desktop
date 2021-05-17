@@ -4,6 +4,7 @@ export interface IUserToken {
   a: string; // contract address
   s: string; // symbol
   d: number; // decimals
+  o: number; // order id
 }
 
 export class UserToken {
@@ -15,6 +16,7 @@ export class UserToken {
   private _price = 0;
   private _wei = '0';
   private _show = true;
+  private _order = -1;
 
   get id() {
     return this._id;
@@ -80,6 +82,14 @@ export class UserToken {
     this._show = value;
   }
 
+  get order() {
+    return this._order;
+  }
+
+  set order(value) {
+    this._order = value;
+  }
+
   constructor(token?: IUserToken) {
     makeAutoObservable(this);
 
@@ -87,10 +97,11 @@ export class UserToken {
       this._id = token.a;
       this._symbol = token.s;
       this._decimals = token.d;
+      this._order = token.o;
     }
   }
 
   toObject(): IUserToken {
-    return { a: this.id, s: this.symbol, d: this.decimals };
+    return { a: this.id, s: this.symbol, d: this.decimals, o: this.order };
   }
 }

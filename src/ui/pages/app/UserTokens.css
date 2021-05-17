@@ -2,9 +2,44 @@
   display: grid;
   grid-template-rows: auto 1fr;
   background-color: transparent;
-  -webkit-app-region: no-drag !important;
+  max-height: 100vh;
+  padding-bottom: 0px;
+}
+
+.page.tokens > .content {
+  overflow: auto;
+  margin: 0 -12px;
+  -webkit-app-region: no-drag;
 }
 
 .page.tokens > .content .tokens .token {
-  padding: 5px 0;
+  display: grid;
+  grid-template-columns: 32px 1fr 45px;
+  padding: 0px 12px;
+  padding-bottom: 8px;
+  align-items: center;
+}
+
+.page.tokens > .content .tokens .token > img {
+  width: 18px;
+  height: 18px;
+}
+
+.page.tokens > .content .tokens .token > .desc {
+  font-size: 14px;
+}
+
+.page.tokens > .content .tokens .token > .desc > .amount {
+  font-size: 12px;
+  color: var(--font-color-title);
+}
+
+/* Fix toggle-component not working */
+.page.tokens > .content .tokens .token.off > .react-toggle input[type='checkbox'] + label:after {
+  margin-left: calc(4px);
+  background-color: lightgrey;
+}
+
+.page.tokens > .content .tokens .token.off > .react-toggle input[type='checkbox'] + label {
+  background-color: lightgrey;
 }
