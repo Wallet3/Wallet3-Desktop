@@ -7,13 +7,14 @@ export interface IUserToken {
 }
 
 export class UserToken {
-  _id = '';
-  _amount = 0;
-  _symbol = '';
-  _name = '';
-  _decimals = 0;
-  _price = 0;
-  _wei = '0';
+  private _id = '';
+  private _amount = 0;
+  private _symbol = '';
+  private _name = '';
+  private _decimals = 0;
+  private _price = 0;
+  private _wei = '0';
+  private _show = true;
 
   get id() {
     return this._id;
@@ -69,6 +70,14 @@ export class UserToken {
 
   set wei(value) {
     this._wei = value;
+  }
+
+  get show() {
+    return this._show;
+  }
+
+  set show(value) {
+    this._show = value;
   }
 
   constructor(token?: IUserToken) {

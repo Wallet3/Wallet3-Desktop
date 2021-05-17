@@ -32,6 +32,7 @@ export class ApplicationPopup extends Application {
         case 'sign':
           this.signVM = new SignVM(payload);
           this.history.push('/sign');
+          break;
       }
     });
   }

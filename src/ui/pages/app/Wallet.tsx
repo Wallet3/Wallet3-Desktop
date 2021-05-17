@@ -141,7 +141,7 @@ export default observer(
           <div className="nav-title">
             <h3 className="title">Assets</h3>
             <Link to={`/userTokens`}>
-              <h3 className="title">{'Custom >'}</h3>
+              <Feather icon="plus-circle" size={16} strokeWidth={1} />
             </Link>
           </div>
 

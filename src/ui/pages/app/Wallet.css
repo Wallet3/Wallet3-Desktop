@@ -119,6 +119,16 @@
   justify-content: space-between;
 }
 
+.page.main > .assets > .nav-title > a {
+  color: var(--font-color);
+  opacity: 0.5;
+  transition: all 0.3s;
+}
+
+.page.main > .assets > .nav-title > a:hover {
+  opacity: 1;
+}
+
 .page.main > .assets > .nav-title > a h3 {
   opacity: 0.5;
   transition: all 0.3s;
