@@ -64,7 +64,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
         <div className="amount">
           <span>Amount:</span>
           <input ref={amountInput} type="text" placeholder="1000" onChange={(e) => transferVM.setAmount(e.target.value)} />
-          <span className="symbol">{transferVM.selectedToken.display_symbol || transferVM.selectedToken.symbol}</span>
+          <span className="symbol">{transferVM.selectedToken.symbol}</span>
         </div>
 
         <div className="tokens">
@@ -83,14 +83,11 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
             styles={{ minWidth: '0', marginRight: '12px' }}
             menuButton={() => (
               <MenuButton className="menu-button">
-                <TokenLabel
-                  symbol={transferVM.selectedToken?.display_symbol || transferVM.selectedToken?.symbol}
-                  name={transferVM.selectedToken?.display_symbol || transferVM.selectedToken?.symbol}
-                />
+                <TokenLabel symbol={transferVM.selectedToken?.symbol} name={transferVM.selectedToken?.symbol} />
               </MenuButton>
             )}
           >
-            {walletVM.currentAccount?.tokens.map((t) => {
+            {walletVM.currentAccount?.allTokens.map((t) => {
               return (
                 <MenuItem
                   key={t.id}
@@ -100,7 +97,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
                     amountInput.current.value = '';
                   }}
                 >
-                  <TokenLabel symbol={t.display_symbol || t.symbol} name={t.display_symbol || t.symbol} expand />
+                  <TokenLabel symbol={t.symbol} name={t.name} expand />
                 </MenuItem>
               );
             })}

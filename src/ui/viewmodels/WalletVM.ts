@@ -31,13 +31,11 @@ export class WalletVM {
     );
 
     ipc.on(Messages.pendingTxsChanged, (e, content: string) => {
-      console.log('pending', content);
-      try {
-        runInAction(() => {
-          // this.pendingTxs.push(...(JSON.parse(content) as TxParams[]));
+      runInAction(() => {
+        try {
           this.pendingTxs = JSON.parse(content);
-        });
-      } catch (error) {}
+        } catch (error) {}
+      });
     });
   }
 

@@ -8,6 +8,7 @@ import { AccountVM } from './AccountVM';
 import ERC20ABI from '../../abis/ERC20.json';
 import { ITokenBalance } from '../../api/Debank';
 import NetworksVM from './NetworksVM';
+import { UserToken } from './models/UserToken';
 import ipc from '../bridges/IPC';
 
 export class TransferVM {
@@ -62,7 +63,7 @@ export class TransferVM {
     return parseUnits(this.amount || '0', this.selectedToken?.decimals ?? 18);
   }
 
-  selectedToken: ITokenBalance = null;
+  selectedToken: UserToken = null;
   receipients: { id: number; name: string }[] = [];
 
   // Gwei
@@ -73,7 +74,7 @@ export class TransferVM {
   constructor(accountVM: AccountVM) {
     makeAutoObservable(this);
     this._accountVM = accountVM;
-    this.selectedToken = accountVM.tokens[0];
+    this.selectedToken = accountVM.allTokens[0];
     this.self = accountVM.address;
 
     this.initGasPrice();
@@ -108,12 +109,12 @@ export class TransferVM {
   }
 
   selectToken(id: string) {
-    const token = this._accountVM.tokens.find((t) => t.id === id);
-    this.selectedToken = token ?? this._accountVM.tokens[0];
+    const token = this._accountVM.allTokens.find((t) => t.id === id);
+    this.selectedToken = token ?? this._accountVM.allTokens[0];
     this.estimateGas();
   }
 
-  setToken(token: ITokenBalance) {
+  setToken(token: UserToken) {
     this.selectedToken = token;
     this.amount = '';
     this.estimateGas();
@@ -207,7 +208,7 @@ export class TransferVM {
     const iface = new ethers.utils.Interface(ERC20ABI);
     const data = this.isERC20 ? iface.encodeFunctionData('transfer', [this.receiptAddress, this.amountBigInt]) : '0x';
 
-    const fee = BigNumber.from(this.gasPrice * GasnowWs.gwei_1 * this.gas);
+    const fee = BigNumber.from(Number.parseInt((this.gasPrice * GasnowWs.gwei_1 * this.gas) as any));
     if (!this.isERC20 && fee.add(BigNumber.from(value)).gt(BigNumber.from(this.selectedToken.wei || 0))) {
       value = BigNumber.from(this.selectedToken.wei || 0)
         .sub(fee)
@@ -231,7 +232,7 @@ export class TransferVM {
 
       transferToken: this.isERC20
         ? {
-            symbol: this.selectedToken.display_symbol || this.selectedToken.symbol,
+            symbol: this.selectedToken.symbol,
             decimals: this.selectedToken.decimals,
           }
         : undefined,

@@ -1,11 +1,17 @@
 import * as Debank from '../../api/Debank';
 import * as Zapper from '../../api/Zapper';
 
+import { IUserToken, UserToken } from './models/UserToken';
 import NetVM, { Networks } from './NetworksVM';
 import { autorun, makeAutoObservable, reaction, runInAction, when } from 'mobx';
 
 import { TransferVM } from './TransferVM';
+import store from 'storejs';
 import { utils } from 'ethers';
+
+const Keys = {
+  userTokens: (chainId: number) => `${chainId}-tokens`,
+};
 
 interface IArgs {
   address: string;
@@ -20,10 +26,10 @@ interface ChainOverview {
 export class AccountVM {
   address: string = '';
 
-  tokens: Debank.ITokenBalance[] = [];
+  allTokens: UserToken[] = [];
   chains: Debank.IChainBalance[] = [];
 
-  nativeToken: Debank.ITokenBalance = null;
+  nativeToken: UserToken = null;
 
   get netWorth() {
     if (this.chains.length === 0) return undefined;
@@ -48,7 +54,7 @@ export class AccountVM {
   }
 
   get chainTokens() {
-    return this.tokens.filter((t) => t?.is_wallet && t?.chain === NetVM.currentNetwork.symbol.toLowerCase());
+    return this.allTokens;
   }
 
   get transferVM() {
@@ -62,7 +68,7 @@ export class AccountVM {
 
   refresh() {
     this.chains = [];
-    this.tokens = [];
+    this.allTokens = [];
     this.nativeToken = null;
 
     this.refreshChainOverview();
@@ -89,33 +95,47 @@ export class AccountVM {
     const nativeSymbols = Networks.map((n) => n?.symbol.toLowerCase());
 
     Debank.getTokenBalances(this.address, NetVM.currentNetwork.symbol).then(async (tokens) => {
-      const assets =
-        tokens
-          ?.filter((t) => t.amount * (t.price || 0) > 0.1 && !nativeSymbols.includes(t.id))
-          .sort((a, b) => (a.symbol > b.symbol ? 1 : -1))
-          .sort((a, b) => b.amount * b.price - a.amount * a.price) ?? [];
-
-      const nativeToken = tokens.find((t) => nativeSymbols.includes(t.id));
-      if (nativeToken) {
-        assets.unshift(nativeToken);
-      } else {
-        const balance = await NetVM.currentProvider.getBalance(this.address);
-        assets.unshift({
-          id: NetVM.currentNetwork.symbol.toLowerCase(),
-          amount: Number.parseFloat(utils.formatEther(balance)),
-          chain: NetVM.currentNetwork.symbol.toLowerCase(),
-          decimals: 18,
-          name: NetVM.currentNetwork.symbol,
-          symbol: NetVM.currentNetwork.symbol,
-          is_wallet: true,
-          wei: balance.toString(),
+      const assets = tokens
+        .filter((t) => t.amount * (t.price || 0) > 0.1 && !nativeSymbols.includes(t.id))
+        .sort((a, b) => (a.symbol > b.symbol ? 1 : -1))
+        .sort((a, b) => b.amount * b.price - a.amount * a.price)
+        .map((t) => {
+          const token = new UserToken();
+          token.id = t.id;
+          token.name = t.name;
+          token.symbol = t.display_symbol || t.symbol;
+          token.amount = t.amount;
+          token.decimals = t.decimals;
+          token.price = t.price;
+          return token;
         });
-      }
+
+      const nativeT = tokens.find((t) => nativeSymbols.includes(t.id));
+      const balance = await NetVM.currentProvider.getBalance(this.address);
+      const nativeToken = new UserToken();
+      nativeToken.id = NetVM.currentNetwork.symbol.toLowerCase();
+      nativeToken.amount = Number.parseFloat(utils.formatEther(balance));
+      nativeToken.decimals = 18;
+      nativeToken.name = NetVM.currentNetwork.symbol;
+      nativeToken.symbol = NetVM.currentNetwork.symbol;
+      nativeToken.wei = balance.toString();
+      nativeToken.price = nativeT?.price ?? 0;
+      assets.unshift(nativeToken);
 
       runInAction(() => {
-        this.nativeToken = assets[0];
-        this.tokens = assets;
+        this.nativeToken = nativeToken;
+        this.allTokens = assets;
       });
     });
+  };
+
+  private loadTokenConfigs = () => {
+    try {
+      const json = store.get(Keys.userTokens(NetVM.currentChainId)) || '[]';
+      const tokens = JSON.parse(json) as IUserToken[];
+      return tokens.map((t) => new UserToken(t));
+    } catch (error) {
+      return [];
+    }
   };
 }

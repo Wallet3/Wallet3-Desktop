@@ -18,6 +18,7 @@ import PendingTx from './components/PendingTx';
 import PendingTxIndicator from './components/PendingTxIndicator';
 import Shell from '../../bridges/Shell';
 import Skeleton from 'react-loading-skeleton';
+import { UserToken } from '../../../ui/viewmodels/models/UserToken';
 import { WalletVM } from '../../viewmodels/WalletVM';
 import { convertTxToUrl } from '../../../misc/Url';
 import findIcon from '../../misc/Icons';
@@ -29,7 +30,7 @@ export default observer(
     const { currentAccount: accountVM } = walletVM;
 
     const rows = accountVM.chainTokens.length / 2;
-    const rowTokens: ITokenBalance[][] =
+    const rowTokens: UserToken[][] =
       accountVM.chainTokens.length === 0
         ? [
             [null, null],
@@ -40,7 +41,7 @@ export default observer(
         : [];
 
     for (let i = 0; i < rows && i < 7; i++) {
-      const row: ITokenBalance[] = [];
+      const row: UserToken[] = [];
       for (let j = 0; j < 2; j++) {
         const token = accountVM.chainTokens[i * 2 + j];
         row.push(token);
@@ -162,11 +163,11 @@ export default observer(
                             <Link
                               className="button"
                               to={`/send?token=${token.id}`}
-                              title={`${token.display_symbol || token.symbol}: $${token.amount * token.price || 0}`}
+                              title={`${token.symbol}: $${token.amount * token.price || 0}`}
                             >
                               <div>
-                                <img className="token-icon" src={findIcon(token.display_symbol || token.symbol)} alt="" />
-                                <span className="symbol">{token.display_symbol || token.symbol}</span>
+                                <img className="token-icon" src={findIcon(token.symbol)} alt="" />
+                                <span className="symbol">{token.symbol}</span>
                                 <span></span>
                                 <span className="amount">{formatNum(token.amount, '')}</span>
                               </div>
