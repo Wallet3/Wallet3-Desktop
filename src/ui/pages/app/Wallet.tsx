@@ -18,12 +18,16 @@ import PendingTx from './components/PendingTx';
 import PendingTxIndicator from './components/PendingTxIndicator';
 import Shell from '../../bridges/Shell';
 import Skeleton from 'react-loading-skeleton';
+import { WalletVM } from '../../viewmodels/WalletVM';
+import { convertTxToUrl } from '../../../misc/Url';
 import findIcon from '../../misc/Icons';
 import { formatNum } from '../../misc/Formatter';
 import { observer } from 'mobx-react-lite';
 
 export default observer(
-  ({ networksVM, accountVM, app }: { app: Application; networksVM: NetworksVM; accountVM?: AccountVM }) => {
+  ({ networksVM, app, walletVM }: { app: Application; networksVM: NetworksVM; walletVM: WalletVM }) => {
+    const { currentAccount: accountVM } = walletVM;
+
     const rows = accountVM.chainTokens.length / 2;
     const rowTokens: ITokenBalance[][] =
       accountVM.chainTokens.length === 0
@@ -44,7 +48,7 @@ export default observer(
       rowTokens.push(row);
     }
 
-    const { pendingTxCount, pendingTxs } = networksVM;
+    const { pendingTxCount, pendingTxs } = walletVM;
 
     return (
       <div className="page main">
@@ -67,7 +71,7 @@ export default observer(
                     key={item.hash}
                     styles={{ padding: '8px 12px' }}
                     onClick={(_) => {
-                      Shell.open(NetworksVM.toExplorerUrl(item));
+                      Shell.open(convertTxToUrl(item));
                     }}
                   >
                     <PendingTx tx={item} {...GasnowWs} />

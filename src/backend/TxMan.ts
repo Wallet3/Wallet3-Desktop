@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import { Connection, FindManyOptions, LessThan, Repository, createConnection } from 'typeorm';
+import { Connection, FindManyOptions, IsNull, LessThan, Repository, createConnection } from 'typeorm';
 import { Notification, app, shell } from 'electron';
 import { makeAutoObservable, observable, runInAction } from 'mobx';
 
@@ -71,10 +71,6 @@ class TxMan {
       await tx.save();
       removeTxs.push(tx);
 
-      const invalidTxs = await this.findTxs({ where: { nonce: LessThan(tx.nonce), blockNumber: null } });
-      Promise.all(invalidTxs.map((t) => t.remove()));
-      removeTxs.push(...invalidTxs);
-
       const notification = new Notification({
         title: tx.status ? 'Transaction Confirmed' : 'Transaction Failed',
         body: `Transaction ${tx.nonce} ${tx.status ? 'confirmed' : 'failed'}, view it on Etherscan`,
@@ -83,6 +79,13 @@ class TxMan {
       });
 
       notification.show();
+
+      const invalidTxs = await this.findTxs({
+        where: { chainId: tx.chainId, nonce: LessThan(tx.nonce), blockNumber: IsNull() },
+      });
+
+      removeTxs.push(...invalidTxs);
+      Promise.all(invalidTxs.map((t) => t.remove()));
     }
 
     runInAction(() => {

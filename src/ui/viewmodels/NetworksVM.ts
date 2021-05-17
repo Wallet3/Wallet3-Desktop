@@ -1,7 +1,6 @@
 import Messages, { TxParams } from '../../common/Messages';
 import { makeAutoObservable, runInAction } from 'mobx';
 
-import { convertTxToUrl } from '../../misc/Url';
 import { getProviderByChainId } from '../../common/Provider';
 import ipc from '../bridges/IPC';
 import store from 'storejs';
@@ -30,25 +29,9 @@ export class NetworksVM {
     return getProviderByChainId(this.currentChainId);
   }
 
-  pendingTxs: TxParams[] = [];
-
-  get pendingTxCount() {
-    return this.pendingTxs.length;
-  }
-
   constructor() {
     makeAutoObservable(this);
     this.setCurrentChainId(store.get(Keys.currentNetworkId) || 1);
-
-    ipc.on(Messages.pendingTxsChanged, (e, content: string) => {
-      console.log('pending', content);
-      try {
-        runInAction(() => {
-          // this.pendingTxs.push(...(JSON.parse(content) as TxParams[]));
-          this.pendingTxs = JSON.parse(content);
-        });
-      } catch (error) {}
-    });
   }
 
   setCurrentChainId(value: number) {
@@ -58,10 +41,6 @@ export class NetworksVM {
     this.currentProvider.ready;
     store.set(Keys.currentNetworkId, value);
     ipc.invoke(Messages.changeChainId, value);
-  }
-
-  static toExplorerUrl(tx: TxParams) {
-    return convertTxToUrl(tx);
   }
 }
 
