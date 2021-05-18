@@ -38,7 +38,9 @@ export default observer(({ accountVM, app }: { accountVM?: AccountVM; app: Appli
                         return (
                           <div
                             className={`token ${t.show ? 'on' : 'off'}`}
-                            onClick={(_) => setForceRefresh((t.show = !t.show) ? Date.now() : Date.now())} // Ugly code: Force refresh UI
+                            onClick={(_) => {
+                              if (i > 0) setForceRefresh((t.show = !t.show) ? Date.now() : Date.now());
+                            }} // Ugly code: Force refresh UI
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
