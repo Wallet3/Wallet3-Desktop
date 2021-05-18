@@ -2,7 +2,7 @@ import './UserTokens.css';
 
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { Observer, observer } from 'mobx-react-lite';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { AccountVM } from '../../viewmodels/AccountVM';
 import { Application } from '../../viewmodels/Application';
@@ -12,7 +12,11 @@ import { Toggle } from 'react-toggle-component';
 
 export default observer(({ accountVM, app }: { accountVM?: AccountVM; app: Application }) => {
   const { allTokens } = accountVM;
-  const [forceRefresh, setForceRefresh] = useState(-1);
+  const [_, setForceRefresh] = useState(-1);
+
+  useEffect(() => {
+    return () => accountVM.save();
+  }, []);
 
   return (
     <div className="page tokens">
@@ -20,8 +24,8 @@ export default observer(({ accountVM, app }: { accountVM?: AccountVM; app: Appli
 
       <div className="content">
         <DragDropContext
-          onDragEnd={(_) => {
-            console.log(_);
+          onDragEnd={(result) => {
+            accountVM.moveToken(result.source.index, result.destination.index);
           }}
         >
           <Droppable droppableId={'tokens'}>
@@ -29,12 +33,12 @@ export default observer(({ accountVM, app }: { accountVM?: AccountVM; app: Appli
               <div className="tokens" {...provided.droppableProps} ref={provided.innerRef}>
                 {allTokens.map((t, i) => {
                   return (
-                    <Draggable key={t.id} draggableId={t.id} index={i}>
+                    <Draggable key={t.id} draggableId={t.id} index={i} isDragDisabled={i === 0}>
                       {(provided, snapshot) => {
                         return (
                           <div
                             className={`token ${t.show ? 'on' : 'off'}`}
-                            onClick={(_) => setForceRefresh((t.show = !t.show) ? 1 : 0)} // Ugly code: Force refresh UI
+                            onClick={(_) => setForceRefresh((t.show = !t.show) ? Date.now() : Date.now())} // Ugly code: Force refresh UI
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
@@ -46,7 +50,7 @@ export default observer(({ accountVM, app }: { accountVM?: AccountVM; app: Appli
                             </div>
 
                             <Toggle
-                              checked={t.show}
+                              checked
                               onToggle={(_) => (t.show = !t.show)}
                               rightBorderColor="#6186ffa0"
                               rightKnobColor="#6186ffa0"

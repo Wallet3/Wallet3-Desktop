@@ -55,7 +55,7 @@ export class AccountVM {
   }
 
   get chainTokens() {
-    return this.allTokens;
+    return this.allTokens.filter((t) => t.show);
   }
 
   get transferVM() {
@@ -77,6 +77,18 @@ export class AccountVM {
     this.refreshChainTokens();
   }
 
+  moveToken(srcIndex: number, dstIndex: number) {
+    if (srcIndex === 0 || dstIndex === 0) return;
+
+    const [srcToken] = this.allTokens.splice(srcIndex, 1);
+    this.allTokens.splice(dstIndex, 0, srcToken);
+    this.allTokens.forEach((t, i) => (t.order = i));
+  }
+
+  save() {
+    store.set(Keys.userTokens(NetVM.currentChainId), JSON.stringify(this.allTokens.slice(1).map((t) => t.toObject())));
+  }
+
   private refreshChainOverview = () => {
     Debank.fetchChainsOverview(this.address).then((overview) => {
       if (!overview) {
@@ -95,22 +107,35 @@ export class AccountVM {
 
   private refreshChainTokens = () => {
     const nativeSymbols = Networks.map((n) => n?.symbol.toLowerCase());
+    const userConfigs = this.loadTokenConfigs();
 
     Debank.getTokenBalances(this.address, NetVM.currentNetwork.symbol).then(async (tokens) => {
-      const assets = tokens
-        .filter((t) => t.amount * (t.price || 0) > 0.1 && !nativeSymbols.includes(t.id))
-        .sort((a, b) => (a.symbol > b.symbol ? 1 : -1))
-        .sort((a, b) => b.amount * b.price - a.amount * a.price)
-        .map((t) => {
-          const token = new UserToken();
-          token.id = t.id;
-          token.name = t.name;
-          token.symbol = t.display_symbol || t.symbol;
-          token.amount = t.amount;
-          token.decimals = t.decimals;
-          token.price = t.price;
-          return token;
-        });
+      let assets = NetVM.currentNetwork.test
+        ? []
+        : tokens
+            .filter((t) => t.amount * (t.price || 0) > 0.1 && !nativeSymbols.includes(t.id))
+            .sort((a, b) => b.amount * b.price - a.amount * a.price)
+            .map((t, i) => {
+              const token = new UserToken();
+              token.id = t.id;
+              token.name = t.name;
+              token.symbol = t.display_symbol || t.symbol;
+              token.amount = t.amount;
+              token.decimals = t.decimals;
+              token.price = t.price;
+
+              const userConfig = userConfigs.find((c) => c.id === t.id);
+              token.order = userConfig?.order ?? i + 1000;
+              token.show = userConfig?.show ?? true;
+
+              const foundIndex = userConfigs.findIndex((c) => c.id === t.id);
+              if (foundIndex >= 0) userConfigs.splice(foundIndex, 1);
+
+              return token;
+            });
+
+      assets.push(...userConfigs);
+      assets = assets.sort((a, b) => a.order - b.order);
 
       const nativeT = tokens.find((t) => nativeSymbols.includes(t.id));
       const balance = await NetVM.currentProvider.getBalance(this.address);

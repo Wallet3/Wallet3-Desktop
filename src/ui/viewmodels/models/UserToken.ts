@@ -5,6 +5,7 @@ export interface IUserToken {
   s: string; // symbol
   d: number; // decimals
   o: number; // order id
+  w: boolean; // show or not
 }
 
 export class UserToken {
@@ -16,7 +17,7 @@ export class UserToken {
   private _price = 0;
   private _wei = '0';
   private _show = true;
-  private _order = -1;
+  private _order = 0;
 
   get id() {
     return this._id;
@@ -98,10 +99,11 @@ export class UserToken {
       this._symbol = token.s;
       this._decimals = token.d;
       this._order = token.o;
+      this._show = token.w;
     }
   }
 
   toObject(): IUserToken {
-    return { a: this.id, s: this.symbol, d: this.decimals, o: this.order };
+    return { a: this.id, s: this.symbol, d: this.decimals, o: this.order, w: this.show };
   }
 }
