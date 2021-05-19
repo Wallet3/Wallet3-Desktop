@@ -20,7 +20,6 @@ export class AddTokenVM {
 
   constructor(accountVM: AccountVM) {
     makeAutoObservable(this);
-
     this.accountVM = accountVM;
   }
 
@@ -47,8 +46,9 @@ export class AddTokenVM {
       runInAction(() => {
         this.balance = ethers.utils.formatUnits(balance, decimals);
         this.name = name;
-        this.decimals = decimals.toNumber();
+        this.decimals = Number.parseInt(decimals);
         this.symbol = symbol;
+        this.isValid = true;
       });
     } catch (error) {
       runInAction(() => (this.isValid = false));
@@ -58,11 +58,15 @@ export class AddTokenVM {
   }
 
   save() {
+    if (this.accountVM.allTokens.find((t) => t.id.toLowerCase() === this.tokenAddress.toLowerCase())) {
+      return;
+    }
+
     const token = new UserToken();
     token.decimals = this.decimals;
     token.symbol = this.symbol;
     token.name = this.name;
-    token.order = 1000;
+    token.order = 1000 + this.accountVM.allTokens.length;
     token.id = this.tokenAddress;
     token.show = true;
     token.amount = Number.parseFloat(this.balance);
