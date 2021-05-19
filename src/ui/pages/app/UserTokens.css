@@ -6,6 +6,22 @@
   padding-bottom: 0px;
 }
 
+.page.tokens > .line-1 {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+
+.page.tokens > .line-1 a {
+  color: var(--font-color);
+  opacity: 0.5;
+  transition: all 0.3s;
+}
+
+.page.tokens > .line-1 a:hover {
+  opacity: 1;
+}
+
 .page.tokens > .content {
   overflow: auto;
   scrollbar-color: dark;

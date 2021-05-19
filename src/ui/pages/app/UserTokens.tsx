@@ -6,7 +6,9 @@ import React, { useEffect, useState } from 'react';
 
 import { AccountVM } from '../../viewmodels/AccountVM';
 import { Application } from '../../viewmodels/Application';
+import Feather from 'feather-icons-react';
 import Icons from '../../misc/Icons';
+import { Link } from 'react-router-dom';
 import { NavBar } from '../../components';
 import { Toggle } from 'react-toggle-component';
 
@@ -20,7 +22,13 @@ export default observer(({ accountVM, app }: { accountVM?: AccountVM; app: Appli
 
   return (
     <div className="page tokens">
-      <NavBar title="Tokens" onBackClick={() => app.history.goBack()} />
+      <div className="line-1">
+        <NavBar title="Tokens" onBackClick={() => app.history.goBack()} />
+
+        <Link to={`/addToken`}>
+          <Feather icon="plus-circle" size={22} strokeWidth={1} />
+        </Link>
+      </div>
 
       <div className="content">
         <DragDropContext

@@ -47,9 +47,9 @@ export class AccountVM {
     return this.chains.map((chain) => {
       const network = Networks.find((n) => n?.symbol.toLowerCase() === chain.id);
       return {
-        name: network.network,
-        value: chain.usd_value,
-        color: network.color,
+        name: network?.network ?? '',
+        value: chain?.usd_value ?? 0,
+        color: network?.color ?? '',
       };
     });
   }
@@ -64,7 +64,7 @@ export class AccountVM {
 
   constructor(args: IArgs) {
     makeAutoObservable(this);
-    this.address = args.address;
+    this.address = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'; // args.address;
     NetVM.currentProvider.lookupAddress(this.address).then((v) => runInAction(() => (this.ens = v)));
   }
 
