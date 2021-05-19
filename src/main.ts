@@ -155,6 +155,8 @@ app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
   }
+
+  GasnowWs.start(true);
 });
 
 // In this file you can include the rest of your app's specific main process

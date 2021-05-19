@@ -83,6 +83,7 @@ export class GasnowWs {
         this.client.onclose = undefined;
         this.client = null;
         this.onClose?.();
+        this.start();
       } catch (error) {}
     };
 
