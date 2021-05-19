@@ -69,6 +69,12 @@ export const Networks: INetwork[] = [
     chainId: 100,
     color: '#48A9A6',
   },
+  {
+    symbol: 'FTM',
+    chainId: 250,
+    network: 'Fantom',
+    color: '#1969FF',
+  },
   null,
   {
     symbol: 'ETH',
@@ -98,10 +104,6 @@ export const Networks: INetwork[] = [
     color: '#6186ff',
     test: true,
   },
-  // {
-  //   symbol: 'FTM',
-  //   chainId: 250,
-  // },
 ];
 
 export default new NetworksVM();

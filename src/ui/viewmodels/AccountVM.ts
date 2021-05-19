@@ -69,7 +69,7 @@ export class AccountVM {
 
   constructor(args: IArgs) {
     makeAutoObservable(this);
-    this.address = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'; // args.address;
+    this.address = args.address;
     NetVM.currentProvider.lookupAddress(this.address).then((v) => runInAction(() => (this.ens = v)));
   }
 
