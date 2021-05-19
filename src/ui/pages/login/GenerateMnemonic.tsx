@@ -8,8 +8,8 @@ import { Link } from 'react-router-dom';
 import Mnemonic from '../../components/Mnemonic';
 import { MnemonicVM } from '../../viewmodels/MnemonicVM';
 import { NavBar } from '../../components';
-import { action } from 'mobx';
 import { observer } from 'mobx-react-lite';
+import shell from '../../bridges/Shell';
 
 export default observer(({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) => {
   useEffect(() => {
@@ -34,7 +34,7 @@ export default observer(({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) 
         <Mnemonic phrases={mnVM.phrases} />
 
         <div className="actions">
-          <div className="addr">
+          <div className="addr" onClick={(_) => shell.open(`https://etherscan.io/address/${mnVM.address}`)}>
             <span>Address: </span>
             <span className="addr-value" title={mnVM.address}>
               {mnVM.address}

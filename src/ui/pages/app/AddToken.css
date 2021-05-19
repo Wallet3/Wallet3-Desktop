@@ -1,0 +1,27 @@
+.page.add-token {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.page.add-token > .content > input {
+  border: none;
+  width: 100%;
+  box-sizing: border-box;
+  background: none;
+  border-bottom: 1px dashed var(--border-color);
+  outline: none;
+  font-size: 17px;
+}
+
+.page.add-token > .content > .form {
+  margin-top: 18px;
+  font-size: 15px;
+}
+
+.page.add-token > .content > .form > div {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dashed var(--border-color);
+  margin-bottom: 6px;
+  color: var(--font-color-title);
+}
