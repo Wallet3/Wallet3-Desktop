@@ -72,11 +72,11 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
           <span
             className="balance"
             onClick={(_) => {
-              amountInput.current.value = transferVM.selectedToken.amount.toString();
-              transferVM.setAmount(transferVM.selectedToken.amount.toString());
+              amountInput.current.value = transferVM.maxSelectedTokenBalance.toString();
+              transferVM.setAmount(transferVM.maxSelectedTokenBalance.toString());
             }}
           >
-            Max: <AnimatedNumber value={transferVM.maxTokenBalance} formatValue={(n) => formatNum(n, '')} />
+            Max: <AnimatedNumber value={transferVM.maxSelectedTokenBalance} formatValue={(n) => formatNum(n, '')} />
           </span>
           <Menu
             overflow="auto"

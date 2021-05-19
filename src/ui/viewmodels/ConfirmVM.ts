@@ -140,7 +140,9 @@ export class ConfirmVM {
 
   get insufficientFee() {
     // this._value stands for native asset (in wei)
-    return this.nativeBalance.lt(this.gasPriceWei.mul(this.gas).add(this._value).toString());
+    // console.log(this.nativeBalance.toString());
+    // console.log(this.gasPriceWei.mul(this.gas).add(this._value).toString());
+    return this.nativeBalance.lt(this.gasPriceWei.mul(this.gas).add(this._value));
   }
 
   get isValid() {

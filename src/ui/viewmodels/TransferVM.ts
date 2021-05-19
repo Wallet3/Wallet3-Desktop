@@ -61,7 +61,7 @@ export class TransferVM {
     return value.gt(this.selectedTokenBalance) ? this.selectedTokenBalance : value;
   }
 
-  get maxTokenBalance() {
+  get maxSelectedTokenBalance() {
     return Number.parseFloat(utils.formatUnits(this.selectedTokenBalance, this.selectedToken?.decimals));
   }
 
