@@ -2,7 +2,6 @@ import './PendingTx.css';
 
 import BarLoader from 'react-spinners/BarLoader';
 import Feather from 'feather-icons-react';
-import NetworkLabel from './NetworkLabel';
 import { Networks } from '../../../viewmodels/NetworksVM';
 import React from 'react';
 import { TxParams } from '../../../../common/Messages';

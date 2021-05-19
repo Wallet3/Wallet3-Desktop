@@ -3,6 +3,10 @@
   grid-template-rows: auto 1fr auto;
 }
 
+.page.add-token > .content ::placeholder {
+  color: #d0d0d0;
+}
+
 .page.add-token > .content > input {
   border: none;
   width: 100%;
@@ -20,6 +24,7 @@
 
 .page.add-token > .content > .form > div {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   border-bottom: 1px dashed var(--border-color);
   margin-bottom: 6px;

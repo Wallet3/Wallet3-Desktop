@@ -26,7 +26,6 @@ import { observer } from 'mobx-react-lite';
 export default observer(
   ({ networksVM, app, walletVM }: { app: Application; networksVM: NetworksVM; walletVM: WalletVM }) => {
     const { currentAccount: accountVM, pendingTxCount, pendingTxs } = walletVM;
-    const { url } = useRouteMatch();
 
     const rows = accountVM.chainTokens.length / 2;
     const rowTokens: UserToken[][] = accountVM.chainTokens.length === 0 ? new Array(7).fill([null, null]) : [];

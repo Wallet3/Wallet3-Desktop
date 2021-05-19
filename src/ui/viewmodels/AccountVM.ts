@@ -5,6 +5,7 @@ import { IUserToken, UserToken } from './models/UserToken';
 import NetVM, { Networks } from './NetworksVM';
 import { autorun, makeAutoObservable, reaction, runInAction, when } from 'mobx';
 
+import { AddTokenVM } from './AddTokenVM';
 import { TransferVM } from './TransferVM';
 import store from 'storejs';
 import { utils } from 'ethers';
@@ -60,6 +61,10 @@ export class AccountVM {
 
   get transferVM() {
     return new TransferVM(this);
+  }
+
+  get addTokenVM() {
+    return new AddTokenVM(this);
   }
 
   constructor(args: IArgs) {
