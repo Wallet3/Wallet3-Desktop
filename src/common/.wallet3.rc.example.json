@@ -1,3 +1,7 @@
 {
-  "1": []
+  "1": [],
+  "56": ["https://bsc-dataseed1.ninicoin.io", "https://bsc-dataseed3.binance.org"],
+  "100": ["https://rpc.xdaichain.com"],
+  "137": ["https://rpc-mainnet.maticvigil.com/v1/ad9cd3ae96780b0ab3510c8ab10092aa12261f29"],
+  "250": ["https://rpcapi.fantom.network"]
 }

@@ -31,6 +31,9 @@ export function convertTxToUrl(tx: TxParams) {
     case 128:
       url = `https://hecoinfo.com/tx/${tx.hash}`;
       break;
+    case 250:
+      url = `https://ftmscan.com/tx/${tx.hash}`;
+      break;
   }
 
   return url;

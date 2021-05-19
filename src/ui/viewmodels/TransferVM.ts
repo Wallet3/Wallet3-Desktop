@@ -1,12 +1,11 @@
 import { BigNumber, ethers, utils } from 'ethers';
-import Gasnow, { GasnowHttp, GasnowWs } from '../../api/Gasnow';
+import Gasnow, { GasnowWs } from '../../api/Gasnow';
 import { IReactionDisposer, makeAutoObservable, reaction, runInAction } from 'mobx';
 import Messages, { ConfirmSendTx } from '../../common/Messages';
 import { parseEther, parseUnits } from 'ethers/lib/utils';
 
 import { AccountVM } from './AccountVM';
 import ERC20ABI from '../../abis/ERC20.json';
-import { ITokenBalance } from '../../api/Debank';
 import NetworksVM from './NetworksVM';
 import { UserToken } from './models/UserToken';
 import ipc from '../bridges/IPC';
@@ -28,12 +27,10 @@ export class TransferVM {
 
   get isValid() {
     try {
-      const validAmount =
-        this.amountBigInt.lte(
-          parseUnits(this.selectedToken?.amount.toString() ?? '0', this.selectedToken?.decimals ?? 18)
-        ) && Number.parseFloat(this.amount) >= 0;
+      const validAmount = this.amountBigInt.lte(this.selectedTokenBalance) && Number.parseFloat(this.amount) >= 0;
 
       return (
+        this.selectedTokenBalance.gt(0) &&
         this.receiptAddress &&
         this.receipient &&
         this.amount.length > 0 &&
@@ -60,22 +57,28 @@ export class TransferVM {
   }
 
   get amountBigInt() {
-    return parseUnits(this.amount || '0', this.selectedToken?.decimals ?? 18);
+    const value = parseUnits(this.amount || '0', this.selectedToken?.decimals ?? 18);
+    return value.gt(this.selectedTokenBalance) ? this.selectedTokenBalance : value;
+  }
+
+  get maxTokenBalance() {
+    return Number.parseFloat(utils.formatUnits(this.selectedTokenBalance, this.selectedToken?.decimals));
   }
 
   selectedToken: UserToken = null;
+  selectedTokenBalance = BigNumber.from(0);
   receipients: { id: number; name: string }[] = [];
 
   // Gwei
-  rapid = 0;
-  fast = 0;
-  standard = 0;
+  rapid = 20;
+  fast = 20;
+  standard = 20;
 
   constructor(accountVM: AccountVM) {
     makeAutoObservable(this);
     this._accountVM = accountVM;
-    this.selectedToken = accountVM.allTokens[0];
     this.self = accountVM.address;
+    this.selectedToken = accountVM.allTokens[0];
 
     this.initGasPrice();
     this.initNonce();
@@ -112,12 +115,14 @@ export class TransferVM {
     const token = this._accountVM.allTokens.find((t) => t.id === id);
     this.selectedToken = token ?? this._accountVM.allTokens[0];
     this.estimateGas();
+    this.refreshBalance();
   }
 
   setToken(token: UserToken) {
     this.selectedToken = token;
     this.amount = '';
     this.estimateGas();
+    this.refreshBalance();
   }
 
   setGasPrice(price: number) {
@@ -173,12 +178,12 @@ export class TransferVM {
 
   private estimateGas() {
     if (!this.selectToken) {
-      this.gas = 21000;
+      this.setGas(21000);
       return;
     }
 
     if (!this.isERC20) {
-      this.gas = 21000;
+      this.setGas(21000);
       return;
     }
 
@@ -186,12 +191,20 @@ export class TransferVM {
     const amt = this.amountBigInt;
     erc20.estimateGas
       .transferFrom(this.self, this.receiptAddress || '0xD1b05E3AFEDcb11F29c5A560D098170bE26Fe5f5', amt)
-      .then((v) => {
-        runInAction(() => (this.gas = Number.parseInt((v.toNumber() * 2) as any)));
-      })
-      .catch(() => {
-        runInAction(() => (this.gas = 150_000));
-      });
+      .then((v) => runInAction(() => this.setGas(Number.parseInt((v.toNumber() * 2) as any))))
+      .catch(() => runInAction(() => this.setGas(150_000)));
+  }
+
+  private refreshBalance() {
+    this.selectedTokenBalance = BigNumber.from(0);
+
+    if (this.isERC20) {
+      const erc20 = new ethers.Contract(this.selectedToken.id, ERC20ABI, NetworksVM.currentProvider);
+      erc20.balanceOf(this.self).then((v: BigNumber) => runInAction(() => (this.selectedTokenBalance = v)));
+      return;
+    }
+
+    NetworksVM.currentProvider.getBalance(this.self).then((v) => runInAction(() => (this.selectedTokenBalance = v)));
   }
 
   dispose() {
@@ -209,16 +222,10 @@ export class TransferVM {
     const data = this.isERC20 ? iface.encodeFunctionData('transfer', [this.receiptAddress, this.amountBigInt]) : '0x';
 
     const fee = BigNumber.from(Number.parseInt((this.gasPrice * GasnowWs.gwei_1 * this.gas) as any));
-    if (!this.isERC20 && fee.add(BigNumber.from(value)).gt(BigNumber.from(this.selectedToken.wei || 0))) {
+    if (!this.isERC20 && fee.add(BigNumber.from(value)).gt(this.selectedTokenBalance)) {
       value = BigNumber.from(this.selectedToken.wei || 0)
         .sub(fee)
         .toString();
-    }
-
-    if (this.isERC20) {
-      const erc20 = new ethers.Contract(this.selectedToken.id, ERC20ABI, NetworksVM.currentProvider);
-      const balance: BigNumber = await erc20.balanceOf(this._accountVM.address);
-      value = balance.lt(value) ? balance.toString() : value;
     }
 
     await ipc.invokeSecure<void>(Messages.createTransferTx, {
