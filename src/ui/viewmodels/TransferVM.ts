@@ -62,7 +62,7 @@ export class TransferVM {
   }
 
   get maxSelectedTokenBalance() {
-    return Number.parseFloat(utils.formatUnits(this.selectedTokenBalance, this.selectedToken?.decimals));
+    return utils.formatUnits(this.selectedTokenBalance, this.selectedToken?.decimals);
   }
 
   selectedToken: UserToken = null;
@@ -221,7 +221,7 @@ export class TransferVM {
     const iface = new ethers.utils.Interface(ERC20ABI);
     const data = this.isERC20 ? iface.encodeFunctionData('transfer', [this.receiptAddress, this.amountBigInt]) : '0x';
 
-    const fee = BigNumber.from(Number.parseInt((this.gasPrice * GasnowWs.gwei_1 * this.gas) as any));
+    const fee = BigNumber.from(this.gasPrice * GasnowWs.gwei_1).mul(this.gas);
     if (!this.isERC20 && fee.add(BigNumber.from(value)).gt(this.selectedTokenBalance)) {
       value = BigNumber.from(this.selectedToken.wei || 0)
         .sub(fee)
