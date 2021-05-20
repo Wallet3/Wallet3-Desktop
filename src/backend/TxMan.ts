@@ -1,8 +1,8 @@
 import * as path from 'path';
 
-import { Connection, FindManyOptions, IsNull, LessThan, Repository, createConnection } from 'typeorm';
+import { Connection, FindManyOptions, IsNull, LessThanOrEqual, Repository, createConnection } from 'typeorm';
 import { Notification, app, shell } from 'electron';
-import { makeAutoObservable, observable, runInAction } from 'mobx';
+import { makeAutoObservable, runInAction } from 'mobx';
 
 import Transaction from './models/Transaction';
 import { convertTxToUrl } from '../misc/Url';
@@ -81,7 +81,7 @@ class TxMan {
       notification.show();
 
       const invalidTxs = await this.findTxs({
-        where: { chainId: tx.chainId, nonce: LessThan(tx.nonce), blockNumber: IsNull() },
+        where: { chainId: tx.chainId, nonce: LessThanOrEqual(tx.nonce), blockNumber: IsNull() },
       });
 
       removeTxs.push(...invalidTxs);

@@ -1,4 +1,8 @@
+import Messages, { ConfirmSendTx } from '../../common/Messages';
+
+import { GasnowWs } from '../../api/Gasnow';
 import { TxParams } from '../../common/Messages';
+import ipc from '../bridges/IPC';
 
 export class PendingTxVM {
   _tx: TxParams;
@@ -38,8 +42,28 @@ export class PendingTxVM {
   get nonce() {
     return this._tx.nonce;
   }
-  
+
   get data() {
     return this._tx.data;
+  }
+
+  async cancelTx() {
+    await ipc.invokeSecure<void>(Messages.createTransferTx, {
+      chainId: this._tx.chainId,
+      from: this._tx.from,
+      to: this._tx.from,
+      value: '0',
+      gas: this._tx.gas,
+      gasPrice: Number.parseInt((this._tx.gasPrice * 1.1) as any) + GasnowWs.gwei_1,
+      nonce: this.nonce,
+      data: '0x',
+    } as ConfirmSendTx);
+  }
+
+  async speedUp() {
+    await ipc.invokeSecure<void>(Messages.createTransferTx, {
+      ...this._tx,
+      gasPrice: Number.parseInt((this._tx.gasPrice * 1.1) as any) + GasnowWs.gwei_1,
+    } as ConfirmSendTx);
   }
 }
