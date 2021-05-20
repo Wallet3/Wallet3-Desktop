@@ -17,7 +17,7 @@ export default ({ title, icon, chainId }: { title?: string; icon?: string; chain
 
       {chainId ? (
         <div className="network">
-          <img src={Icons(network.symbol.toLowerCase())} alt="" />
+          <img src={Icons(network.symbol)} alt="" />
           <span>{network.network}</span>
         </div>
       ) : (
