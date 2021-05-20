@@ -26,7 +26,7 @@ export function convertTxToUrl(tx: TxParams) {
       url = `https://blockscout.com/xdai/mainnet/tx/${tx.hash}`;
       break;
     case 137:
-      url = `https://explorer-mainnet.maticvigil.com/tx/${tx.hash}`;
+      url = `https://explorer.matic.network/tx/${tx.hash}`;
       break;
     case 128:
       url = `https://hecoinfo.com/tx/${tx.hash}`;

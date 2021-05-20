@@ -13,10 +13,14 @@ const Keys = {
 export class WalletVM {
   accounts: AccountVM[] = [];
   currentAccount: AccountVM = null;
-  pendingTxs: TxParams[] = [];
+  allPendingTxs: TxParams[] = [];
 
   get accountIndex() {
     return this.accounts.indexOf(this.currentAccount);
+  }
+
+  get pendingTxs() {
+    return this.allPendingTxs.filter((tx) => tx.from === this.currentAccount.address);
   }
 
   get pendingTxCount() {
@@ -34,7 +38,7 @@ export class WalletVM {
     ipc.on(Messages.pendingTxsChanged, (e, content: string) => {
       runInAction(() => {
         try {
-          this.pendingTxs = JSON.parse(content);
+          this.allPendingTxs = JSON.parse(content);
         } catch (error) {}
       });
     });

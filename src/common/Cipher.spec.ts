@@ -1,18 +1,18 @@
 import * as helper from './Cipher';
 
-import sodium from 'libsodium-wrappers';
+// import sodium from 'libsodium-wrappers';
 
-test('random', async () => {
-  await sodium.ready;
-  console.log(sodium.crypto_secretstream_xchacha20poly1305_keygen());
-  const sodBuf = sodium.randombytes_buf(32);
-  const buf = Buffer.from(sodBuf);
-  console.log(sodBuf);
-  console.log(buf);
-  console.log(buf.toString('hex'));
+// test('random', async () => {
+//   await sodium.ready;
+//   console.log(sodium.crypto_secretstream_xchacha20poly1305_keygen());
+//   const sodBuf = sodium.randombytes_buf(32);
+//   const buf = Buffer.from(sodBuf);
+//   console.log(sodBuf);
+//   console.log(buf);
+//   console.log(buf.toString('hex'));
 
-  expect(buf.length).toBe(32);
-});
+//   expect(buf.length).toBe(32);
+// });
 
 test('encrypt', () => {
   const iv = helper.generateIv();
