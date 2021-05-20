@@ -17,7 +17,9 @@ import ipc from '../bridges/IPC';
 const Transfer = '0xa9059cbb';
 const Approve = '0x095ea7b3';
 
-const Methods = new Map<string, string[]>([
+type Method = 'Contract Interaction' | 'Transfer' | 'Approve' | '';
+
+const Methods = new Map<string, [Method, string]>([
   ['0x', ['Transfer', 'repeat']],
   [Transfer, ['Transfer', 'repeat']],
   [Approve, ['Approve', 'shield']],
@@ -25,7 +27,7 @@ const Methods = new Map<string, string[]>([
 
 export class ConfirmVM {
   args: ConfirmSendTx = null;
-  method = '';
+  method: Method = '';
   flag = '';
   chainId = 1;
   nativeBalance = BigNumber.from(0);

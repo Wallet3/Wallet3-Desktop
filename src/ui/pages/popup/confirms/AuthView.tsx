@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { ApplicationPopup } from '../../../viewmodels/ApplicationPopup';
 import PasscodeView from '../../../components/PasscodeView';
@@ -20,27 +20,21 @@ export default observer(
     const { touchIDSupported } = app;
     const [loading, setLoading] = useState(false);
 
+    const auth = async (passcode?: string) => {
+      setLoading(true);
+
+      if (touchIDSupported) {
+        await onAuthTouchID?.();
+      } else {
+        await onAuthPasscode?.(passcode);
+      }
+
+      setLoading(false);
+    };
+
     return (
       <div className="auth">
-        <div className="panel">
-          {touchIDSupported ? (
-            <TouchIDView
-              onAuth={async () => {
-                setLoading(true);
-                await onAuthTouchID?.();
-                setLoading(false);
-              }}
-            />
-          ) : (
-            <PasscodeView
-              onAuth={async (passcode) => {
-                setLoading(true);
-                await onAuthPasscode?.(passcode);
-                setLoading(false);
-              }}
-            />
-          )}
-        </div>
+        <div className="panel">{touchIDSupported ? <TouchIDView onAuth={auth} /> : <PasscodeView onAuth={auth} />}</div>
         <button disabled={loading} onClick={(_) => onCancel?.()}>
           Cancel
         </button>
