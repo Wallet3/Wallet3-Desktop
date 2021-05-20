@@ -40,11 +40,12 @@ export default observer(({ app }: Props) => {
   };
 
   const onContinue = () => {
+    console.trace('continue');
     anime({
       targets: '.page.confirm > .container > .details',
-      translateX: '-100vw',
+      translateX: [0, '-100vw'],
       easing: 'linear',
-      opacity: 0,
+      opacity: [1, 0],
       duration: 300,
     });
 
@@ -59,8 +60,8 @@ export default observer(({ app }: Props) => {
   };
 
   const onReject = () => {
-    window.close();
     (confirmVM ?? signVM).rejectRequest();
+    window.close();
   };
 
   const onAuthCancel = () => {
@@ -68,7 +69,7 @@ export default observer(({ app }: Props) => {
       targets: '.page.confirm > .container > .details',
       translateX: ['-100vw', 0],
       easing: 'linear',
-      opacity: 1,
+      opacity: [0, 1],
       duration: 300,
     });
 
@@ -76,7 +77,7 @@ export default observer(({ app }: Props) => {
       targets: '.page.confirm > .container > .auth',
       translateX: [0, '100vw'],
       easing: 'linear',
-      opacity: 0,
+      opacity: [1, 0],
       duration: 300,
     });
   };
@@ -93,6 +94,12 @@ export default observer(({ app }: Props) => {
       duration: 1,
       translateX: '100vw',
     });
+
+    document.onkeydown = (ev) => {
+      if (ev.code !== 'Enter') return;
+      ev.preventDefault();
+      onContinue();
+    };
   }, []);
 
   return (
