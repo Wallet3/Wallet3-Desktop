@@ -22,8 +22,28 @@
   max-width: 50vw;
 }
 
+.page.pending-tx > .form > div > span.link {
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.page.pending-tx > .form > div:last-child {
+  border: none;
+}
+
 .page.pending-tx > .actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 8px;
+}
+
+.page.pending-tx > .actions button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page.pending-tx > .actions button > span {
+  display: inline-block;
+  margin: 0 4px;
 }

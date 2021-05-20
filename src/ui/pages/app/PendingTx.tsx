@@ -1,12 +1,14 @@
 import './PendingTx.css';
 
-import React, { useEffect } from 'react';
-
 import { Application } from '../../viewmodels/Application';
+import Feather from 'feather-icons-react';
 import { GasnowWs } from '../../../api/Gasnow';
 import { NavBar } from '../../components';
 import { Networks } from '../../viewmodels/NetworksVM';
+import React from 'react';
 import { WalletVM } from '../../viewmodels/WalletVM';
+import { convertTxToUrl } from '../../../misc/Url';
+import shell from '../../bridges/Shell';
 
 export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => {
   const { pendingTxVM: vm } = walletVM;
@@ -24,12 +26,12 @@ export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => 
 
         <div>
           <span>From:</span>
-          <span>{vm?.from}</span>
+          <span title={vm?.from}>{vm?.from}</span>
         </div>
 
         <div>
           <span>To:</span>
-          <span>{vm?.to}</span>
+          <span title={vm?.to}>{vm?.to}</span>
         </div>
 
         <div>
@@ -56,11 +58,24 @@ export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => 
           <div>Data:</div>
           <div>{vm?.data}</div>
         </div>
+
+        <div>
+          <span></span>
+          <span className="link" onClick={(_) => shell.open(convertTxToUrl(vm._tx))}>
+            View on Etherscan
+          </span>
+        </div>
       </div>
 
       <div className="actions">
-        <button>Cancel Tx</button>
-        <button>Speed Up</button>
+        <button>
+          <Feather icon="x" size={14} strokeWidth={2} />
+          <span>Cancel</span>
+        </button>
+        <button>
+          <Feather icon="chevrons-up" size={14} strokeWidth={2} />
+          <span>Speed Up</span>
+        </button>
       </div>
     </div>
   );
