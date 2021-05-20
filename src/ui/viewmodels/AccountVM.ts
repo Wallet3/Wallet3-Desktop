@@ -70,7 +70,11 @@ export class AccountVM {
   constructor(args: IArgs) {
     makeAutoObservable(this);
     this.address = args.address;
-    NetVM.currentProvider.lookupAddress(this.address).then((v) => runInAction(() => (this.ens = v)));
+
+    NetVM.currentProvider
+      .lookupAddress(this.address)
+      .then((v) => runInAction(() => (this.ens = v)))
+      .catch(() => {});
   }
 
   refresh() {
@@ -110,7 +114,7 @@ export class AccountVM {
     });
   };
 
-  private refreshChainTokens = () => {
+  refreshChainTokens = () => {
     const nativeSymbols = Networks.map((n) => n?.symbol.toLowerCase());
     const userConfigs = this.loadTokenConfigs();
 

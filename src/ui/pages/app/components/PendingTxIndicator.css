@@ -11,4 +11,5 @@
 
 .pendingtx-indicator > svg {
   margin: 0;
+  margin-right: 1px;
 }

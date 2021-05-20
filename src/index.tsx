@@ -27,8 +27,3 @@ function render() {
 }
 
 render();
-
-document.addEventListener('visibilitychange', (ev) => {
-  if (document.hidden) return;
-  Coingecko.start();
-});

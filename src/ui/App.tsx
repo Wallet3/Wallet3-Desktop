@@ -1,6 +1,6 @@
 import './App.css';
 
-import { Account, AddToken, Transfer, UserTokens } from './pages/app';
+import { Account, AddToken, PendingTx, Transfer, UserTokens } from './pages/app';
 import { Blank, Generate, Import, Locking, SetupPasscode, Welcome } from './pages/login/';
 import { Route, Router, Switch } from 'react-router-dom';
 
@@ -46,6 +46,9 @@ export default observer((args: { app: Application; mnVM: MnemonicVM; networksVM:
           </Route>
           <Route path={`/addToken`}>
             <AddToken {...args} />
+          </Route>
+          <Route path="/pendingtx">
+            <PendingTx {...args} />
           </Route>
 
           <Route path="*" component={Blank} />

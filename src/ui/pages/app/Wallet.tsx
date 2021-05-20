@@ -12,7 +12,7 @@ import Feather from 'feather-icons-react';
 import GasnowWs from '../../../api/Gasnow';
 import HSBar from 'react-horizontal-stacked-bar-chart';
 import NetworkLabel from './components/NetworkLabel';
-import PendingTx from './components/PendingTx';
+import PendingTx from './components/PendingTxLabel';
 import PendingTxIndicator from './components/PendingTxIndicator';
 import Shell from '../../bridges/Shell';
 import Skeleton from 'react-loading-skeleton';
@@ -60,7 +60,8 @@ export default observer(
                     key={item.hash}
                     styles={{ padding: '8px 12px' }}
                     onClick={(_) => {
-                      Shell.open(convertTxToUrl(item));
+                      walletVM.selectPendingTx(item);
+                      app.history.push(`/pendingtx?hash=${item.hash}`);
                     }}
                   >
                     <PendingTx tx={item} {...GasnowWs} />

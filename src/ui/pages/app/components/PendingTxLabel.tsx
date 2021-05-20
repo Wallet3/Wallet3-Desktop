@@ -1,4 +1,4 @@
-import './PendingTx.css';
+import './PendingTxLabel.css';
 
 import BarLoader from 'react-spinners/BarLoader';
 import Feather from 'feather-icons-react';
@@ -13,7 +13,7 @@ export default observer(({ tx, rapid, fast, standard }: { tx: TxParams; rapid: n
     tx.gasPrice >= rapid ? 'rapid' : tx.gasPrice >= fast ? 'fast' : tx.gasPrice >= standard ? 'standard' : 'slow';
 
   return (
-    <div className="pendingtx">
+    <div className="pendingtx-label">
       <div className="title">
         <div>
           <span className={`${level} gas`}>{level}</span>

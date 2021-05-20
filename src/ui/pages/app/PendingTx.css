@@ -1,0 +1,29 @@
+.page.pending-tx {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.page.pending-tx > .form {
+  overflow: hidden;
+}
+
+.page.pending-tx > .form > div {
+  display: flex;
+  justify-content: space-between;
+  color: var(--font-color-title);
+  border-bottom: 1px dashed var(--border-color);
+  margin-bottom: 4px;
+}
+
+.page.pending-tx > .form > div > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 50vw;
+}
+
+.page.pending-tx > .actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 8px;
+}

@@ -3,6 +3,7 @@ import NetVM, { Networks } from './NetworksVM';
 import { makeAutoObservable, reaction, runInAction, when } from 'mobx';
 
 import { AccountVM } from './AccountVM';
+import { PendingTxVM } from './PendingTxVM';
 import ipc from '../bridges/IPC';
 
 const Keys = {
@@ -43,6 +44,18 @@ export class WalletVM {
     this.accounts = addresses.map((address) => new AccountVM({ address }));
     this.currentAccount = this.accounts[0];
     this.currentAccount?.refresh();
+    setTimeout(() => this.refresh(), 30 * 1000);
+  }
+
+  refresh() {
+    this.currentAccount?.refreshChainTokens();
+    setTimeout(() => this.refresh(), 30 * 1000);
+  }
+
+  pendingTxVM: PendingTxVM = null;
+
+  selectPendingTx(tx: TxParams) {
+    this.pendingTxVM = new PendingTxVM(tx);
   }
 }
 
