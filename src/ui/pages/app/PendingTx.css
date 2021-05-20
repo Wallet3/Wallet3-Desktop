@@ -27,6 +27,22 @@
   font-size: 12px;
 }
 
+.page.pending-tx > .form > div.data {
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.page.pending-tx > .form > div.data span:last-child {
+  max-width: calc(100vw - 24px);
+  max-height: 127px;
+  margin-top: 4px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .page.pending-tx > .form > div:last-child {
   border: none;
 }

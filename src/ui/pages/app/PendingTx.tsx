@@ -54,7 +54,7 @@ export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => 
           <span>{vm?.nonce}</span>
         </div>
 
-        <div>
+        <div className="data">
           <span>Data:</span>
           <span>{vm?.data}</span>
         </div>
@@ -68,12 +68,12 @@ export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => 
       </div>
 
       <div className="actions">
-        <button onClick={(_) => vm.cancelTx()}>
-          <Feather icon="x" size={14} strokeWidth={2} />
+        <button onClick={(_) => vm.cancelTx().then(() => app.history.goBack())}>
+          {/* <Feather icon="x" size={14} strokeWidth={2} /> */}
           <span>Cancel</span>
         </button>
-        <button onClick={(_) => vm.speedUp()}>
-          <Feather icon="chevrons-up" size={14} strokeWidth={2} />
+        <button onClick={(_) => vm.speedUp().then(() => app.history.goBack())}>
+          {/* <Feather icon="chevrons-up" size={14} strokeWidth={2} /> */}
           <span>Speed Up</span>
         </button>
       </div>

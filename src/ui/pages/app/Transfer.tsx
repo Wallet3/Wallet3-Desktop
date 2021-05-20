@@ -9,6 +9,7 @@ import Feather from 'feather-icons-react';
 import { NavBar } from '../../components';
 import { ReactSearchAutocomplete } from 'react-search-autocomplete';
 import TokenLabel from '../../components/TokenLabel';
+import { TransferVM } from '../../viewmodels/TransferVM';
 import { WalletVM } from '../../viewmodels/WalletVM';
 import { formatNum } from '../../misc/Formatter';
 import { observer } from 'mobx-react-lite';
@@ -29,16 +30,19 @@ const AddressSearchStyle = {
 
 export default observer(({ app, walletVM }: { app: Application; walletVM: WalletVM }) => {
   const [activeGas, setActiveGas] = useState(1);
-  const { transferVM } = walletVM.currentAccount;
+  const [transferVM, setVM] = useState<TransferVM>(null);
   const amountInput = useRef<HTMLInputElement>();
   const gasInput = useRef<HTMLInputElement>();
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
+    const { transferVM } = walletVM.currentAccount;
+
     transferVM.selectToken(params.get('token'));
+    setVM(transferVM);
 
     return () => transferVM.dispose();
-  }, [app]);
+  }, []);
 
   return (
     <div className="page send">
@@ -50,21 +54,21 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
           <ReactSearchAutocomplete
             showIcon={false}
             inputDebounce={500}
-            items={transferVM.receipients}
+            items={transferVM?.receipients}
             styling={AddressSearchStyle}
             placeholder="Receipt Address or ENS"
-            onSearch={(s, r) => transferVM.setReceipient(s)}
-            onSelect={(item) => transferVM.setReceipient(item.name)}
+            onSearch={(s, r) => transferVM?.setReceipient(s)}
+            onSelect={(item) => transferVM?.setReceipient(item.name)}
           />
           <Feather icon="edit" size={15} strokeWidth={2} className="edit-icon" />
         </div>
 
-        {transferVM.isEns ? <div className="ens-resolve">{transferVM.receiptAddress}</div> : undefined}
+        {transferVM?.isEns ? <div className="ens-resolve">{transferVM?.receiptAddress}</div> : undefined}
 
         <div className="amount">
           <span>Amount:</span>
-          <input ref={amountInput} type="text" placeholder="1000" onChange={(e) => transferVM.setAmount(e.target.value)} />
-          <span className="symbol">{transferVM.selectedToken.symbol}</span>
+          <input ref={amountInput} type="text" placeholder="1000" onChange={(e) => transferVM?.setAmount(e.target.value)} />
+          <span className="symbol">{transferVM?.selectedToken.symbol}</span>
         </div>
 
         <div className="tokens">
@@ -72,18 +76,18 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
           <span
             className="balance"
             onClick={(_) => {
-              amountInput.current.value = transferVM.maxSelectedTokenBalance.toString();
-              transferVM.setAmount(transferVM.maxSelectedTokenBalance.toString());
+              amountInput.current.value = transferVM?.maxSelectedTokenBalance.toString();
+              transferVM?.setAmount(transferVM?.maxSelectedTokenBalance.toString());
             }}
           >
-            Max: <AnimatedNumber value={transferVM.maxSelectedTokenBalance} formatValue={(n) => formatNum(n, '')} />
+            Max: <AnimatedNumber value={transferVM?.maxSelectedTokenBalance} formatValue={(n) => formatNum(n, '')} />
           </span>
           <Menu
             overflow="auto"
             styles={{ minWidth: '0', marginRight: '12px' }}
             menuButton={() => (
               <MenuButton className="menu-button">
-                <TokenLabel symbol={transferVM.selectedToken?.symbol} name={transferVM.selectedToken?.symbol} />
+                <TokenLabel symbol={transferVM?.selectedToken?.symbol} name={transferVM?.selectedToken?.symbol} />
               </MenuButton>
             )}
           >
@@ -93,7 +97,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
                   key={t.id}
                   styles={{ padding: '0.375rem 1rem' }}
                   onClick={(_) => {
-                    transferVM.setToken(t);
+                    transferVM?.setToken(t);
                     amountInput.current.value = '';
                   }}
                 >
@@ -108,8 +112,8 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
           <span>Gas:</span>
           <input
             type="text"
-            placeholder={`${transferVM.gas}`}
-            onChange={(e) => transferVM.setGas(Number.parseInt(e.target.value))}
+            placeholder={`${transferVM?.gas}`}
+            onChange={(e) => transferVM?.setGas(Number.parseInt(e.target.value))}
           />
           <span></span>
         </div>
@@ -118,8 +122,8 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
           <span>Nonce:</span>
           <input
             type="text"
-            placeholder={`${transferVM.nonce}`}
-            onChange={(e) => transferVM.setNonce(Number.parseInt(e.target.value))}
+            placeholder={`${transferVM?.nonce}`}
+            onChange={(e) => transferVM?.setNonce(Number.parseInt(e.target.value))}
           />
           <span></span>
         </div>
@@ -129,12 +133,12 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
             className={`${activeGas === 0 ? 'active' : ''}`}
             onClick={(_) => {
               setActiveGas(0);
-              transferVM.setGasLevel(0);
+              transferVM?.setGasLevel(0);
             }}
           >
             <span>Rapid</span>
             <span style={{ color: '#2ecc71' }}>
-              <AnimatedNumber value={transferVM.rapid} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
+              <AnimatedNumber value={transferVM?.rapid} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
             </span>
           </div>
 
@@ -144,12 +148,12 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
             className={`${activeGas === 1 ? 'active' : ''}`}
             onClick={(_) => {
               setActiveGas(1);
-              transferVM.setGasLevel(1);
+              transferVM?.setGasLevel(1);
             }}
           >
             <span>Fast</span>
             <span style={{ color: 'orange' }}>
-              <AnimatedNumber value={transferVM.fast} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
+              <AnimatedNumber value={transferVM?.fast} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
             </span>
           </div>
 
@@ -159,12 +163,12 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
             className={`${activeGas === 2 ? 'active' : ''}`}
             onClick={(_) => {
               setActiveGas(2);
-              transferVM.setGasLevel(2);
+              transferVM?.setGasLevel(2);
             }}
           >
             <span>Standard</span>
             <span style={{ color: 'deepskyblue' }}>
-              <AnimatedNumber value={transferVM.standard} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
+              <AnimatedNumber value={transferVM?.standard} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
             </span>
           </div>
 
@@ -178,20 +182,20 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
               placeholder="20"
               onClick={(_) => {
                 setActiveGas(3);
-                transferVM.setGasPrice(Number.parseFloat(gasInput.current.value) || 0);
-                transferVM.setGasLevel(3);
+                transferVM?.setGasPrice(Number.parseFloat(gasInput.current.value) || 0);
+                transferVM?.setGasLevel(3);
               }}
-              onChange={(e) => transferVM.setGasPrice(Number.parseFloat(e.target.value) || 0)}
+              onChange={(e) => transferVM?.setGasPrice(Number.parseFloat(e.target.value) || 0)}
             />
           </div>
         </div>
       </div>
 
       <button
-        disabled={!transferVM.isValid || transferVM.insufficientFee || transferVM.sending}
-        onClick={(_) => transferVM.sendTx().then(() => app.history.goBack())}
+        disabled={!transferVM?.isValid || transferVM?.insufficientFee || transferVM?.sending}
+        onClick={(_) => transferVM?.sendTx().then(() => app.history.goBack())}
       >
-        {transferVM.insufficientFee ? 'INSUFFICIENT FEE' : 'Send'}
+        {transferVM?.insufficientFee ? 'INSUFFICIENT FEE' : 'Send'}
       </button>
     </div>
   );
