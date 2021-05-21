@@ -110,37 +110,38 @@
   margin: 0 8px;
 }
 
-.page.main > .assets {
-  margin-top: 12px;
-}
-
-.page.main > .assets > .nav-title {
+.page.main .nav-title {
   display: flex;
   justify-content: space-between;
 }
 
-.page.main > .assets > .nav-title > a {
+.page.main .nav-title > a {
   color: var(--font-color);
   opacity: 0.5;
   transition: all 0.3s;
 }
 
-.page.main > .assets > .nav-title > a:hover {
+.page.main .nav-title > a:hover {
   opacity: 1;
 }
 
-.page.main > .assets > .nav-title > a h3 {
+.page.main .nav-title > a h3 {
   opacity: 0.5;
   transition: all 0.3s;
 }
 
-.page.main > .assets > .nav-title > a h3:hover {
+.page.main .nav-title > a h3:hover {
   opacity: 1;
+}
+
+.page.main > .assets {
+  margin: 12px 0;
+  height: 209px;
 }
 
 .page.main > .assets > table {
   margin: 0 -12px;
-  margin-top: 8px;
+  margin-top: 4px;
   width: 100vw;
 }
 
@@ -152,10 +153,11 @@
 /* skeleton loading */
 .page.main > .assets > table td > span {
   width: 100%;
-  padding: 0 4px;
+  padding: 4px 4px;
   margin-bottom: 2px;
   display: inline-block;
   box-sizing: border-box;
+  min-height: 20px;
 }
 
 .page.main > .assets > table td .button {

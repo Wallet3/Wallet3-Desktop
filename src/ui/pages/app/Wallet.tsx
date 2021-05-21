@@ -25,16 +25,20 @@ export default observer(
   ({ networksVM, app, walletVM }: { app: Application; networksVM: NetworksVM; walletVM: WalletVM }) => {
     const { currentAccount: accountVM, pendingTxCount, pendingTxs } = walletVM;
 
+    const maxRows = 6;
     const rows = accountVM.chainTokens.length / 2;
-    const rowTokens: UserToken[][] = accountVM.chainTokens.length === 0 ? new Array(7).fill([null, null]) : [];
+    const rowTokens: UserToken[][] =
+      accountVM.chainTokens.length === 0
+        ? new Array(maxRows).fill([null, null])
+        : new Array(maxRows).fill([undefined, undefined]);
 
-    for (let i = 0; i < rows && i < 7; i++) {
+    for (let i = 0; i < rows && i < maxRows; i++) {
       const row: UserToken[] = [];
       for (let j = 0; j < 2; j++) {
         const token = accountVM.chainTokens[i * 2 + j];
         row.push(token);
       }
-      rowTokens.push(row);
+      rowTokens[i] = row;
     }
 
     return (
@@ -166,7 +170,9 @@ export default observer(
                             </Link>
                           ) : token === null ? (
                             <Skeleton height={20} />
-                          ) : undefined}
+                          ) : (
+                            <span />
+                          )}
                         </td>
                       );
                     })}
@@ -175,6 +181,16 @@ export default observer(
               })}
             </tbody>
           </table>
+        </div>
+
+        <div className="nfts">
+          <div className="nav-title">
+            <h3 className="title">NFTs</h3>
+
+            <Link to={`/userTokens`}>
+              <Feather icon="more-horizontal" size={16} strokeWidth={1} />
+            </Link>
+          </div>
         </div>
       </div>
     );
