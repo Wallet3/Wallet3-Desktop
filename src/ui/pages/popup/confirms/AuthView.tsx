@@ -11,14 +11,17 @@ export default observer(
     onCancel,
     onAuthTouchID,
     onAuthPasscode,
+    runTouchID,
   }: {
     app: ApplicationPopup;
     onCancel?: () => void;
     onAuthTouchID?: () => Promise<void>;
     onAuthPasscode?: (passcode: string) => Promise<void>;
+    runTouchID?: boolean;
   }) => {
     const { touchIDSupported } = app;
     const [loading, setLoading] = useState(false);
+    const [launched, setLaunced] = useState(false);
 
     const auth = async (passcode?: string) => {
       setLoading(true);
@@ -31,6 +34,11 @@ export default observer(
 
       setLoading(false);
     };
+
+    if (runTouchID && touchIDSupported && loading === false && launched == false) {
+      setLaunced(true);
+      auth();
+    }
 
     return (
       <div className="auth">

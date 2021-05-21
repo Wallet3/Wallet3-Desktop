@@ -3,7 +3,7 @@ import './ConfirmTx.css';
 import * as Anime from '../../misc/Anime';
 
 import App, { ApplicationPopup } from '../../viewmodels/ApplicationPopup';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import ApproveView from './confirms/ApproveView';
 import AuthView from './confirms/AuthView';
@@ -19,6 +19,7 @@ interface Props {
 
 export default observer(({ app }: Props) => {
   const { confirmVM, signVM } = app;
+  const [runTouchID, setRunTouchID] = useState(false);
 
   const authViaTouchID = async () => {
     if (await (confirmVM ?? signVM).approveRequest('touchid')) {
@@ -55,7 +56,7 @@ export default observer(({ app }: Props) => {
       easing: 'linear',
       opacity: [0, 1],
       duration: 300,
-      complete: () => (App.touchIDSupported ? authViaTouchID() : undefined),
+      complete: () => setRunTouchID(true),
     });
   };
 
@@ -125,7 +126,13 @@ export default observer(({ app }: Props) => {
 
         {signVM ? <SignView signVM={signVM} onReject={onReject} onContinue={onContinue} /> : undefined}
 
-        <AuthView app={app} onCancel={onAuthCancel} onAuthTouchID={authViaTouchID} onAuthPasscode={authViaPassword} />
+        <AuthView
+          app={app}
+          onCancel={onAuthCancel}
+          onAuthTouchID={authViaTouchID}
+          onAuthPasscode={authViaPassword}
+          runTouchID={runTouchID}
+        />
       </div>
     </div>
   );
