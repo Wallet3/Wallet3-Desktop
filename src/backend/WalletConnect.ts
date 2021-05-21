@@ -16,8 +16,11 @@ export class WalletConnect extends EventEmitter {
   chainId: number;
   peerMeta: WCClientMeta;
 
-  constructor(uri: string) {
+  private modal = false;
+
+  constructor(uri: string, modal = false) {
     super();
+    this.modal = modal;
 
     this.connector = new WalletConnector({
       uri,
@@ -66,7 +69,7 @@ export class WalletConnect extends EventEmitter {
       this.dispose();
     });
 
-    await App.createPopupWindow('connectDapp', request.params);
+    await App.createPopupWindow('connectDapp', request.params, this.modal, this.modal ? App.mainWindow : undefined);
   };
 
   handleCallRequest = async (error: Error, request: WCCallRequestRequest) => {

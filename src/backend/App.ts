@@ -250,10 +250,11 @@ export class App {
 
     ipcMain.handle(`${MessageKeys.connectWallet}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
-      const { uri } = App.decryptIpc(encrypted, iv, key);
+      const { uri, modal } = App.decryptIpc(encrypted, iv, key);
       if (!uri) return;
 
-      return App.encryptIpc((await WCMan.connectAndWaitSession(uri)) ? true : false, iv, key);
+      console.log(uri, modal);
+      return App.encryptIpc((await WCMan.connectAndWaitSession(uri, modal)) ? true : false, iv, key);
     });
   };
 

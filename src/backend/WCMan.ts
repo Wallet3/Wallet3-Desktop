@@ -3,12 +3,12 @@ import { WalletConnect } from './WalletConnect';
 class WCMan {
   private cache = new Set<string>();
 
-  async connectAndWaitSession(uri: string) {
+  async connectAndWaitSession(uri: string, modal = false) {
     if (this.cache.has(uri)) return;
 
-    const wc = new WalletConnect(uri);
+    const wc = new WalletConnect(uri, modal);
     this.cache.add(uri);
-    
+
     return await new Promise<WalletConnect>((resolve) => {
       const timer = setTimeout(() => rejectPromise(), 7000);
 

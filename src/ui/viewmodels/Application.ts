@@ -72,7 +72,7 @@ export class Application {
   }
 
   connectWallet(uri: string) {
-    ipc.invokeSecure(MessageKeys.connectWallet, { uri });
+    return ipc.invokeSecure(MessageKeys.connectWallet, { uri, modal: true });
   }
 }
 
