@@ -1,10 +1,8 @@
 import './Wallet.css';
 import '@szhsin/react-menu/dist/index.css';
 
-import { Link, useRouteMatch } from 'react-router-dom';
 import { Menu, MenuButton, MenuDivider, MenuItem } from '@szhsin/react-menu';
 import { Networks, NetworksVM } from '../../viewmodels/NetworksVM';
-import React, { useEffect, useState } from 'react';
 
 import AnimatedNumber from 'react-animated-number';
 import { Application } from '../../viewmodels/Application';
@@ -12,9 +10,11 @@ import { CryptoIcons } from '../../misc/Icons';
 import Feather from 'feather-icons-react';
 import GasnowWs from '../../../api/Gasnow';
 import HSBar from 'react-horizontal-stacked-bar-chart';
+import { Link } from 'react-router-dom';
 import NetworkLabel from './components/NetworkLabel';
 import PendingTx from './components/PendingTxLabel';
 import PendingTxIndicator from './components/PendingTxIndicator';
+import React from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { UserToken } from '../../../ui/viewmodels/models/UserToken';
 import { WalletVM } from '../../viewmodels/WalletVM';

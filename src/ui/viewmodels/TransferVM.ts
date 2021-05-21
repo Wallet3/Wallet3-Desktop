@@ -70,9 +70,9 @@ export class TransferVM {
   receipients: { id: number; name: string }[] = [];
 
   // Gwei
-  rapid = 20;
-  fast = 20;
-  standard = 20;
+  rapid = 0;
+  fast = 0;
+  standard = 0;
 
   constructor(accountVM: AccountVM) {
     makeAutoObservable(this);
@@ -80,6 +80,10 @@ export class TransferVM {
     this.self = accountVM.address;
     this.selectedToken = accountVM.allTokens[0];
 
+    this.rapid = Gasnow.rapidGwei;
+    this.fast = Gasnow.fastGwei;
+    this.standard = Gasnow.standardGwei;
+    
     this.initGasPrice();
     this.initNonce();
   }

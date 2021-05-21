@@ -2,6 +2,7 @@ import './Settings.css';
 
 import { CryptoIcons, FlagIcons } from '../../misc/Icons';
 
+import Feather from 'feather-icons-react';
 import React from 'react';
 import Select from 'react-select';
 import { WalletVM } from '../../viewmodels/WalletVM';
@@ -12,12 +13,18 @@ const tokens = [
   { value: 'eth', label: 'ETH' },
 ];
 
+const langs = [
+  { value: 'usa', label: 'English' },
+  { value: 'jp', label: '日本語' },
+  { value: 'cn', label: '简体中文' },
+];
+
 const icon = (symbol: string) => ({
   alignItems: 'center',
   display: 'flex',
 
   ':before': {
-    backgroundImage: `url(${symbol === 'eth' ? CryptoIcons(symbol) : FlagIcons(symbol)})`,
+    backgroundImage: `url(${FlagIcons(symbol)})`,
     backgroundSize: 'cover',
     content: '" "',
     display: 'block',
@@ -52,7 +59,7 @@ export default observer(({ walletVM }: { walletVM: WalletVM }) => {
 
   return (
     <div className="page settings">
-      <div className="accounts">
+      <div className="drop-menu accounts">
         <div className="actions">
           <span className="title">Accounts</span>
           <span className="gen-account">Generate</span>
@@ -60,7 +67,7 @@ export default observer(({ walletVM }: { walletVM: WalletVM }) => {
         <Select options={accounts} isClearable={false} isSearchable={false} defaultValue={accounts[0]} />
       </div>
 
-      <div>
+      <div className="drop-menu currencies">
         <span className="title">Display Currency</span>
 
         <Select
@@ -74,6 +81,34 @@ export default observer(({ walletVM }: { walletVM: WalletVM }) => {
           //   this.setState({ selected: item });
           // }}
         />
+      </div>
+
+      <div className="drop-menu langs">
+        <span className="title">Languages</span>
+
+        <Select
+          options={langs}
+          styles={customStyles}
+          defaultValue={langs[0]}
+          isClearable={false}
+          isSearchable={false}
+          // onChange={(item) => {
+          //   this.props.onChange?.(item!['value']);
+          //   this.setState({ selected: item });
+          // }}
+        />
+      </div>
+
+      <div className="setting-item">
+        <Feather icon="lock" size={20} strokeWidth={2} />
+        <span>Change Passcode</span>
+        <Feather icon="chevron-right" size={15} />
+      </div>
+
+      <div className="setting-item">
+        <Feather icon="tool" size={20} strokeWidth={2} />
+        <span>Reset</span>
+        <span></span>
       </div>
     </div>
   );
