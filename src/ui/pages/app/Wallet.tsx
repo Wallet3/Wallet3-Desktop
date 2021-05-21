@@ -38,6 +38,7 @@ export default observer(
         const token = accountVM.chainTokens[i * 2 + j];
         row.push(token);
       }
+
       rowTokens[i] = row;
     }
 

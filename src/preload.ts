@@ -12,7 +12,6 @@ import {
 } from 'electron';
 import { decrypt, encrypt } from './common/Cipher';
 
-import IPCKeys from './common/Messages';
 import Messages from './common/Messages';
 
 const ipcSecureIv = crypto.randomBytes(16);
@@ -23,7 +22,7 @@ async function initSecureContext() {
   const ecdh = crypto.createECDH('secp521r1');
   const rendererEcdhKey = ecdh.generateKeys();
 
-  const mainKey = await ipcRenderer.invoke(IPCKeys.exchangeDHKey, {
+  const mainKey = await ipcRenderer.invoke(Messages.exchangeDHKey, {
     rendererEcdhKey,
     ipcSecureIv,
     windowId,
@@ -85,6 +84,10 @@ export class ClipboardApi {
 
   writeText = (text: string) => {
     clipboard.writeText(text);
+  };
+
+  readText = (type?: 'selection' | 'clipboard') => {
+    return clipboard.readText(type);
   };
 }
 

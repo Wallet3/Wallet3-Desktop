@@ -70,6 +70,10 @@ export class Application {
   scanQR() {
     return ipc.invoke(MessageKeys.scanQR);
   }
+
+  connectWallet(uri: string) {
+    ipc.invokeSecure(MessageKeys.connectWallet, { uri });
+  }
 }
 
 export default new Application();

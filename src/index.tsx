@@ -9,7 +9,7 @@ import networksVM, { NetworksVM } from './ui/viewmodels/NetworksVM';
 import walletVM, { WalletVM } from './ui/viewmodels/WalletVM';
 
 import AppPage from './ui/App';
-import Coingecko from './api/Coingecko';
+import clipboard from './ui/bridges/Clipboard';
 import { observer } from 'mobx-react-lite';
 
 interface ViewModels {
@@ -27,3 +27,12 @@ function render() {
 }
 
 render();
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') return;
+  const text = clipboard.readText();
+
+  if (text.startsWith('wc:') && text.includes('bridge=')) {
+    App.connectWallet(text);
+  }
+});

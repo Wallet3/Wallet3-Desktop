@@ -232,27 +232,3 @@ export class WalletConnect extends EventEmitter {
     this.removeAllListeners();
   }
 }
-
-export async function connectAndWaitSession(uri: string) {
-  const wc = new WalletConnect(uri);
-
-  return await new Promise<WalletConnect>((resolve) => {
-    const timer = setTimeout(() => rejectPromise(), 7000);
-
-    const rejectPromise = () => {
-      clearTimeout(timer);
-      resolve(undefined);
-      wc.dispose(); // uri is expired
-    };
-
-    wc.once('error', rejectPromise);
-    wc.once('disconnect', rejectPromise);
-
-    wc.once('sessionRequest', () => {
-      clearTimeout(timer);
-      wc.removeAllListeners('error');
-      wc.removeAllListeners('disconnect');
-      resolve(wc);
-    });
-  });
-}

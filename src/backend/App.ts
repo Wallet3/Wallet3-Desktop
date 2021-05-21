@@ -2,13 +2,13 @@ import * as Cipher from '../common/Cipher';
 
 import { BrowserWindow, Notification, TouchBar, TouchBarButton, app, ipcMain, systemPreferences } from 'electron';
 import MessageKeys, { ConfirmSendTx, InitStatus, PopupWindowTypes, SendTxParams, TxParams } from '../common/Messages';
-import { WalletConnect, connectAndWaitSession } from './WalletConnect';
 import { ethers, utils } from 'ethers';
 import { getProviderByChainId, sendTransaction } from '../common/Provider';
 
 import KeyMan from './KeyMan';
 import Transaction from './models/Transaction';
 import TxMan from './TxMan';
+import WCMan from './WCMan';
 import { createECDH } from 'crypto';
 import { reaction } from 'mobx';
 
@@ -209,7 +209,7 @@ export class App {
     }
 
     App.saveTx(params, txHex);
-    
+
     return result;
   };
 
@@ -253,7 +253,7 @@ export class App {
       const { uri } = App.decryptIpc(encrypted, iv, key);
       if (!uri) return;
 
-      return App.encryptIpc((await connectAndWaitSession(uri)) ? true : false, iv, key);
+      return App.encryptIpc((await WCMan.connectAndWaitSession(uri)) ? true : false, iv, key);
     });
   };
 
