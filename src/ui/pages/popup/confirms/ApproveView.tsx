@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 
 import { ConfirmVM } from '../../../viewmodels/ConfirmVM';
+import { CryptoIcons } from '../../../misc/Icons';
 import Feather from 'feather-icons-react';
-import Icons from '../../../misc/Icons';
 import { observer } from 'mobx-react-lite';
 
 export default observer(
@@ -35,7 +35,7 @@ export default observer(
                 defaultValue={confirmVM.approveToken.limitAmount}
                 onChange={(e) => confirmVM.setApproveAmount(e.target.value)}
               />
-              <img src={Icons(tokenSymbol)} alt={tokenSymbol} /> {tokenSymbol}
+              <img src={CryptoIcons(tokenSymbol)} alt={tokenSymbol} /> {tokenSymbol}
             </span>
           </div>
 

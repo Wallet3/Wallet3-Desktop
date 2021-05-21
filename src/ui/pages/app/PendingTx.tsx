@@ -1,9 +1,9 @@
 import './PendingTx.css';
 
 import { Application } from '../../viewmodels/Application';
+import { CryptoIcons } from '../../misc/Icons';
 import Feather from 'feather-icons-react';
 import { GasnowWs } from '../../../api/Gasnow';
-import Icons from '../../misc/Icons';
 import { NavBar } from '../../components';
 import { Networks } from '../../viewmodels/NetworksVM';
 import React from 'react';
@@ -23,7 +23,7 @@ export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => 
         <div>
           <span>Chain:</span>
           <span>
-            <img src={Icons(chain.symbol)} alt="" />
+            <img src={CryptoIcons(chain.symbol)} alt="" />
             {chain.network}
           </span>
         </div>

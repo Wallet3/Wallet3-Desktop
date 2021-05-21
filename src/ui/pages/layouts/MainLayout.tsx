@@ -21,7 +21,10 @@ export default observer((args: { networksVM: NetworksVM; walletVM: WalletVM; app
       <div className="layout">
         <div>
           <Switch>
-            <Route path={`${path}/settings`} component={Settings} />
+            <Route path={`${path}/settings`}>
+              <Settings {...args} />
+            </Route>
+
             <Route path={path}>
               <Wallet {...args} />
             </Route>

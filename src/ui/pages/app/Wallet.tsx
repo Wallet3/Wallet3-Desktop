@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 
 import AnimatedNumber from 'react-animated-number';
 import { Application } from '../../viewmodels/Application';
+import { CryptoIcons } from '../../misc/Icons';
 import Feather from 'feather-icons-react';
 import GasnowWs from '../../../api/Gasnow';
 import HSBar from 'react-horizontal-stacked-bar-chart';
@@ -17,7 +18,6 @@ import PendingTxIndicator from './components/PendingTxIndicator';
 import Skeleton from 'react-loading-skeleton';
 import { UserToken } from '../../../ui/viewmodels/models/UserToken';
 import { WalletVM } from '../../viewmodels/WalletVM';
-import findIcon from '../../misc/Icons';
 import { formatNum } from '../../misc/Formatter';
 import { observer } from 'mobx-react-lite';
 
@@ -163,7 +163,7 @@ export default observer(
                               title={`${token.symbol}: $${token.amount * token.price || 0}`}
                             >
                               <div>
-                                <img className="token-icon" src={findIcon(token.symbol)} alt="" />
+                                <img className="token-icon" src={CryptoIcons(token.symbol)} alt="" />
                                 <span className="symbol">{token.symbol}</span>
                                 <span></span>
                                 <span className="amount">{formatNum(token.amount, '')}</span>

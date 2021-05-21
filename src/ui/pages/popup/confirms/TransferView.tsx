@@ -1,8 +1,8 @@
 import React, { createRef } from 'react';
 
 import { ConfirmVM } from '../../../viewmodels/ConfirmVM';
+import { CryptoIcons } from '../../../misc/Icons';
 import Feather from 'feather-icons-react';
-import Icons from '../../../misc/Icons';
 import { observer } from 'mobx-react-lite';
 
 export default observer(
@@ -24,7 +24,7 @@ export default observer(
           <div>
             <span>Amount:</span>
             <span>
-              {amount} <img src={Icons(tokenSymbol)} alt={tokenSymbol} /> {tokenSymbol}
+              {amount} <img src={CryptoIcons(tokenSymbol)} alt={tokenSymbol} /> {tokenSymbol}
             </span>
           </div>
 

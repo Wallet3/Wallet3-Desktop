@@ -6,8 +6,8 @@ import React, { useEffect, useState } from 'react';
 
 import { AccountVM } from '../../viewmodels/AccountVM';
 import { Application } from '../../viewmodels/Application';
+import { CryptoIcons } from '../../misc/Icons';
 import Feather from 'feather-icons-react';
-import Icons from '../../misc/Icons';
 import { Link } from 'react-router-dom';
 import { NavBar } from '../../components';
 import { Toggle } from 'react-toggle-component';
@@ -53,7 +53,7 @@ export default observer(({ accountVM, app }: { accountVM?: AccountVM; app: Appli
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
                           >
-                            <img src={Icons(t.symbol)} alt={t.symbol} />
+                            <img src={CryptoIcons(t.symbol)} alt={t.symbol} />
                             <div className="desc">
                               <div>{t.symbol}</div>
                               <div className="amount">{t.amount}</div>
