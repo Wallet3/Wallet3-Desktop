@@ -11,6 +11,7 @@ interface INetwork {
   chainId: number;
   color: string;
   test?: boolean;
+  order?: number;
 }
 
 const Keys = {
@@ -50,30 +51,35 @@ export const Networks: INetwork[] = [
     network: 'Ethereum',
     chainId: 1,
     color: '#6186ff',
-  },
-  {
-    symbol: 'MATIC',
-    network: 'Polygon',
-    chainId: 137,
-    color: '#8247E5',
+    order: 1,
   },
   {
     symbol: 'BSC',
     network: 'BSC',
     chainId: 56,
     color: '#f3ba2f',
+    order: 2,
+  },
+  {
+    symbol: 'MATIC',
+    network: 'Polygon',
+    chainId: 137,
+    color: '#8247E5',
+    order: 3,
   },
   {
     symbol: 'xDAI',
     network: 'xDAI',
     chainId: 100,
     color: '#48A9A6',
+    order: 4,
   },
   {
     symbol: 'FTM',
     chainId: 250,
     network: 'Fantom',
     color: '#1969FF',
+    order: 5,
   },
   null,
   {

@@ -45,14 +45,18 @@ export class AccountVM {
   }
 
   get chainsOverview(): ChainOverview[] {
-    return this.chains.map((chain) => {
-      const network = Networks.find((n) => n?.symbol.toLowerCase() === chain.id);
-      return {
-        name: network?.network ?? '',
-        value: chain?.usd_value ?? 0,
-        color: network?.color ?? '',
-      };
-    });
+    return this.chains
+      .filter((c) => Networks.find((n) => n?.symbol.toLowerCase() === c.id)) // Filter supported chains
+      .map((chain) => {
+        const network = Networks.find((n) => n?.symbol.toLowerCase() === chain.id);
+        return {
+          name: network?.network ?? '',
+          value: chain?.usd_value ?? 0,
+          color: network?.color ?? '',
+          order: network.order ?? chain.community_id,
+        };
+      })
+      .sort((a, b) => a.order - b.order);
   }
 
   get chainTokens() {
