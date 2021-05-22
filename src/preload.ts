@@ -41,7 +41,7 @@ export class IpcBridgeApi {
   };
 
   invokeSecure = async <T>(channel: string, argObj: any = {}) => {
-    argObj.__nonce = crypto.randomBytes(3).toString('hex');
+    argObj['__obfs'] = crypto.randomBytes(3).toString('hex');
 
     const serialized = JSON.stringify(argObj);
     const encrypted = encrypt(ipcSecureIv, serialized, ipcSecureKey);

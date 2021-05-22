@@ -11,7 +11,9 @@ export default observer(
         <div className="form sign-msg">{signVM.signMsg.map((v) => v + '\n')}</div>
         <div className="actions">
           <button onClick={(_) => onReject?.()}>Cancel</button>
-          <button onClick={(_) => onContinue?.()}>Continue</button>
+          <button className="positive" onClick={(_) => onContinue?.()}>
+            Continue
+          </button>
         </div>
       </div>
     );

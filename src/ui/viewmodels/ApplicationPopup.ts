@@ -1,4 +1,4 @@
-import Messages, { ConfirmSendTx, InitStatus, PopupWindowTypes } from '../../common/Messages';
+import Messages, { ConfirmSendTx, PopupWindowTypes } from '../../common/Messages';
 
 import { Application } from './Application';
 import { ConfirmVM } from './ConfirmVM';
@@ -33,6 +33,9 @@ export class ApplicationPopup extends Application {
           this.signVM = new SignVM(payload);
           this.history.push('/sign');
           break;
+        case 'auth':
+          this.history.push('/auth');
+          break;
       }
     });
   }
@@ -40,7 +43,6 @@ export class ApplicationPopup extends Application {
   confirmVM?: ConfirmVM;
   connectDappVM?: ConnectDappVM;
   signVM?: SignVM;
-
 }
 
 export default new ApplicationPopup();

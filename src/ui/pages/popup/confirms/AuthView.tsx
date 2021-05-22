@@ -1,3 +1,5 @@
+import './AuthView.css';
+
 import React, { useState } from 'react';
 
 import { ApplicationPopup } from '../../../viewmodels/ApplicationPopup';

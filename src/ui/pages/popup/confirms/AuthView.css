@@ -1,0 +1,23 @@
+.auth {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  opacity: 0;
+}
+
+.auth > .panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth > .panel > .touchid-view {
+  height: 64px;
+}
+
+.auth > .panel > .passcode-view {
+  width: 100%;
+  height: 165px;
+}

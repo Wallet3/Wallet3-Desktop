@@ -1,4 +1,4 @@
-import { ConfirmTx, ConnectDapp, QRScanner } from './pages/popup';
+import { Auth, ConfirmTx, ConnectDapp, QRScanner } from './pages/popup';
 import { Route, Router, Switch } from 'react-router-dom';
 
 import { ApplicationPopup } from './viewmodels/ApplicationPopup';
@@ -24,6 +24,10 @@ export default observer(({ app }: { app: ApplicationPopup }) => {
 
         <Route path="/sign">
           <ConfirmTx app={app} />
+        </Route>
+
+        <Route path="/auth">
+          <Auth app={app} />
         </Route>
 
         <Route path="*" component={Blank} />
