@@ -6,6 +6,7 @@ export interface IUserToken {
   d: number; // decimals
   o: number; // order id
   w: boolean; // show or not
+  v: number; // amount
 }
 
 export class UserToken {
@@ -100,10 +101,11 @@ export class UserToken {
       this._decimals = token.d;
       this._order = token.o;
       this._show = token.w;
+      this._amount = token.v;
     }
   }
 
   toObject(): IUserToken {
-    return { a: this.id, s: this.symbol, d: this.decimals, o: this.order, w: this.show };
+    return { a: this.id, s: this.symbol, d: this.decimals, o: this.order, w: this.show, v: this.amount };
   }
 }
