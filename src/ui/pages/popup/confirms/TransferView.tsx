@@ -17,7 +17,7 @@ export default observer(
       <div className="details">
         <div className="form">
           <div>
-            <span>Recipient:</span>
+            <span>To:</span>
             <span title={receiptAddress}>{receipt}</span>
           </div>
 

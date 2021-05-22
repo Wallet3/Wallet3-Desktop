@@ -46,7 +46,7 @@ export class WalletVM {
   }
 
   initAccounts(addresses: string[]) {
-    this.accounts = addresses.map((address) => new AccountVM({ address }));
+    this.accounts = addresses.map((address, i) => new AccountVM({ address, accountIndex: i }));
 
     const lastUsedAccount = store.get(Keys.lastUsedAccount) || addresses[0];
     this.currentAccount = this.accounts.find((a) => a.address === lastUsedAccount);

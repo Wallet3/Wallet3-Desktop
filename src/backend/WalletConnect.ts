@@ -155,6 +155,7 @@ export class WalletConnect extends EventEmitter {
     App.createPopupWindow('sendTx', {
       chainId: this.chainId,
       from: this.accountAddress,
+      accountIndex: this.accountIndex,
       to: param.to,
       data: param.data || '0x',
       gas: Number.parseInt(param.gas) || 21000,

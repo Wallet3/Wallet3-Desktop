@@ -30,6 +30,7 @@ export class ConfirmVM {
   method: Method = '';
   flag = '';
   chainId = 1;
+  accountIndex = -1;
   nativeBalance = BigNumber.from(0);
   transferToken?: { symbol: string; transferAmount: BigNumber; decimals: number; to: string } = undefined;
   approveToken?: {
@@ -79,6 +80,7 @@ export class ConfirmVM {
 
     this.args = params;
     this.chainId = params.chainId;
+    this.accountIndex = params.accountIndex;
     this._gas = params.gas;
     this._gasPrice = params.gasPrice / GasnowWs.gwei_1;
     this._nonce = params.nonce || 0;

@@ -66,6 +66,7 @@ export interface TxParams {
   data: string;
   hash?: string;
   timestamp?: number;
+  accountIndex?: number;
 }
 
 export interface AuthParams {

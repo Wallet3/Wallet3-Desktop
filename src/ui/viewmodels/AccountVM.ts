@@ -11,11 +11,12 @@ import store from 'storejs';
 import { utils } from 'ethers';
 
 const Keys = {
-  userTokens: (chainId: number) => `${chainId}-tokens`,
+  userTokens: (chainId: number, accountIndex: number) => `${chainId}-${accountIndex}-tokens`,
 };
 
 interface IArgs {
   address: string;
+  accountIndex: number;
 }
 
 interface ChainOverview {
@@ -27,6 +28,7 @@ interface ChainOverview {
 export class AccountVM {
   address: string = '';
   ens = '';
+  accountIndex = -1;
 
   allTokens: UserToken[] = [];
   chains: Debank.IChainBalance[] = [];
@@ -74,6 +76,7 @@ export class AccountVM {
   constructor(args: IArgs) {
     makeAutoObservable(this);
     this.address = args.address;
+    this.accountIndex = args.accountIndex;
 
     NetVM.currentProvider
       .lookupAddress(this.address)
@@ -99,7 +102,10 @@ export class AccountVM {
   }
 
   save() {
-    store.set(Keys.userTokens(NetVM.currentChainId), JSON.stringify(this.allTokens.slice(1).map((t) => t.toObject())));
+    store.set(
+      Keys.userTokens(NetVM.currentChainId, this.accountIndex),
+      JSON.stringify(this.allTokens.slice(1).map((t) => t.toObject()))
+    );
   }
 
   private refreshChainOverview = () => {
@@ -171,7 +177,7 @@ export class AccountVM {
 
   private loadTokenConfigs = () => {
     try {
-      const json = store.get(Keys.userTokens(NetVM.currentChainId)) || '[]';
+      const json = store.get(Keys.userTokens(NetVM.currentChainId, this.accountIndex)) || '[]';
       const tokens = JSON.parse(json) as IUserToken[];
       return tokens.map((t) => new UserToken(t));
     } catch (error) {

@@ -55,7 +55,7 @@ const customStyles = {
 export default observer(({ walletVM, networksVM }: { walletVM: WalletVM; networksVM: NetworksVM }) => {
   const accounts = walletVM.accounts.map((a, i) => {
     const addr = `${a.address.substring(0, 7)}...${a.address.substring(a.address.length - 4)}`;
-    const balance = `${a.nativeToken?.amount ?? 0} ${a.nativeToken?.symbol ?? networksVM.currentNetwork.symbol}`;
+    const balance = `${a.nativeToken?.amount.toFixed(2) ?? 0} ${a.nativeToken?.symbol ?? networksVM.currentNetwork.symbol}`;
     const name = a.ens ? a.ens.substring(0, a.ens.indexOf('.eth')).substring(0, 12) : `Account ${i + 1}`;
     return {
       label: `${name} | ${addr} (${balance})`,
