@@ -14,6 +14,5 @@ export const CryptoIcons = (symbol: string) => {
 
 export const FlagIcons = (country: string) => {
   const img = require(`../../assets/icons/flags/${country.toLowerCase()}.svg`).default;
-  console.log(img);
   return img;
 };

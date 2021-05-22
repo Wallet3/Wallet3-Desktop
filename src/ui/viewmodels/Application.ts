@@ -44,7 +44,7 @@ export class Application {
     const password = crypto.sha256(passcode);
     const { addresses, verified } = await ipc.invokeSecure<InitVerifyPassword>(MessageKeys.initVerifyPassword, {
       password,
-      count: store.get('AddressCount') || 1,
+      count: 10,
     });
 
     if (verified) {

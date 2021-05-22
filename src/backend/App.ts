@@ -104,7 +104,7 @@ export class App {
       await KeyMan.savePassword(userPassword);
       if (!(await KeyMan.saveMnemonic(userPassword))) return App.encryptIpc({ success: false }, iv, key);
 
-      const addresses = await KeyMan.genAddresses(userPassword, 1);
+      const addresses = await KeyMan.genAddresses(userPassword, 10);
       this.addresses = addresses;
       if (this.touchBarButtons?.walletConnect) this.touchBarButtons.walletConnect.enabled = true;
 
@@ -138,6 +138,13 @@ export class App {
       }
 
       return App.encryptIpc({ verified, addresses: verified ? this.addresses : [] }, iv, key);
+    });
+
+    ipcMain.handle(`${MessageKeys.changeAccountIndex}-secure`, (e, encrypted, winId) => {
+      const { iv, key } = this.windows.get(winId);
+      const { index } = App.decryptIpc(encrypted, iv, key);
+      this.currentAddressIndex = index;
+      return App.encryptIpc({}, iv, key);
     });
 
     ipcMain.handle(`${MessageKeys.releaseWindow}-secure`, (e, encrypted, winId) => {

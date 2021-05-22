@@ -5,9 +5,10 @@ import { makeAutoObservable, reaction, runInAction, when } from 'mobx';
 import { AccountVM } from './AccountVM';
 import { PendingTxVM } from './PendingTxVM';
 import ipc from '../bridges/IPC';
+import store from 'storejs';
 
 const Keys = {
-  addressCount: 'AddressCount',
+  lastUsedAccount: 'lastUsedAccount',
 };
 
 export class WalletVM {
@@ -46,14 +47,25 @@ export class WalletVM {
 
   initAccounts(addresses: string[]) {
     this.accounts = addresses.map((address) => new AccountVM({ address }));
-    this.currentAccount = this.accounts[0];
-    this.currentAccount?.refresh();
-    setTimeout(() => this.refresh(), 30 * 1000);
+
+    const lastUsedAccount = store.get(Keys.lastUsedAccount) || addresses[0];
+    this.currentAccount = this.accounts.find((a) => a.address === lastUsedAccount);
+    this.currentAccount.refresh();
+
+    ipc.invokeSecure(Messages.changeAccountIndex, { index: addresses.indexOf(lastUsedAccount) });
+    setTimeout(() => this.refresh(), 45 * 1000);
+  }
+
+  selectAccount(account: AccountVM) {
+    this.currentAccount = account;
+    this.currentAccount.refresh();
+    ipc.invokeSecure(Messages.changeAccountIndex, { index: this.accountIndex });
+    store.set(Keys.lastUsedAccount, account.address);
   }
 
   refresh() {
     this.currentAccount?.refreshChainTokens();
-    setTimeout(() => this.refresh(), 30 * 1000);
+    setTimeout(() => this.refresh(), 45 * 1000);
   }
 
   pendingTxVM: PendingTxVM = null;

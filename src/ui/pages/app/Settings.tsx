@@ -5,6 +5,7 @@ import { Menu, MenuButton, MenuDivider, MenuItem } from '@szhsin/react-menu';
 
 import DisplayCurrency from './components/DisplayCurrency';
 import Feather from 'feather-icons-react';
+import { NetworksVM } from '../../viewmodels/NetworksVM';
 import React from 'react';
 import Select from 'react-select';
 import { WalletVM } from '../../viewmodels/WalletVM';
@@ -38,6 +39,7 @@ const icon = (symbol: string) => ({
 
 const customStyles = {
   option: (provided, state) => {
+    console.log(state);
     return {
       ...provided,
       ...icon(state.value),
@@ -50,11 +52,11 @@ const customStyles = {
   },
 };
 
-export default observer(({ walletVM }: { walletVM: WalletVM }) => {
+export default observer(({ walletVM, networksVM }: { walletVM: WalletVM; networksVM: NetworksVM }) => {
   const accounts = walletVM.accounts.map((a, i) => {
     const addr = `${a.address.substring(0, 7)}...${a.address.substring(a.address.length - 4)}`;
-    const balance = `${a.nativeToken?.amount} ${a.nativeToken?.symbol}`;
-    const name = a.ens ? a.ens.substring(0, 12) + `${a.ens.length > 12 ? '....eth' : ''}` : `Account ${i + 1}`;
+    const balance = `${a.nativeToken?.amount ?? 0} ${a.nativeToken?.symbol ?? networksVM.currentNetwork.symbol}`;
+    const name = a.ens ? a.ens.substring(0, a.ens.indexOf('.eth')).substring(0, 12) : `Account ${i + 1}`;
     return {
       label: `${name} | ${addr} (${balance})`,
       value: a,
@@ -67,9 +69,15 @@ export default observer(({ walletVM }: { walletVM: WalletVM }) => {
       <div className="drop-menu accounts">
         <div className="actions">
           <span className="title">Accounts</span>
-          <span className="gen-account">Generate</span>
+          {/* <span className="gen-account">Generate</span> */}
         </div>
-        <Select options={accounts} isClearable={false} isSearchable={false} defaultValue={accounts[0]} />
+        <Select
+          options={accounts}
+          isClearable={false}
+          isSearchable={false}
+          defaultValue={accounts.find((a) => a.value === walletVM.currentAccount)}
+          onChange={(v) => walletVM.selectAccount(v.value)}
+        />
       </div>
 
       <div className="setting-item">

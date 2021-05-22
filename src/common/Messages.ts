@@ -14,6 +14,7 @@ export default {
   releaseWindow: 'msg-release-window',
   clearHistory: 'msg-clear-history',
   changeChainId: 'msg-change-chain-id',
+  changeAccountIndex: 'msg-change-account-index',
 
   scanQR: 'msg-scan-qr',
   connectWallet: 'msg-connect-wallet',
