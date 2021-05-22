@@ -80,7 +80,7 @@ export default observer(
                 <NetworkLabel chainId={networksVM.currentChainId} />
               </MenuButton>
             )}
-            styles={{ minWidth: '7rem' }}
+            styles={{ minWidth: '5.5rem' }}
             direction="bottom"
             overflow="auto"
             position="anchor"

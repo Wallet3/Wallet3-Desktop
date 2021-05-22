@@ -2,6 +2,7 @@ import * as Cipher from '../common/Cipher';
 
 import { BrowserWindow, Notification, TouchBar, TouchBarButton, app, ipcMain, systemPreferences } from 'electron';
 import MessageKeys, { ConfirmSendTx, InitStatus, PopupWindowTypes, SendTxParams, TxParams } from '../common/Messages';
+import { createECDH, randomBytes } from 'crypto';
 import { ethers, utils } from 'ethers';
 import { getProviderByChainId, sendTransaction } from '../common/Provider';
 
@@ -9,7 +10,6 @@ import KeyMan from './KeyMan';
 import Transaction from './models/Transaction';
 import TxMan from './TxMan';
 import WCMan from './WCMan';
-import { createECDH } from 'crypto';
 import { reaction } from 'mobx';
 
 declare const POPUP_WINDOW_WEBPACK_ENTRY: string;

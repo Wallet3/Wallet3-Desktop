@@ -21,28 +21,43 @@
 
 .page.settings > .accounts > .actions > .gen-account {
   cursor: pointer;
-  font-size: 10px;
-  margin-top: 1px;
+  font-size: 12px;
   color: var(--font-color-title);
 }
 
-.page.settings > .drop-menu.langs {
-  margin-bottom: 24px;
+.page.settings > .drop-menu.accounts {
+  margin-bottom: 16px;
 }
 
 .page.settings > .setting-item {
   display: grid;
   grid-template-columns: 29px 1fr auto;
-  font-size: 17px;
+  font-size: 15px;
   color: var(--font-color-title);
   align-items: center;
-  padding-bottom: 6px;
+  padding-bottom: 4px;
   border-bottom: 1px dashed var(--border-color);
-  cursor: pointer;
   transition: all 0.3s;
   margin-bottom: 12px;
 }
 
-.page.settings > .setting-item:hover {
+.page.settings > .setting-item > svg {
+  margin-bottom: -1px;
+}
+
+.page.settings > .setting-item.click {
+  cursor: pointer;
+}
+
+.page.settings > .setting-item.click:hover {
   opacity: 0.75;
+}
+
+.page.settings > .setting-item > .menu-button {
+  padding: 4px 6px;
+  margin-bottom: -3px;
+}
+
+.page.settings > .setting-item > .menu-button > .display-currency > span {
+  margin-bottom: -1px;
 }
