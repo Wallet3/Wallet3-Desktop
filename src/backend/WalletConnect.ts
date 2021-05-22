@@ -14,6 +14,8 @@ export class WalletConnect extends EventEmitter {
   connector: WalletConnector;
   peerId: string;
   chainId: number;
+  accountIndex = -1;
+  accountAddress = '';
   peerMeta: WCClientMeta;
 
   private modal = false;
@@ -46,7 +48,7 @@ export class WalletConnect extends EventEmitter {
       return;
     }
 
-    const [{ peerMeta, chainId, peerId }] = request.params;
+    const [{ peerMeta, peerId }] = request.params;
     this.peerId = peerId;
     this.peerMeta = peerMeta;
 
@@ -59,8 +61,10 @@ export class WalletConnect extends EventEmitter {
 
     ipcMain.handleOnce(WcMessages.approveWcSession(this.peerId), () => {
       clearHandlers();
-      this.connector.approveSession({ accounts: App.addresses, chainId: App.chainId });
+      this.accountIndex = App.currentAddressIndex;
+      this.accountAddress = App.currentAddress;
       this.chainId = App.chainId;
+      this.connector.approveSession({ accounts: [this.accountAddress], chainId: this.chainId });
     });
 
     ipcMain.handleOnce(WcMessages.rejectWcSession(this.peerId), () => {
@@ -108,7 +112,7 @@ export class WalletConnect extends EventEmitter {
       const c = new ethers.Contract(param.to, ERC20ABI, App.chainProvider);
       const decimals = (await c.decimals()).toNumber();
       const symbol = await c.symbol();
-      const balance = (await c.balanceOf(App.currentAddress)).toString();
+      const balance = (await c.balanceOf(this.accountAddress)).toString();
 
       transferToken = { decimals, symbol, balance };
     }
@@ -127,7 +131,7 @@ export class WalletConnect extends EventEmitter {
       const password = App.extractPassword(params);
       if (!password) return Application.encryptIpc('', iv, key);
 
-      const txHex = await KeyMan.signTx(password, App.currentAddressIndex, params);
+      const txHex = await KeyMan.signTx(password, this.accountIndex, params);
       if (!txHex) {
         this.connector.rejectRequest({ id: request.id, error: { message: 'Invalid data' } });
         return;
@@ -150,12 +154,12 @@ export class WalletConnect extends EventEmitter {
 
     App.createPopupWindow('sendTx', {
       chainId: this.chainId,
-      from: App.currentAddress,
+      from: this.accountAddress,
       to: param.to,
       data: param.data || '0x',
       gas: Number.parseInt(param.gas) || 21000,
       gasPrice: Number.parseInt(param.gasPrice) || GasnowWs.gwei_20,
-      nonce: Number.parseInt(param.nonce) || (await getTransactionCount(this.chainId, App.currentAddress)),
+      nonce: Number.parseInt(param.nonce) || (await getTransactionCount(this.chainId, this.accountAddress)),
       value: param.value || 0,
 
       receipient,
@@ -189,7 +193,7 @@ export class WalletConnect extends EventEmitter {
       switch (type) {
         case 'personal_sign':
           msg = params[0];
-          signed = await KeyMan.personalSignMessage(password, App.currentAddressIndex, msg);
+          signed = await KeyMan.personalSignMessage(password, this.accountIndex, msg);
 
           if (!signed) {
             this.connector.rejectRequest({ id: request.id, error: { message: 'Permission Denied' } });
@@ -202,7 +206,7 @@ export class WalletConnect extends EventEmitter {
           msg = params[1];
           try {
             const typedData = JSON.parse(msg);
-            signed = await KeyMan.signTypedData(password, App.currentAddressIndex, typedData);
+            signed = await KeyMan.signTypedData(password, this.accountIndex, typedData);
           } catch (error) {
             this.connector.rejectRequest({ id: request.id, error: { message: 'Invalid Typed Data' } });
             return Application.encryptIpc(false, iv, key);
