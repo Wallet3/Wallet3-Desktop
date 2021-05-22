@@ -1,7 +1,7 @@
 import './Account.css';
 
 import { Logo, NavBar } from '../../components';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { Application } from '../../viewmodels/Application';
 import CheckIcon from '../../../assets/icons/app/check.svg';
@@ -14,7 +14,8 @@ import { WalletVM } from '../../viewmodels/WalletVM';
 export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => {
   const [showCheck, setShowCheck] = useState(false);
 
-  const address = walletVM.currentAccount.address;
+  const { currentAccount } = walletVM;
+  const address = currentAccount.address;
 
   return (
     <div className="page account">
@@ -22,6 +23,12 @@ export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => 
 
       <div className="content">
         <div>
+          <input
+            type="text"
+            maxLength={10}
+            defaultValue={currentAccount.name || currentAccount.ens || `Account ${currentAccount.accountIndex}`}
+            onChange={(e) => (currentAccount.name = e.target.value)}
+          />
           <QRCode value={address} size={150} bgColor="transparent" />
           <div className="addr">
             <span onClick={(_) => Shell.open(`https://etherscan.io/address/${address}`)}>{address}</span>

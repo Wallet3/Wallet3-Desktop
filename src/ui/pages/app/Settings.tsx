@@ -55,10 +55,10 @@ const customStyles = {
 export default observer(({ walletVM, networksVM }: { walletVM: WalletVM; networksVM: NetworksVM }) => {
   const accounts = walletVM.accounts.map((a, i) => {
     const addr = `${a.address.substring(0, 7)}...${a.address.substring(a.address.length - 4)}`;
-    const balance = `${a.nativeToken?.amount.toFixed(2) ?? 0} ${a.nativeToken?.symbol ?? networksVM.currentNetwork.symbol}`;
-    const name = a.ens ? a.ens.substring(0, a.ens.indexOf('.eth')).substring(0, 12) : `Account ${i + 1}`;
+    const balance = a.nativeToken ? `(${a.nativeToken.amount.toFixed(2)} ${a.nativeToken.symbol})` : '';
+    const name = a.name || (a.ens ? a.ens.substring(0, a.ens.indexOf('.eth')).substring(0, 12) : `Account ${i + 1}`);
     return {
-      label: `${name} | ${addr} (${balance})`,
+      label: `${name} | ${addr} ${balance}`,
       value: a,
     };
   });
@@ -69,7 +69,6 @@ export default observer(({ walletVM, networksVM }: { walletVM: WalletVM; network
       <div className="drop-menu accounts">
         <div className="actions">
           <span className="title">Accounts</span>
-          {/* <span className="gen-account">Generate</span> */}
         </div>
         <Select
           options={accounts}

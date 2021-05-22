@@ -101,7 +101,7 @@ export default observer(
 
           <button
             className="icon-button"
-            title={(accountVM?.ens || accountVM?.address) ?? 'Show Address'}
+            title={(`${accountVM?.ens || accountVM?.address} (Account ${accountVM.accountIndex})`) ?? 'Show Address'}
             onClick={(_) => app.history.push('/account')}
           >
             <Feather icon="user" size={16} strokeWidth={1} />

@@ -11,7 +11,8 @@ import store from 'storejs';
 import { utils } from 'ethers';
 
 const Keys = {
-  userTokens: (chainId: number, accountIndex: number) => `${chainId}-${accountIndex}-tokens`,
+  userTokens: (chainId: number, accountIndex: number) => `userTokens-${chainId}-${accountIndex}`,
+  accountName: (accountIndex: number) => `accountName-${accountIndex}`,
 };
 
 interface IArgs {
@@ -29,6 +30,7 @@ export class AccountVM {
   address: string = '';
   ens = '';
   accountIndex = -1;
+  private _name = '';
 
   allTokens: UserToken[] = [];
   chains: Debank.IChainBalance[] = [];
@@ -73,10 +75,20 @@ export class AccountVM {
     return new AddTokenVM(this);
   }
 
+  get name() {
+    return this._name;
+  }
+
+  set name(value) {
+    this._name = value;
+    store.set(Keys.accountName(this.accountIndex), value);
+  }
+
   constructor(args: IArgs) {
     makeAutoObservable(this);
     this.address = args.address;
     this.accountIndex = args.accountIndex;
+    this._name = store.get(Keys.accountName(this.accountIndex)) || '';
 
     NetVM.currentProvider
       .lookupAddress(this.address)

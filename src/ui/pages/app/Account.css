@@ -16,6 +16,17 @@
   align-items: center;
 }
 
+.page.account > .content input {
+  width: 150px;
+  border: none;
+  border-bottom: 1px dashed var(--border-color);
+  background: none;
+  outline: none;
+  font-size: 15px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
 .page.account > .content .addr {
   margin-top: 12px;
   display: flex;
