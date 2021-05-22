@@ -45,7 +45,7 @@ export default observer(({ accountVM, app }: { accountVM?: AccountVM; app: Appli
                       {(provided, snapshot) => {
                         return (
                           <div
-                            className={`token ${t.show ? 'on' : 'off'}`}
+                            className={`token ${t.show ? 'on' : 'off'} ${i === 11 ? 'show-line' : ''}`}
                             onClick={(_) => {
                               if (i > 0) setForceRefresh((t.show = !t.show) ? Date.now() : Date.now());
                             }} // Ugly code: Force refresh UI

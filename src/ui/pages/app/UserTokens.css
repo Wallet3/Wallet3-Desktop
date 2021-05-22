@@ -35,6 +35,7 @@
   padding: 0px 12px;
   padding-bottom: 8px;
   align-items: center;
+  outline: none;
 }
 
 .page.tokens > .content .tokens .token > img {
@@ -59,4 +60,9 @@
 
 .page.tokens > .content .tokens .token.off > .react-toggle input[type='checkbox'] + label {
   background-color: lightgrey;
+}
+
+.page.tokens > .content .tokens .token.show-line {
+  border-bottom: 1px dashed var(--border-color);
+  margin-bottom: 8px;
 }

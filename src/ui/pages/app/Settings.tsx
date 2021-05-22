@@ -52,9 +52,11 @@ const customStyles = {
 
 export default observer(({ walletVM }: { walletVM: WalletVM }) => {
   const accounts = walletVM.accounts.map((a, i) => {
-    const addr = `${a.address.substring(0, 7)}...${a.address.substring(a.address.length - 5)}`;
+    const addr = `${a.address.substring(0, 7)}...${a.address.substring(a.address.length - 4)}`;
+    const balance = `${a.nativeToken?.amount} ${a.nativeToken?.symbol}`;
+    const name = a.ens ? a.ens.substring(0, 12) + `${a.ens.length > 12 ? '....eth' : ''}` : `Account ${i + 1}`;
     return {
-      label: `${a.ens ? a.ens.substring(0, 15) : `Account ${i + 1}`} | ${addr}`,
+      label: `${name} | ${addr} (${balance})`,
       value: a,
     };
   });
@@ -69,38 +71,6 @@ export default observer(({ walletVM }: { walletVM: WalletVM }) => {
         </div>
         <Select options={accounts} isClearable={false} isSearchable={false} defaultValue={accounts[0]} />
       </div>
-
-      {/* <div className="drop-menu currencies">
-        <span className="title">Display Currency</span>
-
-        <Select
-          options={tokens}
-          styles={customStyles}
-          defaultValue={tokens[0]}
-          isClearable={false}
-          isSearchable={false}
-          // onChange={(item) => {
-          //   this.props.onChange?.(item!['value']);
-          //   this.setState({ selected: item });
-          // }}
-        />
-      </div>
-
-      <div className="drop-menu langs">
-        <span className="title">Languages</span>
-
-        <Select
-          options={langs}
-          styles={customStyles}
-          defaultValue={langs[0]}
-          isClearable={false}
-          isSearchable={false}
-          // onChange={(item) => {
-          //   this.props.onChange?.(item!['value']);
-          //   this.setState({ selected: item });
-          // }}
-        />
-      </div> */}
 
       <div className="setting-item">
         <Feather icon="dollar-sign" size={iconSize} />

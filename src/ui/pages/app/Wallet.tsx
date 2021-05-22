@@ -55,7 +55,6 @@ export default observer(
               direction="bottom"
               overflow="auto"
               position="anchor"
-              arrow
             >
               {pendingTxs.map((item) => {
                 return (
@@ -84,7 +83,6 @@ export default observer(
             direction="bottom"
             overflow="auto"
             position="anchor"
-            arrow
           >
             {Networks.map((item) => {
               return item ? (
