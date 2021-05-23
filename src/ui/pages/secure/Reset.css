@@ -1,0 +1,26 @@
+.page.reset {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.page.reset > .content {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  color: var(--font-color-title);
+  text-align: center;
+  font-size: 14px;
+  line-height: 24px;
+}
+
+.page.reset > button {
+  border-color: red;
+  background-color: red;
+  color: white;
+}
+
+.page.reset > button:hover {
+  background-color: firebrick;
+  border-color: firebrick;
+}

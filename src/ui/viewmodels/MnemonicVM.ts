@@ -45,7 +45,7 @@ export class MnemonicVM {
   async changePasscode(authKey: string, passcode: string) {
     const { success } = await ipc.invokeSecure<BooleanResult>(`${MessageKeys.changePassword}`, {
       authKey,
-      password: crypto.sha256(passcode),
+      newPassword: crypto.sha256(passcode),
     });
 
     return success;

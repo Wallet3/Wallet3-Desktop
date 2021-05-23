@@ -29,6 +29,8 @@ class WCMan {
       });
     });
   }
+
+  clean() {}
 }
 
 export default new WCMan();

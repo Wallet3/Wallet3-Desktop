@@ -148,7 +148,7 @@ export class App {
 
     ipcMain.handle(`${MessageKeys.changePassword}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
-      const { authKey, password } = App.decryptIpc(encrypted, iv, key);
+      const { authKey, newPassword } = App.decryptIpc(encrypted, iv, key);
       const oldPassword = this.authKeys.get(authKey);
       this.authKeys.delete(authKey);
 
@@ -156,8 +156,8 @@ export class App {
       if (!mnemonic) return App.encryptIpc({ success: false }, iv, key);
 
       KeyMan.setTmpMnemonic(mnemonic);
-      await KeyMan.savePassword(password);
-      if (!(await KeyMan.saveMnemonic(password))) return App.encryptIpc({ success: false }, iv, key);
+      await KeyMan.savePassword(newPassword);
+      if (!(await KeyMan.saveMnemonic(newPassword))) return App.encryptIpc({ success: false }, iv, key);
 
       return App.encryptIpc({ success: true }, iv, key);
     });
@@ -190,8 +190,20 @@ export class App {
       this.windows.delete(winId);
     });
 
-    ipcMain.handle(`${MessageKeys.fetchAddresses}-secure`, (e, encrypted) => {
-      KeyMan;
+    ipcMain.handle(`${MessageKeys.resetSystem}-secure`, async (e, encrypted, winId) => {
+      const { iv, key } = this.windows.get(winId);
+      const { authKey } = App.decryptIpc(encrypted, iv, key);
+      if (!this.authKeys.has(authKey)) {
+        return App.encryptIpc({ success: false }, iv, key);
+      }
+
+      const password = this.authKeys.get(authKey);
+      this.authKeys.clear();
+      await KeyMan.reset(password);
+      await TxMan.clean();
+      WCMan.clean();
+
+      return App.encryptIpc({ success: true }, iv, key);
     });
 
     ipcMain.handle(`${MessageKeys.changeChainId}`, async (e, id) => {
@@ -220,9 +232,6 @@ export class App {
   }
 
   async init() {
-    // KeyMan.reset('').then((v) => {
-    //   console.log(v);
-    // });
     await KeyMan.init();
   }
 

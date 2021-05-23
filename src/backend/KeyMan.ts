@@ -5,6 +5,8 @@ import * as keytar from 'keytar';
 
 import { TxParams } from '../common/Messages';
 
+const BasePath = `m/44'/60'/0'/0`;
+
 const Keys = {
   salt: 'salt',
   password: 'password',
@@ -23,14 +25,14 @@ const sha256 = (text: string) => crypto.createHash('sha256').update(text).digest
 class KeyMan {
   salt!: string;
   tmpMnemonic?: string;
-  basePath = `m/44'/60'/0'/0`;
+  basePath = BasePath;
   pathIndex = 0;
   hasMnemonic = false;
 
   async init() {
     this.salt = await keytar.getPassword(Keys.salt, Keys.account);
     this.hasMnemonic = (await keytar.getPassword(Keys.mnemonic, Keys.account)) ? true : false;
-    this.basePath = (await keytar.getPassword(Keys.basePath, Keys.account)) || `m/44'/60'/0'/0`;
+    this.basePath = (await keytar.getPassword(Keys.basePath, Keys.account)) || BasePath;
     this.pathIndex = Number.parseInt((await keytar.getPassword(Keys.pathIndex, Keys.account)) || '0');
   }
 
@@ -146,7 +148,7 @@ class KeyMan {
   reset(password: string) {
     this.salt = undefined;
     this.hasMnemonic = false;
-    this.basePath = `m/44'/60'/0'/0`;
+    this.basePath = BasePath;
     this.pathIndex = 0;
 
     const tasks = [Keys.mnemonic, Keys.salt, Keys.mnemonic, Keys.basePath, Keys.pathIndex].map((key) =>

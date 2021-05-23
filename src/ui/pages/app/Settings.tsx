@@ -78,6 +78,13 @@ export default observer(({ walletVM, app }: { app: Application; walletVM: Wallet
     app.history.push(`/setupPassword?authKey=${authKey}`);
   };
 
+  const goToReset = async () => {
+    const { success, authKey } = await app.auth();
+    if (!success) return;
+
+    app.history.push(`/reset?authKey=${authKey}`);
+  };
+
   const iconSize = 15;
   return (
     <div className="page settings">
@@ -144,7 +151,7 @@ export default observer(({ walletVM, app }: { app: Application; walletVM: Wallet
         <Feather icon="chevron-right" size={15} />
       </div>
 
-      <div className="setting-item click" onClick={(_) => app.auth()}>
+      <div className="setting-item click" onClick={(_) => goToReset()}>
         <Feather icon="tool" size={iconSize} />
         <span>Reset</span>
         <Feather icon="chevron-right" size={15} />

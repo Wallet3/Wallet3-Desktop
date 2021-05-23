@@ -1,11 +1,11 @@
 import './App.css';
 
 import { Account, AddToken, PendingTx, Transfer, UserTokens } from './pages/app';
+import { BackupMnemonic, Reset } from './pages/secure';
 import { Blank, Generate, Import, Locking, SetupPasscode, Welcome } from './pages/login/';
 import { Route, Router, Switch } from 'react-router-dom';
 
 import { Application } from './viewmodels/Application';
-import { BackupMnemonic } from './pages/secure';
 import MainLayout from './pages/layouts/MainLayout';
 import { MnemonicVM } from './viewmodels/MnemonicVM';
 import { NetworksVM } from './viewmodels/NetworksVM';
@@ -53,6 +53,9 @@ export default observer((args: { app: Application; mnVM: MnemonicVM; networksVM:
           </Route>
           <Route path="/backupMnemonic">
             <BackupMnemonic {...args} />
+          </Route>
+          <Route path="/reset">
+            <Reset {...args} />
           </Route>
 
           <Route path="*" component={Blank} />

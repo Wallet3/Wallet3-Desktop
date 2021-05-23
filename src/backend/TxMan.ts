@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 import * as path from 'path';
 
 import { Connection, FindManyOptions, IsNull, LessThanOrEqual, Repository, createConnection } from 'typeorm';
@@ -13,6 +14,8 @@ class TxMan {
 
   private connection: Connection;
   private txRepo: Repository<Transaction>;
+  private _dbPath = '';
+  private _timer: NodeJS.Timer;
 
   constructor() {
     makeAutoObservable(this);
@@ -23,6 +26,7 @@ class TxMan {
 
     const userData = app.getPath('userData');
     const dbPath = path.join(userData, 'data/app.sqlite');
+    this._dbPath = dbPath;
 
     this.connection = await createConnection({
       type: 'sqlite',
@@ -96,7 +100,13 @@ class TxMan {
       }
     });
 
-    setTimeout(async () => await this.checkPendingTxs(), 12 * 1000);
+    this._timer = setTimeout(async () => await this.checkPendingTxs(), 15 * 1000);
+  }
+
+  async clean() {
+    clearTimeout(this._timer);
+    await this.connection.close();
+    fs.unlinkSync(this._dbPath);
   }
 }
 

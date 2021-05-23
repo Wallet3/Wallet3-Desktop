@@ -12,7 +12,6 @@ export default {
   promptTouchID: 'msg-prompt-touchid',
   resetSystem: 'msg-reset-system',
   createTransferTx: 'msg-create-transfer-tx',
-  fetchAddresses: 'msg-fetch-addresses',
   releaseWindow: 'msg-release-window',
   clearHistory: 'msg-clear-history',
   changeChainId: 'msg-change-chain-id',
