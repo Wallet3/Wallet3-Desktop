@@ -145,13 +145,15 @@ class KeyMan {
     return addresses;
   }
 
-  reset(password: string) {
+  async reset(password: string) {
+    if (!(await this.verifyPassword(password))) return false;
+
     this.salt = undefined;
     this.hasMnemonic = false;
     this.basePath = BasePath;
     this.pathIndex = 0;
 
-    const tasks = [Keys.mnemonic, Keys.salt, Keys.mnemonic, Keys.basePath, Keys.pathIndex].map((key) =>
+    const tasks = [Keys.mnemonic, Keys.salt, Keys.basePath, Keys.pathIndex].map((key) =>
       keytar.deletePassword(key, Keys.account)
     );
 
