@@ -146,6 +146,22 @@ export class App {
       return App.encryptIpc(await KeyMan.verifyPassword(password), iv, key);
     });
 
+    ipcMain.handle(`${MessageKeys.changePassword}-secure`, async (e, encrypted, winId) => {
+      const { iv, key } = this.windows.get(winId);
+      const { authKey, password } = App.decryptIpc(encrypted, iv, key);
+      const oldPassword = this.authKeys.get(authKey);
+      this.authKeys.delete(authKey);
+
+      const mnemonic = await KeyMan.readMnemonic(oldPassword);
+      if (!mnemonic) return App.encryptIpc({ success: false }, iv, key);
+
+      KeyMan.setTmpMnemonic(mnemonic);
+      await KeyMan.savePassword(password);
+      if (!(await KeyMan.saveMnemonic(password))) return App.encryptIpc({ success: false }, iv, key);
+
+      return App.encryptIpc({ success: true }, iv, key);
+    });
+
     ipcMain.handle(`${MessageKeys.initVerifyPassword}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
       const { password, count } = App.decryptIpc(encrypted, iv, key);

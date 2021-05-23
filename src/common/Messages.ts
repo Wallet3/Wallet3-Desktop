@@ -7,6 +7,7 @@ export default {
   setupMnemonic: 'msg-setup-mnemonic',
   readMnemonic: 'msg-read-mnemonic',
   verifyPassword: 'msg-verify-password',
+  changePassword: 'msg-change-passcode',
   initVerifyPassword: 'msg-init-verify-password',
   promptTouchID: 'msg-prompt-touchid',
   resetSystem: 'msg-reset-system',
@@ -61,6 +62,10 @@ export interface SetupMnemonic {
 export interface AuthenticationResult {
   success: boolean;
   authKey: string;
+}
+
+export interface BooleanResult {
+  success: boolean;
 }
 
 export interface TxParams {

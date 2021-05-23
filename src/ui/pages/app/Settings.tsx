@@ -71,6 +71,13 @@ export default observer(({ walletVM, app }: { app: Application; walletVM: Wallet
     app.history.push(`/backupMnemonic?authKey=${authKey}`);
   };
 
+  const goToChangePasscode = async () => {
+    const { success, authKey } = await app.auth();
+    if (!success) return;
+
+    app.history.push(`/setupPassword?authKey=${authKey}`);
+  };
+
   const iconSize = 15;
   return (
     <div className="page settings">
@@ -131,7 +138,7 @@ export default observer(({ walletVM, app }: { app: Application; walletVM: Wallet
         <Feather icon="chevron-right" size={15} />
       </div>
 
-      <div className="setting-item click" onClick={(_) => app.auth()}>
+      <div className="setting-item click" onClick={(_) => goToChangePasscode()}>
         <Feather icon="lock" size={iconSize} />
         <span>Change Passcode</span>
         <Feather icon="chevron-right" size={15} />

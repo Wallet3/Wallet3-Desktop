@@ -1,4 +1,4 @@
-import MessageKeys, { GenMnemonic, SetupMnemonic } from '../../common/Messages';
+import MessageKeys, { BooleanResult, GenMnemonic, SetupMnemonic } from '../../common/Messages';
 import { action, makeAutoObservable, runInAction } from 'mobx';
 
 import WalletVM from './WalletVM';
@@ -40,6 +40,15 @@ export class MnemonicVM {
     runInAction(() => {
       this.phrases = mnemonic.split(/\s/);
     });
+  }
+
+  async changePasscode(authKey: string, passcode: string) {
+    const { success } = await ipc.invokeSecure<BooleanResult>(`${MessageKeys.changePassword}`, {
+      authKey,
+      password: crypto.sha256(passcode),
+    });
+
+    return success;
   }
 
   clean() {

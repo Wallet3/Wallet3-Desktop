@@ -27,6 +27,23 @@ export default ({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) => {
     setPassVerified(code === passcode1);
   };
 
+  const done = async () => {
+    const params = new URLSearchParams(window.location.search);
+    const authKey = params.get('authKey');
+
+    if (authKey) {
+      if (await mnVM.changePasscode(authKey, passcode1)) {
+        app.history.goBack();
+      }
+
+      return;
+    }
+
+    if (await mnVM.setupMnemonic(passcode1)) {
+      app.history.push('/app');
+    }
+  };
+
   return (
     <div className="page setupPw">
       <NavBar title="Setup Passcode" onBackClick={() => app.history.goBack()} />
@@ -42,14 +59,7 @@ export default ({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) => {
         ) : undefined}
       </div>
 
-      <button
-        disabled={!passVerified}
-        onClick={async (_) => {
-          if (await mnVM.setupMnemonic(passcode1)) {
-            app.history.push('/app');
-          }
-        }}
-      >
+      <button disabled={!passVerified} onClick={(_) => done()}>
         DONE
       </button>
     </div>
