@@ -17,7 +17,6 @@ import KeyMan from './KeyMan';
 import Transaction from './models/Transaction';
 import TxMan from './TxMan';
 import WCMan from './WCMan';
-import { reaction } from 'mobx';
 
 declare const POPUP_WINDOW_WEBPACK_ENTRY: string;
 declare const POPUP_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -199,6 +198,7 @@ export class App {
 
       const password = this.authKeys.get(authKey);
       this.authKeys.clear();
+
       await KeyMan.reset(password);
       await TxMan.clean();
       WCMan.clean();
