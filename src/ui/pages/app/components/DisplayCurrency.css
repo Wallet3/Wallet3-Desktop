@@ -1,15 +1,25 @@
 .display-currency {
-  display: grid;
+  /* display: grid; */
+  position: relative;
+  display: flex;
   grid-template-columns: auto 1fr;
   align-items: center;
   font-size: 14px;
   column-gap: 6px;
-  line-height: 14px;
+  line-height: 1rem;
+}
+
+.display-currency > span {
+  margin-bottom: -2px;
 }
 
 .display-currency.mini {
   font-size: 12px;
   line-height: 12px;
+}
+
+.display-currency.mini > span {
+  margin-bottom: 0px;
 }
 
 .display-currency > img {

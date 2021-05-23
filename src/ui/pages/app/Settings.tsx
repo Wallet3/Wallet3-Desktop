@@ -108,12 +108,12 @@ export default observer(({ walletVM, app }: { app: Application; walletVM: Wallet
           styles={{ minWidth: '3rem' }}
           menuButton={() => (
             <MenuButton className="menu-button">
-              <DisplayCurrency flag="USD" />
+              <DisplayCurrency flag="usa" label="USD" />
             </MenuButton>
           )}
         >
           <MenuItem styles={{ padding: '8px 12px' }}>
-            <DisplayCurrency flag="USD" mini />
+            <DisplayCurrency flag="usa" label="USD" mini />
           </MenuItem>
         </Menu>
       </div>
