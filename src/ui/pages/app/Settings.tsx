@@ -118,7 +118,7 @@ export default observer(({ walletVM, app }: { app: Application; walletVM: Wallet
         </Menu>
       </div>
 
-      <div className="setting-item click">
+      <div className="setting-item click" onClick={(_) => app.auth()}>
         <Feather icon="package" size={iconSize} />
         <span>Backup Mnemonic</span>
         <Feather icon="chevron-right" size={15} />
@@ -130,10 +130,10 @@ export default observer(({ walletVM, app }: { app: Application; walletVM: Wallet
         <Feather icon="chevron-right" size={15} />
       </div>
 
-      <div className="setting-item click">
+      <div className="setting-item click" onClick={(_) => app.auth()}>
         <Feather icon="tool" size={iconSize} />
         <span>Reset</span>
-        <span></span>
+        <Feather icon="chevron-right" size={15} />
       </div>
     </div>
   );

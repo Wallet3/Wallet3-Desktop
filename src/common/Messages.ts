@@ -57,6 +57,11 @@ export interface SetupMnemonic {
   addresses: string[];
 }
 
+export interface AuthenticationResult {
+  success: boolean;
+  authKey: string;
+}
+
 export interface TxParams {
   chainId: number;
   from: string;

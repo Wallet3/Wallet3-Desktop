@@ -1,7 +1,14 @@
 import * as Cipher from '../common/Cipher';
 
 import { BrowserWindow, Notification, TouchBar, TouchBarButton, app, ipcMain, systemPreferences } from 'electron';
-import MessageKeys, { ConfirmSendTx, InitStatus, PopupWindowTypes, SendTxParams, TxParams } from '../common/Messages';
+import MessageKeys, {
+  AuthenticationResult,
+  ConfirmSendTx,
+  InitStatus,
+  PopupWindowTypes,
+  SendTxParams,
+  TxParams,
+} from '../common/Messages';
 import { createECDH, randomBytes } from 'crypto';
 import { ethers, utils } from 'ethers';
 import { getProviderByChainId, sendTransaction } from '../common/Provider';
@@ -25,6 +32,8 @@ export class App {
   currentAddressIndex = 0;
   addresses: string[] = [];
   chainId = 1;
+
+  private authKeys = new Map<string, string>();
 
   get chainProvider() {
     return getProviderByChainId(this.chainId);
@@ -270,11 +279,14 @@ export class App {
       const authId = randomBytes(4).toString('hex');
       this.createPopupWindow('auth', { authId }, true, this.mainWindow);
 
-      const result = await new Promise<{ result: boolean }>((resolve) => {
+      const result = await new Promise<AuthenticationResult>((resolve) => {
         ipcMain.handleOnce(`${MessageKeys.returnAuthenticationResult(authId)}-secure`, async (e, encrypted, popWinId) => {
           const { iv, key } = this.windows.get(popWinId);
-          const ret = App.decryptIpc(encrypted, iv, key) as { result: boolean };
-          resolve(ret);
+          const { success, password } = App.decryptIpc(encrypted, iv, key) as { success: boolean; password?: string };
+          const authKey = result ? randomBytes(8).toString('hex') : '';
+          if (authKey) this.authKeys.set(authKey, password || (this.touchIDSupported ? this.userPassword : undefined));
+
+          resolve({ success, authKey });
         });
       });
 

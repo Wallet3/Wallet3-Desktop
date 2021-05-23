@@ -7,6 +7,7 @@ import AuthView from './confirms/AuthView';
 import Messages from '../../../common/Messages';
 import { PopupTitle } from '../../components';
 import React from 'react';
+import crypto from '../../bridges/Crypto';
 import ipc from '../../bridges/IPC';
 
 export default ({ app }: { app: ApplicationPopup }) => {
@@ -14,10 +15,10 @@ export default ({ app }: { app: ApplicationPopup }) => {
   const authId = params.get('id');
 
   const authViaTouchID = async () => {
-    const result = await app.promptTouchID();
+    const success = await app.promptTouchID();
 
-    if (result) {
-      ipc.invokeSecure(`${Messages.returnAuthenticationResult(authId)}`, { result });
+    if (success) {
+      ipc.invokeSecure(`${Messages.returnAuthenticationResult(authId)}`, { success });
       window.close();
     } else {
       Anime.vibrate('div.auth > .panel');
@@ -25,10 +26,10 @@ export default ({ app }: { app: ApplicationPopup }) => {
   };
 
   const authViaPassword = async (passcode: string) => {
-    const verified = await app.verifyPassword(passcode);
+    const success = await app.verifyPassword(passcode);
 
-    if (verified) {
-      ipc.invokeSecure(`${Messages.returnAuthenticationResult(authId)}`, { result: verified });
+    if (success) {
+      ipc.invokeSecure(`${Messages.returnAuthenticationResult(authId)}`, { success, password: crypto.sha256(passcode) });
       window.close();
     } else {
       Anime.vibrate('div.auth > .panel');

@@ -1,4 +1,4 @@
-import MessageKeys, { InitStatus, InitVerifyPassword, TxParams } from '../../common/Messages';
+import MessageKeys, { AuthenticationResult, InitStatus, InitVerifyPassword, TxParams } from '../../common/Messages';
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import WalletVM from './WalletVM';
@@ -64,7 +64,8 @@ export class Application {
   }
 
   async auth() {
-    await ipc.invokeSecure(MessageKeys.popupAuthentication, {});
+    const result = (await ipc.invokeSecure(MessageKeys.popupAuthentication, {})) as AuthenticationResult;
+    return result;
   }
 
   clearHistory() {
