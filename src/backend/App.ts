@@ -126,6 +126,20 @@ export class App {
       await KeyMan.setFullPath(fullPath);
     });
 
+    ipcMain.handle(`${MessageKeys.readMnemonic}-secure`, async (e, encrypted, winId) => {
+      const { iv, key } = this.windows.get(winId);
+      const { authKey } = App.decryptIpc(encrypted, iv, key);
+      const password = this.authKeys.get(authKey);
+      this.authKeys.delete(authKey);
+
+      if (!password) {
+        return App.encryptIpc({}, iv, key);
+      }
+
+      const mnemonic = await KeyMan.readMnemonic(password);
+      return App.encryptIpc({ mnemonic }, iv, key);
+    });
+
     ipcMain.handle(`${MessageKeys.verifyPassword}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
       const { password } = App.decryptIpc(encrypted, iv, key);
@@ -283,7 +297,7 @@ export class App {
         ipcMain.handleOnce(`${MessageKeys.returnAuthenticationResult(authId)}-secure`, async (e, encrypted, popWinId) => {
           const { iv, key } = this.windows.get(popWinId);
           const { success, password } = App.decryptIpc(encrypted, iv, key) as { success: boolean; password?: string };
-          const authKey = result ? randomBytes(8).toString('hex') : '';
+          const authKey = success ? randomBytes(8).toString('hex') : '';
           if (authKey) this.authKeys.set(authKey, password || (this.touchIDSupported ? this.userPassword : undefined));
 
           resolve({ success, authKey });

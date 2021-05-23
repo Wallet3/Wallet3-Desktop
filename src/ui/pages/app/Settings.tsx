@@ -64,6 +64,13 @@ export default observer(({ walletVM, app }: { app: Application; walletVM: Wallet
     };
   });
 
+  const goToBackupMnemonic = async () => {
+    const { success, authKey } = await app.auth();
+    if (!success) return;
+
+    app.history.push(`/backupMnemonic?authKey=${authKey}`);
+  };
+
   const iconSize = 15;
   return (
     <div className="page settings">
@@ -118,7 +125,7 @@ export default observer(({ walletVM, app }: { app: Application; walletVM: Wallet
         </Menu>
       </div>
 
-      <div className="setting-item click" onClick={(_) => app.auth()}>
+      <div className="setting-item click" onClick={(_) => goToBackupMnemonic()}>
         <Feather icon="package" size={iconSize} />
         <span>Backup Mnemonic</span>
         <Feather icon="chevron-right" size={15} />

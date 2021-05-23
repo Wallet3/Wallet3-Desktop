@@ -34,6 +34,18 @@ export class MnemonicVM {
     return success;
   }
 
+  async readMnemonic(authKey: string) {
+    const { mnemonic } = await ipc.invokeSecure<{ mnemonic: string }>(`${MessageKeys.readMnemonic}`, { authKey });
+
+    runInAction(() => {
+      this.phrases = mnemonic.split(/\s/);
+    });
+  }
+
+  clean() {
+    this.phrases = [];
+  }
+
   private _delayTimer: NodeJS.Timer;
   setPath(fullPath: string) {
     clearTimeout(this._delayTimer);

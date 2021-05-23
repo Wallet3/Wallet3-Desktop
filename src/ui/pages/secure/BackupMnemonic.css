@@ -1,0 +1,22 @@
+.page.backup-mnemonic {
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.page.backup-mnemonic h5 {
+  margin: 0;
+  margin-bottom: 8px;
+  color: var(--font-color-desc);
+}
+
+.page.backup-mnemonic ul {
+  padding: 0 4px;
+  margin: 0 14px;
+  margin-bottom: 24px;
+  font-size: 13px;
+  color: var(--font-color-desc);
+}
+
+.page.backup-mnemonic ul > li {
+  margin-bottom: 8px;
+}

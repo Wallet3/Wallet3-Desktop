@@ -14,6 +14,7 @@ import shell from '../../bridges/Shell';
 export default observer(({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) => {
   useEffect(() => {
     mnVM.requestMnemonic(12);
+    return () => mnVM.clean();
   }, [mnVM]);
 
   const [mnLength, setMnLength] = useState(12);

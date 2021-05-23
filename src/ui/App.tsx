@@ -5,6 +5,7 @@ import { Blank, Generate, Import, Locking, SetupPasscode, Welcome } from './page
 import { Route, Router, Switch } from 'react-router-dom';
 
 import { Application } from './viewmodels/Application';
+import { BackupMnemonic } from './pages/secure';
 import MainLayout from './pages/layouts/MainLayout';
 import { MnemonicVM } from './viewmodels/MnemonicVM';
 import { NetworksVM } from './viewmodels/NetworksVM';
@@ -49,6 +50,9 @@ export default observer((args: { app: Application; mnVM: MnemonicVM; networksVM:
           </Route>
           <Route path="/pendingtx">
             <PendingTx {...args} />
+          </Route>
+          <Route path="/backupMnemonic">
+            <BackupMnemonic {...args} />
           </Route>
 
           <Route path="*" component={Blank} />

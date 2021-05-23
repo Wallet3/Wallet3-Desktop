@@ -5,6 +5,7 @@ export default {
   saveTmpMnemonic: 'msg-save-tmp-mnemonic',
   setDerivationPath: 'msg-set-derivation-path',
   setupMnemonic: 'msg-setup-mnemonic',
+  readMnemonic: 'msg-read-mnemonic',
   verifyPassword: 'msg-verify-password',
   initVerifyPassword: 'msg-init-verify-password',
   promptTouchID: 'msg-prompt-touchid',

@@ -6,6 +6,7 @@ import React from 'react';
 
 export default ({ phrases }: { phrases: string[] }) => {
   const rows = phrases.length / 4;
+  const count = phrases.length;
   const rowWords: string[][] = phrases.length === 0 ? new Array(3).fill(new Array(4).fill('')) : [];
 
   for (let i = 0; i < rows; i++) {
@@ -22,16 +23,18 @@ export default ({ phrases }: { phrases: string[] }) => {
     return (
       <tr key={ri}>
         {row.map((word, wi) => {
+          const index = ri * 4 + wi + 1;
+
           return (
             <td key={`row-${ri}-${wi}`}>
               {word ? (
                 <div>
                   <span>{word}</span>
-                  <span className="no">{ri * 4 + wi + 1}</span>
+                  <span className="no">{index}</span>
                 </div>
-              ) : (
+              ) : index < count ? (
                 <Skeleton width={64} height={20} style={{ margin: '8px 0' }} />
-              )}
+              ) : undefined}
             </td>
           );
         })}
