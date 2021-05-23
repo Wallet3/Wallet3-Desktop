@@ -115,6 +115,7 @@ export class App {
       const addresses = await KeyMan.genAddresses(userPassword, 10);
       this.addresses = addresses;
       if (this.touchBarButtons?.walletConnect) this.touchBarButtons.walletConnect.enabled = true;
+      if (this.touchIDSupported) this.userPassword = userPassword;
 
       return App.encryptIpc({ addresses, success: true }, iv, key);
     });
@@ -169,10 +170,7 @@ export class App {
       if (verified) {
         this.addresses.push(...(await KeyMan.genAddresses(password, count)));
         if (this.touchBarButtons?.walletConnect) this.touchBarButtons.walletConnect.enabled = true;
-
-        if (this.touchIDSupported) {
-          this.userPassword = password;
-        }
+        if (this.touchIDSupported) this.userPassword = password;
       }
 
       return App.encryptIpc({ verified, addresses: verified ? this.addresses : [] }, iv, key);
