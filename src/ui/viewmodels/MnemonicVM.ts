@@ -6,7 +6,7 @@ import crypto from '../bridges/Crypto';
 import ipc from '../bridges/IPC';
 
 export class MnemonicVM {
-  phrases: string[] = [];
+  phrases: string[] = new Array(12).fill('');
   address = '';
 
   constructor() {

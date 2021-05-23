@@ -34,6 +34,7 @@
 .page.generate > div.seeds > .actions > .addr {
   display: flex;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .page.generate > div.seeds > .actions > .addr > .addr-value {

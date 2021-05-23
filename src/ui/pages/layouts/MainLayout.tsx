@@ -14,7 +14,13 @@ import { observer } from 'mobx-react-lite';
 
 export default observer((args: { networksVM: NetworksVM; walletVM: WalletVM; app: Application }) => {
   const { path, url } = useRouteMatch();
-  const [activeTab, setActiveTab] = useState(0);
+
+  let tab = 0;
+  if (location.pathname.endsWith('settings')) {
+    tab = 1;
+  }
+
+  const [activeTab, setActiveTab] = useState(tab);
 
   return (
     <SkeletonTheme color="#eeeeee90" highlightColor="#f5f5f5d0">
