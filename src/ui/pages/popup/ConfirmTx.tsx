@@ -127,7 +127,7 @@ export default observer(({ app }: Props) => {
         {signVM ? <SignView signVM={signVM} onReject={onReject} onContinue={onContinue} /> : undefined}
 
         <AuthView
-          app={app}
+          touchIDSupported={app.touchIDSupported}
           onCancel={onAuthCancel}
           onAuthTouchID={authViaTouchID}
           onAuthPasscode={authViaPassword}

@@ -3,6 +3,7 @@ import './Settings.css';
 import { CryptoIcons, FlagIcons } from '../../misc/Icons';
 import { Menu, MenuButton, MenuDivider, MenuItem } from '@szhsin/react-menu';
 
+import { Application } from '../../viewmodels/Application';
 import DisplayCurrency from './components/DisplayCurrency';
 import Feather from 'feather-icons-react';
 import { NetworksVM } from '../../viewmodels/NetworksVM';
@@ -52,7 +53,7 @@ const customStyles = {
   },
 };
 
-export default observer(({ walletVM, networksVM }: { walletVM: WalletVM; networksVM: NetworksVM }) => {
+export default observer(({ walletVM, app }: { app: Application; walletVM: WalletVM; networksVM: NetworksVM }) => {
   const accounts = walletVM.accounts.map((a, i) => {
     const addr = `${a.address.substring(0, 7)}...${a.address.substring(a.address.length - 4)}`;
     const balance = a.nativeToken ? `(${a.nativeToken.amount.toFixed(2)} ${a.nativeToken.symbol})` : '';
@@ -123,7 +124,7 @@ export default observer(({ walletVM, networksVM }: { walletVM: WalletVM; network
         <Feather icon="chevron-right" size={15} />
       </div>
 
-      <div className="setting-item click">
+      <div className="setting-item click" onClick={(_) => app.auth()}>
         <Feather icon="lock" size={iconSize} />
         <span>Change Passcode</span>
         <Feather icon="chevron-right" size={15} />

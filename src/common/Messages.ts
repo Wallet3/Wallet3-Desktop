@@ -16,7 +16,7 @@ export default {
   changeChainId: 'msg-change-chain-id',
   changeAccountIndex: 'msg-change-account-index',
   popupAuthentication: 'msg-popup-authentication',
-  returnAuthenticationResult: 'msg-return-authentication',
+  returnAuthenticationResult: (id: string) => `msg-return-authentication-${id}`,
 
   scanQR: 'msg-scan-qr',
   connectWallet: 'msg-connect-wallet',

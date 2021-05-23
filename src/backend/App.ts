@@ -271,7 +271,7 @@ export class App {
       this.createPopupWindow('auth', { authId }, true, this.mainWindow);
 
       const result = await new Promise<{ result: boolean }>((resolve) => {
-        ipcMain.handleOnce(`${MessageKeys.returnAuthenticationResult}-${authId}-secure`, async (e, encrypted, popWinId) => {
+        ipcMain.handleOnce(`${MessageKeys.returnAuthenticationResult(authId)}-secure`, async (e, encrypted, popWinId) => {
           const { iv, key } = this.windows.get(popWinId);
           const ret = App.decryptIpc(encrypted, iv, key) as { result: boolean };
           resolve(ret);

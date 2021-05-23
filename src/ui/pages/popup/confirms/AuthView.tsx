@@ -9,19 +9,18 @@ import { observer } from 'mobx-react-lite';
 
 export default observer(
   ({
-    app,
+    touchIDSupported,
     onCancel,
     onAuthTouchID,
     onAuthPasscode,
     runTouchID,
   }: {
-    app: ApplicationPopup;
     onCancel?: () => void;
     onAuthTouchID?: () => Promise<void>;
     onAuthPasscode?: (passcode: string) => Promise<void>;
+    touchIDSupported: boolean;
     runTouchID?: boolean;
   }) => {
-    const { touchIDSupported } = app;
     const [loading, setLoading] = useState(false);
     const [launched, setLaunced] = useState(false);
 

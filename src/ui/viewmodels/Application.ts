@@ -63,6 +63,10 @@ export class Application {
     return await ipc.invokeSecure<boolean>(MessageKeys.promptTouchID, { message });
   }
 
+  async auth() {
+    await ipc.invokeSecure(MessageKeys.popupAuthentication, {});
+  }
+
   clearHistory() {
     return ipc.invoke(MessageKeys.clearHistory);
   }

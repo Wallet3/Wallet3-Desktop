@@ -92,26 +92,7 @@
   z-index: 2;
 }
 
-/* .page.confirm > .container > .auth {
+.page.confirm > .container > .auth {
   position: absolute;
-  width: 100%;
-  height: 100%;
-  display: grid;
-  grid-template-rows: 1fr auto;
   opacity: 0;
 }
-
-.page.confirm > .container > .auth > .panel {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.page.confirm > .container > .auth > .panel > .touchid-view {
-  height: 64px;
-}
-
-.page.confirm > .container > .auth > .panel > .passcode-view {
-  width: 100%;
-  height: 165px;
-} */
