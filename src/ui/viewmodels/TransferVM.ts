@@ -83,7 +83,7 @@ export class TransferVM {
     this.rapid = Gasnow.rapidGwei;
     this.fast = Gasnow.fastGwei;
     this.standard = Gasnow.standardGwei;
-    
+
     this.initGasPrice();
     this.initNonce();
   }
@@ -204,7 +204,12 @@ export class TransferVM {
 
     if (this.isERC20) {
       const erc20 = new ethers.Contract(this.selectedToken.id, ERC20ABI, NetworksVM.currentProvider);
-      erc20.balanceOf(this.self).then((v: BigNumber) => runInAction(() => (this.selectedTokenBalance = v)));
+      erc20.balanceOf(this.self).then((v: BigNumber) =>
+        runInAction(() => {
+          this.selectedTokenBalance = v;
+          this.selectedToken.amount = Number.parseFloat(utils.formatUnits(v, this.selectedToken.decimals));
+        })
+      );
       return;
     }
 

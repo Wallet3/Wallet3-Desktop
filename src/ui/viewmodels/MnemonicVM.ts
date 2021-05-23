@@ -57,6 +57,8 @@ export class MnemonicVM {
 
   private _delayTimer: NodeJS.Timer;
   setPath(fullPath: string) {
+    if (!fullPath.startsWith('m/')) return;
+    
     clearTimeout(this._delayTimer);
     this._delayTimer = setTimeout(() => {
       ipc.invokeSecure(MessageKeys.setDerivationPath, { fullPath });

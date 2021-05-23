@@ -198,6 +198,7 @@ export class App {
 
       const password = this.authKeys.get(authKey);
       this.authKeys.clear();
+      if (this.touchBarButtons?.walletConnect) this.touchBarButtons.walletConnect.enabled = false;
 
       await KeyMan.reset(password);
       await TxMan.clean();
