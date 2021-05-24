@@ -53,7 +53,7 @@ export class MnemonicVM {
   }
 
   clean() {
-    this.phrases = [];
+    this.phrases = new Array(12).fill('');
   }
 
   private _delayTimer: NodeJS.Timer;

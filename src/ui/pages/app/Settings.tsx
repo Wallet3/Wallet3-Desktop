@@ -4,6 +4,7 @@ import { CryptoIcons, FlagIcons } from '../../misc/Icons';
 import { Menu, MenuButton, MenuDivider, MenuItem } from '@szhsin/react-menu';
 
 import { Application } from '../../viewmodels/Application';
+import { CurrencyVM } from '../../viewmodels/CurrencyVM';
 import DisplayCurrency from './components/DisplayCurrency';
 import Feather from 'feather-icons-react';
 import { NetworksVM } from '../../viewmodels/NetworksVM';
@@ -23,37 +24,13 @@ const langs = [
   { value: 'cn', label: '简体中文' },
 ];
 
-const icon = (symbol: string) => ({
-  alignItems: 'center',
-  display: 'flex',
+interface IConstructor {
+  app: Application;
+  walletVM: WalletVM;
+  currencyVM: CurrencyVM;
+}
 
-  ':before': {
-    backgroundImage: `url(${FlagIcons(symbol)})`,
-    backgroundSize: 'cover',
-    content: '" "',
-    display: 'block',
-    marginRight: 8,
-    height: 19,
-    width: 19,
-  },
-});
-
-const customStyles = {
-  option: (provided, state) => {
-    console.log(state);
-    return {
-      ...provided,
-      ...icon(state.value),
-    };
-  },
-  singleValue: (provided, state) => {
-    const opacity = state.isDisabled ? 0.5 : 1;
-    const transition = 'opacity 300ms';
-    return { ...provided, opacity, transition, ...icon(state.data.value) };
-  },
-};
-
-export default observer(({ walletVM, app }: { app: Application; walletVM: WalletVM; networksVM: NetworksVM }) => {
+export default observer(({ walletVM, app, currencyVM }: IConstructor) => {
   const accounts = walletVM.accounts.map((a, i) => {
     const addr = `${a.address.substring(0, 7)}...${a.address.substring(a.address.length - 4)}`;
     const balance = a.nativeToken ? `(${a.nativeToken.amount.toFixed(2)} ${a.nativeToken.symbol})` : '';
@@ -108,13 +85,17 @@ export default observer(({ walletVM, app }: { app: Application; walletVM: Wallet
           styles={{ minWidth: '3rem' }}
           menuButton={() => (
             <MenuButton className="menu-button">
-              <DisplayCurrency flag="usa" label="USD" />
+              <DisplayCurrency flag={currencyVM.currentCurrency.flag} label={currencyVM.currentCurrency.currency} />
             </MenuButton>
           )}
         >
-          <MenuItem styles={{ padding: '8px 12px' }}>
-            <DisplayCurrency flag="usa" label="USD" mini />
-          </MenuItem>
+          {currencyVM.supportedCurrencies.map((c) => {
+            return (
+              <MenuItem styles={{ padding: '8px 12px' }} onClick={() => currencyVM.setCurrency(c)}>
+                <DisplayCurrency flag={c.flag} label={c.currency} mini />
+              </MenuItem>
+            );
+          })}
         </Menu>
       </div>
 

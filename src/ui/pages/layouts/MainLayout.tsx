@@ -6,13 +6,14 @@ import { Route, Switch } from 'react-router';
 import { Settings, Wallet } from '../app';
 
 import { Application } from '../../viewmodels/Application';
+import { CurrencyVM } from '../../viewmodels/CurrencyVM';
 import Feather from 'feather-icons-react';
 import { NetworksVM } from '../../viewmodels/NetworksVM';
 import { SkeletonTheme } from 'react-loading-skeleton';
 import { WalletVM } from '../../viewmodels/WalletVM';
 import { observer } from 'mobx-react-lite';
 
-export default observer((args: { networksVM: NetworksVM; walletVM: WalletVM; app: Application }) => {
+export default observer((args: { networksVM: NetworksVM; walletVM: WalletVM; app: Application; currencyVM: CurrencyVM }) => {
   const { path, url } = useRouteMatch();
 
   let tab = 0;
