@@ -7,6 +7,7 @@ import { Networks, NetworksVM } from '../../viewmodels/NetworksVM';
 import AnimatedNumber from 'react-animated-number';
 import { Application } from '../../viewmodels/Application';
 import { CryptoIcons } from '../../misc/Icons';
+import { CurrencyVM } from '../../viewmodels/CurrencyVM';
 import Feather from 'feather-icons-react';
 import GasnowWs from '../../../api/Gasnow';
 import HSBar from 'react-horizontal-stacked-bar-chart';
@@ -22,7 +23,17 @@ import { formatNum } from '../../misc/Formatter';
 import { observer } from 'mobx-react-lite';
 
 export default observer(
-  ({ networksVM, app, walletVM }: { app: Application; networksVM: NetworksVM; walletVM: WalletVM }) => {
+  ({
+    networksVM,
+    app,
+    walletVM,
+    currencyVM,
+  }: {
+    app: Application;
+    networksVM: NetworksVM;
+    walletVM: WalletVM;
+    currencyVM: CurrencyVM;
+  }) => {
     const { currentAccount: accountVM, pendingTxCount, pendingTxs } = walletVM;
 
     const maxRows = 6;
@@ -101,7 +112,7 @@ export default observer(
 
           <button
             className="icon-button"
-            title={(`${accountVM?.ens || accountVM?.address} (Account ${accountVM.accountIndex})`) ?? 'Show Address'}
+            title={`${accountVM?.ens || accountVM?.address} (Account ${accountVM.accountIndex})` ?? 'Show Address'}
             onClick={(_) => app.history.push('/account')}
           >
             <Feather icon="user" size={16} strokeWidth={1} />
@@ -114,7 +125,12 @@ export default observer(
             {accountVM.netWorth === undefined ? (
               <Skeleton />
             ) : (
-              <AnimatedNumber component="span" value={accountVM.netWorth} duration={300} formatValue={(n) => formatNum(n)} />
+              <AnimatedNumber
+                component="span"
+                value={accountVM.netWorth}
+                duration={300}
+                formatValue={(n) => currencyVM.format(n)}
+              />
             )}
           </div>
 

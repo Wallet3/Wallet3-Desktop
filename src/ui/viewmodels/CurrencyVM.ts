@@ -1,4 +1,6 @@
+import Coingecko from '../../api/Coingecko';
 import { makeAutoObservable } from 'mobx';
+import numeral from 'numeral';
 import store from 'storejs';
 
 interface Currency {
@@ -24,6 +26,21 @@ export class CurrencyVM {
   setCurrency(currency: Currency) {
     this.currentCurrency = currency;
     store.set('currency', currency.currency);
+  }
+
+  format(usd: number) {
+    let value = 0;
+    switch (this.currentCurrency.currency) {
+      case 'USD':
+        value = usd;
+        break;
+      case 'ETH':
+        value = usd / Coingecko.eth;
+        break;
+    }
+
+    const formatted = numeral(value).format('0,0.00');
+    return `${this.currentCurrency.symbol} ${formatted === 'NaN' ? '0.00' : formatted}`.trim();
   }
 }
 

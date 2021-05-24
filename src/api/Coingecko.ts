@@ -21,9 +21,9 @@ class Coingecko {
     makeAutoObservable(this);
   }
 
-  start() {
+  start(delay: number = 25) {
     const run = () => {
-      this.timer = setTimeout(() => this.start(), 15 * 1000);
+      this.timer = setTimeout(() => this.start(delay), delay * 1000);
     };
 
     clearTimeout(this.timer);

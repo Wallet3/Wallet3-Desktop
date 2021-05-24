@@ -7,6 +7,7 @@ import MessageKeys, {
 } from '../../common/Messages';
 import { makeObservable, observable, runInAction } from 'mobx';
 
+import Coingecko from '../../api/Coingecko';
 import WalletVM from './WalletVM';
 import { createBrowserHistory } from 'history';
 import crypto from '../bridges/Crypto';
@@ -32,6 +33,8 @@ export class Application {
     this.hasMnemonic = hasMnemonic;
     this.touchIDSupported = touchIDSupported;
     this.initVerified = initVerified;
+
+    Coingecko.start(30);
 
     if (addresses?.length > 0) {
       WalletVM.initAccounts(addresses);

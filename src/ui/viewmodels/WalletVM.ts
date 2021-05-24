@@ -49,7 +49,7 @@ export class WalletVM {
     this.accounts = addresses.map((address, i) => new AccountVM({ address, accountIndex: i + 1 }));
 
     const lastUsedAccount = store.get(Keys.lastUsedAccount) || addresses[0];
-    this.currentAccount = this.accounts.find((a) => a.address === lastUsedAccount);
+    this.currentAccount = this.accounts.find((a) => a.address === lastUsedAccount) || this.accounts[0];
     this.currentAccount.refresh();
 
     ipc.invokeSecure(Messages.changeAccountIndex, { index: addresses.indexOf(lastUsedAccount) });
