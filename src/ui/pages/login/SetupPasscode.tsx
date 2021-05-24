@@ -9,10 +9,12 @@ import { Application } from '../../viewmodels/Application';
 import { MnemonicVM } from '../../viewmodels/MnemonicVM';
 import { NavBar } from '../../components';
 import Passcode from 'react-codes-input';
+import { useTranslation } from 'react-i18next';
 
 export default ({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) => {
   const [passcode1, setPasscode1] = useState('');
   const [passVerified, setPassVerified] = useState(false);
+  const { t } = useTranslation();
 
   const onPasscode1Change = (code: string) => {
     if (code.length !== 6) return;
@@ -46,10 +48,10 @@ export default ({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) => {
 
   return (
     <div className="page setupPw">
-      <NavBar title="Setup Passcode" onBackClick={() => app.history.goBack()} />
+      <NavBar title={t('Setup Passcode')} onBackClick={() => app.history.goBack()} />
 
       <div className="password">
-        <p>{passcode1.length === 0 ? 'Please enter a passcode' : 'Please enter again'}</p>
+        <p>{passcode1.length === 0 ? t('Please enter a passcode') : t('Please enter again')}</p>
         {!passcode1 ? (
           <Passcode id="passcode1" codeLength={6} hide initialFocus onChange={onPasscode1Change} focusColor="#6186ff" />
         ) : undefined}
@@ -60,7 +62,7 @@ export default ({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) => {
       </div>
 
       <button disabled={!passVerified} onClick={(_) => done()}>
-        DONE
+        {t('DONE')}
       </button>
     </div>
   );

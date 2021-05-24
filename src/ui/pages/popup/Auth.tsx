@@ -9,8 +9,11 @@ import { PopupTitle } from '../../components';
 import React from 'react';
 import crypto from '../../bridges/Crypto';
 import ipc from '../../bridges/IPC';
+import { useTranslation } from 'react-i18next';
 
 export default ({ app }: { app: ApplicationPopup }) => {
+  const { t } = useTranslation();
+
   const params = new URLSearchParams(window.location.search);
   const authId = params.get('id');
 
@@ -43,7 +46,7 @@ export default ({ app }: { app: ApplicationPopup }) => {
 
   return (
     <div className="page auth">
-      <PopupTitle title={'Authentication'} icon={'lock'} />
+      <PopupTitle title={t('Authentication')} icon={'lock'} />
       <AuthView
         touchIDSupported={app.touchIDSupported}
         onAuthTouchID={authViaTouchID}

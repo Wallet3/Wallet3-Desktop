@@ -3,8 +3,11 @@ import './Welcome.css';
 import { Link } from 'react-router-dom';
 import { Logo } from '../../components';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 export default () => {
+  const { t } = useTranslation();
+
   return (
     <div className="page welcome">
       <div className="brand">
@@ -14,10 +17,10 @@ export default () => {
 
       <div className="actions">
         <Link className="button" to="/generate">
-          CREATE
+          {t('CREATE')}
         </Link>
         <Link className="button" to="/import">
-          IMPORT
+          {t('IMPORT')}
         </Link>
       </div>
     </div>

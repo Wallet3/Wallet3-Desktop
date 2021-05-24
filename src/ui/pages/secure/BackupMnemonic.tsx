@@ -7,10 +7,12 @@ import Mnemonic from '../../components/Mnemonic';
 import { MnemonicVM } from '../../viewmodels/MnemonicVM';
 import { NavBar } from '../../components';
 import { observer } from 'mobx-react-lite';
+import { useTranslation } from 'react-i18next';
 
 export default observer(({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) => {
   const params = new URLSearchParams(window.location.search);
   const authKey = params.get('authKey');
+  const { t } = useTranslation();
 
   useEffect(() => {
     mnVM.readMnemonic(authKey);
@@ -19,14 +21,14 @@ export default observer(({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) 
 
   return (
     <div className="page backup-mnemonic">
-      <NavBar title="Backup Mnemonic" onBackClick={() => app.history.goBack()} />
+      <NavBar title={t('Backup Mnemonic')} onBackClick={() => app.history.goBack()} />
 
       <div className="content">
         <div>
-          <h5>Security Tips</h5>
+          <h5>{t('Security Tips')}</h5>
           <ul>
-            <li>The mnemonic consists of English words, please keep them safe.</li>
-            <li>Once the mnemonic gets lost, it cannot be retrieved, and you may lose all your funds.</li>
+            <li>{t('Mn_Sec_Tip_1')}</li>
+            <li>{t('Mn_Sec_Tip_2')}</li>
           </ul>
         </div>
 

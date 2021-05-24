@@ -10,8 +10,11 @@ import { MnemonicVM } from '../../viewmodels/MnemonicVM';
 import { NavBar } from '../../components';
 import { observer } from 'mobx-react-lite';
 import shell from '../../bridges/Shell';
+import { useTranslation } from 'react-i18next';
 
 export default observer(({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) => {
+  const { t } = useTranslation();
+
   useEffect(() => {
     mnVM.requestMnemonic(12);
     return () => mnVM.clean();
@@ -22,12 +25,12 @@ export default observer(({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) 
   return (
     <div className="page generate">
       <div>
-        <NavBar title="Mnemonic" onBackClick={() => app.history.goBack()} />
+        <NavBar title={t('Mnemonic')} onBackClick={() => app.history.goBack()} />
 
-        <h5>Security Tips</h5>
+        <h5>{t('Security Tips')}</h5>
         <ul>
-          <li>The mnemonic consists of English words, please keep them safe.</li>
-          <li>Once the mnemonic gets lost, it cannot be retrieved, and you may lose all your funds.</li>
+          <li>{t('Mn_Sec_Tip_1')}</li>
+          <li>{t('Mn_Sec_Tip_2')}</li>
         </ul>
       </div>
 
@@ -36,7 +39,7 @@ export default observer(({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) 
 
         <div className="actions">
           <div className="addr" onClick={(_) => shell.open(`https://etherscan.io/address/${mnVM.address}`)}>
-            <span>Address: </span>
+            <span>{t('Address')}: </span>
             <span className="addr-value" title={mnVM.address}>
               {mnVM.address}
             </span>
@@ -75,7 +78,7 @@ export default observer(({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) 
       <div className="padding"></div>
 
       <Link className="button" to="/setupPassword">
-        NEXT
+        {t('NEXT')}
       </Link>
     </div>
   );

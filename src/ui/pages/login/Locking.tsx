@@ -8,6 +8,7 @@ import { Application } from '../../viewmodels/Application';
 import Passcode from 'react-codes-input';
 import TouchID from '../../../assets/icons/app/touchid.svg';
 import anime from 'animejs';
+import { useTranslation } from 'react-i18next';
 
 export default (args: { app: Application }) => {
   const { app } = args;
@@ -20,6 +21,8 @@ export default (args: { app: Application }) => {
 };
 
 const PasscodeView = ({ app }: { app: Application }) => {
+  const { t } = useTranslation();
+
   const onPasscodeChange = async (value: string) => {
     if (value.length < 6) return;
 
@@ -40,13 +43,15 @@ const PasscodeView = ({ app }: { app: Application }) => {
 
   return (
     <div className="passcode-view">
-      <p>Please enter passcode</p>
+      <p>{t('Please enter passcode')}</p>
       <Passcode id="passcode-locking" codeLength={6} hide initialFocus onChange={onPasscodeChange} focusColor="#6186ff" />
     </div>
   );
 };
 
 const TouchIDView = ({ app }: { app: Application }) => {
+  const { t } = useTranslation();
+
   const onKeyDown: KeyboardEventHandler<HTMLDivElement> = async (e) => {
     if (e.code !== 'Space') return;
     await auth();
@@ -81,7 +86,7 @@ const TouchIDView = ({ app }: { app: Application }) => {
 
   return (
     <div className="touchid-view" tabIndex={0} onKeyDown={onKeyDown}>
-      <p>Press [space] to continue</p>
+      <p>{t('Press [space] to continue')}</p>
       <div>
         <img src={TouchID} onClick={(_) => auth()} />
       </div>

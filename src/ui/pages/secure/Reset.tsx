@@ -4,8 +4,11 @@ import { Application } from '../../viewmodels/Application';
 import Feather from 'feather-icons-react';
 import { NavBar } from '../../components';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 export default ({ app }: { app: Application }) => {
+  const { t } = useTranslation();
+
   const reset = async () => {
     const params = new URLSearchParams(window.location.search);
     const authKey = params.get('authKey');
@@ -17,15 +20,15 @@ export default ({ app }: { app: Application }) => {
 
   return (
     <div className="page reset">
-      <NavBar title="Reset" onBackClick={() => app.history.goBack()} />
+      <NavBar title={t('Reset')} onBackClick={() => app.history.goBack()} />
       <div className="content">
         <Feather icon="alert-triangle" size={64} strokeWidth={1} />
         <p>
-          The operation is not reversible. <br />
-          Please keep your mnemonic safe.
+          {t('Reset_Tip1')} <br />
+          {t('Reset_Tip2')}
         </p>
       </div>
-      <button onClick={(_) => reset()}>Reset</button>
+      <button onClick={(_) => reset()}>{t('Reset')}</button>
     </div>
   );
 };

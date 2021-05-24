@@ -6,6 +6,7 @@ import { ApplicationPopup } from '../../../viewmodels/ApplicationPopup';
 import PasscodeView from '../../../components/PasscodeView';
 import TouchIDView from '../../../components/TouchIDView';
 import { observer } from 'mobx-react-lite';
+import { useTranslation } from 'react-i18next';
 
 export default observer(
   ({
@@ -21,6 +22,8 @@ export default observer(
     touchIDSupported: boolean;
     runTouchID?: boolean;
   }) => {
+    const { t } = useTranslation();
+
     const [loading, setLoading] = useState(false);
     const [launched, setLaunced] = useState(false);
 
@@ -45,7 +48,7 @@ export default observer(
       <div className="auth">
         <div className="panel">{touchIDSupported ? <TouchIDView onAuth={auth} /> : <PasscodeView onAuth={auth} />}</div>
         <button disabled={loading} onClick={(_) => onCancel?.()}>
-          Cancel
+          {t('Cancel')}
         </button>
       </div>
     );

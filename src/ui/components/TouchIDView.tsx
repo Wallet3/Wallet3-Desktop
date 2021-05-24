@@ -4,11 +4,13 @@ import * as Anime from '../misc/Anime';
 
 import React, { KeyboardEventHandler, useEffect } from 'react';
 
-import { Application } from '../viewmodels/Application';
 import TouchID from '../../assets/icons/app/touchid.svg';
 import { observer } from 'mobx-react-lite';
+import { useTranslation } from 'react-i18next';
 
 export default observer(({ onAuth }: { onAuth?: () => void }) => {
+  const { t } = useTranslation();
+
   const onKeyDown: KeyboardEventHandler<HTMLDivElement> = async (e) => {
     if (e.code !== 'Space') return;
     onAuth?.();
@@ -20,7 +22,7 @@ export default observer(({ onAuth }: { onAuth?: () => void }) => {
 
   return (
     <div className="touchid-view" tabIndex={0} onKeyDown={onKeyDown}>
-      <p>Press [space] to continue</p>
+      <p>{t('Press [space] to continue')}</p>
       <div>
         <img src={TouchID} onClick={(_) => onAuth?.()} />
       </div>
