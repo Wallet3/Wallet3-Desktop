@@ -32,8 +32,8 @@ export class AddTokenVM {
     this.accountVM = accountVM;
   }
 
-  async inputAddress(value: string) {
-    if (!utils.isAddress(value)) return;
+  async inputAddress(addr: string) {
+    if (!utils.isAddress(addr)) return;
     if (this.loading) return;
 
     this.loading = true;
@@ -41,12 +41,12 @@ export class AddTokenVM {
     this.name = '';
     this.decimals = 0;
     this.symbol = '';
-    this.tokenAddress = value;
+    this.tokenAddress = addr;
 
-    const isMKR = value.toLowerCase() === '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2';
+    const isMKR = addr.toLowerCase() === '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2';
 
     try {
-      const erc20 = new ethers.Contract(value, isMKR ? MKRABI : ERC20ABI, NetworksVM.currentProvider);
+      const erc20 = new ethers.Contract(addr, isMKR ? MKRABI : ERC20ABI, NetworksVM.currentProvider);
       let [balance, name, decimals, symbol] = await Promise.all([
         erc20.balanceOf(this.accountVM.address),
         erc20.name(),

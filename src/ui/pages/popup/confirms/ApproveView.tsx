@@ -13,8 +13,7 @@ interface Props {
 }
 
 export default observer(({ confirmVM, onReject, onContinue }: Props) => {
-  const { receiptAddress, receipt, approveToken, tokenSymbol, gas, gasPrice, maxFee, nonce, totalValue, networkSymbol } =
-    confirmVM;
+  const { approveToken, tokenSymbol, gas, gasPrice, maxFee, nonce, totalValue, networkSymbol } = confirmVM;
   const { t } = useTranslation();
 
   useEffect(() => {

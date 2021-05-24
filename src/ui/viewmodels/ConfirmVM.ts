@@ -1,17 +1,18 @@
 import { BigNumber, ethers, utils } from 'ethers';
 import Messages, { ConfirmSendTx, SendTxParams, WcMessages } from '../../common/Messages';
-import NetworksVM, { Networks } from './NetworksVM';
 import { formatEther, parseUnits } from '@ethersproject/units';
 import { makeAutoObservable, runInAction } from 'mobx';
 
 import App from './Application';
 import ERC20ABI from '../../abis/ERC20.json';
 import { GasnowWs } from '../../api/Gasnow';
+import { Networks } from './NetworksVM';
 import WalletVM from './WalletVM';
 import crypto from '../bridges/Crypto';
 import delay from 'delay';
 import { findTokenByAddress } from '../misc/Tokens';
 import { formatUnits } from 'ethers/lib/utils';
+import { getProviderByChainId } from '../../common/Provider';
 import i18n from '../../i18n';
 import ipc from '../bridges/IPC';
 
@@ -44,11 +45,17 @@ export class ConfirmVM {
     iface?: ethers.utils.Interface;
   } = undefined;
 
+  private _provider: ethers.providers.BaseProvider;
   private _value: string | number = '';
   private _data: string = '';
 
   constructor(params: ConfirmSendTx) {
     makeAutoObservable(this);
+    this._provider = getProviderByChainId(params.chainId);
+    this._provider
+      .getBalance(params.from)
+      .then((v) => runInAction(() => (this.nativeBalance = v)))
+      .catch(() => console.log('balance error'));
 
     if (Methods.has(params.data?.substring(0, 10))) {
       const [method, icon] = Methods.get(params.data.substring(0, 10));
@@ -87,11 +94,6 @@ export class ConfirmVM {
     this._nonce = params.nonce || 0;
     this._value = params.value || 0;
     this._data = params.data;
-
-    NetworksVM.currentProvider
-      .getBalance(params.from)
-      .then((v) => runInAction(() => (this.nativeBalance = v)))
-      .catch(() => console.log('balance error'));
   }
 
   get receipt() {
@@ -149,8 +151,6 @@ export class ConfirmVM {
 
   get insufficientFee() {
     // this._value stands for native asset (in wei)
-    // console.log(this.nativeBalance.toString());
-    // console.log(this.gasPriceWei.mul(this.gas).add(this._value).toString());
     return this.nativeBalance.lt(this.gasPriceWei.mul(this.gas).add(this._value));
   }
 
@@ -211,7 +211,7 @@ export class ConfirmVM {
       return;
     }
 
-    const c = new ethers.Contract(params.to, ERC20ABI, NetworksVM.currentProvider);
+    const c = new ethers.Contract(params.to, ERC20ABI, this._provider);
     const symbol = await c.symbol();
     const decimals: number = await c.decimals();
 
@@ -238,15 +238,18 @@ export class ConfirmVM {
       return;
     }
 
-    const c = new ethers.Contract(params.to, ERC20ABI, NetworksVM.currentProvider);
-    const symbol = await c.symbol();
-    const decimals: number = await c.decimals();
+    try {
+      const c = new ethers.Contract(params.to, ERC20ABI, this._provider);
+      const [symbol, decimals] = await Promise.all([c.symbol(), c.decimals()]);
 
-    runInAction(() => {
-      this.approveToken.symbol = symbol;
-      this.approveToken.decimals = decimals;
-      this.approveToken.limitAmount = formatUnits(wad, decimals);
-    });
+      runInAction(() => {
+        this.approveToken.symbol = symbol;
+        this.approveToken.decimals = decimals;
+        this.approveToken.limitAmount = formatUnits(wad, decimals);
+      });
+    } catch (error) {
+      runInAction(() => (this.approveToken.limitAmount = formatUnits(wad, 18)));
+    }
   }
 
   async approveRequest(via: 'touchid' | 'passcode', passcode?: string) {
@@ -286,7 +289,7 @@ export class ConfirmVM {
     }
 
     if (txHex) {
-      NetworksVM.currentProvider.sendTransaction(txHex).catch(console.error);
+      this._provider.sendTransaction(txHex).catch(console.error);
     }
 
     return true;
