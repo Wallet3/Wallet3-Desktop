@@ -116,7 +116,8 @@ export class App {
       this.addresses = addresses;
       if (this.touchBarButtons?.walletConnect) this.touchBarButtons.walletConnect.enabled = true;
       if (this.touchIDSupported) this.userPassword = userPassword;
-
+      TxMan.init();
+      
       return App.encryptIpc({ addresses, success: true }, iv, key);
     });
 
@@ -201,6 +202,8 @@ export class App {
       await KeyMan.reset(password);
       await TxMan.clean();
       WCMan.clean();
+      this.currentAddressIndex = 0;
+      this.addresses = [];
 
       return App.encryptIpc({ success: true }, iv, key);
     });

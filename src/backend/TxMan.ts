@@ -39,9 +39,7 @@ class TxMan {
     this.txRepo = this.connection.getRepository(Transaction);
 
     const pendingTxs = await this.findTxs({ where: { blockNumber: null } });
-    runInAction(async () => {
-      this.pendingTxs.push(...pendingTxs);
-    });
+    runInAction(async () => this.pendingTxs.push(...pendingTxs));
 
     this.checkPendingTxs();
   }
@@ -100,12 +98,13 @@ class TxMan {
       }
     });
 
-    this._timer = setTimeout(async () => await this.checkPendingTxs(), 15 * 1000);
+    this._timer = setTimeout(async () => await this.checkPendingTxs(), 20 * 1000);
   }
 
   async clean() {
     clearTimeout(this._timer);
-    await this.connection.close();
+    await this.connection?.close();
+    this.connection = undefined;
     fs.unlinkSync(this._dbPath);
   }
 }
