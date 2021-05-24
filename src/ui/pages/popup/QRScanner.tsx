@@ -11,9 +11,11 @@ import anime from 'animejs';
 import ipc from '../../bridges/IPC';
 import qrscanner from 'qr-scanner';
 import scanQR from '../../misc/QRScanner';
+import { useTranslation } from 'react-i18next';
 
 export default () => {
   const [scanning, setScanning] = useState(false);
+  const { t } = useTranslation();
 
   const scanWalletConnect = async () => {
     setScanning(true);
@@ -75,13 +77,13 @@ export default () => {
           <img src={QRCode} alt="" />
         </div>
 
-        <p>{`1. Open System Preferences > Security & Privacy > Privacy > Screen Recording.`} </p>
-        <p>{`2. Please check Wallet 3 is selected.`}</p>
+        <p>{t('WalletConnect_Tip1')} </p>
+        <p>{t('WalletConnect_Tip2')}</p>
       </div>
       <div className="actions">
-        <button onClick={(_) => window.close()}>Cancel</button>
+        <button onClick={(_) => window.close()}>{t('Cancel')}</button>
         <button disabled={scanning} onClick={(_) => scanWalletConnect()}>
-          Try Again
+          {t('Try Again')}
         </button>
       </div>
     </div>

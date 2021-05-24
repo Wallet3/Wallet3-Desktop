@@ -51,6 +51,8 @@
   "Gas Limit": "Gas Limit",
   "Gas Price": "Gas Price",
   "Data": "Data",
+  "Max Fee": "Max Fee",
+  "Total": "Total",
   "View on Etherscan": "View on Etherscan",
   "Cancel Tx": "Cancel Tx",
   "Speed Up": "Speed Up",
@@ -61,6 +63,16 @@
   "Reset_Tip1": "The operation is not reversible.",
   "Reset_Tip2": "Please keep your mnemonic safe.",
   "Authentication": "Authentication",
-  "Max Fee": "Max Fee",
-  "Total": "Total"
+  "Approve": "Approve",
+  "Approve_Tip": "By granting this transaction, the spender can spend your funds without your knowledge. Please be careful to check the granting limit below.",
+  "Spender": "Spender",
+  "Funds Limit": "Funds Limit",
+  "Contract Interaction": "Contract Interaction",
+  "Sign": "Sign",
+  "Reject": "Reject",
+  "Cancel": "Cancel",
+  "Try Again": "Try Again",
+  "WalletConnect_Tip1": "1. Open System Preferences > Security & Privacy > Privacy > Screen Recording.",
+  "WalletConnect_Tip2": "2. Please check Wallet 3 is selected.",
+  "Send Transaction": "Send Transaction"
 }

@@ -4,6 +4,7 @@ import { ConfirmVM } from '../../../viewmodels/ConfirmVM';
 import { CryptoIcons } from '../../../misc/Icons';
 import Feather from 'feather-icons-react';
 import { observer } from 'mobx-react-lite';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   confirmVM: ConfirmVM;
@@ -12,7 +13,9 @@ interface Props {
 }
 
 export default observer(({ confirmVM, onReject, onContinue }: Props) => {
-  const { receiptAddress, receipt, approveToken, tokenSymbol, gas, gasPrice, maxFee, nonce, totalValue } = confirmVM;
+  const { receiptAddress, receipt, approveToken, tokenSymbol, gas, gasPrice, maxFee, nonce, totalValue, networkSymbol } =
+    confirmVM;
+  const { t } = useTranslation();
 
   useEffect(() => {
     window.resizeTo(360, 375);
@@ -21,18 +24,15 @@ export default observer(({ confirmVM, onReject, onContinue }: Props) => {
   return (
     <div className="details">
       <div className="form">
-        <div className="attention">
-          By granting this transaction, the spender can spend your funds without your knowledge. Please be careful to check
-          the granting limit below.
-        </div>
+        <div className="attention">{t('Approve_Tip')}</div>
 
         <div>
-          <span>Spender:</span>
+          <span>{t('Spender')}:</span>
           <span>{confirmVM.approveToken.spender}</span>
         </div>
 
         <div>
-          <span>Funds Limit:</span>
+          <span>{t('Funds Limit')}:</span>
           <span>
             <input
               type="text"
@@ -45,7 +45,7 @@ export default observer(({ confirmVM, onReject, onContinue }: Props) => {
         </div>
 
         <div>
-          <span>Gas Price:</span>
+          <span>{t('Gas Price')}:</span>
           <div>
             <input type="text" defaultValue={gasPrice} onChange={(e) => confirmVM.setGasPrice(e.target.value)} />
             <span>
@@ -55,7 +55,7 @@ export default observer(({ confirmVM, onReject, onContinue }: Props) => {
         </div>
 
         <div>
-          <span>Gas Limit:</span>
+          <span>{t('Gas Limit')}:</span>
           <div>
             <input type="text" defaultValue={gas} onChange={(e) => confirmVM.setGas(e.target.value)} />
             <span>
@@ -65,7 +65,7 @@ export default observer(({ confirmVM, onReject, onContinue }: Props) => {
         </div>
 
         <div>
-          <span>Nonce:</span>
+          <span>{t('Nonce')}:</span>
           <div>
             <input type="text" defaultValue={nonce} onChange={(e) => confirmVM.setNonce(e.target.value)} />
             <span>
@@ -75,23 +75,27 @@ export default observer(({ confirmVM, onReject, onContinue }: Props) => {
         </div>
 
         <div>
-          <span>Max Fee:</span>
-          <span>{maxFee} ETH</span>
+          <span>{t('Max Fee')}:</span>
+          <span>
+            {maxFee} {networkSymbol}
+          </span>
         </div>
 
         <div>
-          <span>Total:</span>
-          <span>{totalValue} ETH</span>
+          <span>{t('Total')}:</span>
+          <span>
+            {totalValue} {networkSymbol}
+          </span>
         </div>
       </div>
       <div className="actions">
-        <button onClick={(_) => onReject?.()}>Cancel</button>
+        <button onClick={(_) => onReject?.()}>{t('Cancel')}</button>
         <button
           className="positive"
           onClick={(_) => onContinue?.()}
           disabled={!confirmVM.isValid || confirmVM.insufficientFee}
         >
-          Continue
+          {t('Continue')}
         </button>
       </div>
     </div>

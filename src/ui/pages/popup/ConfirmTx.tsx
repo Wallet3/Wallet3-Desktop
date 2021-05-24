@@ -12,6 +12,7 @@ import SignView from './confirms/SignView';
 import TransferView from './confirms/TransferView';
 import anime from 'animejs';
 import { observer } from 'mobx-react-lite';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   app: ApplicationPopup;
@@ -20,6 +21,7 @@ interface Props {
 export default observer(({ app }: Props) => {
   const { confirmVM, signVM } = app;
   const [runTouchID, setRunTouchID] = useState(false);
+  const { t } = useTranslation();
 
   const authViaTouchID = async () => {
     if (await (confirmVM ?? signVM).approveRequest('touchid')) {
@@ -106,7 +108,7 @@ export default observer(({ app }: Props) => {
   return (
     <div className="page confirm">
       <PopupTitle
-        title={confirmVM?.method ?? signVM?.method}
+        title={t(confirmVM?.method ?? signVM?.method)}
         icon={confirmVM?.flag ?? signVM?.flag}
         chainId={confirmVM?.chainId}
       />

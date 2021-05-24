@@ -12,6 +12,7 @@ import crypto from '../bridges/Crypto';
 import delay from 'delay';
 import { findTokenByAddress } from '../misc/Tokens';
 import { formatUnits } from 'ethers/lib/utils';
+import i18n from '../../i18n';
 import ipc from '../bridges/IPC';
 
 const Transfer = '0xa9059cbb';
@@ -133,6 +134,10 @@ export class ConfirmVM {
     );
   }
 
+  get networkSymbol() {
+    return Networks.find((c) => c?.chainId === this.chainId).symbol ?? 'ETH';
+  }
+
   private _nonce = -1;
   get nonce() {
     return this._nonce;
@@ -248,7 +253,7 @@ export class ConfirmVM {
     let verified = false;
     switch (via) {
       case 'touchid':
-        verified = await App.promptTouchID('Send Tx');
+        verified = await App.promptTouchID(i18n.t('Send Transaction'));
         break;
       case 'passcode':
         verified = await App.verifyPassword(passcode);

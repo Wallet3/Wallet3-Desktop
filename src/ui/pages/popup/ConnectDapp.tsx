@@ -1,13 +1,14 @@
 import './ConnectDapp.css';
 
 import { ApplicationPopup } from '../../viewmodels/ApplicationPopup';
-import { ConnectDappVM } from '../../viewmodels/ConnectDappVM';
 import { PopupTitle } from '../../components';
 import React from 'react';
 import { observer } from 'mobx-react-lite';
+import { useTranslation } from 'react-i18next';
 
 export default observer(({ app }: { app: ApplicationPopup }) => {
   const { connectDappVM: vm } = app;
+  const { t } = useTranslation();
 
   return (
     <div className="page connectdapp">
@@ -29,7 +30,7 @@ export default observer(({ app }: { app: ApplicationPopup }) => {
             window.close();
           }}
         >
-          Reject
+          {t('Reject')}
         </button>
         <button
           className="positive"
@@ -38,7 +39,7 @@ export default observer(({ app }: { app: ApplicationPopup }) => {
             window.close();
           }}
         >
-          Approve
+          {t('Approve')}
         </button>
       </div>
     </div>

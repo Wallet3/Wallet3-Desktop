@@ -2,6 +2,7 @@ import { RequestSignMessage, WcMessages } from '../../common/Messages';
 
 import App from './Application';
 import crypto from '../bridges/Crypto';
+import i18n from '../../i18n';
 import ipc from '../bridges/IPC';
 import { makeAutoObservable } from 'mobx';
 
@@ -22,7 +23,7 @@ export class SignVM {
     let verified = false;
     switch (via) {
       case 'touchid':
-        verified = await App.promptTouchID('Send Tx');
+        verified = await App.promptTouchID(i18n.t('Send Transaction'));
         break;
       case 'passcode':
         verified = await App.verifyPassword(passcode);
