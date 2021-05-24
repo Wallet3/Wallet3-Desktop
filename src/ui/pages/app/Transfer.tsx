@@ -13,6 +13,7 @@ import { TransferVM } from '../../viewmodels/TransferVM';
 import { WalletVM } from '../../viewmodels/WalletVM';
 import { formatNum } from '../../misc/Formatter';
 import { observer } from 'mobx-react-lite';
+import { useTranslation } from 'react-i18next';
 
 const AddressSearchStyle = {
   border: 'none',
@@ -29,6 +30,8 @@ const AddressSearchStyle = {
 };
 
 export default observer(({ app, walletVM }: { app: Application; walletVM: WalletVM }) => {
+  const { t } = useTranslation();
+
   const [activeGas, setActiveGas] = useState(1);
   const [transferVM, setVM] = useState<TransferVM>(null);
   const amountInput = useRef<HTMLInputElement>();
@@ -46,17 +49,17 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
 
   return (
     <div className="page send">
-      <NavBar title="Transfer" onBackClick={() => app.history.goBack()} />
+      <NavBar title={t('Transfer')} onBackClick={() => app.history.goBack()} />
 
       <div className="form">
         <div className="to">
-          <span>To:</span>
+          <span>{t('To')}:</span>
           <ReactSearchAutocomplete
             showIcon={false}
             inputDebounce={500}
             items={transferVM?.receipients}
             styling={AddressSearchStyle}
-            placeholder="Receipt Address or ENS"
+            placeholder="Receipient Address or ENS"
             onSearch={(s, r) => transferVM?.setReceipient(s)}
             onSelect={(item) => transferVM?.setReceipient(item.name)}
           />
@@ -66,7 +69,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
         {transferVM?.isEns ? <div className="ens-resolve">{transferVM?.receiptAddress}</div> : undefined}
 
         <div className="amount">
-          <span>Amount:</span>
+          <span>{t('Amount')}:</span>
           <input ref={amountInput} type="text" placeholder="1000" onChange={(e) => transferVM?.setAmount(e.target.value)} />
           <span className="symbol">{transferVM?.selectedToken.symbol}</span>
         </div>
@@ -80,7 +83,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
               transferVM?.setAmount(transferVM?.maxSelectedTokenBalance.toString());
             }}
           >
-            Max: <AnimatedNumber value={transferVM?.maxSelectedTokenBalance} formatValue={(n) => formatNum(n, '')} />
+            {t('Max')}: <AnimatedNumber value={transferVM?.maxSelectedTokenBalance} formatValue={(n) => formatNum(n, '')} />
           </span>
           <Menu
             overflow="auto"
@@ -109,7 +112,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
         </div>
 
         <div className="amount">
-          <span>Gas:</span>
+          <span>{t('Gas')}:</span>
           <input
             type="text"
             placeholder={`${transferVM?.gas}`}
@@ -119,7 +122,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
         </div>
 
         <div className="amount">
-          <span>Nonce:</span>
+          <span>{t('Nonce')}:</span>
           <input
             type="text"
             placeholder={`${transferVM?.nonce}`}
@@ -136,7 +139,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
               transferVM?.setGasLevel(0);
             }}
           >
-            <span>Rapid</span>
+            <span>{t('Rapid')}</span>
             <span style={{ color: '#2ecc71' }}>
               <AnimatedNumber value={transferVM?.rapid} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
             </span>
@@ -151,7 +154,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
               transferVM?.setGasLevel(1);
             }}
           >
-            <span>Fast</span>
+            <span>{t('Fast')}</span>
             <span style={{ color: 'orange' }}>
               <AnimatedNumber value={transferVM?.fast} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
             </span>
@@ -166,7 +169,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
               transferVM?.setGasLevel(2);
             }}
           >
-            <span>Standard</span>
+            <span>{t('Standard')}</span>
             <span style={{ color: 'deepskyblue' }}>
               <AnimatedNumber value={transferVM?.standard} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
             </span>
@@ -175,7 +178,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
           <div className="separator" />
 
           <div className={`${activeGas === 3 ? 'active' : ''}`} onClick={(_) => setActiveGas(3)}>
-            <span>Cust.</span>
+            <span>{t('Cust.')}</span>
             <input
               ref={gasInput}
               type="text"
@@ -195,7 +198,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
         disabled={!transferVM?.isValid || transferVM?.insufficientFee || transferVM?.sending}
         onClick={(_) => transferVM?.sendTx().then(() => app.history.goBack())}
       >
-        {transferVM?.insufficientFee ? 'INSUFFICIENT FEE' : 'Send'}
+        {transferVM?.insufficientFee ? t('INSUFFICIENT FEE') : t('Send')}
       </button>
     </div>
   );

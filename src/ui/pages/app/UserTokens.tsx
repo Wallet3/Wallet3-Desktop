@@ -11,10 +11,12 @@ import Feather from 'feather-icons-react';
 import { Link } from 'react-router-dom';
 import { NavBar } from '../../components';
 import { Toggle } from 'react-toggle-component';
+import { useTranslation } from 'react-i18next';
 
 export default observer(({ accountVM, app }: { accountVM?: AccountVM; app: Application }) => {
   const { allTokens } = accountVM;
   const [_, setForceRefresh] = useState(-1);
+  const { t } = useTranslation();
 
   useEffect(() => {
     return () => accountVM.save();
@@ -23,7 +25,7 @@ export default observer(({ accountVM, app }: { accountVM?: AccountVM; app: Appli
   return (
     <div className="page tokens">
       <div className="line-1">
-        <NavBar title="Tokens" onBackClick={() => app.history.goBack()} />
+        <NavBar title={t('Tokens')} onBackClick={() => app.history.goBack()} />
 
         <Link to={`/addToken`}>
           <Feather icon="plus-circle" size={22} strokeWidth={1} />

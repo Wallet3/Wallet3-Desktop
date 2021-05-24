@@ -49,7 +49,6 @@ span {
 .page {
   box-sizing: border-box;
   padding: 12px;
-  overflow: hidden;
 }
 
 table {

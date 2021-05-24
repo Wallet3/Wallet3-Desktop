@@ -6,15 +6,17 @@ import { NavBar } from '../../components';
 import React from 'react';
 import { WalletVM } from '../../viewmodels/WalletVM';
 import { observer } from 'mobx-react-lite';
+import { useTranslation } from 'react-i18next';
 
 export default observer(({ app, walletVM }: { app: Application; walletVM: WalletVM }) => {
   const { currentAccount } = walletVM;
   const { addTokenVM } = currentAccount;
+  const { t } = useTranslation();
 
   const Loader = () => <BarLoader width={24} height={2} />;
   return (
     <div className="page add-token">
-      <NavBar title="Add Token" onBackClick={() => app.history.goBack()} />
+      <NavBar title={t('Add Token')} onBackClick={() => app.history.goBack()} />
 
       <div className="content">
         <input
@@ -26,22 +28,22 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
 
         <div className="form">
           <div>
-            <span>Name:</span>
+            <span>{t('Name')}:</span>
             {addTokenVM.loading ? <Loader /> : <span>{addTokenVM.name || '---'}</span>}
           </div>
 
           <div>
-            <span>Symbol:</span>
+            <span>{t('Symbol')}:</span>
             {addTokenVM.loading ? <Loader /> : <span>{addTokenVM.symbol || '---'}</span>}
           </div>
 
           <div>
-            <span>Decimals:</span>
+            <span>{t('Decimals')}:</span>
             {addTokenVM.loading ? <Loader /> : <span>{addTokenVM.decimals || '---'} </span>}
           </div>
 
           <div>
-            <span>Balance:</span>
+            <span>{t('Balance')}:</span>
             {addTokenVM.loading ? <Loader /> : <span>{addTokenVM.balance || '---'}</span>}
           </div>
         </div>

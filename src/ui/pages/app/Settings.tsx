@@ -12,6 +12,7 @@ import React from 'react';
 import Select from 'react-select';
 import { WalletVM } from '../../viewmodels/WalletVM';
 import { observer } from 'mobx-react-lite';
+import { useTranslation } from 'react-i18next';
 
 const tokens = [
   { value: 'usd', label: 'USD' },
@@ -31,6 +32,8 @@ interface IConstructor {
 }
 
 export default observer(({ walletVM, app, currencyVM }: IConstructor) => {
+  const { t } = useTranslation();
+
   const accounts = walletVM.accounts.map((a, i) => {
     const addr = `${a.address.substring(0, 7)}...${a.address.substring(a.address.length - 4)}`;
     const balance = a.nativeToken ? `(${a.nativeToken.amount.toFixed(2)} ${a.nativeToken.symbol})` : '';
@@ -67,7 +70,7 @@ export default observer(({ walletVM, app, currencyVM }: IConstructor) => {
     <div className="page settings">
       <div className="drop-menu accounts">
         <div className="actions">
-          <span className="title">Accounts</span>
+          <span className="title">{t('Accounts')}</span>
         </div>
         <Select
           options={accounts}
@@ -80,7 +83,7 @@ export default observer(({ walletVM, app, currencyVM }: IConstructor) => {
 
       <div className="setting-item">
         <Feather icon="dollar-sign" size={iconSize} />
-        <span>Display Currency</span>
+        <span>{t('Display Currency')}</span>
         <Menu
           styles={{ minWidth: '3rem' }}
           menuButton={() => (
@@ -101,7 +104,7 @@ export default observer(({ walletVM, app, currencyVM }: IConstructor) => {
 
       <div className="setting-item">
         <Feather icon="globe" size={iconSize} />
-        <span>Languages</span>
+        <span>{t('Languages')}</span>
 
         <Menu
           styles={{ minWidth: '5rem' }}
@@ -122,19 +125,19 @@ export default observer(({ walletVM, app, currencyVM }: IConstructor) => {
 
       <div className="setting-item click" onClick={(_) => goToBackupMnemonic()}>
         <Feather icon="package" size={iconSize} />
-        <span>Backup Mnemonic</span>
+        <span>{t('Backup Mnemonic')}</span>
         <Feather icon="chevron-right" size={15} />
       </div>
 
       <div className="setting-item click" onClick={(_) => goToChangePasscode()}>
         <Feather icon="lock" size={iconSize} />
-        <span>Change Passcode</span>
+        <span>{t('Change Passcode')}</span>
         <Feather icon="chevron-right" size={15} />
       </div>
 
       <div className="setting-item click" onClick={(_) => goToReset()}>
         <Feather icon="tool" size={iconSize} />
-        <span>Reset</span>
+        <span>{t('Reset')}</span>
         <Feather icon="chevron-right" size={15} />
       </div>
     </div>
