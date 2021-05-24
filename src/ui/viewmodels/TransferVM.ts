@@ -57,8 +57,8 @@ export class TransferVM {
   }
 
   get amountBigInt() {
-    const value = parseUnits(this.amount || '0', this.selectedToken?.decimals ?? 18);
-    return value.gt(this.selectedTokenBalance) ? this.selectedTokenBalance : value;
+    return parseUnits(this.amount || '0', this.selectedToken?.decimals ?? 18);
+    // return value.gt(this.selectedTokenBalance) ? this.selectedTokenBalance : value;
   }
 
   get maxSelectedTokenBalance() {
@@ -143,10 +143,25 @@ export class TransferVM {
 
   setGasLevel(level: number) {
     this.gasLevel = level;
+    this.autoSetGasPrice();
   }
 
   setAmount(amount: string) {
     this.amount = amount;
+  }
+
+  private autoSetGasPrice() {
+    switch (this.gasLevel) {
+      case 0:
+        this.gasPrice = this.rapid;
+        break;
+      case 1:
+        this.gasPrice = this.fast;
+        break;
+      case 2:
+        this.gasPrice = this.standard;
+        break;
+    }
   }
 
   private initGasPrice() {
@@ -158,18 +173,7 @@ export class TransferVM {
         this.rapid = Gasnow.rapidGwei;
         this.fast = Gasnow.fastGwei;
         this.standard = Gasnow.standardGwei;
-
-        switch (this.gasLevel) {
-          case 0:
-            this.gasPrice = this.rapid;
-            break;
-          case 1:
-            this.gasPrice = this.fast;
-            break;
-          case 2:
-            this.gasPrice = this.standard;
-            break;
-        }
+        this.autoSetGasPrice();
       }
     );
   }

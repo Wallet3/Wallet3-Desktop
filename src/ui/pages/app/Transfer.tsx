@@ -83,7 +83,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
               transferVM?.setAmount(transferVM?.maxSelectedTokenBalance.toString());
             }}
           >
-            {t('Max')}: <AnimatedNumber value={transferVM?.maxSelectedTokenBalance} formatValue={(n) => formatNum(n, '')} />
+            {t('Max')}: <AnimatedNumber value={transferVM?.selectedToken.amount} formatValue={(n) => formatNum(n, '')} />
           </span>
           <Menu
             overflow="auto"
