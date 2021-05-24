@@ -30,3 +30,9 @@
   margin-bottom: 6px;
   color: var(--font-color-title);
 }
+
+.page.add-token > .content > .form > div span {
+  max-width: 50vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
