@@ -1,7 +1,7 @@
 import App, { App as Application } from './App';
 import { AuthParams, ConfirmSendTx, RequestSignMessage, SendTxParams, WcMessages } from '../common/Messages';
 import { ethers, utils } from 'ethers';
-import { getTransactionCount, sendTransaction } from '../common/Provider';
+import { getProviderByChainId, getTransactionCount } from '../common/Provider';
 
 import ERC20ABI from '../abis/ERC20.json';
 import EventEmitter from 'events';
@@ -17,6 +17,7 @@ export class WalletConnect extends EventEmitter {
   accountIndex = -1;
   accountAddress = '';
   peerMeta: WCClientMeta;
+  chainProvider: ethers.providers.BaseProvider;
 
   private modal = false;
 
@@ -64,6 +65,7 @@ export class WalletConnect extends EventEmitter {
       this.accountIndex = App.currentAddressIndex;
       this.accountAddress = App.currentAddress;
       this.chainId = App.chainId;
+      this.chainProvider = getProviderByChainId(this.chainId);
       this.connector.approveSession({ accounts: [this.accountAddress], chainId: this.chainId });
     });
 
@@ -109,7 +111,7 @@ export class WalletConnect extends EventEmitter {
     let transferToken: { balance: string; symbol: string; decimals: number } = undefined;
 
     if (param.data?.startsWith('0xa9059cbb')) {
-      const c = new ethers.Contract(param.to, ERC20ABI, App.chainProvider);
+      const c = new ethers.Contract(param.to, ERC20ABI, this.chainProvider);
       const decimals = (await c.decimals()).toNumber();
       const symbol = await c.symbol();
       const balance = (await c.balanceOf(this.accountAddress)).toString();

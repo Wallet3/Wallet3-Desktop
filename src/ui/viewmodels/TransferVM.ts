@@ -58,7 +58,6 @@ export class TransferVM {
 
   get amountBigInt() {
     return parseUnits(this.amount || '0', this.selectedToken?.decimals ?? 18);
-    // return value.gt(this.selectedTokenBalance) ? this.selectedTokenBalance : value;
   }
 
   get maxSelectedTokenBalance() {

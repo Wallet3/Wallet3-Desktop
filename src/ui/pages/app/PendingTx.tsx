@@ -41,7 +41,7 @@ export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => 
 
         <div>
           <span>{t('Value')}:</span>
-          <span>{`${vm?.value} ${chain.symbol}`}</span>
+          <span>{`${Number.parseFloat(vm?.value).toFixed(2)} ${chain.symbol}`}</span>
         </div>
 
         <div>
