@@ -8,12 +8,21 @@ import { Settings, Wallet } from '../app';
 import { Application } from '../../viewmodels/Application';
 import { CurrencyVM } from '../../viewmodels/CurrencyVM';
 import Feather from 'feather-icons-react';
+import { LangsVM } from '../../viewmodels/LangsVM';
 import { NetworksVM } from '../../viewmodels/NetworksVM';
 import { SkeletonTheme } from 'react-loading-skeleton';
 import { WalletVM } from '../../viewmodels/WalletVM';
 import { observer } from 'mobx-react-lite';
 
-export default observer((args: { networksVM: NetworksVM; walletVM: WalletVM; app: Application; currencyVM: CurrencyVM }) => {
+interface Props {
+  networksVM: NetworksVM;
+  walletVM: WalletVM;
+  app: Application;
+  currencyVM: CurrencyVM;
+  langsVM: LangsVM;
+}
+
+export default observer((args: Props) => {
   const { path, url } = useRouteMatch();
 
   let tab = 0;

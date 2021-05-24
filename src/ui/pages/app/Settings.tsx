@@ -1,12 +1,12 @@
 import './Settings.css';
 
-import { CryptoIcons, FlagIcons } from '../../misc/Icons';
 import { Menu, MenuButton, MenuDivider, MenuItem } from '@szhsin/react-menu';
 
 import { Application } from '../../viewmodels/Application';
 import { CurrencyVM } from '../../viewmodels/CurrencyVM';
 import DisplayCurrency from './components/DisplayCurrency';
 import Feather from 'feather-icons-react';
+import { LangsVM } from '../../viewmodels/LangsVM';
 import { NetworksVM } from '../../viewmodels/NetworksVM';
 import React from 'react';
 import Select from 'react-select';
@@ -14,24 +14,14 @@ import { WalletVM } from '../../viewmodels/WalletVM';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 
-const tokens = [
-  { value: 'usd', label: 'USD' },
-  { value: 'eth', label: 'ETH' },
-];
-
-const langs = [
-  { value: 'usa', label: 'English' },
-  { value: 'jp', label: '日本語' },
-  { value: 'cn', label: '简体中文' },
-];
-
 interface IConstructor {
   app: Application;
   walletVM: WalletVM;
   currencyVM: CurrencyVM;
+  langsVM: LangsVM;
 }
 
-export default observer(({ walletVM, app, currencyVM }: IConstructor) => {
+export default observer(({ walletVM, app, currencyVM, langsVM }: IConstructor) => {
   const { t } = useTranslation();
 
   const accounts = walletVM.accounts.map((a, i) => {
@@ -94,7 +84,7 @@ export default observer(({ walletVM, app, currencyVM }: IConstructor) => {
         >
           {currencyVM.supportedCurrencies.map((c) => {
             return (
-              <MenuItem styles={{ padding: '8px 12px' }} onClick={() => currencyVM.setCurrency(c)}>
+              <MenuItem key={c.flag} styles={{ padding: '8px 12px' }} onClick={() => currencyVM.setCurrency(c)}>
                 <DisplayCurrency flag={c.flag} label={c.currency} mini />
               </MenuItem>
             );
@@ -110,16 +100,17 @@ export default observer(({ walletVM, app, currencyVM }: IConstructor) => {
           styles={{ minWidth: '5rem' }}
           menuButton={() => (
             <MenuButton className="menu-button">
-              <DisplayCurrency flag="usa" label="English" />
+              <DisplayCurrency flag={langsVM.currentLang.flag} label={langsVM.currentLang.name} />
             </MenuButton>
           )}
         >
-          <MenuItem styles={{ padding: '8px 12px' }}>
-            <DisplayCurrency flag="usa" label="English" mini />
-          </MenuItem>
-          <MenuItem styles={{ padding: '8px 12px' }}>
-            <DisplayCurrency flag="jp" label="日本語" mini />
-          </MenuItem>
+          {langsVM.supportedLangs.map((lang) => {
+            return (
+              <MenuItem key={lang.value} styles={{ padding: '8px 12px' }} onClick={(_) => langsVM.setLang(lang)}>
+                <DisplayCurrency flag={lang.flag} label={lang.name} mini />
+              </MenuItem>
+            );
+          })}
         </Menu>
       </div>
 

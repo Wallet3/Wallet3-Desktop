@@ -12,7 +12,7 @@ export default observer(({ app }: { app: ApplicationPopup }) => {
 
   return (
     <div className="page connectdapp">
-      <PopupTitle title="Connect" icon="anchor" />
+      <PopupTitle title={t('ConnectDapp')} icon="anchor" />
 
       <div className="content">
         <img src={vm.icon} alt={vm.appName} />

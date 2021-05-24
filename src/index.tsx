@@ -6,6 +6,7 @@ import * as ReactDOM from 'react-dom';
 
 import App, { Application } from './ui/viewmodels/Application';
 import currencyVM, { CurrencyVM } from './ui/viewmodels/CurrencyVM';
+import langsVM, { LangsVM } from './ui/viewmodels/LangsVM';
 import mnVM, { MnemonicVM } from './ui/viewmodels/MnemonicVM';
 import networksVM, { NetworksVM } from './ui/viewmodels/NetworksVM';
 import walletVM, { WalletVM } from './ui/viewmodels/WalletVM';
@@ -20,9 +21,10 @@ interface ViewModels {
   networksVM: NetworksVM;
   walletVM: WalletVM;
   currencyVM: CurrencyVM;
+  langsVM: LangsVM;
 }
 
-const viewmodels = { app: App, mnVM, networksVM, walletVM, currencyVM };
+const viewmodels = { app: App, mnVM, networksVM, walletVM, currencyVM, langsVM };
 const AppView = observer((args: ViewModels) => <AppPage {...args} />);
 
 function render() {

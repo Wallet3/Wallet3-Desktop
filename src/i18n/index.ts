@@ -6,6 +6,9 @@ const resources = {
   en: {
     translation: en,
   },
+  'en-us': {
+    translation: en,
+  },
 };
 
 i18n
