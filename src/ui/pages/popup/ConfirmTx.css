@@ -64,6 +64,10 @@
   margin-left: 2px;
 }
 
+.page.confirm > .container > .details > .form > div img.dapp-icon {
+  margin-right: 4px;
+}
+
 .page.confirm > .container > .details > .form > div > div {
   display: flex;
   align-items: flex-end;

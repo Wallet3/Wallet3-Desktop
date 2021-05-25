@@ -157,21 +157,25 @@ export class WalletConnect extends EventEmitter {
       this.connector.rejectRequest({ id: request.id, error: { message: 'User rejected' } });
     });
 
-    App.createPopupWindow('sendTx', {
-      chainId: this.chainId,
-      from: this.accountAddress,
-      accountIndex: this.accountIndex,
-      to: param.to,
-      data: param.data || '0x',
-      gas: Number.parseInt(param.gas) || 21000,
-      gasPrice: Number.parseInt(param.gasPrice) || GasnowWs.gwei_20,
-      nonce: Number.parseInt(param.nonce) || (await getTransactionCount(this.chainId, this.accountAddress)),
-      value: param.value || 0,
+    App.createPopupWindow(
+      'sendTx',
+      {
+        chainId: this.chainId,
+        from: this.accountAddress,
+        accountIndex: this.accountIndex,
+        to: param.to,
+        data: param.data || '0x',
+        gas: Number.parseInt(param.gas) || 21000,
+        gasPrice: Number.parseInt(param.gasPrice) || GasnowWs.gwei_20,
+        nonce: Number.parseInt(param.nonce) || (await getTransactionCount(this.chainId, this.accountAddress)),
+        value: param.value || 0,
 
-      receipient,
-      transferToken,
-      walletConnect: { peerId: this.peerId, reqid: request.id, app: this.appMeta },
-    } as ConfirmSendTx);
+        receipient,
+        transferToken,
+        walletConnect: { peerId: this.peerId, reqid: request.id, app: this.appMeta },
+      } as ConfirmSendTx,
+      { height: 336 }
+    );
   };
 
   sign = async (request: WCCallRequestRequest, params: any, type: 'personal_sign' | 'signTypedData') => {

@@ -24,6 +24,16 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
   return (
     <div className="details">
       <div className="form">
+        {implVM.args.walletConnect?.app ? (
+          <div>
+            <span>{t('dApp')}:</span>
+            <span>
+              <img className="dapp-icon" src={implVM.args.walletConnect.app.icons[0]} alt="" />
+              {implVM.args.walletConnect.app.name}
+            </span>
+          </div>
+        ) : undefined}
+
         <div>
           <span>{t('To')}:</span>
           <span title={receiptAddress}>{receipt}</span>

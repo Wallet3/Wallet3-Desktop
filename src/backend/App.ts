@@ -340,7 +340,7 @@ export class App {
     payload: any,
     windowArgs?: { modal?: boolean; parent?: BrowserWindow; height?: number }
   ) {
-    let { modal, parent, height } = windowArgs;
+    let { modal, parent, height } = windowArgs || {};
 
     height = height ?? (modal ? 340 : 315);
     const popup = new BrowserWindow({
