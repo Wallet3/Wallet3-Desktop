@@ -2,7 +2,6 @@ import App, { App as Application } from './App';
 import { AuthParams, ConfirmSendTx, RequestSignMessage, SendTxParams, WcMessages } from '../common/Messages';
 import { IReactionDisposer, reaction } from 'mobx';
 import { ethers, utils } from 'ethers';
-import { getProviderByChainId, getTransactionCount } from '../common/Provider';
 
 import ERC20ABI from '../abis/ERC20.json';
 import EventEmitter from 'events';
@@ -10,6 +9,7 @@ import { GasnowWs } from '../api/Gasnow';
 import KeyMan from './KeyMan';
 import WalletConnector from '@walletconnect/client';
 import { findTokenByAddress } from '../ui/misc/Tokens';
+import { getTransactionCount } from '../common/Provider';
 import { ipcMain } from 'electron';
 
 export class WalletConnect extends EventEmitter {
@@ -50,13 +50,13 @@ export class WalletConnect extends EventEmitter {
     this.connector.on('session_request', this.handleSessionRequest);
     this.connector.on('call_request', this.handleCallRequest);
     this.connector.on('disconnect', (error: Error) => {
-      console.log('discconnect');
+      console.log(`${this.appMeta?.name} discconnected`);
       this.emit('disconnect', this);
       this.dispose();
     });
   }
 
-  connectViaSession(session: WcSession) {
+  connectViaSession(session: IWcSession) {
     this.connector = new WalletConnector({});
     this.connector.session = session;
     this.connector.on('session_request', this.handleSessionRequest);
@@ -76,11 +76,11 @@ export class WalletConnect extends EventEmitter {
       return;
     }
 
+    this.emit('sessionRequest');
+
     const [{ peerMeta, peerId }] = request.params;
     this.peerId = peerId;
     this.appMeta = peerMeta;
-
-    this.emit('sessionRequest', request);
 
     const clearHandlers = () => {
       ipcMain.removeHandler(WcMessages.approveWcSession(this.peerId));
@@ -90,7 +90,7 @@ export class WalletConnect extends EventEmitter {
     ipcMain.handleOnce(WcMessages.approveWcSession(this.peerId), () => {
       clearHandlers();
       this.connector.approveSession({ accounts: [App.currentAddress], chainId: App.chainId });
-      this.emit('session_approved', this.connector.session);
+      this.emit('sessionApproved', this.connector.session);
       console.log(this.connector.session);
     });
 
@@ -285,7 +285,7 @@ export class WalletConnect extends EventEmitter {
   }
 }
 
-export interface WcSession {
+export interface IWcSession {
   connected: boolean;
   accounts: string[];
   chainId: number;

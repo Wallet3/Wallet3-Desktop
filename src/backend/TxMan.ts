@@ -3,7 +3,7 @@ import * as path from 'path';
 
 import { Connection, FindManyOptions, IsNull, LessThanOrEqual, Repository, createConnection } from 'typeorm';
 import { Notification, app, shell } from 'electron';
-import { makeAutoObservable, runInAction } from 'mobx';
+import { makeObservable, observable, runInAction } from 'mobx';
 
 import Transaction from './models/Transaction';
 import { convertTxToUrl } from '../misc/Url';
@@ -19,7 +19,7 @@ class TxMan {
   private _timer: NodeJS.Timer;
 
   constructor() {
-    makeAutoObservable(this);
+    makeObservable(this, { pendingTxs: observable });
   }
 
   async init() {

@@ -329,7 +329,6 @@ export class App {
       const { uri, modal } = App.decryptIpc(encrypted, iv, key);
       if (!uri) return;
 
-      console.log(uri, modal);
       return App.encryptIpc((await WCMan.connectAndWaitSession(uri, modal)) ? true : false, iv, key);
     });
 
