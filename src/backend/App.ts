@@ -17,6 +17,7 @@ import KeyMan from './KeyMan';
 import Transaction from './models/Transaction';
 import TxMan from './TxMan';
 import WCMan from './WCMan';
+import i18n from '../i18n';
 import { utils } from 'ethers';
 
 declare const POPUP_WINDOW_WEBPACK_ENTRY: string;
@@ -278,14 +279,13 @@ export class App {
     const { result } = await sendTransaction(chainId, txHex);
     if (!result) {
       new Notification({
-        title: `Transaction ${params.nonce} Failed`,
-        body: `Transaction ${params.nonce} failed, please try again. Gas price to low or insufficient balance.`,
+        title: i18n.t('Transaction Failed'),
+        body: i18n.t('TxFailed2', { nonce: params.nonce }),
       }).show();
       return undefined;
     }
 
     App.saveTx(params, txHex);
-
     return result;
   };
 

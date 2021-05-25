@@ -80,5 +80,6 @@
   "Transaction Confirmed": "Transaction Confirmed",
   "Transaction Failed": "Transaction Failed",
   "TxConfirmed": "Transaction {{nonce}} confirmed, view it on Etherscan",
-  "TxFailed": "Transaction {{nonce}} failed, view it on Etherscan"
+  "TxFailed": "Transaction {{nonce}} failed, view it on Etherscan",
+  "TxFailed2": "Transaction {{nonce}} failed, please try again. Gas price to low or insufficient balance."
 }
