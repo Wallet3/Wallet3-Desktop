@@ -4,16 +4,24 @@
 }
 
 .page.connectdapp > .content {
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.page.connectdapp > .content > .appinfo {
   text-align: center;
   font-size: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  position: relative;
+  margin-top: -24px;
   color: var(--font-color-title);
+  z-index: 0;
 }
 
-.page.connectdapp > .content > * {
+.page.connectdapp > .content > .appinfo > * {
   margin-bottom: 4px;
   max-width: 70vw;
   overflow: hidden;
@@ -21,7 +29,7 @@
   white-space: nowrap;
 }
 
-.page.connectdapp > .content > .desc {
+.page.connectdapp > .content > .appinfo > .desc {
   margin-top: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -30,11 +38,25 @@
   max-height: 3em;
 }
 
-.page.connectdapp > .content img {
+.page.connectdapp > .content > .appinfo > img {
   width: 48px;
   height: 48px;
   border: none;
   margin-bottom: 12px;
+}
+
+.page.connectdapp > .content > div.networks {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+  z-index: 1;
+}
+
+.page.connectdapp > .content > div.networks > button {
+  width: auto;
+  padding-left: 5px;
+  padding-right: 5px;
+  /* border: 1px solid var(--font-color-title); */
 }
 
 .page.connectdapp > .actions {

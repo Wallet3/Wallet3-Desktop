@@ -1,10 +1,13 @@
 import './NetworkLabel.css';
 
-import { CryptoIcons } from '../../../misc/Icons';
+import { AppsIcon, CryptoIcons } from '../../../misc/Icons';
+
 import React from 'react';
+import i18n from '../../../../i18n';
 import { observer } from 'mobx-react-lite';
 
 const SVGs = new Map([
+  [0, [AppsIcon, i18n.t('Auto Switch')]],
   [1, [CryptoIcons('eth'), 'Ethereum']],
   [3, [CryptoIcons('eth'), 'Ropsten']],
   [4, [CryptoIcons('eth'), 'Rinkeby']],

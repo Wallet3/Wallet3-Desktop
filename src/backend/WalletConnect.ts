@@ -16,7 +16,11 @@ export class WalletConnect extends EventEmitter {
   connector: WalletConnector;
   peerId: string;
   appMeta: WCClientMeta;
+  get appChainId() {
+    return this._appChainId || App.chainId;
+  }
 
+  private _appChainId = 0; // 0 - auto switch
   private _modal = false;
   private _chainIdObserver: IReactionDisposer;
   private _currAddrObserver: IReactionDisposer;
@@ -28,15 +32,16 @@ export class WalletConnect extends EventEmitter {
     this._chainIdObserver = reaction(
       () => App.chainId,
       () => {
-        this.connector?.updateSession({ chainId: App.chainId, accounts: [App.currentAddress] });
-        console.log('update chainId', App.chainId);
+        if (this._appChainId !== 0) return;
+        this.connector?.updateSession({ chainId: this.appChainId, accounts: [App.currentAddress] });
+        console.log('update chainId', this.appChainId);
       }
     );
 
     this._currAddrObserver = reaction(
       () => App.currentAddressIndex,
       () => {
-        this.connector?.updateSession({ chainId: App.chainId, accounts: [App.currentAddress] });
+        this.connector?.updateSession({ chainId: this.appChainId, accounts: [App.currentAddress] });
         console.log('update account', App.currentAddress);
       }
     );
@@ -93,9 +98,10 @@ export class WalletConnect extends EventEmitter {
       ipcMain.removeHandler(WcMessages.rejectWcSession(this.peerId));
     };
 
-    ipcMain.handleOnce(WcMessages.approveWcSession(this.peerId), () => {
+    ipcMain.handleOnce(WcMessages.approveWcSession(this.peerId), (e, c) => {
       clearHandlers();
-      this.connector.approveSession({ accounts: [App.currentAddress], chainId: App.chainId });
+      this._appChainId = c.chainId || 0;
+      this.connector.approveSession({ accounts: [App.currentAddress], chainId: this.appChainId });
       this.emit('sessionApproved', this.connector.session);
       console.log(this.connector.session);
     });
@@ -124,9 +130,9 @@ export class WalletConnect extends EventEmitter {
     console.log(request.params);
 
     const checkAccount = (from: string) => {
-      if (from.toLowerCase() === App.currentAddress.toLowerCase()) return true;
+      if (from?.toLowerCase() === App.currentAddress.toLowerCase()) return true;
       this.connector.rejectRequest({ id: request.id, error: { message: 'Update session' } });
-      this.connector.updateSession({ chainId: App.chainId, accounts: [App.currentAddress] });
+      this.connector.updateSession({ chainId: this.appChainId, accounts: [App.currentAddress] });
       return false;
     };
 
@@ -187,7 +193,7 @@ export class WalletConnect extends EventEmitter {
         return;
       }
 
-      const hash = await Application.sendTx(App.chainId, params, txHex);
+      const hash = await Application.sendTx(this.appChainId, params, txHex);
 
       if (!hash) {
         this.connector.rejectRequest({ id: request.id, error: { message: 'Transaction failed' } });
@@ -205,14 +211,14 @@ export class WalletConnect extends EventEmitter {
     App.createPopupWindow(
       'sendTx',
       {
-        chainId: App.chainId,
+        chainId: this.appChainId,
         from: App.currentAddress,
         accountIndex: App.currentAddressIndex,
         to: param.to,
         data: param.data || '0x',
         gas: Number.parseInt(param.gas) || 21000,
         gasPrice: Number.parseInt(param.gasPrice) || GasnowWs.gwei_20,
-        nonce: Number.parseInt(param.nonce) || (await getTransactionCount(App.chainId, App.currentAddress)),
+        nonce: Number.parseInt(param.nonce) || (await getTransactionCount(this.appChainId, App.currentAddress)),
         value: param.value || 0,
 
         receipient,

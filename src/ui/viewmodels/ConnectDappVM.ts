@@ -21,15 +21,21 @@ export class ConnectDappVM {
 
     const [param] = params;
     this.peerId = param.peerId;
-    this.chainId = param.chainId;
+    this.chainId = param.chainId || 0;
     this.appName = param.peerMeta.name;
     this.icon = param.peerMeta.icons[0];
     this.url = param.peerMeta.url;
     this.desc = param.peerMeta.description;
+
+    console.log(param);
+  }
+
+  setChainId(id: number) {
+    this.chainId = id;
   }
 
   approve() {
-    ipc.invoke(WcMessages.approveWcSession(this.peerId));
+    ipc.invoke(WcMessages.approveWcSession(this.peerId), { chainId: this.chainId });
   }
 
   reject() {

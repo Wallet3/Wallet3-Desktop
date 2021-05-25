@@ -7,4 +7,10 @@ export default class WCSession extends BaseEntity {
 
   @Column({ type: 'text' })
   session: string;
+
+  @Column()
+  chainId: number;
+
+  @Column()
+  lastUsedTimestamp: number;
 }
