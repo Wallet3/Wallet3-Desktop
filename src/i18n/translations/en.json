@@ -76,5 +76,9 @@
   "Try Again": "Try Again",
   "WalletConnect_Tip1": "1. Open System Preferences > Security & Privacy > Privacy > Screen Recording.",
   "WalletConnect_Tip2": "2. Please check Wallet 3 is selected.",
-  "Send Transaction": "Send Transaction"
+  "Send Transaction": "Send Transaction",
+  "Transaction Confirmed": "Transaction Confirmed",
+  "Transaction Failed": "Transaction Failed",
+  "TxConfirmed": "Transaction {{nonce}} confirmed, view it on Etherscan",
+  "TxFailed": "Transaction {{nonce}} failed, view it on Etherscan"
 }

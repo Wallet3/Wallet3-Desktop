@@ -174,7 +174,7 @@ export class WalletConnect extends EventEmitter {
         transferToken,
         walletConnect: { peerId: this.peerId, reqid: request.id, app: this.appMeta },
       } as ConfirmSendTx,
-      { height: 336 }
+      { height: 339 }
     );
   };
 

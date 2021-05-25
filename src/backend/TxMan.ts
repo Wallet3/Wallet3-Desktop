@@ -8,6 +8,7 @@ import { makeAutoObservable, runInAction } from 'mobx';
 import Transaction from './models/Transaction';
 import { convertTxToUrl } from '../misc/Url';
 import { getTransactionReceipt } from '../common/Provider';
+import i18n from '../i18n';
 
 class TxMan {
   pendingTxs: Transaction[] = [];
@@ -74,8 +75,8 @@ class TxMan {
       removeTxs.push(tx);
 
       const notification = new Notification({
-        title: tx.status ? 'Transaction Confirmed' : 'Transaction Failed',
-        body: `Transaction ${tx.nonce} ${tx.status ? 'confirmed' : 'failed'}, view it on Etherscan`,
+        title: tx.status ? i18n.t('Transaction Confirmed') : i18n.t('Transaction Failed'),
+        body: i18n.t(tx.status ? 'TxConfirmed' : 'TxFailed', { nonce: tx.nonce }), //`Transaction ${tx.nonce} ${tx.status ? 'confirmed' : 'failed'}, view it on Etherscan`,
       }).once('click', () => {
         shell.openExternal(convertTxToUrl(tx));
       });
