@@ -69,7 +69,7 @@ export class WalletConnect extends EventEmitter {
     this.connector.on('call_request', this.handleCallRequest);
     this.connector.on('disconnect', () => this.emit('disconnect', this));
     this.peerId = session.peerId;
-    this.appMeta = session.clientMeta;
+    this.appMeta = session.peerMeta;
   }
 
   get session() {
@@ -123,17 +123,24 @@ export class WalletConnect extends EventEmitter {
     console.log(request.id);
     console.log(request.params);
 
+    const checkAccount = (from: string) => {
+      if (from.toLowerCase() === App.currentAddress.toLowerCase()) return true;
+      this.connector.rejectRequest({ id: request.id, error: { message: 'Update session' } });
+      this.connector.updateSession({ chainId: App.chainId, accounts: [App.currentAddress] });
+      return false;
+    };
+
     switch (request.method) {
       case 'eth_sendTransaction':
         const [param] = request.params as WCCallRequest_eth_sendTransaction[];
-        this.eth_sendTransaction(request, param);
+        if (checkAccount(param.from)) this.eth_sendTransaction(request, param);
         break;
       case 'eth_sign':
         break;
       case 'eth_signTransaction':
         break;
       case 'personal_sign':
-        this.sign(request, request.params, 'personal_sign');
+        if (checkAccount(request.params[1])) this.sign(request, request.params, 'personal_sign');
         break;
       case 'eth_signTypedData':
         this.sign(request, request.params, 'signTypedData');
