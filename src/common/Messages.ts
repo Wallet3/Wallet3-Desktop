@@ -95,6 +95,7 @@ export interface SignMessage extends AuthParams {
 export interface WCParams {
   peerId: string;
   reqid: number;
+  app: WCClientMeta;
 }
 
 export interface ConfirmSendTx extends TxParams {

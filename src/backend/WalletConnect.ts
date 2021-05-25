@@ -16,7 +16,7 @@ export class WalletConnect extends EventEmitter {
   chainId: number;
   accountIndex = -1;
   accountAddress = '';
-  peerMeta: WCClientMeta;
+  appMeta: WCClientMeta;
   chainProvider: ethers.providers.BaseProvider;
 
   private modal = false;
@@ -51,7 +51,7 @@ export class WalletConnect extends EventEmitter {
 
     const [{ peerMeta, peerId }] = request.params;
     this.peerId = peerId;
-    this.peerMeta = peerMeta;
+    this.appMeta = peerMeta;
 
     this.emit('sessionRequest', request);
 
@@ -75,7 +75,10 @@ export class WalletConnect extends EventEmitter {
       this.dispose();
     });
 
-    await App.createPopupWindow('connectDapp', request.params, this.modal, this.modal ? App.mainWindow : undefined);
+    await App.createPopupWindow('connectDapp', request.params, {
+      modal: this.modal,
+      parent: this.modal ? App.mainWindow : undefined,
+    });
   };
 
   handleCallRequest = async (error: Error, request: WCCallRequestRequest) => {
@@ -167,7 +170,7 @@ export class WalletConnect extends EventEmitter {
 
       receipient,
       transferToken,
-      walletConnect: { peerId: this.peerId, reqid: request.id },
+      walletConnect: { peerId: this.peerId, reqid: request.id, app: this.appMeta },
     } as ConfirmSendTx);
   };
 

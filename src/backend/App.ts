@@ -69,7 +69,7 @@ export class App {
 
     ipcMain.handle(MessageKeys.scanQR, () => {
       if (this.addresses.length === 0) return false;
-      this.createPopupWindow('scanQR', {}, true, this.mainWindow);
+      this.createPopupWindow('scanQR', {}, { modal: true, parent: this.mainWindow });
       return true;
     });
 
@@ -117,7 +117,7 @@ export class App {
       if (this.touchBarButtons?.walletConnect) this.touchBarButtons.walletConnect.enabled = true;
       if (this.touchIDSupported) this.userPassword = userPassword;
       TxMan.init();
-      
+
       return App.encryptIpc({ addresses, success: true }, iv, key);
     });
 
@@ -296,7 +296,7 @@ export class App {
     ipcMain.handle(`${MessageKeys.createTransferTx}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
       const params: ConfirmSendTx = App.decryptIpc(encrypted, iv, key);
-      const popup = await this.createPopupWindow('sendTx', params, true, this.mainWindow);
+      const popup = await this.createPopupWindow('sendTx', params, { modal: true, parent: this.mainWindow });
 
       await new Promise<boolean>((resolve) => {
         popup.once('close', () => resolve(true));
@@ -318,7 +318,7 @@ export class App {
       const { iv, key } = this.windows.get(winId);
 
       const authId = randomBytes(4).toString('hex');
-      this.createPopupWindow('auth', { authId }, true, this.mainWindow);
+      this.createPopupWindow('auth', { authId }, { modal: true, parent: this.mainWindow });
 
       const result = await new Promise<AuthenticationResult>((resolve) => {
         ipcMain.handleOnce(`${MessageKeys.returnAuthenticationResult(authId)}-secure`, async (e, encrypted, popWinId) => {
@@ -335,8 +335,14 @@ export class App {
     });
   };
 
-  createPopupWindow(type: PopupWindowTypes, payload: any, modal = false, parent?: BrowserWindow) {
-    const height = modal ? 340 : 315;
+  createPopupWindow(
+    type: PopupWindowTypes,
+    payload: any,
+    windowArgs?: { modal?: boolean; parent?: BrowserWindow; height?: number }
+  ) {
+    let { modal, parent, height } = windowArgs;
+
+    height = height ?? (modal ? 340 : 315);
     const popup = new BrowserWindow({
       width: 360,
       minWidth: 360,
