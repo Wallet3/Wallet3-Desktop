@@ -31,7 +31,7 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
             <span>
               <Image
                 className="dapp-icon"
-                src={implVM.args.walletConnect.app.icons[0]}
+                src={implVM.args.walletConnect.app.icons[0] || ''}
                 alt={implVM.args.walletConnect.app.name}
               />
               {implVM.args.walletConnect.app.name}

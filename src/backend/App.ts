@@ -9,6 +9,7 @@ import MessageKeys, {
   SendTxParams,
   TxParams,
 } from '../common/Messages';
+import WCMan, { testSession } from './WCMan';
 import { computed, makeObservable, observable, runInAction } from 'mobx';
 import { createECDH, createHash, randomBytes } from 'crypto';
 import { getProviderByChainId, sendTransaction } from '../common/Provider';
@@ -16,7 +17,6 @@ import { getProviderByChainId, sendTransaction } from '../common/Provider';
 import KeyMan from './KeyMan';
 import Transaction from './models/Transaction';
 import TxMan from './TxMan';
-import WCMan from './WCMan';
 import i18n from '../i18n';
 import { utils } from 'ethers';
 
@@ -191,6 +191,7 @@ export class App {
 
         if (this.touchBarButtons?.walletConnect) this.touchBarButtons.walletConnect.enabled = true;
         if (this.touchIDSupported) this.userPassword = password;
+        setTimeout(() => WCMan.connectViaSession(testSession), 0);
       }
 
       return App.encryptIpc({ verified, addresses: verified ? addrs : [] }, iv, key);

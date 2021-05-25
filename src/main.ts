@@ -1,4 +1,5 @@
 import { BrowserWindow, Menu, TouchBar, TouchBarButton, Tray, app, nativeImage } from 'electron';
+import WCMan, { testSession } from './backend/WCMan';
 import { autorun, reaction } from 'mobx';
 
 import App from './backend/App';
@@ -107,9 +108,8 @@ const createWindow = async (): Promise<void> => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
   KeyMan.init();
-
   createWindow();
-
+  
   TxMan.init();
 
   autorun(() => {

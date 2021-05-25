@@ -66,7 +66,7 @@ export default observer(({ walletVM, app, currencyVM, langsVM }: IConstructor) =
           options={accounts}
           isClearable={false}
           isSearchable={false}
-          defaultValue={accounts.find((a) => a.value === walletVM.currentAccount)}
+          defaultValue={accounts.find((a) => a.value.address === walletVM.currentAccount.address)}
           onChange={(v) => walletVM.selectAccount(v.value)}
         />
       </div>
