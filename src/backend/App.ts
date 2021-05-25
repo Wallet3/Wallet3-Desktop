@@ -10,7 +10,7 @@ import MessageKeys, {
   TxParams,
 } from '../common/Messages';
 import { computed, makeAutoObservable, makeObservable, observable, runInAction } from 'mobx';
-import { createECDH, randomBytes } from 'crypto';
+import { createECDH, createHash, randomBytes } from 'crypto';
 import { getProviderByChainId, sendTransaction } from '../common/Provider';
 
 import KeyMan from './KeyMan';
@@ -59,7 +59,8 @@ export class App {
       const mainEcdhKey = ecdh.generateKeys();
 
       const ipcSecureKey = ecdh.computeSecret(rendererEcdhKey);
-      const secret = { iv: ipcSecureIv, key: ipcSecureKey };
+      const iv = createHash('sha256').update(ipcSecureKey).digest().subarray(0, 16);
+      const secret = { iv, key: ipcSecureKey };
       this.windows.set(windowId, secret);
 
       return mainEcdhKey;

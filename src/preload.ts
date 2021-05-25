@@ -14,8 +14,8 @@ import { decrypt, encrypt } from './common/Cipher';
 
 import Messages from './common/Messages';
 
-const ipcSecureIv = crypto.randomBytes(16);
 const windowId = crypto.randomBytes(4).toString('hex');
+let ipcSecureIv: Buffer;
 let ipcSecureKey: Buffer;
 
 async function initSecureContext() {
@@ -24,11 +24,11 @@ async function initSecureContext() {
 
   const mainKey = await ipcRenderer.invoke(Messages.exchangeDHKey, {
     rendererEcdhKey,
-    ipcSecureIv,
     windowId,
   });
 
   ipcSecureKey = ecdh.computeSecret(mainKey);
+  ipcSecureIv = crypto.createHash('sha256').update(ipcSecureKey).digest().subarray(0, 16);
 }
 
 initSecureContext();
