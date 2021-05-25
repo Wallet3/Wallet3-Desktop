@@ -26,7 +26,7 @@ export class Application {
   }
 
   async init(jump = true) {
-    const { hasMnemonic, touchIDSupported, initVerified, addresses } = await ipc.invoke<InitStatus>(
+    const { hasMnemonic, touchIDSupported, initVerified, addresses } = await ipc.invokeSecure<InitStatus>(
       MessageKeys.getInitStatus
     );
 

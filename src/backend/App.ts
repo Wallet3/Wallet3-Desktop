@@ -1,6 +1,6 @@
 import * as Cipher from '../common/Cipher';
 
-import { BrowserWindow, Notification, TouchBar, TouchBarButton, app, ipcMain, systemPreferences } from 'electron';
+import { BrowserWindow, Notification, TouchBar, TouchBarButton, ipcMain, systemPreferences } from 'electron';
 import MessageKeys, {
   AuthenticationResult,
   ConfirmSendTx,
@@ -9,7 +9,7 @@ import MessageKeys, {
   SendTxParams,
   TxParams,
 } from '../common/Messages';
-import { computed, makeAutoObservable, makeObservable, observable, runInAction } from 'mobx';
+import { computed, makeObservable, observable, runInAction } from 'mobx';
 import { createECDH, createHash, randomBytes } from 'crypto';
 import { getProviderByChainId, sendTransaction } from '../common/Provider';
 
@@ -53,7 +53,7 @@ export class App {
     });
 
     ipcMain.handle(MessageKeys.exchangeDHKey, (e, dh) => {
-      const { rendererEcdhKey, ipcSecureIv, windowId } = dh;
+      const { rendererEcdhKey, windowId } = dh;
 
       const ecdh = createECDH('secp521r1');
       const mainEcdhKey = ecdh.generateKeys();
@@ -66,13 +66,19 @@ export class App {
       return mainEcdhKey;
     });
 
-    ipcMain.handle(MessageKeys.getInitStatus, () => {
-      return {
-        hasMnemonic: KeyMan.hasMnemonic,
-        touchIDSupported: this.touchIDSupported,
-        initVerified: this.addresses.length > 0,
-        addresses: [...this.addresses],
-      } as InitStatus;
+    ipcMain.handle(`${MessageKeys.getInitStatus}-secure`, (e, _, winId) => {
+      const { iv, key } = this.windows.get(winId);
+
+      return App.encryptIpc(
+        {
+          hasMnemonic: KeyMan.hasMnemonic,
+          touchIDSupported: this.touchIDSupported,
+          initVerified: this.addresses.length > 0,
+          addresses: [...this.addresses],
+        } as InitStatus,
+        iv,
+        key
+      );
     });
 
     ipcMain.handle(MessageKeys.scanQR, () => {
