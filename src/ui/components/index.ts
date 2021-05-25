@@ -1,5 +1,6 @@
+import Image from './Image';
 import Logo from './Logo';
 import NavBar from './NavBar';
 import PopupTitle from './PopupTitle';
 
-export { Logo, NavBar, PopupTitle };
+export { Logo, NavBar, PopupTitle, Image };

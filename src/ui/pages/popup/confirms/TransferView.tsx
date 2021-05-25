@@ -3,6 +3,7 @@ import React, { createRef } from 'react';
 import { ConfirmVM } from '../../../viewmodels/ConfirmVM';
 import { CryptoIcons } from '../../../misc/Icons';
 import Feather from 'feather-icons-react';
+import { Image } from '../../../components';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 
@@ -28,7 +29,11 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
           <div>
             <span>{t('dApp')}:</span>
             <span>
-              <img className="dapp-icon" src={implVM.args.walletConnect.app.icons[0]} alt="" />
+              <Image
+                className="dapp-icon"
+                src={implVM.args.walletConnect.app.icons[0]}
+                alt={implVM.args.walletConnect.app.name}
+              />
               {implVM.args.walletConnect.app.name}
             </span>
           </div>

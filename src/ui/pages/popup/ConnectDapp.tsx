@@ -1,7 +1,8 @@
 import './ConnectDapp.css';
 
+import { Image, PopupTitle } from '../../components';
+
 import { ApplicationPopup } from '../../viewmodels/ApplicationPopup';
-import { PopupTitle } from '../../components';
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
@@ -15,7 +16,7 @@ export default observer(({ app }: { app: ApplicationPopup }) => {
       <PopupTitle title={t('ConnectDapp')} icon="anchor" />
 
       <div className="content">
-        <img src={vm.icon} alt={vm.appName} />
+        <Image src={vm.icon} alt={vm.appName} />
         <div>{vm.appName}</div>
         <div className="desc" title={vm.desc}>
           {vm.desc}
