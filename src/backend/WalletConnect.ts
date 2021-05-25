@@ -7,6 +7,7 @@ import ERC20ABI from '../abis/ERC20.json';
 import EventEmitter from 'events';
 import { GasnowWs } from '../api/Gasnow';
 import KeyMan from './KeyMan';
+import WCSession from './models/WCSession';
 import WalletConnector from '@walletconnect/client';
 import { findTokenByAddress } from '../ui/misc/Tokens';
 import { getTransactionCount } from '../common/Provider';
@@ -16,6 +17,7 @@ export class WalletConnect extends EventEmitter {
   connector: WalletConnector;
   peerId: string;
   appMeta: WCClientMeta;
+
   get appChainId() {
     return this._appChainId || App.chainId;
   }
@@ -24,6 +26,7 @@ export class WalletConnect extends EventEmitter {
   private _modal = false;
   private _chainIdObserver: IReactionDisposer;
   private _currAddrObserver: IReactionDisposer;
+  private _wcSession: WCSession;
 
   constructor(modal = false) {
     super();
@@ -79,6 +82,14 @@ export class WalletConnect extends EventEmitter {
 
   get session() {
     return this.connector?.session;
+  }
+
+  get wcSession() {
+    return this._wcSession;
+  }
+
+  set wcSession(value: WCSession) {
+    this._wcSession = value;
   }
 
   private handleSessionRequest = async (error: Error, request: WCSessionRequestRequest) => {

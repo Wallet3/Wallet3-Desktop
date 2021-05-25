@@ -1,44 +1,27 @@
-import * as fs from 'fs';
-import * as path from 'path';
-
-import { Connection, FindManyOptions, IsNull, LessThanOrEqual, Repository, createConnection } from 'typeorm';
+import { FindManyOptions, IsNull, LessThanOrEqual } from 'typeorm';
 import { Notification, app, shell } from 'electron';
 import { makeObservable, observable, runInAction } from 'mobx';
 
+import DBMan from './DBMan';
 import Transaction from './models/Transaction';
 import { convertTxToUrl } from '../misc/Url';
 import { getTransactionReceipt } from '../common/Provider';
 import i18n from '../i18n';
 
 class TxMan {
+  private _timer: NodeJS.Timer;
+
   pendingTxs: Transaction[] = [];
 
-  private connection: Connection;
-  private txRepo: Repository<Transaction>;
-  private _dbPath = '';
-  private _timer: NodeJS.Timer;
+  get txRepo() {
+    return DBMan.txRepo;
+  }
 
   constructor() {
     makeObservable(this, { pendingTxs: observable });
   }
 
   async init() {
-    if (this.connection) return;
-
-    const userData = app.getPath('userData');
-    const dbPath = path.join(userData, 'data/app.sqlite');
-    this._dbPath = dbPath;
-
-    this.connection = await createConnection({
-      type: 'sqlite',
-      database: dbPath,
-      entities: [Transaction],
-      synchronize: true,
-      logging: false,
-    });
-
-    this.txRepo = this.connection.getRepository(Transaction);
-
     const pendingTxs = await this.findTxs({ where: { blockNumber: null } });
     runInAction(async () => this.pendingTxs.push(...pendingTxs));
 
@@ -102,11 +85,8 @@ class TxMan {
     this._timer = setTimeout(async () => await this.checkPendingTxs(), 20 * 1000);
   }
 
-  async clean() {
+  clean() {
     clearTimeout(this._timer);
-    await this.connection?.close();
-    this.connection = undefined;
-    fs.unlinkSync(this._dbPath);
   }
 }
 

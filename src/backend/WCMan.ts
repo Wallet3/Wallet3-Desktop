@@ -1,7 +1,23 @@
 import { IWcSession, WalletConnect } from './WalletConnect';
+import { makeObservable, observable, runInAction } from 'mobx';
+
+import App from './App';
+import DBMan from './DBMan';
+import WCSession from './models/WCSession';
 
 class WCMan {
   private cache = new Set<string>();
+
+  connects: WalletConnect[] = [];
+
+  constructor() {
+    makeObservable(this, { connects: observable });
+  }
+
+  async recoverSessions() {
+    const sessions = await DBMan.wcsessionRepo.find();
+    sessions.forEach((s) => this.recoverSession(s));
+  }
 
   async connectAndWaitSession(uri: string, modal = false) {
     if (this.cache.has(uri)) return;
@@ -19,21 +35,47 @@ class WCMan {
         wc.dispose(); // uri is expired
       };
 
-      wc.once('error', rejectPromise);
-      wc.once('disconnect', rejectPromise);
       wc.once('sessionRequest', () => {
         clearTimeout(timer);
         resolve(wc);
       });
+
+      wc.once('sessionApproved', () => {
+        const session = new WCSession();
+        session.chainId = wc.appChainId;
+        session.topicId = wc.session.handshakeTopic;
+        session.lastUsedTimestamp = Date.now();
+        session.session = JSON.stringify(wc.session);
+        DBMan.wcsessionRepo.save(session);
+      });
+
+      wc.once('disconnect', () => {});
     });
   }
 
-  connectViaSession(session: IWcSession) {
+  connectSession(session: IWcSession) {
     if (this.cache.has(session.key)) return;
     this.cache.add(session.key);
 
     const wc = new WalletConnect();
     wc.connectViaSession(session);
+    wc.once('disconnect', () => {
+      wc.dispose();
+      wc.wcSession?.remove({});
+      runInAction(() => this.connects.splice(this.connects.indexOf(wc), 1));
+    });
+
+    runInAction(() => this.connects.push(wc));
+    return wc;
+  }
+
+  recoverSession(wcSession: WCSession) {
+    const session: IWcSession = JSON.parse(wcSession.session);
+    session.accounts = [App.currentAddress];
+    session.chainId = wcSession.chainId || App.chainId;
+
+    const wc = this.connectSession(session);
+    wc.wcSession = wcSession;
   }
 
   clean() {}

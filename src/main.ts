@@ -4,6 +4,7 @@ import { autorun, reaction } from 'mobx';
 
 import App from './backend/App';
 import Coingecko from './api/Coingecko';
+import DBMan from './backend/DBMan';
 import GasnowWs from './api/Gasnow';
 import KeyMan from './backend/KeyMan';
 import Messages from './common/Messages';
@@ -109,7 +110,8 @@ const createWindow = async (): Promise<void> => {
 app.on('ready', async () => {
   KeyMan.init();
   createWindow();
-  
+
+  await DBMan.init();
   TxMan.init();
 
   autorun(() => {

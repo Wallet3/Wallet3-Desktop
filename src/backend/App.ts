@@ -14,6 +14,7 @@ import { computed, makeObservable, observable, runInAction } from 'mobx';
 import { createECDH, createHash, randomBytes } from 'crypto';
 import { getProviderByChainId, sendTransaction } from '../common/Provider';
 
+import DBMan from './DBMan';
 import KeyMan from './KeyMan';
 import Transaction from './models/Transaction';
 import TxMan from './TxMan';
@@ -132,6 +133,7 @@ export class App {
 
       if (this.touchBarButtons?.walletConnect) this.touchBarButtons.walletConnect.enabled = true;
       if (this.touchIDSupported) this.userPassword = userPassword;
+      await DBMan.init();
       TxMan.init();
 
       return App.encryptIpc({ addresses, success: true }, iv, key);
@@ -191,7 +193,7 @@ export class App {
 
         if (this.touchBarButtons?.walletConnect) this.touchBarButtons.walletConnect.enabled = true;
         if (this.touchIDSupported) this.userPassword = password;
-        setTimeout(() => WCMan.connectViaSession(testSession), 0);
+        setTimeout(() => WCMan.connectSession(testSession), 0);
       }
 
       return App.encryptIpc({ verified, addresses: verified ? addrs : [] }, iv, key);
@@ -220,6 +222,7 @@ export class App {
       if (this.touchBarButtons?.walletConnect) this.touchBarButtons.walletConnect.enabled = false;
 
       await KeyMan.reset(password);
+      await DBMan.clean();
       await TxMan.clean();
       WCMan.clean();
 
