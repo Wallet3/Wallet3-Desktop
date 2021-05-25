@@ -9,30 +9,31 @@ import MessageKeys, {
   SendTxParams,
   TxParams,
 } from '../common/Messages';
+import { computed, makeAutoObservable, makeObservable, observable, runInAction } from 'mobx';
 import { createECDH, randomBytes } from 'crypto';
-import { ethers, utils } from 'ethers';
 import { getProviderByChainId, sendTransaction } from '../common/Provider';
 
 import KeyMan from './KeyMan';
 import Transaction from './models/Transaction';
 import TxMan from './TxMan';
 import WCMan from './WCMan';
+import { utils } from 'ethers';
 
 declare const POPUP_WINDOW_WEBPACK_ENTRY: string;
 declare const POPUP_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
 export class App {
-  touchIDSupported = false;
+  touchIDSupported = systemPreferences.canPromptTouchID();
 
   userPassword?: string; // keep password in memory for TouchID users
   windows = new Map<string, { iv: Buffer; key: Buffer }>();
   mainWindow?: BrowserWindow;
   touchBarButtons?: { walletConnect: TouchBarButton; gas: TouchBarButton; price?: TouchBarButton };
+  private authKeys = new Map<string, string>();
+
   currentAddressIndex = 0;
   addresses: string[] = [];
   chainId = 1;
-
-  private authKeys = new Map<string, string>();
 
   get chainProvider() {
     return getProviderByChainId(this.chainId);
@@ -43,7 +44,13 @@ export class App {
   }
 
   constructor() {
-    this.touchIDSupported = systemPreferences.canPromptTouchID();
+    makeObservable(this, {
+      addresses: observable,
+      chainId: observable,
+      currentAddressIndex: observable,
+      chainProvider: computed,
+      currentAddress: computed,
+    });
 
     ipcMain.handle(MessageKeys.exchangeDHKey, (e, dh) => {
       const { rendererEcdhKey, ipcSecureIv, windowId } = dh;
@@ -63,7 +70,7 @@ export class App {
         hasMnemonic: KeyMan.hasMnemonic,
         touchIDSupported: this.touchIDSupported,
         initVerified: this.addresses.length > 0,
-        addresses: this.addresses,
+        addresses: [...this.addresses],
       } as InitStatus;
     });
 
@@ -113,7 +120,8 @@ export class App {
       if (!(await KeyMan.saveMnemonic(userPassword))) return App.encryptIpc({ success: false }, iv, key);
 
       const addresses = await KeyMan.genAddresses(userPassword, 10);
-      this.addresses = addresses;
+      runInAction(() => (this.addresses = addresses));
+
       if (this.touchBarButtons?.walletConnect) this.touchBarButtons.walletConnect.enabled = true;
       if (this.touchIDSupported) this.userPassword = userPassword;
       TxMan.init();
@@ -167,21 +175,24 @@ export class App {
       const { iv, key } = this.windows.get(winId);
       const { password, count } = App.decryptIpc(encrypted, iv, key);
       const verified = await KeyMan.verifyPassword(password);
+      let addrs: string[] = [];
 
       if (verified) {
-        this.addresses.push(...(await KeyMan.genAddresses(password, count)));
+        addrs = await KeyMan.genAddresses(password, count);
+        runInAction(() => this.addresses.push(...addrs));
+
         if (this.touchBarButtons?.walletConnect) this.touchBarButtons.walletConnect.enabled = true;
         if (this.touchIDSupported) this.userPassword = password;
       }
 
-      return App.encryptIpc({ verified, addresses: verified ? this.addresses : [] }, iv, key);
+      return App.encryptIpc({ verified, addresses: verified ? addrs : [] }, iv, key);
     });
 
     ipcMain.handle(`${MessageKeys.changeAccountIndex}-secure`, (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
       const { index } = App.decryptIpc(encrypted, iv, key);
-      this.currentAddressIndex = index;
-      return App.encryptIpc({}, iv, key);
+      runInAction(() => (this.currentAddressIndex = index));
+      return App.encryptIpc({ success: true }, iv, key);
     });
 
     ipcMain.handle(`${MessageKeys.releaseWindow}-secure`, (e, encrypted, winId) => {
@@ -202,16 +213,21 @@ export class App {
       await KeyMan.reset(password);
       await TxMan.clean();
       WCMan.clean();
-      this.currentAddressIndex = 0;
-      this.addresses = [];
+
+      runInAction(() => {
+        this.currentAddressIndex = 0;
+        this.addresses = [];
+      });
 
       return App.encryptIpc({ success: true }, iv, key);
     });
 
-    ipcMain.handle(`${MessageKeys.changeChainId}`, async (e, id) => {
-      this.chainId = id;
-      this.chainProvider.ready;
-    });
+    ipcMain.handle(`${MessageKeys.changeChainId}`, async (e, id) =>
+      runInAction(() => {
+        this.chainId = id;
+        this.chainProvider.ready;
+      })
+    );
 
     ipcMain.handle(`${MessageKeys.sendTx}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
@@ -231,10 +247,6 @@ export class App {
     });
 
     this.initPopupHandlers();
-  }
-
-  async init() {
-    await KeyMan.init();
   }
 
   static readonly decryptIpc = (encrypted: string, iv: Buffer, key: Buffer) => {

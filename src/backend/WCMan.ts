@@ -1,4 +1,4 @@
-import { WalletConnect } from './WalletConnect';
+import { WalletConnect, WcSession } from './WalletConnect';
 
 class WCMan {
   private cache = new Set<string>();
@@ -6,7 +6,8 @@ class WCMan {
   async connectAndWaitSession(uri: string, modal = false) {
     if (this.cache.has(uri)) return;
 
-    const wc = new WalletConnect(uri, modal);
+    const wc = new WalletConnect(modal);
+    wc.connect(uri);
     this.cache.add(uri);
 
     return await new Promise<WalletConnect>((resolve) => {
@@ -28,6 +29,11 @@ class WCMan {
         resolve(wc);
       });
     });
+  }
+
+  connectViaSession(session: WcSession) {
+    const wc = new WalletConnect();
+    wc.connectViaSession(session)
   }
 
   clean() {}

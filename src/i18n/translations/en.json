@@ -35,7 +35,7 @@
   "Mnemonic": "Mnemonic",
   "Security Tips": "Security Tips",
   "Mn_Sec_Tip_1": "The mnemonic consists of English words, please keep them safe.",
-  "Mn_Sec_Tip_2": "Once the mnemonic gets lost, it cannot be retrieved, and you may lose all your funds.",
+  "Mn_Sec_Tip_2": "Once the mnemonic gets lost, it cannot be retrieved, and you would lose all your funds.",
   "Address": "Address",
   "NEXT": "NEXT",
   "Continue": "Continue",

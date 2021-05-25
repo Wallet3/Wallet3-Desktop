@@ -4,6 +4,7 @@ import { autorun, reaction } from 'mobx';
 import App from './backend/App';
 import Coingecko from './api/Coingecko';
 import GasnowWs from './api/Gasnow';
+import KeyMan from './backend/KeyMan';
 import Messages from './common/Messages';
 import TxMan from './backend/TxMan';
 
@@ -105,7 +106,8 @@ const createWindow = async (): Promise<void> => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-  App.init();
+  KeyMan.init();
+
   createWindow();
 
   TxMan.init();

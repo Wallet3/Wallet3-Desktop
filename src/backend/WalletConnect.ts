@@ -20,12 +20,14 @@ export class WalletConnect extends EventEmitter {
   appMeta: WCClientMeta;
   chainProvider: ethers.providers.BaseProvider;
 
-  private modal = false;
+  private _modal = false;
 
-  constructor(uri: string, modal = false) {
+  constructor(modal = false) {
     super();
-    this.modal = modal;
+    this._modal = modal;
+  }
 
+  connect(uri: string) {
     this.connector = new WalletConnector({
       uri,
       clientMeta: {
@@ -40,11 +42,26 @@ export class WalletConnect extends EventEmitter {
     this.connector.on('call_request', this.handleCallRequest);
     this.connector.on('disconnect', (error: Error) => {
       console.log('discconnect');
+      this.emit('disconnect', this);
       this.dispose();
     });
   }
 
-  handleSessionRequest = async (error: Error, request: WCSessionRequestRequest) => {
+  connectViaSession(session: WcSession) {
+    this.connector = new WalletConnector({});
+    this.connector.session = session;
+    this.connector.on('session_request', this.handleSessionRequest);
+    this.connector.on('call_request', this.handleCallRequest);
+    this.connector.on('disconnect', () => this.emit('disconnect', this));
+    this.peerId = session.peerId;
+    this.appMeta = session.clientMeta;
+  }
+
+  get session() {
+    return this.connector?.session;
+  }
+
+  private handleSessionRequest = async (error: Error, request: WCSessionRequestRequest) => {
     if (error) {
       this.emit('error', error);
       return;
@@ -68,6 +85,7 @@ export class WalletConnect extends EventEmitter {
       this.chainId = App.chainId;
       this.chainProvider = getProviderByChainId(this.chainId);
       this.connector.approveSession({ accounts: [this.accountAddress], chainId: this.chainId });
+      console.log(this.connector.session);
     });
 
     ipcMain.handleOnce(WcMessages.rejectWcSession(this.peerId), () => {
@@ -77,12 +95,12 @@ export class WalletConnect extends EventEmitter {
     });
 
     await App.createPopupWindow('connectDapp', request.params, {
-      modal: this.modal,
-      parent: this.modal ? App.mainWindow : undefined,
+      modal: this._modal,
+      parent: this._modal ? App.mainWindow : undefined,
     });
   };
 
-  handleCallRequest = async (error: Error, request: WCCallRequestRequest) => {
+  private handleCallRequest = async (error: Error, request: WCCallRequestRequest) => {
     if (error) {
       this.emit('error', error);
       return;
@@ -110,7 +128,7 @@ export class WalletConnect extends EventEmitter {
     }
   };
 
-  eth_sendTransaction = async (request: WCCallRequestRequest, param: WCCallRequest_eth_sendTransaction) => {
+  private eth_sendTransaction = async (request: WCCallRequestRequest, param: WCCallRequest_eth_sendTransaction) => {
     const receipient: { address: string; name: string } = undefined;
     let transferToken: { balance: string; symbol: string; decimals: number } = undefined;
 
@@ -185,7 +203,7 @@ export class WalletConnect extends EventEmitter {
     );
   };
 
-  sign = async (request: WCCallRequestRequest, params: any, type: 'personal_sign' | 'signTypedData') => {
+  private sign = async (request: WCCallRequestRequest, params: any, type: 'personal_sign' | 'signTypedData') => {
     const clearHandlers = () => {
       ipcMain.removeHandler(`${WcMessages.approveWcCallRequest(this.peerId, request.id)}-secure`);
       ipcMain.removeHandler(`${WcMessages.rejectWcCallRequest(this.peerId, request.id)}-secure`);
@@ -255,4 +273,18 @@ export class WalletConnect extends EventEmitter {
   dispose() {
     this.removeAllListeners();
   }
+}
+
+export interface WcSession {
+  connected: boolean;
+  accounts: string[];
+  chainId: number;
+  bridge: string;
+  key: string;
+  clientId: string;
+  clientMeta: WCClientMeta | null;
+  peerId: string;
+  peerMeta: WCClientMeta | null;
+  handshakeId: number;
+  handshakeTopic: string;
 }
