@@ -276,7 +276,6 @@ export class ConfirmVM {
       data: this.args.data,
 
       password: via === 'passcode' ? crypto.sha256(passcode) : undefined,
-      accountIndex: WalletVM.accountIndex,
       viaTouchID: via === 'touchid',
     } as SendTxParams;
 

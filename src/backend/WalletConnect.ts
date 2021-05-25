@@ -8,6 +8,7 @@ import EventEmitter from 'events';
 import { GasnowWs } from '../api/Gasnow';
 import KeyMan from './KeyMan';
 import WalletConnector from '@walletconnect/client';
+import { findTokenByAddress } from '../ui/misc/Tokens';
 import { ipcMain } from 'electron';
 
 export class WalletConnect extends EventEmitter {
@@ -114,12 +115,18 @@ export class WalletConnect extends EventEmitter {
     let transferToken: { balance: string; symbol: string; decimals: number } = undefined;
 
     if (param.data?.startsWith('0xa9059cbb')) {
+      const found = findTokenByAddress(param.to);
       const c = new ethers.Contract(param.to, ERC20ABI, this.chainProvider);
-      const decimals = (await c.decimals()).toNumber();
-      const symbol = await c.symbol();
       const balance = (await c.balanceOf(this.accountAddress)).toString();
 
-      transferToken = { decimals, symbol, balance };
+      if (found) {
+        transferToken = { ...found, balance };
+      } else {
+        const decimals = (await c.decimals()).toNumber();
+        const symbol = await c.symbol();
+
+        transferToken = { decimals, symbol, balance };
+      }
     }
 
     const clearHandlers = () => {
