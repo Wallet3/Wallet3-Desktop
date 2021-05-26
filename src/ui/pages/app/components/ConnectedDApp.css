@@ -6,12 +6,30 @@
   width: 100%;
 }
 
-.connectedapp > img {
+.connectedapp > .dapp-logo {
+  position: relative;
+}
+
+.connectedapp > .dapp-logo > img.appicon {
   width: 15px;
   height: 15px;
 }
 
-.connectedapp > .info > span {
+.connectedapp > .dapp-logo > img.network {
+  position: absolute;
+  right: 3px;
+  top: -2px;
+  width: 7px;
+  height: 7px;
+  opacity: 0.85;
+}
+
+.connectedapp > .info .basic {
+  display: flex;
+  justify-content: space-between;
+}
+
+.connectedapp > .info .basic span {
   max-width: 50vw;
   overflow: hidden;
   text-overflow: ellipsis;

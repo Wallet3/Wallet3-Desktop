@@ -9,7 +9,6 @@ import MessageKeys, {
   SendTxParams,
   TxParams,
 } from '../common/Messages';
-import WCMan, { testSession } from './WCMan';
 import { autorun, computed, makeObservable, observable, runInAction } from 'mobx';
 import { createECDH, createHash, randomBytes } from 'crypto';
 import { getProviderByChainId, sendTransaction } from '../common/Provider';
@@ -18,6 +17,7 @@ import DBMan from './DBMan';
 import KeyMan from './KeyMan';
 import Transaction from './models/Transaction';
 import TxMan from './TxMan';
+import WCMan from './WCMan';
 import i18n from '../i18n';
 import { utils } from 'ethers';
 
@@ -57,6 +57,7 @@ export class App {
 
     autorun(() => {
       console.log('wc connects', WCMan.connects.length);
+      console.log(WCMan.connects.map((c) => c.connector.connect));
       this.mainWindow?.webContents.send(
         MessageKeys.wcConnectsChanged,
         WCMan.connects.map((wc) => wc.session)
@@ -289,6 +290,8 @@ export class App {
   };
 
   extractPassword = (params: SendTxParams) => {
+    if (!this.ready) return '';
+
     const password = params.viaTouchID ? this.userPassword : params.password;
     if (params.from.toLowerCase() !== this.currentAddress.toLowerCase()) {
       return '';

@@ -13,9 +13,10 @@ class WCMan {
     makeObservable(this, { connects: observable });
   }
 
-  async recoverSessions() {
+  async init() {
+    this.connects = [];
     const sessions = await DBMan.wcsessionRepo.find();
-    sessions.forEach((s) => this.recoverSession(s));
+    this.recoverSessions(sessions);
   }
 
   async connectAndWaitSession(uri: string, modal = false) {
@@ -55,23 +56,26 @@ class WCMan {
     });
   }
 
-  recoverSession(wcSession: WCSession) {
-    const session: IWcSession = JSON.parse(wcSession.session);
+  recoverSessions(wcSessions: WCSession[]) {
+    const sessions: IWcSession[] = wcSessions.map((s) => JSON.parse(s.session));
 
-    const wc = this.connectSession(session);
-    if (wc) wc.wcSession = wcSession;
+    const wcs = this.connectSessions(sessions);
+    wcs.filter((i) => i).map((wc, i) => (wc.wcSession = wcSessions[i]));
+
+    runInAction(() => this.connects.push(...wcs));
   }
 
-  private connectSession(session: IWcSession) {
-    if (this.cache.has(session.key)) return;
-    this.cache.add(session.key);
+  private connectSessions(sessions: IWcSession[]) {
+    return sessions.map((session) => {
+      if (this.cache.has(session.key)) return undefined;
+      this.cache.add(session.key);
 
-    const wc = new WalletConnect();
-    wc.connectViaSession(session);
-    this.handleWCEvents(wc);
+      const wc = new WalletConnect();
+      wc.connectViaSession(session);
+      this.handleWCEvents(wc);
 
-    runInAction(() => this.connects.push(wc));
-    return wc;
+      return wc;
+    });
   }
 
   private handleWCEvents(wc: WalletConnect) {
@@ -98,27 +102,3 @@ class WCMan {
 }
 
 export default new WCMan();
-
-export const testSession = {
-  connected: true,
-  accounts: ['0xaa94f8452a35743fb8F0B99b5222A6FDc350A924'],
-  chainId: 42,
-  bridge: 'https://bridge.walletconnect.org',
-  key: '1f01772c7b76e0de659920f0b44de56b293fd2c1dca7a2890b03f7ad03935617',
-  clientId: '207c7513-7bb7-40ad-8e05-7450452844f1',
-  clientMeta: {
-    name: 'Wallet 3',
-    description: 'A secure desktop wallet for Bankless Era',
-    icons: [],
-    url: 'https://wallet3.io',
-  },
-  peerId: '44358115-e1d9-4307-9cd5-2e20afd74886',
-  peerMeta: {
-    description: '',
-    url: 'https://example.walletconnect.org',
-    icons: ['https://example.walletconnect.org/favicon.ico'],
-    name: 'WalletConnect Example',
-  },
-  handshakeId: 1621931452514045,
-  handshakeTopic: 'b31ca7ec-f164-4771-a5b3-2bd22549870d',
-};

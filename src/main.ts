@@ -1,5 +1,4 @@
 import { BrowserWindow, Menu, TouchBar, TouchBarButton, Tray, app, nativeImage } from 'electron';
-import WCMan, { testSession } from './backend/WCMan';
 import { autorun, reaction } from 'mobx';
 
 import App from './backend/App';
@@ -9,6 +8,7 @@ import GasnowWs from './api/Gasnow';
 import KeyMan from './backend/KeyMan';
 import Messages from './common/Messages';
 import TxMan from './backend/TxMan';
+import WCMan from './backend/WCMan';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -121,7 +121,7 @@ app.on('ready', async () => {
 
   await DBMan.init();
   await TxMan.init();
-  await WCMan.recoverSessions();
+  await WCMan.init();
 
   GasnowWs.start(true);
   GasnowWs.onClose = () => GasnowWs.start(true);

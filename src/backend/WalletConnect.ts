@@ -90,6 +90,7 @@ export class WalletConnect extends EventEmitter {
   }
 
   updateSession() {
+    if (!App.ready) return;
     this.connector?.updateSession({ chainId: this.appChainId, accounts: [App.currentAddress] });
     this.emit('sessionUpdated', this?.session);
   }
