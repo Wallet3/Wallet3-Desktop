@@ -3,7 +3,8 @@ import NetVM, { Networks } from './NetworksVM';
 import { makeAutoObservable, reaction, runInAction, when } from 'mobx';
 
 import { AccountVM } from './AccountVM';
-import { PendingTxVM } from './PendingTxVM';
+import { DAppVM } from './wallet/DAppVM';
+import { PendingTxVM } from './wallet/PendingTxVM';
 import ipc from '../bridges/IPC';
 import store from 'storejs';
 
@@ -83,6 +84,12 @@ export class WalletVM {
 
   selectPendingTx(tx: TxParams) {
     this.pendingTxVM = new PendingTxVM(tx);
+  }
+
+  dAppVM: DAppVM = null;
+
+  selectDAppSession(session: IWcSession) {
+    this.dAppVM = new DAppVM(session);
   }
 }
 

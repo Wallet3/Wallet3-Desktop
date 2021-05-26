@@ -57,7 +57,6 @@ export class App {
 
     autorun(() => {
       console.log('wc connects', WCMan.connects.length);
-      console.log(WCMan.connects.map((c) => c.connector.connect));
       this.mainWindow?.webContents.send(
         MessageKeys.wcConnectsChanged,
         WCMan.connects.map((wc) => wc.session)
@@ -242,7 +241,7 @@ export class App {
 
       await KeyMan.reset(password);
       await DBMan.clean();
-      await TxMan.clean();
+      TxMan.clean();
       WCMan.clean();
 
       runInAction(() => {

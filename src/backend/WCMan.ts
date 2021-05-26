@@ -94,10 +94,12 @@ class WCMan {
   }
 
   clean() {
-    this.connects.forEach((c) => {
-      c.wcSession.remove();
-      c.dispose();
-    });
+    this.connects.forEach((c) => c.wcSession.remove());
+    this.dispose();
+  }
+
+  dispose() {
+    this.connects.forEach((c) => c.dispose());
   }
 }
 

@@ -8,7 +8,7 @@
   width: 12px;
   height: 12px;
   margin: 0 !important;
-  margin-right: 4px;
+  margin-right: 4px !important;
   display: inline-block;
 }
 

@@ -1,4 +1,4 @@
-import { BrowserWindow, Menu, TouchBar, TouchBarButton, Tray, app, nativeImage } from 'electron';
+import { BrowserWindow, Menu, TouchBar, TouchBarButton, Tray, app, nativeImage, powerMonitor } from 'electron';
 import { autorun, reaction } from 'mobx';
 
 import App from './backend/App';
@@ -9,6 +9,7 @@ import KeyMan from './backend/KeyMan';
 import Messages from './common/Messages';
 import TxMan from './backend/TxMan';
 import WCMan from './backend/WCMan';
+import delay from 'delay';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -169,3 +170,10 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
+
+powerMonitor.on('resume', async () => {
+  console.log('resume');
+  await delay(5000); // waiting for network is connected
+  WCMan.dispose();
+  WCMan.init();
+});

@@ -1,8 +1,8 @@
-import Messages, { ConfirmSendTx } from '../../common/Messages';
+import Messages, { ConfirmSendTx } from '../../../common/Messages';
 
-import { GasnowWs } from '../../api/Gasnow';
-import { TxParams } from '../../common/Messages';
-import ipc from '../bridges/IPC';
+import { GasnowWs } from '../../../api/Gasnow';
+import { TxParams } from '../../../common/Messages';
+import ipc from '../../bridges/IPC';
 
 export class PendingTxVM {
   _tx: TxParams;

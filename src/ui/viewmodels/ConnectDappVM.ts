@@ -26,8 +26,6 @@ export class ConnectDappVM {
     this.icon = param.peerMeta.icons[0];
     this.url = param.peerMeta.url;
     this.desc = param.peerMeta.description;
-
-    console.log(param);
   }
 
   setChainId(id: number) {
