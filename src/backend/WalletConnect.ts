@@ -159,19 +159,24 @@ export class WalletConnect extends EventEmitter {
     switch (request.method) {
       case 'eth_sendTransaction':
         const [param] = request.params as WCCallRequest_eth_sendTransaction[];
-        if (checkAccount(param.from)) this.eth_sendTransaction(request, param);
+        if (!checkAccount(param.from)) return;
+
+        this.eth_sendTransaction(request, param);
         break;
       case 'eth_sign':
         break;
       case 'eth_signTransaction':
         break;
       case 'personal_sign':
-        if (checkAccount(request.params[1])) this.sign(request, request.params, 'personal_sign');
+        if (!checkAccount(request.params[1])) return;
+        this.sign(request, request.params, 'personal_sign');
         break;
       case 'eth_signTypedData':
         this.sign(request, request.params, 'signTypedData');
         break;
     }
+
+    this.emit('sessionUpdated');
   };
 
   private eth_sendTransaction = async (request: WCCallRequestRequest, param: WCCallRequest_eth_sendTransaction) => {

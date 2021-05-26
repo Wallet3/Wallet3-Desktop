@@ -38,6 +38,7 @@
 
 .connectedapp > .info > .extra {
   display: flex;
+  margin-top: 2px;
   justify-content: space-between;
   font-size: 10px;
 }
