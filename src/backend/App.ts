@@ -241,8 +241,8 @@ export class App {
 
       await KeyMan.reset(password);
       await DBMan.clean();
-      TxMan.clean();
-      WCMan.clean();
+      await TxMan.clean();
+      await WCMan.clean();
 
       runInAction(() => {
         this.currentAddressIndex = 0;

@@ -87,6 +87,13 @@ class TxMan {
 
   clean() {
     clearTimeout(this._timer);
+
+    return new Promise<void>((resolve) => {
+      runInAction(() => {
+        this.pendingTxs = [];
+        resolve();
+      });
+    });
   }
 }
 

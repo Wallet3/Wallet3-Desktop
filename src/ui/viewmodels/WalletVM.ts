@@ -52,6 +52,7 @@ export class WalletVM {
 
     ipc.on(Messages.wcConnectsChanged, (e, content: IWcSession[]) =>
       runInAction(() => {
+        console.log('wcconnects', content);
         this.appConnects = content;
       })
     );

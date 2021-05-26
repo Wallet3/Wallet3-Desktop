@@ -62,6 +62,11 @@ export class GasnowWs {
     makeAutoObservable(this);
   }
 
+  restart(native = false) {
+    this.stop();
+    this.start(native);
+  }
+
   start(native = false) {
     if (this.client) return;
 
@@ -101,7 +106,7 @@ export class GasnowWs {
   }
 
   stop() {
-    this.client.close(0, 'thanks');
+    this.client.close();
     this.client.onmessage = undefined;
     this.client.onerror = undefined;
     this.client = undefined;

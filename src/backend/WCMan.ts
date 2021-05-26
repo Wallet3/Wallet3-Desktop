@@ -23,7 +23,6 @@ class WCMan {
   }
 
   async init() {
-    this.connects = [];
     const sessions = await DBMan.wcsessionRepo.find();
     this.recoverSessions(sessions);
   }
@@ -112,14 +111,21 @@ class WCMan {
     runInAction(() => this.connects.splice(this.connects.indexOf(target), 1));
   }
 
-  clean() {
-    this.connects.forEach((c) => c.wcSession.remove());
-    this.dispose();
+  async clean() {
+    this.connects.forEach((c) => c?.wcSession?.remove());
+    await this.dispose();
   }
 
   dispose() {
-    this.connects.forEach((c) => c.dispose());
-    this.connects = [];
+    this.connects.forEach((c) => c?.dispose());
+    this.cache.clear();
+
+    return new Promise<void>((resolve) =>
+      runInAction(() => {
+        this.connects = [];
+        resolve();
+      })
+    );
   }
 }
 

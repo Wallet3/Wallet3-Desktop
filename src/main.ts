@@ -171,9 +171,13 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 
-powerMonitor.on('resume', async () => {
+powerMonitor.on('resume', () => {
   console.log('resume');
-  await delay(5000); // waiting for network is connected
-  WCMan.dispose();
-  WCMan.init();
+
+  setTimeout(async () => {
+    await WCMan.dispose();
+    WCMan.init();
+  }, 5000);
+
+  GasnowWs.restart(true);
 });
