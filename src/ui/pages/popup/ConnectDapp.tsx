@@ -6,6 +6,7 @@ import { Menu, MenuButton, MenuDivider, MenuItem } from '@szhsin/react-menu';
 
 import { ApplicationPopup } from '../../viewmodels/ApplicationPopup';
 import NetworkLabel from '../app/components/NetworkLabel';
+import { Networks } from '../../viewmodels/NetworksVM';
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
@@ -29,12 +30,21 @@ export default observer(({ app }: { app: ApplicationPopup }) => {
             styles={{ minWidth: '3.5rem' }}
             direction="bottom"
             overflow="auto"
-            position="anchor"
           >
             <MenuItem styles={{ padding: '8px 12px' }}>
               <NetworkLabel chainId={0} expand />
             </MenuItem>
             <MenuDivider />
+
+            {Networks.map((item) => {
+              return item ? (
+                <MenuItem key={item.chainId} styles={{ padding: '8px 12px' }} onClick={(_) => vm.setChainId(item.chainId)}>
+                  <NetworkLabel expand chainId={item.chainId} />
+                </MenuItem>
+              ) : (
+                <MenuDivider key={Math.random()} />
+              );
+            })}
           </Menu>
         </div>
 

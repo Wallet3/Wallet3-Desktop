@@ -54,9 +54,7 @@
 
 .page.connectdapp > .content > div.networks > button {
   width: auto;
-  padding-left: 5px;
-  padding-right: 5px;
-  /* border: 1px solid var(--font-color-title); */
+  padding: 4px 5px;
 }
 
 .page.connectdapp > .actions {

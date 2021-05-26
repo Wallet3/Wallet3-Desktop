@@ -41,16 +41,12 @@ export class WalletConnect extends EventEmitter {
       () => {
         if (this._userChainId !== 0) return;
         this.updateSession();
-        console.log('update chainId', this.appChainId);
       }
     );
 
     this._currAddrObserver = reaction(
       () => App.currentAddressIndex,
-      () => {
-        this.updateSession();
-        console.log('update account', App.currentAddress);
-      }
+      () => this.updateSession()
     );
   }
 
@@ -59,7 +55,7 @@ export class WalletConnect extends EventEmitter {
       uri,
       clientMeta: {
         name: 'Wallet 3',
-        description: 'A secure desktop wallet for Bankless Era',
+        description: 'A Wallet for Bankless Era',
         icons: [],
         url: 'https://wallet3.io',
       },
@@ -67,11 +63,7 @@ export class WalletConnect extends EventEmitter {
 
     this.connector.on('session_request', this.handleSessionRequest);
     this.connector.on('call_request', this.handleCallRequest);
-    this.connector.on('disconnect', (error: Error) => {
-      console.log(`${this.appMeta?.name} discconnected`);
-      this.emit('disconnect', this);
-      this.dispose();
-    });
+    this.connector.on('disconnect', () => this.emit('disconnect', this));
   }
 
   connectViaSession(session: IWcSession) {
@@ -99,7 +91,7 @@ export class WalletConnect extends EventEmitter {
 
   updateSession() {
     this.connector?.updateSession({ chainId: this.appChainId, accounts: [App.currentAddress] });
-    this.emit('sessionUpdated', this.session);
+    this.emit('sessionUpdated', this?.session);
   }
 
   private handleSessionRequest = async (error: Error, request: WCSessionRequestRequest) => {
@@ -121,16 +113,14 @@ export class WalletConnect extends EventEmitter {
 
     ipcMain.handleOnce(WcMessages.approveWcSession(this.peerId), (e, c) => {
       clearHandlers();
-      this._userChainId = c.chainId || 0;
+      this._userChainId = c?.userChainId || 0;
       this.connector.approveSession({ accounts: [App.currentAddress], chainId: this.appChainId });
       this.emit('sessionApproved', this.connector.session);
-      console.log(this.connector.session);
     });
 
     ipcMain.handleOnce(WcMessages.rejectWcSession(this.peerId), () => {
       clearHandlers();
       this.connector.rejectSession({ message: 'User cancelled' });
-      this.emit('disconnect');
       this.dispose();
     });
 

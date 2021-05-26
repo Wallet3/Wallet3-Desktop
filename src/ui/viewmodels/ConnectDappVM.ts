@@ -35,7 +35,7 @@ export class ConnectDappVM {
   }
 
   approve() {
-    ipc.invoke(WcMessages.approveWcSession(this.peerId), { chainId: this.chainId });
+    ipc.invoke(WcMessages.approveWcSession(this.peerId), { userChainId: this.chainId });
   }
 
   reject() {

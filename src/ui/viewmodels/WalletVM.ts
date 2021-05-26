@@ -15,13 +15,14 @@ export class WalletVM {
   accounts: AccountVM[] = [];
   currentAccount: AccountVM = null;
   allPendingTxs: TxParams[] = [];
+  wcConnects: IWcSession[] = [];
 
   get accountIndex() {
     return this.accounts.indexOf(this.currentAccount);
   }
 
   get pendingTxs() {
-    return this.allPendingTxs.filter((tx) => tx.from === this.currentAccount.address);
+    return this.allPendingTxs.filter((tx) => tx.from === this.currentAccount.address && tx.chainId === NetVM.currentChainId);
   }
 
   get pendingTxCount() {
@@ -36,15 +37,19 @@ export class WalletVM {
       () => this.currentAccount?.refresh()
     );
 
-    ipc.on(Messages.pendingTxsChanged, (e, content: string) => {
+    ipc.on(Messages.pendingTxsChanged, (e, content: string) =>
       runInAction(() => {
         try {
           this.allPendingTxs = JSON.parse(content);
         } catch (error) {}
-      });
-    });
+      })
+    );
 
-    ipc.on(Messages.wcConnectsChanged, (e, content: IWcSession[]) => {});
+    ipc.on(Messages.wcConnectsChanged, (e, content: IWcSession[]) =>
+      runInAction(() => {
+        this.wcConnects = content;
+      })
+    );
   }
 
   initAccounts(addresses: string[]) {

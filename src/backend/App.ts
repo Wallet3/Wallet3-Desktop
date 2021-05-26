@@ -208,7 +208,6 @@ export class App {
 
         if (this.touchBarButtons?.walletConnect) this.touchBarButtons.walletConnect.enabled = true;
         if (this.touchIDSupported) this.userPassword = password;
-        setTimeout(() => WCMan.connectSession(testSession), 0);
       }
 
       return App.encryptIpc({ verified, addresses: verified ? addrs : [] }, iv, key);

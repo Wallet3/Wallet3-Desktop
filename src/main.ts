@@ -97,6 +97,14 @@ const createWindow = async (): Promise<void> => {
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   App.mainWindow = mainWindow;
 
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.webContents.send(Messages.pendingTxsChanged, JSON.stringify(TxMan.pendingTxs));
+    mainWindow.webContents.send(
+      Messages.wcConnectsChanged,
+      WCMan.connects.map((c) => c.session)
+    );
+  });
+
   createTouchBar(mainWindow);
   createTray();
 };

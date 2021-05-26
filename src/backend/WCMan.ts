@@ -55,7 +55,14 @@ class WCMan {
     });
   }
 
-  connectSession(session: IWcSession) {
+  recoverSession(wcSession: WCSession) {
+    const session: IWcSession = JSON.parse(wcSession.session);
+
+    const wc = this.connectSession(session);
+    if (wc) wc.wcSession = wcSession;
+  }
+
+  private connectSession(session: IWcSession) {
     if (this.cache.has(session.key)) return;
     this.cache.add(session.key);
 
@@ -65,13 +72,6 @@ class WCMan {
 
     runInAction(() => this.connects.push(wc));
     return wc;
-  }
-
-  recoverSession(wcSession: WCSession) {
-    const session: IWcSession = JSON.parse(wcSession.session);
-
-    const wc = this.connectSession(session);
-    if (wc) wc.wcSession = wcSession;
   }
 
   private handleWCEvents(wc: WalletConnect) {
@@ -89,7 +89,12 @@ class WCMan {
     });
   }
 
-  clean() {}
+  clean() {
+    this.connects.forEach((c) => {
+      c.wcSession.remove();
+      c.dispose();
+    });
+  }
 }
 
 export default new WCMan();
