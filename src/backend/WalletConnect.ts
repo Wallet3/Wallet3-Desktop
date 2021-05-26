@@ -77,7 +77,7 @@ export class WalletConnect extends EventEmitter {
   }
 
   get session() {
-    return this.connector?.session;
+    return { ...this.connector?.session, lastUsedTimestamp: this.wcSession?.lastUsedTimestamp ?? 0 };
   }
 
   get wcSession() {

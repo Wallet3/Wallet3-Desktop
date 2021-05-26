@@ -6,6 +6,7 @@ import { Networks, NetworksVM } from '../../viewmodels/NetworksVM';
 
 import AnimatedNumber from 'react-animated-number';
 import { Application } from '../../viewmodels/Application';
+import ConnectedDApp from './components/ConnectedDApp';
 import { CryptoIcons } from '../../misc/Icons';
 import { CurrencyVM } from '../../viewmodels/CurrencyVM';
 import Feather from 'feather-icons-react';
@@ -57,15 +58,23 @@ export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor
       <div className="utility-bar">
         {appCount > 0 ? (
           <Menu
+            styles={{ minWidth: '5.5rem' }}
+            direction="bottom"
+            overflow="auto"
+            position="anchor"
             menuButton={() => (
               <MenuButton className="menu-button">
                 <WalletConnectIndicator count={appCount} />
               </MenuButton>
             )}
           >
-            <MenuItem>
-              <span></span>
-            </MenuItem>
+            {appConnects.map((s) => {
+              return (
+                <MenuItem key={s.key} styles={{ padding: '8px 12px' }}>
+                  <ConnectedDApp {...s} />
+                </MenuItem>
+              );
+            })}
           </Menu>
         ) : undefined}
 

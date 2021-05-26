@@ -88,6 +88,7 @@ interface IWcSession {
   peerMeta: WCClientMeta | null;
   handshakeId: number;
   handshakeTopic: string;
+  lastUsedTimestamp?: number;
 }
 
 ////////////////////////ethers///////////////////////

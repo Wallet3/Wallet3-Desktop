@@ -1,0 +1,35 @@
+.connectedapp {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  align-items: flex-start;
+  font-size: 13px;
+  width: 100%;
+}
+
+.connectedapp > img {
+  width: 15px;
+  height: 15px;
+}
+
+.connectedapp > .info > span {
+  max-width: 50vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.connectedapp > .info > .extra {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+}
+
+.connectedapp > .info > .extra > .network-label {
+  font-size: 10px;
+}
+
+.connectedapp > .info > .extra > .network-label img {
+  height: 10px;
+  width: 10px;
+  margin-right: 3px;
+}

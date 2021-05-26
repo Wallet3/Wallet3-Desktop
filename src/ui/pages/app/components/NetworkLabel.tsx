@@ -23,6 +23,7 @@ const SVGs = new Map([
 interface INetworkLabel {
   chainId: number;
   expand?: boolean;
+  noLabel?: boolean;
 }
 
 export default observer((props: INetworkLabel) => {
@@ -30,7 +31,7 @@ export default observer((props: INetworkLabel) => {
 
   return (
     <div className={`network-label ${props.expand ? 'expand' : ''}`}>
-      <img src={svg} alt={label} /> <span>{label}</span>
+      <img src={svg} alt={label} /> {props.noLabel ? undefined : <span>{label}</span>}
     </div>
   );
 });
