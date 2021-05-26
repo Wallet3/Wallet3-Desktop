@@ -59,7 +59,7 @@ export class App {
       console.log('wc connects', WCMan.connects.length);
       this.mainWindow?.webContents.send(
         MessageKeys.wcConnectsChanged,
-        WCMan.connects.map((wc) => wc.session)
+        WCMan.connects.filter((i) => i).map((wc) => wc.session)
       );
     });
   }

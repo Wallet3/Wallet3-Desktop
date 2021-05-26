@@ -119,6 +119,7 @@ class WCMan {
 
   dispose() {
     this.connects.forEach((c) => c.dispose());
+    this.connects = [];
   }
 }
 
