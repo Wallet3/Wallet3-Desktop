@@ -45,6 +45,10 @@ export class App {
     return this.addresses[this.currentAddressIndex];
   }
 
+  get ready() {
+    return this.addresses.length > 0;
+  }
+
   init() {
     autorun(() => {
       console.log('pending', TxMan.pendingTxs.length);

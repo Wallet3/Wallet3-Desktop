@@ -1,0 +1,15 @@
+.walletconnect-indicator {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+}
+
+.walletconnect-indicator > span.count {
+  font-weight: 500;
+  margin-right: 5px;
+}
+
+.walletconnect-indicator > svg {
+  margin: 0;
+  margin-right: 1px;
+}

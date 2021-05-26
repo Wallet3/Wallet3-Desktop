@@ -15,7 +15,7 @@ export class WalletVM {
   accounts: AccountVM[] = [];
   currentAccount: AccountVM = null;
   allPendingTxs: TxParams[] = [];
-  wcConnects: IWcSession[] = [];
+  appConnects: IWcSession[] = [];
 
   get accountIndex() {
     return this.accounts.indexOf(this.currentAccount);
@@ -27,6 +27,10 @@ export class WalletVM {
 
   get pendingTxCount() {
     return this.pendingTxs.length;
+  }
+
+  get appCount() {
+    return this.appConnects.length;
   }
 
   constructor() {
@@ -47,7 +51,7 @@ export class WalletVM {
 
     ipc.on(Messages.wcConnectsChanged, (e, content: IWcSession[]) =>
       runInAction(() => {
-        this.wcConnects = content;
+        this.appConnects = content;
       })
     );
   }

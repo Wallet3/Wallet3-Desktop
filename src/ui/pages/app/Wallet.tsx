@@ -18,6 +18,7 @@ import PendingTxIndicator from './components/PendingTxIndicator';
 import React from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { UserToken } from '../../../ui/viewmodels/models/UserToken';
+import WalletConnectIndicator from './components/WalletConnectIndicator';
 import { WalletVM } from '../../viewmodels/WalletVM';
 import { formatNum } from '../../misc/Formatter';
 import { observer } from 'mobx-react-lite';
@@ -32,7 +33,7 @@ interface IConstructor {
 
 export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor) => {
   const { t } = useTranslation();
-  const { currentAccount: accountVM, pendingTxCount, pendingTxs } = walletVM;
+  const { currentAccount: accountVM, pendingTxCount, pendingTxs, appConnects, appCount } = walletVM;
 
   const maxRows = 6;
   const rows = accountVM.chainTokens.length / 2;
@@ -54,6 +55,20 @@ export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor
   return (
     <div className="page main">
       <div className="utility-bar">
+        {appCount > 0 ? (
+          <Menu
+            menuButton={() => (
+              <MenuButton className="menu-button">
+                <WalletConnectIndicator count={appCount} />
+              </MenuButton>
+            )}
+          >
+            <MenuItem>
+              <span></span>
+            </MenuItem>
+          </Menu>
+        ) : undefined}
+
         {pendingTxCount > 0 ? (
           <Menu
             menuButton={() => (

@@ -1,7 +1,6 @@
 import App, { App as Application } from './App';
 import { AuthParams, ConfirmSendTx, RequestSignMessage, SendTxParams, WcMessages } from '../common/Messages';
 import { IReactionDisposer, reaction } from 'mobx';
-import { ethers, utils } from 'ethers';
 
 import ERC20ABI from '../abis/ERC20.json';
 import EventEmitter from 'events';
@@ -9,6 +8,7 @@ import { GasnowWs } from '../api/Gasnow';
 import KeyMan from './KeyMan';
 import WCSession from './models/WCSession';
 import WalletConnector from '@walletconnect/client';
+import { ethers } from 'ethers';
 import { findTokenByAddress } from '../ui/misc/Tokens';
 import { getTransactionCount } from '../common/Provider';
 import { ipcMain } from 'electron';
@@ -100,6 +100,8 @@ export class WalletConnect extends EventEmitter {
       return;
     }
 
+    if (!App.ready) return;
+
     this.emit('sessionRequest');
 
     const [{ peerMeta, peerId }] = request.params;
@@ -135,6 +137,8 @@ export class WalletConnect extends EventEmitter {
       this.emit('error', error);
       return;
     }
+
+    if (!App.ready) return;
 
     console.log(request.method);
     console.log(request.id);
