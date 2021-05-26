@@ -43,6 +43,8 @@ export class WalletVM {
         } catch (error) {}
       });
     });
+
+    ipc.on(Messages.wcConnectsChanged, (e, content: IWcSession[]) => {});
   }
 
   initAccounts(addresses: string[]) {

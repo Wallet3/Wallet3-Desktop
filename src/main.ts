@@ -95,9 +95,6 @@ const createWindow = async (): Promise<void> => {
 
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
-  mainWindow.once('ready-to-show', () =>
-    mainWindow?.webContents.send(Messages.pendingTxsChanged, JSON.stringify(TxMan.pendingTxs))
-  );
   App.mainWindow = mainWindow;
 
   createTouchBar(mainWindow);
@@ -108,16 +105,15 @@ const createWindow = async (): Promise<void> => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-  KeyMan.init();
+  await KeyMan.init();
+
   createWindow();
 
-  await DBMan.init();
-  TxMan.init();
+  App.init();
 
-  autorun(() => {
-    console.log('pending', TxMan.pendingTxs.length);
-    App.mainWindow?.webContents.send(Messages.pendingTxsChanged, JSON.stringify(TxMan.pendingTxs));
-  });
+  await DBMan.init();
+  await TxMan.init();
+  await WCMan.recoverSessions();
 
   GasnowWs.start(true);
   GasnowWs.onClose = () => GasnowWs.start(true);

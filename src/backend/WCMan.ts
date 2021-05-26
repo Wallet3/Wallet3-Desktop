@@ -1,9 +1,8 @@
-import { IWcSession, WalletConnect } from './WalletConnect';
 import { makeObservable, observable, runInAction } from 'mobx';
 
-import App from './App';
 import DBMan from './DBMan';
 import WCSession from './models/WCSession';
+import { WalletConnect } from './WalletConnect';
 
 class WCMan {
   private cache = new Set<string>();
@@ -41,15 +40,18 @@ class WCMan {
       });
 
       wc.once('sessionApproved', () => {
-        const session = new WCSession();
-        session.chainId = wc.appChainId;
-        session.topicId = wc.session.handshakeTopic;
-        session.lastUsedTimestamp = Date.now();
-        session.session = JSON.stringify(wc.session);
-        DBMan.wcsessionRepo.save(session);
-      });
+        const wcSession = new WCSession();
+        wcSession.userChainId = wc.userChainId;
+        wcSession.topicId = wc.session.handshakeTopic;
+        wcSession.lastUsedTimestamp = Date.now();
+        wcSession.session = JSON.stringify(wc.session);
 
-      wc.once('disconnect', () => {});
+        wc.wcSession = wcSession;
+        DBMan.wcsessionRepo.save(wcSession);
+
+        this.handleWCEvents(wc);
+        runInAction(() => this.connects.push(wc));
+      });
     });
   }
 
@@ -59,11 +61,7 @@ class WCMan {
 
     const wc = new WalletConnect();
     wc.connectViaSession(session);
-    wc.once('disconnect', () => {
-      wc.dispose();
-      wc.wcSession?.remove({});
-      runInAction(() => this.connects.splice(this.connects.indexOf(wc), 1));
-    });
+    this.handleWCEvents(wc);
 
     runInAction(() => this.connects.push(wc));
     return wc;
@@ -71,11 +69,24 @@ class WCMan {
 
   recoverSession(wcSession: WCSession) {
     const session: IWcSession = JSON.parse(wcSession.session);
-    session.accounts = [App.currentAddress];
-    session.chainId = wcSession.chainId || App.chainId;
 
     const wc = this.connectSession(session);
-    wc.wcSession = wcSession;
+    if (wc) wc.wcSession = wcSession;
+  }
+
+  private handleWCEvents(wc: WalletConnect) {
+    wc.once('disconnect', () => {
+      wc.dispose();
+      wc.wcSession?.remove({});
+      runInAction(() => this.connects.splice(this.connects.indexOf(wc), 1));
+    });
+
+    wc.on('sessionUpdated', () => {
+      const { wcSession } = wc;
+      wcSession.session = JSON.stringify(wc.session);
+      wcSession.lastUsedTimestamp = Date.now();
+      wcSession.save();
+    });
   }
 
   clean() {}

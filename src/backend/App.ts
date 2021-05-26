@@ -10,7 +10,7 @@ import MessageKeys, {
   TxParams,
 } from '../common/Messages';
 import WCMan, { testSession } from './WCMan';
-import { computed, makeObservable, observable, runInAction } from 'mobx';
+import { autorun, computed, makeObservable, observable, runInAction } from 'mobx';
 import { createECDH, createHash, randomBytes } from 'crypto';
 import { getProviderByChainId, sendTransaction } from '../common/Provider';
 
@@ -43,6 +43,21 @@ export class App {
 
   get currentAddress() {
     return this.addresses[this.currentAddressIndex];
+  }
+
+  init() {
+    autorun(() => {
+      console.log('pending', TxMan.pendingTxs.length);
+      this.mainWindow?.webContents.send(MessageKeys.pendingTxsChanged, JSON.stringify(TxMan.pendingTxs));
+    });
+
+    autorun(() => {
+      console.log('wc connects', WCMan.connects.length);
+      this.mainWindow?.webContents.send(
+        MessageKeys.wcConnectsChanged,
+        WCMan.connects.map((wc) => wc.session)
+      );
+    });
   }
 
   constructor() {

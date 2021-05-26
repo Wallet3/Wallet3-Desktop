@@ -76,6 +76,20 @@ interface WCEncryptionPayload {
   iv: string;
 }
 
+interface IWcSession {
+  connected: boolean;
+  accounts: string[];
+  chainId: number;
+  bridge: string;
+  key: string;
+  clientId: string;
+  clientMeta: WCClientMeta | null;
+  peerId: string;
+  peerMeta: WCClientMeta | null;
+  handshakeId: number;
+  handshakeTopic: string;
+}
+
 ////////////////////////ethers///////////////////////
 
 interface TypedDataDomain {
