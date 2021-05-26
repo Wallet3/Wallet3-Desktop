@@ -1,8 +1,11 @@
+import Application, { App } from './App';
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import DBMan from './DBMan';
+import Messages from '../common/Messages';
 import WCSession from './models/WCSession';
 import { WalletConnect } from './WalletConnect';
+import { ipcMain } from 'electron';
 
 class WCMan {
   private cache = new Set<string>();
@@ -11,6 +14,12 @@ class WCMan {
 
   constructor() {
     makeObservable(this, { connects: observable });
+
+    ipcMain.handle(`${Messages.disconnectDApp}-secure`, (e, encrypted, winId) => {
+      const { iv, key } = Application.windows.get(winId);
+      const { sessionKey } = App.decryptIpc(encrypted, iv, key);
+      this.disconnect(sessionKey);
+    });
   }
 
   async init() {
@@ -91,6 +100,16 @@ class WCMan {
       wcSession.lastUsedTimestamp = Date.now();
       wcSession.save();
     });
+  }
+
+  disconnect(key: string) {
+    const target = this.connects.find((c) => c.session.key === key);
+    if (!target) return;
+
+    target.disconnect();
+    target.dispose();
+    target.wcSession.remove();
+    runInAction(() => this.connects.splice(this.connects.indexOf(target), 1));
   }
 
   clean() {

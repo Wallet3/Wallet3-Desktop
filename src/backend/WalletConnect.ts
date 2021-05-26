@@ -77,7 +77,11 @@ export class WalletConnect extends EventEmitter {
   }
 
   get session() {
-    return { ...this.connector?.session, lastUsedTimestamp: this.wcSession?.lastUsedTimestamp ?? 0 };
+    return {
+      ...this.connector?.session,
+      lastUsedTimestamp: this.wcSession?.lastUsedTimestamp ?? 0,
+      userChainId: this.userChainId,
+    };
   }
 
   get wcSession() {
@@ -309,6 +313,10 @@ export class WalletConnect extends EventEmitter {
       walletConnect: { peerId: this.peerId, reqid: request.id },
     } as RequestSignMessage);
   };
+
+  disconnect() {
+    this.connector.killSession({ message: 'User exits' });
+  }
 
   dispose() {
     this._chainIdObserver?.();

@@ -1,3 +1,5 @@
+import Messages from '../../../common/Messages';
+import ipc from '../../bridges/IPC';
 export class DAppVM {
   _session: IWcSession;
 
@@ -6,7 +8,7 @@ export class DAppVM {
   }
 
   get chainId() {
-    return this._session.chainId;
+    return this._session.userChainId;
   }
 
   get appName() {
@@ -29,5 +31,7 @@ export class DAppVM {
     return this._session.lastUsedTimestamp;
   }
 
-  disconnect() {}
+  disconnect() {
+    ipc.invokeSecure(Messages.disconnectDApp, { sessionKey: this._session.key });
+  }
 }

@@ -18,6 +18,7 @@ export default {
   changeAccountIndex: 'msg-change-account-index',
   popupAuthentication: 'msg-popup-authentication',
   returnAuthenticationResult: (id: string) => `msg-return-authentication-${id}`,
+  disconnectDApp: 'msg-disconnect-dapp',
 
   scanQR: 'msg-scan-qr',
   connectWallet: 'msg-connect-wallet',

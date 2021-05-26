@@ -56,28 +56,6 @@ export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor
   return (
     <div className="page main">
       <div className="utility-bar">
-        {appCount > 0 ? (
-          <Menu
-            styles={{ minWidth: '5.5rem' }}
-            direction="bottom"
-            overflow="auto"
-            position="anchor"
-            menuButton={() => (
-              <MenuButton className="menu-button">
-                <WalletConnectIndicator count={appCount} />
-              </MenuButton>
-            )}
-          >
-            {appConnects.map((s) => {
-              return (
-                <MenuItem key={s.key} styles={{ padding: '8px 12px' }}>
-                  <ConnectedDApp {...s} />
-                </MenuItem>
-              );
-            })}
-          </Menu>
-        ) : undefined}
-
         {pendingTxCount > 0 ? (
           <Menu
             menuButton={() => (
@@ -100,6 +78,35 @@ export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor
                   }}
                 >
                   <PendingTx tx={item} {...GasnowWs} />
+                </MenuItem>
+              );
+            })}
+          </Menu>
+        ) : undefined}
+
+        {appCount > 0 ? (
+          <Menu
+            styles={{ minWidth: '5.5rem' }}
+            direction="bottom"
+            overflow="auto"
+            position="anchor"
+            menuButton={() => (
+              <MenuButton className="menu-button">
+                <WalletConnectIndicator count={appCount} />
+              </MenuButton>
+            )}
+          >
+            {appConnects.map((s) => {
+              return (
+                <MenuItem
+                  key={s.key}
+                  styles={{ padding: '8px 12px' }}
+                  onClick={(_) => {
+                    walletVM.selectDAppSession(s);
+                    app.history.push(`/connectedapp`);
+                  }}
+                >
+                  <ConnectedDApp {...s} />
                 </MenuItem>
               );
             })}

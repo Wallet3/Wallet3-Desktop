@@ -89,6 +89,7 @@ interface IWcSession {
   handshakeId: number;
   handshakeTopic: string;
   lastUsedTimestamp?: number;
+  userChainId?: number;
 }
 
 ////////////////////////ethers///////////////////////

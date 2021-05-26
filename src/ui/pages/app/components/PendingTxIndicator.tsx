@@ -20,7 +20,7 @@ export default observer(({ pendingCount }: { pendingCount: number }) => {
   return (
     <div className="pendingtx-indicator">
       <span className="count">{pendingCount}</span>
-      <Feather className="icon" icon="refresh-cw" size={12} strokeWidth={1.5} />
+      <Feather className="icon" icon="refresh-cw" size={11} strokeWidth={1.5} />
     </div>
   );
 });
