@@ -31,6 +31,8 @@
 
 .page.confirm > .container > .details > .form > div.attention {
   font-size: 12px;
+  font-weight: 500;
+  color: var(--font-color-title);
   padding-bottom: 8px;
 }
 

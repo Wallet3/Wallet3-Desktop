@@ -112,6 +112,7 @@ export interface ConfirmSendTx extends TxParams {
 
 export interface RequestSignMessage {
   raw: string[];
+  msg?: string;
   walletConnect: WCParams;
 }
 

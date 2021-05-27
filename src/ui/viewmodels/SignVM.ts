@@ -7,16 +7,18 @@ import ipc from '../bridges/IPC';
 import { makeAutoObservable } from 'mobx';
 
 export class SignVM {
-  signMsg: string[] = [];
+  raw: string[] = [];
   method = 'Sign';
   flag = 'edit';
+  msg = '';
 
   params: RequestSignMessage;
 
   constructor(params: RequestSignMessage) {
     makeAutoObservable(this);
-    this.signMsg = params.raw;
+    this.raw = params.raw;
     this.params = params;
+    this.msg = params.msg;
   }
 
   async approveRequest(via: 'touchid' | 'passcode', passcode?: string) {

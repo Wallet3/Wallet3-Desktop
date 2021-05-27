@@ -252,7 +252,7 @@ export class WalletConnect extends EventEmitter {
     );
   };
 
-  private sign = async (request: WCCallRequestRequest, params: any, type: 'personal_sign' | 'signTypedData') => {
+  private sign = async (request: WCCallRequestRequest, params: string[], type: 'personal_sign' | 'signTypedData') => {
     const clearHandlers = () => {
       ipcMain.removeHandler(`${WcMessages.approveWcCallRequest(this.peerId, request.id)}-secure`);
       ipcMain.removeHandler(`${WcMessages.rejectWcCallRequest(this.peerId, request.id)}-secure`);
@@ -313,6 +313,7 @@ export class WalletConnect extends EventEmitter {
 
     App.createPopupWindow('sign', {
       raw: params,
+      msg: params[0].startsWith('0x') ? Buffer.from(params[0].substring(2), 'hex').toString('utf8') : '',
       walletConnect: { peerId: this.peerId, reqid: request.id },
     } as RequestSignMessage);
   };
