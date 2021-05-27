@@ -94,7 +94,6 @@ export class GasnowWs {
       this.client.onmessage = undefined;
       this.client.onerror = undefined;
       this.client.onclose = undefined;
-      this.client = null;
     };
 
     this.client.onmessage = onmessage;
@@ -103,6 +102,8 @@ export class GasnowWs {
   }
 
   stop() {
+    if (!this.client) return;
+
     this.client.close();
     this.client.onmessage = undefined;
     this.client.onerror = undefined;
@@ -113,6 +114,8 @@ export class GasnowWs {
     if (!data) return;
 
     const { gasPrices } = data;
+    if (!gasPrices) return;
+    
     this.rapid = gasPrices.rapid;
     this.fast = gasPrices.fast;
     this.standard = gasPrices.standard;

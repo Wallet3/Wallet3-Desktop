@@ -23,7 +23,7 @@ export class ConnectDappVM {
     this.peerId = param.peerId;
     this.chainId = param.chainId || 0;
     this.appName = param.peerMeta.name;
-    this.icon = param.peerMeta.icons[0];
+    this.icon = param.peerMeta.icons[0] || '';
     this.url = param.peerMeta.url;
     this.desc = param.peerMeta.description;
   }
