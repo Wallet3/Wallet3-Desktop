@@ -184,6 +184,7 @@ export class ConfirmVM {
       const wad = utils.parseUnits(value || '', this.approveToken.decimals);
       const data = this.approveToken.iface?.encodeFunctionData('approve', [this.approveToken.spender, wad.toString()]);
       this.data = data;
+      this.approveToken.limitAmount = utils.formatUnits(wad, this.approveToken.decimals);
     } catch (error) {
       this.data = '';
     }

@@ -84,5 +84,9 @@
   "TxFailed": "Transaction {{nonce}} failed, view it on Etherscan",
   "TxFailed2": "Transaction {{nonce}} failed, please try again. Gas price to low or insufficient balance.",
   "Auto Switch": "Auto Switch",
-  "Passcode updated": "Passcode updated"
+  "Passcode updated": "Passcode updated",
+  "Network": "Network",
+  "Description": "Description",
+  "Last used": "Last used",
+  "Disconnect": "Disconnect"
 }

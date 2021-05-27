@@ -46,7 +46,9 @@ export class WalletVM {
       runInAction(() => (this.allPendingTxs = JSON.parse(content)))
     );
 
-    ipc.on(Messages.wcConnectsChanged, (e, content: IWcSession[]) => runInAction(() => (this.connectedDApps = content)));
+    ipc.on(Messages.wcConnectsChanged, (e, content: IWcSession[]) =>
+      runInAction(() => (this.connectedDApps = content.sort((a, b) => b.lastUsedTimestamp - a.lastUsedTimestamp)))
+    );
   }
 
   initAccounts(addresses: string[]) {

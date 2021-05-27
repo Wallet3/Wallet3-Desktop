@@ -150,7 +150,6 @@ export class App {
       const addresses = await KeyMan.genAddresses(userPassword, 10);
       runInAction(() => (this.addresses = addresses));
 
-      if (this.touchBarButtons?.walletConnect) this.touchBarButtons.walletConnect.enabled = true;
       if (this.touchIDSupported) this.userPassword = userPassword;
       await DBMan.init();
       TxMan.init();
@@ -210,7 +209,6 @@ export class App {
         addrs = await KeyMan.genAddresses(password, count);
         runInAction(() => this.addresses.push(...addrs));
 
-        if (this.touchBarButtons?.walletConnect) this.touchBarButtons.walletConnect.enabled = true;
         if (this.touchIDSupported) this.userPassword = password;
       }
 
@@ -237,7 +235,6 @@ export class App {
 
       const password = this.authKeys.get(authKey);
       this.authKeys.clear();
-      if (this.touchBarButtons?.walletConnect) this.touchBarButtons.walletConnect.enabled = false;
 
       await KeyMan.reset(password);
       await DBMan.clean();

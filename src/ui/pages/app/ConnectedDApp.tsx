@@ -4,7 +4,6 @@ import { Application } from '../../viewmodels/Application';
 import Image from '../../components/Image';
 import { NavBar } from '../../components';
 import NetworkLabel from './components/NetworkLabel';
-import { Networks } from '../../viewmodels/NetworksVM';
 import React from 'react';
 import { WalletVM } from '../../viewmodels/WalletVM';
 import shell from '../../bridges/Shell';
@@ -20,7 +19,7 @@ export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => 
 
       <div className="form">
         <div>
-          <span>Chain:</span>
+          <span>{t('Network')}:</span>
           <NetworkLabel chainId={dAppVM.chainId} />
         </div>
 
@@ -33,7 +32,7 @@ export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => 
         </div>
 
         <div>
-          <span>Desc:</span>
+          <span>{t('Description')}:</span>
           <span>{dAppVM.appDesc}</span>
         </div>
 
@@ -45,7 +44,7 @@ export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => 
         </div>
 
         <div>
-          <span>Last used:</span>
+          <span>{t('Last used')}:</span>
           <span>{new Date(dAppVM.lastUsedTimestamp).toLocaleString()}</span>
         </div>
       </div>
@@ -56,7 +55,7 @@ export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => 
           app.history.goBack();
         }}
       >
-        Disconnect
+        {t('Disconnect')}
       </button>
     </div>
   );

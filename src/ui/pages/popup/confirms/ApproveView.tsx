@@ -27,16 +27,16 @@ export default observer(({ confirmVM, onReject, onContinue }: Props) => {
 
         <div>
           <span>{t('Spender')}:</span>
-          <span>{confirmVM.approveToken.spender}</span>
+          <span title={approveToken.spender}>{approveToken.spender}</span>
         </div>
 
         <div>
           <span>{t('Funds Limit')}:</span>
-          <span>
+          <span title={`${approveToken.limitAmount} ${tokenSymbol}`}>
             <input
               type="text"
               className={`funds-limit ${approveToken.isMax ? 'max' : ''}`}
-              defaultValue={confirmVM.approveToken.limitAmount}
+              defaultValue={approveToken.limitAmount}
               onChange={(e) => confirmVM.setApproveAmount(e.target.value)}
             />
             <img src={CryptoIcons(tokenSymbol)} alt={tokenSymbol} /> {tokenSymbol}

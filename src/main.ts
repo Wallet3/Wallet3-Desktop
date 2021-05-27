@@ -1,4 +1,14 @@
-import { BrowserWindow, Menu, TouchBar, TouchBarButton, Tray, app, nativeImage, powerMonitor } from 'electron';
+import {
+  BrowserWindow,
+  Menu,
+  TouchBar,
+  TouchBarButton,
+  Tray,
+  app,
+  globalShortcut,
+  nativeImage,
+  powerMonitor,
+} from 'electron';
 import { autorun, reaction } from 'mobx';
 
 import App from './backend/App';
@@ -44,10 +54,7 @@ const createTouchBar = (mainWindow: BrowserWindow) => {
     iconPosition: 'left',
     enabled: false,
     icon: nativeImage.createFromDataURL(require('./assets/icons/touchbar/scan.png').default),
-    click: () => {
-      if (App.addresses.length === 0) return;
-      App.createPopupWindow('scanQR', {});
-    },
+    click: () => App.createPopupWindow('scanQR', {}),
   });
 
   const price = new TouchBar.TouchBarButton({
@@ -71,11 +78,30 @@ const createTray = async () => {
   if (tray) return;
 
   tray = new Tray(nativeImage.createFromDataURL(require('./assets/icons/app/tray.png').default));
-  const menu = Menu.buildFromTemplate([{ label: 'Wallet Connect' }]);
+  const menu = Menu.buildFromTemplate([
+    {
+      label: 'Connect DApp',
+      accelerator: 'CommandOrControl+D',
+      click: () => {
+        if (!App.ready) return;
+        App.createPopupWindow('scanQR', {});
+      },
+    },
+    { label: 'Show Wallet 3', click: () => createWindow() },
+    { type: 'separator' },
+    { label: 'Quit', click: () => app.quit() },
+  ]);
+
   tray.setContextMenu(menu);
 };
 
 const createWindow = async (): Promise<void> => {
+  if (App.mainWindow) {
+    App.mainWindow.show();
+    App.mainWindow.focus();
+    return;
+  }
+
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     height: 540,
@@ -89,9 +115,8 @@ const createWindow = async (): Promise<void> => {
       contextIsolation: true,
       nodeIntegration: false,
       webSecurity: true,
-      enableRemoteModule: true,
+      enableRemoteModule: false,
     },
-    // transparent: true,
   });
 
   // and load the index.html of the app.
@@ -106,8 +131,14 @@ const createWindow = async (): Promise<void> => {
     );
   });
 
+  mainWindow.once('closed', () => {
+    app.dock.hide();
+    App.mainWindow = undefined;
+  });
+
   createTouchBar(mainWindow);
   createTray();
+  app.dock.show();
 };
 
 // This method will be called when Electron has finished
@@ -126,27 +157,34 @@ app.on('ready', async () => {
 
   GasnowWs.start(true);
   GasnowWs.onClose = () => GasnowWs.start(true);
-  reaction(
-    () => GasnowWs.fast,
-    () => {
-      const { gas } = App.touchBarButtons || {};
-      if (!gas) return;
 
-      gas.label = `${GasnowWs.rapidGwei} | ${GasnowWs.fastGwei} | ${GasnowWs.standardGwei}`;
-      tray?.setTitle(gas.label);
-    }
-  );
+  autorun(() => {
+    const { gas } = App.touchBarButtons || {};
+    if (!gas) return;
+
+    gas.label = `${GasnowWs.rapidGwei} | ${GasnowWs.fastGwei} | ${GasnowWs.standardGwei}`;
+    tray?.setTitle(gas.label);
+  });
 
   Coingecko.start();
-  reaction(
-    () => Coingecko.eth,
-    () => {
-      const { price } = App.touchBarButtons || {};
-      if (!price) return;
+  autorun(() => {
+    const { price } = App.touchBarButtons || {};
+    if (!price) return;
 
-      price.label = `$ ${Coingecko.eth}`;
-    }
-  );
+    price.label = `$ ${Coingecko.eth}`;
+  });
+
+  autorun(() => {
+    const { walletConnect } = App.touchBarButtons || {};
+    if (!walletConnect) return;
+
+    walletConnect.enabled = App.ready;
+  });
+
+  globalShortcut.register('CommandOrControl+C+D', () => {
+    if (!App.ready) return;
+    App.createPopupWindow('scanQR', {});
+  });
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
