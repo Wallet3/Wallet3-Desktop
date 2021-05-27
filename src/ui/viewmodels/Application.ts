@@ -11,7 +11,8 @@ import store from 'storejs';
 export class Application {
   readonly history = createBrowserHistory();
 
-  initVerified = false;
+  appAuthenticated = false;
+  authExpired = false;
   hasMnemonic = false;
   touchIDSupported = false;
 
@@ -20,13 +21,14 @@ export class Application {
   }
 
   async init(jump = true) {
-    const { hasMnemonic, touchIDSupported, initVerified, addresses } = await ipc.invokeSecure<InitStatus>(
+    const { hasMnemonic, touchIDSupported, appAuthenticated, addresses, authExpired } = await ipc.invokeSecure<InitStatus>(
       MessageKeys.getInitStatus
     );
 
     this.hasMnemonic = hasMnemonic;
     this.touchIDSupported = touchIDSupported;
-    this.initVerified = initVerified;
+    this.authExpired = authExpired;
+    this.appAuthenticated = appAuthenticated;
 
     Coingecko.start(30);
 
@@ -39,11 +41,11 @@ export class Application {
     if (!hasMnemonic) {
       this.history.push('/welcome');
     } else {
-      this.history.push(initVerified ? '/app' : '/authentication');
+      this.history.push(appAuthenticated && !authExpired ? '/app' : '/authentication');
     }
   }
 
-  async verifyInitialization(passcode: string) {
+  async authInitialization(passcode: string) {
     const password = crypto.sha256(passcode);
     const { addresses, verified } = await ipc.invokeSecure<InitVerifyPassword>(MessageKeys.initVerifyPassword, {
       password,

@@ -33,6 +33,7 @@ export class App {
   touchBarButtons?: { walletConnect: TouchBarButton; gas: TouchBarButton; price?: TouchBarButton };
   private authKeys = new Map<string, string>();
 
+  authExpired = false;
   currentAddressIndex = 0;
   addresses: string[] = [];
   chainId = 1;
@@ -94,7 +95,8 @@ export class App {
         {
           hasMnemonic: KeyMan.hasMnemonic,
           touchIDSupported: this.touchIDSupported,
-          initVerified: this.addresses.length > 0,
+          appAuthenticated: this.addresses.length > 0,
+          authExpired: this.authExpired,
           addresses: [...this.addresses],
         } as InitStatus,
         iv,

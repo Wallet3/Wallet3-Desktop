@@ -1,4 +1,4 @@
-import './Authentication.css';
+import './authentication.css';
 
 import * as Anime from '../../misc/Anime';
 
@@ -13,9 +13,13 @@ import { useTranslation } from 'react-i18next';
 export default (args: { app: Application }) => {
   const { app } = args;
 
+  useEffect(() => {
+    app.clearHistory();
+  }, []);
+
   return (
-    <div className="page locking">
-      {app.touchIDSupported && app.initVerified ? <TouchIDView {...args} /> : <PasscodeView {...args} />}
+    <div className="page authentication">
+      {app.touchIDSupported && app.authExpired ? <TouchIDView {...args} /> : <PasscodeView {...args} />}
     </div>
   );
 };
@@ -27,8 +31,8 @@ const PasscodeView = ({ app }: { app: Application }) => {
     if (value.length < 6) return;
 
     let verified = false;
-    if (!app.initVerified) {
-      verified = await app.verifyInitialization(value);
+    if (!app.appAuthenticated) {
+      verified = await app.authInitialization(value);
     } else {
       verified = await app.verifyPassword(value);
     }

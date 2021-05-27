@@ -3,6 +3,7 @@ import '@szhsin/react-menu/dist/index.css';
 
 import { Menu, MenuButton, MenuDivider, MenuItem } from '@szhsin/react-menu';
 import { Networks, NetworksVM, PublicNetworks, Testnets } from '../../viewmodels/NetworksVM';
+import React, { useEffect } from 'react';
 
 import AnimatedNumber from 'react-animated-number';
 import { Application } from '../../viewmodels/Application';
@@ -16,7 +17,6 @@ import { Link } from 'react-router-dom';
 import NetworkLabel from './components/NetworkLabel';
 import PendingTx from './components/PendingTxLabel';
 import PendingTxIndicator from './components/PendingTxIndicator';
-import React from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { UserToken } from '../../../ui/viewmodels/models/UserToken';
 import WalletConnectIndicator from './components/WalletConnectIndicator';
@@ -52,6 +52,10 @@ export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor
 
     rowTokens[i] = row;
   }
+
+  useEffect(() => {
+    app.clearHistory();
+  }, []);
 
   return (
     <div className="page main">

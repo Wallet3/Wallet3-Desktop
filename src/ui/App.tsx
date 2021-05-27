@@ -3,6 +3,7 @@ import './App.css';
 import { Account, AddToken, ConnectedDApp, ConnectedDApps, PendingTx, Transfer, UserTokens } from './pages/app';
 import { Authentication, Blank, Generate, Import, SetupPasscode, Welcome } from './pages/login/';
 import { BackupMnemonic, Reset } from './pages/secure';
+import React, { useEffect } from 'react';
 import { Route, Router, Switch } from 'react-router-dom';
 
 import { Application } from './viewmodels/Application';
@@ -11,7 +12,6 @@ import { LangsVM } from './viewmodels/LangsVM';
 import MainLayout from './pages/layouts/MainLayout';
 import { MnemonicVM } from './viewmodels/MnemonicVM';
 import { NetworksVM } from './viewmodels/NetworksVM';
-import React from 'react';
 import { WalletVM } from './viewmodels/WalletVM';
 import { observer } from 'mobx-react-lite';
 
