@@ -276,6 +276,10 @@ export class App {
       return App.encryptIpc(txHex, iv, key);
     });
 
+    ipcMain.handle(MessageKeys.sendLocalNotification, async (e, content) => {
+      new Notification(content).show();
+    });
+
     this.initPopupHandlers();
   }
 

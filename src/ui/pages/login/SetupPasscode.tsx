@@ -8,6 +8,7 @@ import React, { useState } from 'react';
 import { Application } from '../../viewmodels/Application';
 import { MnemonicVM } from '../../viewmodels/MnemonicVM';
 import { NavBar } from '../../components';
+import Notification from '../../bridges/Notification';
 import Passcode from 'react-codes-input';
 import { useTranslation } from 'react-i18next';
 
@@ -38,6 +39,7 @@ export default ({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) => {
         app.history.goBack();
       }
 
+      Notification.show({ title: t('Passcode updated') });
       return;
     }
 

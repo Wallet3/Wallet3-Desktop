@@ -19,6 +19,7 @@ export default {
   popupAuthentication: 'msg-popup-authentication',
   returnAuthenticationResult: (id: string) => `msg-return-authentication-${id}`,
   disconnectDApp: 'msg-disconnect-dapp',
+  sendLocalNotification: 'msg-send-notification',
 
   scanQR: 'msg-scan-qr',
   connectWallet: 'msg-connect-wallet',

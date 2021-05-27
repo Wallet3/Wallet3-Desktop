@@ -3,6 +3,7 @@ import * as crypto from 'crypto';
 import {
   DesktopCapturerSource,
   IpcRendererEvent,
+  NotificationConstructorOptions,
   SourcesOptions,
   clipboard,
   contextBridge,
@@ -104,3 +105,13 @@ export class ShellApi {
 }
 
 contextBridge.exposeInMainWorld(ShellApi.API_KEY, new ShellApi());
+
+export class NotificationApi {
+  static readonly API_KEY = 'wallet3_notification';
+
+  show = (args: NotificationConstructorOptions) => {
+    ipcRenderer.invoke(Messages.sendLocalNotification, args);
+  };
+}
+
+contextBridge.exposeInMainWorld(NotificationApi.API_KEY, new NotificationApi());
