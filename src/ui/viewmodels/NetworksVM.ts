@@ -45,7 +45,7 @@ export class NetworksVM {
   }
 }
 
-export const Networks: INetwork[] = [
+export const PublicNetworks: INetwork[] = [
   {
     symbol: 'ETH',
     network: 'Ethereum',
@@ -81,7 +81,9 @@ export const Networks: INetwork[] = [
     color: '#1969FF',
     order: 5,
   },
-  null,
+];
+
+export const Testnets: INetwork[] = [
   {
     symbol: 'ETH',
     network: 'Ropsten',
@@ -111,5 +113,7 @@ export const Networks: INetwork[] = [
     test: true,
   },
 ];
+
+export const Networks: INetwork[] = [...PublicNetworks, ...Testnets];
 
 export default new NetworksVM();

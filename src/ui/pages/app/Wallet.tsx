@@ -2,7 +2,7 @@ import './Wallet.css';
 import '@szhsin/react-menu/dist/index.css';
 
 import { Menu, MenuButton, MenuDivider, MenuItem } from '@szhsin/react-menu';
-import { Networks, NetworksVM } from '../../viewmodels/NetworksVM';
+import { Networks, NetworksVM, PublicNetworks, Testnets } from '../../viewmodels/NetworksVM';
 
 import AnimatedNumber from 'react-animated-number';
 import { Application } from '../../viewmodels/Application';
@@ -96,7 +96,7 @@ export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor
               </MenuButton>
             )}
           >
-            {appConnects.map((s) => {
+            {appConnects.slice(0, 6).map((s) => {
               return (
                 <MenuItem
                   key={s.key}
@@ -110,6 +110,13 @@ export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor
                 </MenuItem>
               );
             })}
+
+            {appConnects.length > 6 ? <MenuDivider /> : undefined}
+            {appConnects.length > 6 ? (
+              <MenuItem styles={{ padding: '8px 12px', fontSize: 12, display: 'flex', justifyContent: 'center' }}>
+                <span>{`See All (${appConnects.length})`}</span>
+              </MenuItem>
+            ) : undefined}
           </Menu>
         ) : undefined}
 
@@ -124,8 +131,8 @@ export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor
           overflow="auto"
           position="anchor"
         >
-          {Networks.map((item) => {
-            return item ? (
+          {PublicNetworks.map((item) => {
+            return (
               <MenuItem
                 key={item.chainId}
                 styles={{ padding: '8px 12px' }}
@@ -133,8 +140,18 @@ export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor
               >
                 <NetworkLabel expand chainId={item.chainId} />
               </MenuItem>
-            ) : (
-              <MenuDivider key={Math.random()} />
+            );
+          })}
+          <MenuDivider />
+          {Testnets.map((item) => {
+            return (
+              <MenuItem
+                key={item.chainId}
+                styles={{ padding: '8px 12px' }}
+                onClick={(_) => networksVM.setCurrentChainId(item.chainId)}
+              >
+                <NetworkLabel expand chainId={item.chainId} />
+              </MenuItem>
             );
           })}
         </Menu>

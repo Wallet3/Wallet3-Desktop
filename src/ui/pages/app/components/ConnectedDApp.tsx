@@ -7,13 +7,15 @@ import { Networks } from '../../../viewmodels/NetworksVM';
 import React from 'react';
 
 export default (props: IWcSession) => {
-  const network = Networks.find((n) => n?.chainId === props.chainId)?.symbol;
+  const network = Networks.find((n) => n.chainId === props.chainId);
 
   return (
     <div className="connectedapp">
       <div className="dapp-logo">
         <Image className="appicon" src={props.peerMeta.icons[0] || ''} />
-        <Image className="network" src={network ? CryptoIcons(network) : AppsIcon} />
+        {network?.chainId === 1 ? undefined : (
+          <Image className="network" src={network ? CryptoIcons(network.symbol) : AppsIcon} />
+        )}
       </div>
       <div className="info">
         <div className="basic">

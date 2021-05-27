@@ -30,7 +30,7 @@
 }
 
 .connectedapp > .info .basic span {
-  max-width: 50vw;
+  max-width: 45vw;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -41,4 +41,5 @@
   margin-top: 2px;
   justify-content: space-between;
   font-size: 10px;
+  opacity: 0.5;
 }

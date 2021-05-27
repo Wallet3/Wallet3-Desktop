@@ -69,7 +69,6 @@ export class WalletConnect extends EventEmitter {
   connectViaSession(session: IWcSession) {
     this.connector = new WalletConnector({ session });
 
-    this.connector.on('session_request', this.handleSessionRequest);
     this.connector.on('call_request', this.handleCallRequest);
     this.connector.on('disconnect', () => this.emit('disconnect', this));
     this.peerId = session.peerId;
@@ -96,7 +95,6 @@ export class WalletConnect extends EventEmitter {
   updateSession() {
     if (!App.ready) return;
     this.connector?.updateSession({ chainId: this.appChainId, accounts: [App.currentAddress] });
-    this.emit('sessionUpdated', this?.session);
   }
 
   private handleSessionRequest = async (error: Error, request: WCSessionRequestRequest) => {
