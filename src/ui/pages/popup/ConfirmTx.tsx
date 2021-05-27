@@ -20,7 +20,7 @@ interface Props {
 
 export default observer(({ app }: Props) => {
   const { confirmVM, signVM } = app;
-  const [runTouchID, setRunTouchID] = useState(false);
+  const [onAuthView, setOnAuthView] = useState(false);
   const { t } = useTranslation();
 
   const authViaTouchID = async () => {
@@ -43,7 +43,6 @@ export default observer(({ app }: Props) => {
   };
 
   const onContinue = () => {
-    console.trace('continue');
     anime({
       targets: '.page.confirm > .container > .details',
       translateX: [0, '-100vw'],
@@ -58,7 +57,7 @@ export default observer(({ app }: Props) => {
       easing: 'linear',
       opacity: [0, 1],
       duration: 300,
-      complete: () => setRunTouchID(true),
+      complete: () => setOnAuthView(true),
     });
   };
 
@@ -83,6 +82,8 @@ export default observer(({ app }: Props) => {
       opacity: [1, 0],
       duration: 300,
     });
+
+    setOnAuthView(false);
   };
 
   useEffect(() => {
@@ -100,7 +101,11 @@ export default observer(({ app }: Props) => {
 
     document.onkeydown = (ev) => {
       if (ev.code !== 'Enter') return;
+      if (onAuthView) return;
+
       ev.preventDefault();
+      ev.stopPropagation();
+
       onContinue();
     };
   }, []);
@@ -133,7 +138,7 @@ export default observer(({ app }: Props) => {
           onCancel={onAuthCancel}
           onAuthTouchID={authViaTouchID}
           onAuthPasscode={authViaPassword}
-          runTouchID={runTouchID}
+          runTouchID={onAuthView}
         />
       </div>
     </div>

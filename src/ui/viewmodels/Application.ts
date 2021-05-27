@@ -1,17 +1,11 @@
-import MessageKeys, {
-  AuthenticationResult,
-  BooleanResult,
-  InitStatus,
-  InitVerifyPassword,
-  TxParams,
-} from '../../common/Messages';
-import { makeObservable, observable, runInAction } from 'mobx';
+import MessageKeys, { AuthenticationResult, BooleanResult, InitStatus, InitVerifyPassword } from '../../common/Messages';
 
 import Coingecko from '../../api/Coingecko';
 import WalletVM from './WalletVM';
 import { createBrowserHistory } from 'history';
 import crypto from '../bridges/Crypto';
 import ipc from '../bridges/IPC';
+import { makeObservable } from 'mobx';
 import store from 'storejs';
 
 export class Application {
@@ -45,7 +39,7 @@ export class Application {
     if (!hasMnemonic) {
       this.history.push('/welcome');
     } else {
-      this.history.push(initVerified ? '/app' : '/locking');
+      this.history.push(initVerified ? '/app' : '/authentication');
     }
   }
 

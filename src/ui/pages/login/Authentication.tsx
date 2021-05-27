@@ -1,4 +1,4 @@
-import './Locking.css';
+import './Authentication.css';
 
 import * as Anime from '../../misc/Anime';
 

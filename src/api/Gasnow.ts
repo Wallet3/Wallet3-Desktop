@@ -40,6 +40,7 @@ export class GasnowWs {
   fast = GasnowWs.gwei_10 * 2;
   standard = GasnowWs.gwei_10;
   slow = GasnowWs.gwei_1;
+  onclose?: () => void;
 
   get rapidGwei() {
     return Number.parseInt((this.rapid / GasnowWs.gwei_1) as any);
@@ -94,6 +95,8 @@ export class GasnowWs {
       this.client.onmessage = undefined;
       this.client.onerror = undefined;
       this.client.onclose = undefined;
+      this.client = null;
+      this.onclose?.();
     };
 
     this.client.onmessage = onmessage;
@@ -115,7 +118,7 @@ export class GasnowWs {
 
     const { gasPrices } = data;
     if (!gasPrices) return;
-    
+
     this.rapid = gasPrices.rapid;
     this.fast = gasPrices.fast;
     this.standard = gasPrices.standard;

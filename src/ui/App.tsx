@@ -1,8 +1,8 @@
 import './App.css';
 
 import { Account, AddToken, ConnectedDApp, ConnectedDApps, PendingTx, Transfer, UserTokens } from './pages/app';
+import { Authentication, Blank, Generate, Import, SetupPasscode, Welcome } from './pages/login/';
 import { BackupMnemonic, Reset } from './pages/secure';
-import { Blank, Generate, Import, Locking, SetupPasscode, Welcome } from './pages/login/';
 import { Route, Router, Switch } from 'react-router-dom';
 
 import { Application } from './viewmodels/Application';
@@ -41,8 +41,8 @@ export default observer((args: Props) => {
             <SetupPasscode {...args} />
           </Route>
           <Route path="/welcome" exact component={Welcome} />
-          <Route path="/locking" exact>
-            <Locking {...args} />
+          <Route path="/authentication" exact>
+            <Authentication {...args} />
           </Route>
           <Route path="/app">
             <MainLayout {...args} />

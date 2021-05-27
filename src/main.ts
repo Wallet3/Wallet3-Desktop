@@ -9,7 +9,6 @@ import {
   nativeImage,
   powerMonitor,
 } from 'electron';
-import { autorun, reaction } from 'mobx';
 
 import App from './backend/App';
 import Coingecko from './api/Coingecko';
@@ -19,6 +18,7 @@ import KeyMan from './backend/KeyMan';
 import Messages from './common/Messages';
 import TxMan from './backend/TxMan';
 import WCMan from './backend/WCMan';
+import { autorun } from 'mobx';
 import delay from 'delay';
 import i18n from './i18n';
 
@@ -156,6 +156,7 @@ app.on('ready', async () => {
   WCMan.init();
 
   GasnowWs.start(true);
+  GasnowWs.onclose = () => GasnowWs.start(true);
   autorun(() => {
     const { gas } = App.touchBarButtons || {};
     if (!gas) return;
@@ -202,8 +203,17 @@ app.on('activate', () => {
   }
 });
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
+let idleTimer: NodeJS.Timeout;
+
+app.on('browser-window-focus', () => {
+  console.log('active');
+  clearTimeout(idleTimer);
+});
+
+app.on('browser-window-blur', () => {
+  console.log('deactive');
+  idleTimer = setTimeout(() => {}, 60 * 1000 * 5);
+});
 
 powerMonitor.on('resume', () => {
   console.log('resume');
@@ -215,3 +225,5 @@ powerMonitor.on('resume', () => {
 
   GasnowWs.restart(true);
 });
+
+powerMonitor.on('suspend', () => {});
