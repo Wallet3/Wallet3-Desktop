@@ -34,7 +34,7 @@ interface IConstructor {
 
 export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor) => {
   const { t } = useTranslation();
-  const { currentAccount: accountVM, pendingTxCount, pendingTxs, appConnects, appCount } = walletVM;
+  const { currentAccount: accountVM, pendingTxCount, pendingTxs, connectedDApps, appCount } = walletVM;
 
   const maxRows = 6;
   const rows = accountVM.chainTokens.length / 2;
@@ -96,7 +96,7 @@ export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor
               </MenuButton>
             )}
           >
-            {appConnects.slice(0, 6).map((s) => {
+            {connectedDApps.slice(0, 6).map((s) => {
               return (
                 <MenuItem
                   key={s.key}
@@ -113,8 +113,11 @@ export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor
 
             {appCount > 6 ? <MenuDivider /> : undefined}
             {appCount > 6 ? (
-              <MenuItem styles={{ padding: '8px 12px', fontSize: 12, display: 'flex', justifyContent: 'center' }}>
-                <span>{`See All (${appConnects.length})`}</span>
+              <MenuItem
+                styles={{ padding: '8px 12px', fontSize: 12, display: 'flex', justifyContent: 'center' }}
+                onClick={(_) => app.history.push('/connectedapps')}
+              >
+                <span>{`${t('See All')} (${appCount})`}</span>
               </MenuItem>
             ) : undefined}
           </Menu>

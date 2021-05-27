@@ -16,7 +16,7 @@ export class WalletVM {
   accounts: AccountVM[] = [];
   currentAccount: AccountVM = null;
   allPendingTxs: TxParams[] = [];
-  appConnects: IWcSession[] = [];
+  connectedDApps: IWcSession[] = [];
 
   get accountIndex() {
     return this.accounts.indexOf(this.currentAccount);
@@ -31,7 +31,7 @@ export class WalletVM {
   }
 
   get appCount() {
-    return this.appConnects.length;
+    return this.connectedDApps.length;
   }
 
   constructor() {
@@ -43,19 +43,10 @@ export class WalletVM {
     );
 
     ipc.on(Messages.pendingTxsChanged, (e, content: string) =>
-      runInAction(() => {
-        try {
-          this.allPendingTxs = JSON.parse(content);
-        } catch (error) {}
-      })
+      runInAction(() => (this.allPendingTxs = JSON.parse(content)))
     );
 
-    ipc.on(Messages.wcConnectsChanged, (e, content: IWcSession[]) =>
-      runInAction(() => {
-        console.log('wcconnects', content);
-        this.appConnects = content;
-      })
-    );
+    ipc.on(Messages.wcConnectsChanged, (e, content: IWcSession[]) => runInAction(() => (this.connectedDApps = content)));
   }
 
   initAccounts(addresses: string[]) {

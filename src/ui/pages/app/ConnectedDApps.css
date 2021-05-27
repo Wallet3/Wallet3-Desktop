@@ -1,0 +1,63 @@
+.page.dapps {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+}
+
+.page.dapps > .content {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  flex-direction: row;
+  overflow-y: auto;
+  gap: 12px;
+  transition: all 0.3s;
+  height: calc(100vh - 12px - 72px);
+}
+
+.page.dapps > .content > div.dapp {
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  width: calc(50vw - 20px);
+  padding: 10px 0 0px 0;
+  display: flex;
+  flex-direction: column;
+  height: 89px;
+  gap: 8px 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.page.dapps > .content > div.dapp:hover {
+  background: var(--border-color);
+}
+
+.page.dapps > .content > div.dapp > div {
+  display: flex;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--font-color-title);
+}
+
+.page.dapps > .content > div.dapp > div span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0 12px;
+}
+
+.page.dapps > .content > div.dapp img.icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 5px;
+}
+
+.page.dapps > .content > div.dapp svg {
+  opacity: 0.55;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.page.dapps > .content > div.dapp svg:hover {
+  opacity: 1;
+}

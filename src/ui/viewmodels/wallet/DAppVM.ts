@@ -32,6 +32,10 @@ export class DAppVM {
   }
 
   disconnect() {
-    ipc.invokeSecure(Messages.disconnectDApp, { sessionKey: this._session.key });
+    DAppVM.disconnect(this._session.key);
+  }
+
+  static disconnect(sessionKey: string) {
+    ipc.invokeSecure(Messages.disconnectDApp, { sessionKey });
   }
 }
