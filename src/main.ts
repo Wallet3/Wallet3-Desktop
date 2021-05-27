@@ -20,6 +20,7 @@ import Messages from './common/Messages';
 import TxMan from './backend/TxMan';
 import WCMan from './backend/WCMan';
 import delay from 'delay';
+import i18n from './i18n';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -80,16 +81,16 @@ const createTray = async () => {
   tray = new Tray(nativeImage.createFromDataURL(require('./assets/icons/app/tray.png').default));
   const menu = Menu.buildFromTemplate([
     {
-      label: 'Connect DApp',
+      label: i18n.t('Connect DApp'),
       accelerator: 'CommandOrControl+D',
       click: () => {
         if (!App.ready) return;
         App.createPopupWindow('scanQR', {});
       },
     },
-    { label: 'Show Wallet 3', click: () => createWindow() },
+    { label: i18n.t('Show Wallet 3'), click: () => createWindow(), accelerator: 'CommandOrControl+S' },
     { type: 'separator' },
-    { label: 'Quit', click: () => app.quit() },
+    { label: i18n.t('Quit'), click: () => app.quit(), accelerator: 'CommandOrControl+Q' },
   ]);
 
   tray.setContextMenu(menu);
@@ -146,18 +147,15 @@ const createWindow = async (): Promise<void> => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
   await KeyMan.init();
+  await DBMan.init();
 
   createWindow();
 
   App.init();
-
-  await DBMan.init();
-  await TxMan.init();
-  await WCMan.init();
+  TxMan.init();
+  WCMan.init();
 
   GasnowWs.start(true);
-  GasnowWs.onClose = () => GasnowWs.start(true);
-
   autorun(() => {
     const { gas } = App.touchBarButtons || {};
     if (!gas) return;
@@ -202,8 +200,6 @@ app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
   }
-
-  GasnowWs.start(true);
 });
 
 // In this file you can include the rest of your app's specific main process
@@ -215,7 +211,7 @@ powerMonitor.on('resume', () => {
   setTimeout(async () => {
     await WCMan.dispose();
     WCMan.init();
-  }, 5000);
+  }, 3000);
 
   GasnowWs.restart(true);
 });

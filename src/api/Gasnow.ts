@@ -35,7 +35,6 @@ export class GasnowWs {
   static readonly gwei_1 = 1000000000;
   static readonly host = 'wss://www.gasnow.org/ws';
 
-  onClose?: () => void;
   client: WebSocket | ws;
   rapid = GasnowWs.gwei_10 * 2;
   fast = GasnowWs.gwei_10 * 2;
@@ -87,7 +86,6 @@ export class GasnowWs {
         this.client.onerror = undefined;
         this.client.onclose = undefined;
         this.client = null;
-        this.onClose?.();
         this.start();
       } catch (error) {}
     };
@@ -97,7 +95,6 @@ export class GasnowWs {
       this.client.onerror = undefined;
       this.client.onclose = undefined;
       this.client = null;
-      this.onClose?.();
     };
 
     this.client.onmessage = onmessage;

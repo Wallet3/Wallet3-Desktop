@@ -88,5 +88,8 @@
   "Network": "Network",
   "Description": "Description",
   "Last used": "Last used",
-  "Disconnect": "Disconnect"
+  "Disconnect": "Disconnect",
+  "Connect DApp": "Connect DApp",
+  "Show Wallet 3": "Show Wallet 3",
+  "Quit": "Quit"
 }
