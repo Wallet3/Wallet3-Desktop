@@ -1,4 +1,4 @@
-import './ConnectedDApp.css';
+import './ConnectedDAppLabel.css';
 
 import { AppsIcon, CryptoIcons } from '../../../misc/Icons';
 

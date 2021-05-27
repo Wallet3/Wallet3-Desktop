@@ -27,7 +27,7 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
       <div className="form">
         {implVM.args.walletConnect?.app ? (
           <div>
-            <span>{t('dApp')}:</span>
+            <span>{t('DApp')}:</span>
             <span>
               <Image
                 className="dapp-icon"

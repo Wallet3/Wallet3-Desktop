@@ -1,6 +1,6 @@
 import './App.css';
 
-import { Account, AddToken, ConnectedDapp, PendingTx, Transfer, UserTokens } from './pages/app';
+import { Account, AddToken, ConnectedDApp, PendingTx, Transfer, UserTokens } from './pages/app';
 import { BackupMnemonic, Reset } from './pages/secure';
 import { Blank, Generate, Import, Locking, SetupPasscode, Welcome } from './pages/login/';
 import { Route, Router, Switch } from 'react-router-dom';
@@ -63,7 +63,7 @@ export default observer((args: Props) => {
             <PendingTx {...args} />
           </Route>
           <Route path="/connectedapp">
-            <ConnectedDapp {...args} />
+            <ConnectedDApp {...args} />
           </Route>
           <Route path="/backupMnemonic">
             <BackupMnemonic {...args} />

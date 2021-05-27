@@ -1,4 +1,4 @@
-import './DApp.css';
+import './ConnectedDApp.css';
 
 import { Application } from '../../viewmodels/Application';
 import Image from '../../components/Image';
@@ -25,7 +25,7 @@ export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => 
         </div>
 
         <div>
-          <span>dApp:</span>
+          <span>DApp:</span>
           <span>
             <Image src={dAppVM.appIcon} />
             {dAppVM.appName}

@@ -6,7 +6,7 @@ import { Networks, NetworksVM, PublicNetworks, Testnets } from '../../viewmodels
 
 import AnimatedNumber from 'react-animated-number';
 import { Application } from '../../viewmodels/Application';
-import ConnectedDApp from './components/ConnectedDApp';
+import ConnectedDAppLabel from './components/ConnectedDAppLabel';
 import { CryptoIcons } from '../../misc/Icons';
 import { CurrencyVM } from '../../viewmodels/CurrencyVM';
 import Feather from 'feather-icons-react';
@@ -106,13 +106,13 @@ export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor
                     app.history.push(`/connectedapp`);
                   }}
                 >
-                  <ConnectedDApp {...s} />
+                  <ConnectedDAppLabel {...s} />
                 </MenuItem>
               );
             })}
 
-            {appConnects.length > 6 ? <MenuDivider /> : undefined}
-            {appConnects.length > 6 ? (
+            {appCount > 6 ? <MenuDivider /> : undefined}
+            {appCount > 6 ? (
               <MenuItem styles={{ padding: '8px 12px', fontSize: 12, display: 'flex', justifyContent: 'center' }}>
                 <span>{`See All (${appConnects.length})`}</span>
               </MenuItem>
