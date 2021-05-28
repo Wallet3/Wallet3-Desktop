@@ -149,6 +149,7 @@ export class WalletConnect extends EventEmitter {
 
     const checkAccount = (from: string) => {
       if (from?.toLowerCase() === App.currentAddress.toLowerCase()) return true;
+      console.log(from, App.currentAddress)
       this.connector.rejectRequest({ id: request.id, error: { message: 'Update session' } });
       this.updateSession();
       return false;

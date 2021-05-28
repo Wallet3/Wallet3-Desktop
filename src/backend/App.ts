@@ -199,6 +199,7 @@ export class App {
       await KeyMan.savePassword(newPassword);
       if (!(await KeyMan.saveMnemonic(newPassword))) return App.encryptIpc({ success: false }, iv, key);
 
+      if (this.touchIDSupported) this.userPassword = newPassword;
       return App.encryptIpc({ success: true }, iv, key);
     });
 

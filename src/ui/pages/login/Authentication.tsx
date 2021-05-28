@@ -13,18 +13,10 @@ export default ({ app }: { app: Application }) => {
   const { t } = useTranslation();
   const [validated, setValidated] = useState(false);
 
-  useEffect(() => {
-    app.clearHistory();
-
-    const onFocus = () => {
-      touchIDSupported && appAuthenticated ? authViaTouchID() : undefined;
-      window.removeEventListener('focus', onFocus);
-    };
-    
-    window.addEventListener('focus', onFocus);
-
-    return () => window.removeEventListener('focus', onFocus);
-  }, []);
+  const goApp = () => {
+    setValidated(true);
+    setTimeout(() => app.history.push('/app'), 1250);
+  };
 
   const authViaTouchID = async () => {
     if (await app.promptTouchID(t('Unlock Wallet'))) {
@@ -46,10 +38,17 @@ export default ({ app }: { app: Application }) => {
     }
   };
 
-  const goApp = () => {
-    setValidated(true);
-    setTimeout(() => app.history.push('/app'), 1250);
-  };
+  useEffect(() => {
+    app.clearHistory();
+
+    if (touchIDSupported && appAuthenticated)
+      document.onkeydown = (ev) => {
+        if (!(ev.code === 'Enter' || ev.code === 'Space')) return;
+        authViaTouchID();
+      };
+
+    return () => (document.onkeydown = undefined);
+  }, []);
 
   return (
     <div className="page authentication ">
