@@ -1,14 +1,4 @@
-import {
-  BrowserWindow,
-  Menu,
-  TouchBar,
-  TouchBarButton,
-  Tray,
-  app,
-  globalShortcut,
-  nativeImage,
-  powerMonitor,
-} from 'electron';
+import { BrowserWindow, Menu, TouchBar, TouchBarButton, Tray, app, nativeImage, powerMonitor } from 'electron';
 
 import App from './backend/App';
 import Coingecko from './api/Coingecko';
@@ -20,6 +10,7 @@ import TxMan from './backend/TxMan';
 import WCMan from './backend/WCMan';
 import { autorun } from 'mobx';
 import delay from 'delay';
+import { globalShortcut } from 'electron';
 import i18n from './i18n';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
@@ -190,8 +181,6 @@ app.on('ready', async () => {
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
-  App.authExpired = true;
-
   if (process.platform !== 'darwin') {
     app.quit();
   }
@@ -213,8 +202,7 @@ app.on('browser-window-focus', () => {
 
 app.on('browser-window-blur', () => {
   idleTimer = setTimeout(() => {
-    console.log('auth expired', App.authExpired);
-    App.authExpired = true;
+    App.mainWindow?.webContents.send(Messages.idleExpired, { idleExpired: true });
   }, 3 * 1000 * 60);
 });
 
@@ -228,5 +216,5 @@ powerMonitor.on('resume', () => {
 });
 
 powerMonitor.on('suspend', () => {
-  App.authExpired = true;
+  App.mainWindow?.webContents.send(Messages.idleExpired, { idleExpired: true });
 });

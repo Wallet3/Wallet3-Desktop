@@ -30,7 +30,7 @@ export default {
 
   pendingTxsChanged: 'msg-pendingtxs-changed',
   wcConnectsChanged: 'msg-wcconnects-changed',
-  authExpired: 'msg-auth-expired',
+  idleExpired: 'msg-app-idle-expired',
 };
 
 export const WcMessages = {
@@ -44,7 +44,6 @@ export interface InitStatus {
   hasMnemonic: boolean;
   touchIDSupported: boolean;
   appAuthenticated: boolean;
-  authExpired: boolean;
   addresses?: string[];
 }
 

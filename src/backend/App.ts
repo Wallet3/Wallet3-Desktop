@@ -37,17 +37,6 @@ export class App {
   chainId = 1;
 
   #authKeys = new Map<string, string>();
-  #authExpired = true;
-
-  get authExpired() {
-    return this.#authExpired;
-  }
-
-  set authExpired(value: boolean) {
-    if (value === this.#authExpired) return;
-    this.#authExpired = value;
-    this.mainWindow?.webContents.send(MessageKeys.authExpired, { authExpired: this.authExpired });
-  }
 
   get chainProvider() {
     return getProviderByChainId(this.chainId);
@@ -107,7 +96,6 @@ export class App {
           hasMnemonic: KeyMan.hasMnemonic,
           touchIDSupported: this.touchIDSupported,
           appAuthenticated: this.addresses.length > 0,
-          authExpired: this.authExpired,
           addresses: [...this.addresses],
         } as InitStatus,
         iv,
@@ -133,7 +121,6 @@ export class App {
 
       try {
         await systemPreferences.promptTouchID(message ?? i18n.t('Unlock Wallet'));
-        this.authExpired = false;
         return App.encryptIpc(true, iv, key);
       } catch (error) {
         return App.encryptIpc(false, iv, key);
@@ -196,8 +183,6 @@ export class App {
       const { password } = App.decryptIpc(encrypted, iv, key);
 
       const verified = await KeyMan.verifyPassword(password);
-      if (verified) this.authExpired = false;
-
       return App.encryptIpc(verified, iv, key);
     });
 
@@ -214,7 +199,6 @@ export class App {
       await KeyMan.savePassword(newPassword);
       if (!(await KeyMan.saveMnemonic(newPassword))) return App.encryptIpc({ success: false }, iv, key);
 
-      this.authExpired = false;
       return App.encryptIpc({ success: true }, iv, key);
     });
 
@@ -229,7 +213,6 @@ export class App {
         runInAction(() => this.addresses.push(...addrs));
 
         if (this.touchIDSupported) this.userPassword = password;
-        this.authExpired = false;
       }
 
       return App.encryptIpc({ verified, addresses: verified ? addrs : [] }, iv, key);

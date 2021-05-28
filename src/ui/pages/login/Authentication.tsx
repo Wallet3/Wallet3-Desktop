@@ -10,7 +10,7 @@ import TouchIDView from '../../components/TouchIDView';
 import { useTranslation } from 'react-i18next';
 
 export default ({ app }: { app: Application }) => {
-  const { touchIDSupported, authExpired, appAuthenticated } = app;
+  const { touchIDSupported, appAuthenticated } = app;
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -40,10 +40,10 @@ export default ({ app }: { app: Application }) => {
   return (
     <div className="page authentication">
       <div className="container">
-        {touchIDSupported && appAuthenticated && authExpired ? (
+        {touchIDSupported && appAuthenticated ? (
           <TouchIDView onAuth={authViaTouchID} />
         ) : (
-          <PasscodeView onAuth={(passcode) => authViaPassword(passcode)} />
+          <PasscodeView onAuth={authViaPassword} />
         )}
       </div>
     </div>

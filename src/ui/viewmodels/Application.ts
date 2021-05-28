@@ -12,25 +12,22 @@ export class Application {
   readonly history = createBrowserHistory();
 
   appAuthenticated = false;
-  authExpired = false;
   touchIDSupported = false;
 
   constructor() {
     makeObservable(this, {});
 
-    ipc.on(MessageKeys.authExpired, (e, { authExpired }: { authExpired: boolean }) => {
-      this.authExpired = authExpired;
-      if (authExpired) this.history.push('/authentication');
+    ipc.on(MessageKeys.idleExpired, (e, { idleExpired }: { idleExpired: boolean }) => {
+      if (idleExpired) this.history.push('/authentication');
     });
   }
 
   async init(jump = true) {
-    const { hasMnemonic, touchIDSupported, appAuthenticated, addresses, authExpired } = await ipc.invokeSecure<InitStatus>(
+    const { hasMnemonic, touchIDSupported, appAuthenticated, addresses } = await ipc.invokeSecure<InitStatus>(
       MessageKeys.getInitStatus
     );
 
     this.touchIDSupported = touchIDSupported;
-    this.authExpired = authExpired;
     this.appAuthenticated = appAuthenticated;
 
     Coingecko.start(30);
@@ -44,7 +41,7 @@ export class Application {
     if (!hasMnemonic) {
       this.history.push('/welcome');
     } else {
-      this.history.push(appAuthenticated && !authExpired ? '/app' : '/authentication');
+      this.history.push('/authentication');
     }
   }
 
@@ -58,7 +55,6 @@ export class Application {
     if (verified) {
       WalletVM.initAccounts(addresses);
       this.appAuthenticated = true;
-      this.authExpired = false;
     }
 
     return verified;
