@@ -15,6 +15,15 @@ export default ({ app }: { app: Application }) => {
 
   useEffect(() => {
     app.clearHistory();
+
+    const onFocus = () => {
+      touchIDSupported && appAuthenticated ? authViaTouchID() : undefined;
+      window.removeEventListener('focus', onFocus);
+    };
+    
+    window.addEventListener('focus', onFocus);
+
+    return () => window.removeEventListener('focus', onFocus);
   }, []);
 
   const authViaTouchID = async () => {
