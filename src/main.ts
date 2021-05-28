@@ -116,11 +116,8 @@ const createWindow = async (): Promise<void> => {
   App.mainWindow = mainWindow;
 
   mainWindow.once('ready-to-show', () => {
-    mainWindow.webContents.send(Messages.pendingTxsChanged, JSON.stringify(TxMan.pendingTxs));
-    mainWindow.webContents.send(
-      Messages.wcConnectsChanged,
-      WCMan.connects.map((c) => c.session)
-    );
+    mainWindow.webContents.send(Messages.pendingTxsChanged, [...TxMan.pendingTxs]);
+    mainWindow.webContents.send(Messages.wcConnectsChanged, WCMan.connectedSessions);
   });
 
   mainWindow.once('closed', () => {

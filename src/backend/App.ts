@@ -53,15 +53,12 @@ export class App {
   init() {
     autorun(() => {
       console.log('pending', TxMan.pendingTxs.length);
-      this.mainWindow?.webContents.send(MessageKeys.pendingTxsChanged, JSON.stringify(TxMan.pendingTxs));
+      this.mainWindow?.webContents.send(MessageKeys.pendingTxsChanged, [...TxMan.pendingTxs]);
     });
 
     autorun(() => {
       console.log('wc connects', WCMan.connects.length);
-      this.mainWindow?.webContents.send(
-        MessageKeys.wcConnectsChanged,
-        WCMan.connects.filter((i) => i).map((wc) => wc.session)
-      );
+      this.mainWindow?.webContents.send(MessageKeys.wcConnectsChanged, WCMan.connectedSessions);
     });
   }
 
@@ -97,6 +94,8 @@ export class App {
           touchIDSupported: this.touchIDSupported,
           appAuthenticated: this.addresses.length > 0,
           addresses: [...this.addresses],
+          connectedDApps: WCMan.connects.map((c) => c.session),
+          pendingTxs: [...TxMan.pendingTxs],
         } as InitStatus,
         iv,
         key

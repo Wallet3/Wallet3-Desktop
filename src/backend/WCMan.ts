@@ -12,6 +12,10 @@ class WCMan {
 
   connects: WalletConnect[] = [];
 
+  get connectedSessions() {
+    return this.connects.map((c) => c.session);
+  }
+
   constructor() {
     makeObservable(this, { connects: observable });
 

@@ -45,7 +45,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
                     DAppVM.disconnect(item.key);
                   }}
                 >
-                  <Feather icon="trash-2" size={16} strokWidth={1} />
+                  <Feather icon="trash-2" size={16} strokeWidth={1.5} />
                 </span>
               </div>
             </div>

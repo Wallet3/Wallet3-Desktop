@@ -2,14 +2,14 @@ import MessageKeys, { AuthenticationResult, BooleanResult, InitStatus, InitVerif
 
 import Coingecko from '../../api/Coingecko';
 import WalletVM from './WalletVM';
-import { createBrowserHistory } from 'history';
+import { createMemoryHistory } from 'history';
 import crypto from '../bridges/Crypto';
 import ipc from '../bridges/IPC';
 import { makeObservable } from 'mobx';
 import store from 'storejs';
 
 export class Application {
-  readonly history = createBrowserHistory();
+  readonly history = createMemoryHistory();
 
   appAuthenticated = false;
   touchIDSupported = false;
@@ -23,9 +23,8 @@ export class Application {
   }
 
   async init(jump = true) {
-    const { hasMnemonic, touchIDSupported, appAuthenticated, addresses } = await ipc.invokeSecure<InitStatus>(
-      MessageKeys.getInitStatus
-    );
+    const { hasMnemonic, touchIDSupported, appAuthenticated, addresses, pendingTxs, connectedDApps } =
+      await ipc.invokeSecure<InitStatus>(MessageKeys.getInitStatus);
 
     this.touchIDSupported = touchIDSupported;
     this.appAuthenticated = appAuthenticated;
@@ -33,7 +32,7 @@ export class Application {
     Coingecko.start(30);
 
     if (addresses?.length > 0) {
-      WalletVM.initAccounts(addresses);
+      WalletVM.initAccounts({ addresses, pendingTxs, connectedDApps });
     }
 
     if (!jump) return;
@@ -53,7 +52,7 @@ export class Application {
     });
 
     if (verified) {
-      WalletVM.initAccounts(addresses);
+      WalletVM.initAccounts({ addresses });
       this.appAuthenticated = true;
     }
 

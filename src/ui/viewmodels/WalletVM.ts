@@ -42,16 +42,24 @@ export class WalletVM {
       () => this.currentAccount?.refresh()
     );
 
-    ipc.on(Messages.pendingTxsChanged, (e, content: string) =>
-      runInAction(() => (this.allPendingTxs = JSON.parse(content)))
-    );
+    ipc.on(Messages.pendingTxsChanged, (e, content: TxParams[]) => runInAction(() => (this.allPendingTxs = content)));
 
     ipc.on(Messages.wcConnectsChanged, (e, content: IWcSession[]) =>
       runInAction(() => (this.connectedDApps = content.sort((a, b) => b.lastUsedTimestamp - a.lastUsedTimestamp)))
     );
   }
 
-  initAccounts(addresses: string[]) {
+  initAccounts({
+    addresses,
+    pendingTxs,
+    connectedDApps,
+  }: {
+    addresses: string[];
+    pendingTxs?: TxParams[];
+    connectedDApps?: IWcSession[];
+  }) {
+    this.connectedDApps = connectedDApps ?? this.connectedDApps;
+    this.allPendingTxs = pendingTxs ?? this.allPendingTxs;
     this.accounts = addresses.map((address, i) => new AccountVM({ address, accountIndex: i + 1 }));
 
     const lastUsedAccount = store.get(Keys.lastUsedAccount) || addresses[0];

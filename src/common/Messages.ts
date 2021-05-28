@@ -45,6 +45,8 @@ export interface InitStatus {
   touchIDSupported: boolean;
   appAuthenticated: boolean;
   addresses?: string[];
+  pendingTxs: TxParams[];
+  connectedDApps: IWcSession[];
 }
 
 export interface InitVerifyPassword {

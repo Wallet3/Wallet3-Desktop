@@ -4,11 +4,9 @@ import { Application } from './Application';
 import { ConfirmVM } from './ConfirmVM';
 import { ConnectDappVM } from './ConnectDappVM';
 import { SignVM } from './SignVM';
-import { createBrowserHistory } from 'history';
 import ipc from '../bridges/IPC';
 
 export class ApplicationPopup extends Application {
-  readonly history = createBrowserHistory();
   type: PopupWindowTypes;
 
   async init() {
