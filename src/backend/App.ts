@@ -132,7 +132,7 @@ export class App {
       const { message } = App.decryptIpc(encrypted, iv, key);
 
       try {
-        await systemPreferences.promptTouchID(message ?? 'Unlock Wallet');
+        await systemPreferences.promptTouchID(message ?? i18n.t('Unlock Wallet'));
         this.authExpired = false;
         return App.encryptIpc(true, iv, key);
       } catch (error) {

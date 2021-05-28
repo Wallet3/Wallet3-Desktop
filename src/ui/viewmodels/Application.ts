@@ -29,7 +29,7 @@ export class Application {
       MessageKeys.getInitStatus
     );
 
-    this.touchIDSupported =false;// touchIDSupported;
+    this.touchIDSupported = touchIDSupported;
     this.authExpired = authExpired;
     this.appAuthenticated = appAuthenticated;
 
@@ -58,6 +58,7 @@ export class Application {
     if (verified) {
       WalletVM.initAccounts(addresses);
       this.appAuthenticated = true;
+      this.authExpired = false;
     }
 
     return verified;

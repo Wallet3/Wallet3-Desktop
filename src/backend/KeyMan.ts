@@ -8,12 +8,12 @@ import { TxParams } from '../common/Messages';
 const BasePath = `m/44'/60'/0'/0`;
 
 const Keys = {
-  salt: 'salt',
-  password: 'password',
-  basePath: 'basePath',
-  pathIndex: 'pathIndex',
-  account: 'master',
-  mnemonic: 'mnemonic',
+  salt: 'wallet3-salt',
+  password: 'wallet3-password',
+  basePath: 'wallet3-basePath',
+  pathIndex: 'wallet3-pathIndex',
+  account: 'wallet3-master',
+  mnemonic: 'wallet3-mnemonic',
 };
 
 export function setTest() {

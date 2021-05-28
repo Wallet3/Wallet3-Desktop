@@ -208,21 +208,17 @@ app.on('activate', () => {
 let idleTimer: NodeJS.Timeout;
 
 app.on('browser-window-focus', () => {
-  console.log('active');
   clearTimeout(idleTimer);
 });
 
 app.on('browser-window-blur', () => {
-  console.log('deactive');
   idleTimer = setTimeout(() => {
     console.log('auth expired', App.authExpired);
     App.authExpired = true;
-  }, 3 * 1000);
+  }, 3 * 1000 * 60);
 });
 
 powerMonitor.on('resume', () => {
-  console.log('resume');
-
   setTimeout(async () => {
     await WCMan.dispose();
     WCMan.init();
