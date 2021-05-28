@@ -3,7 +3,7 @@ import './ConnectedDApp.css';
 import { Application } from '../../viewmodels/Application';
 import Image from '../../components/Image';
 import { NavBar } from '../../components';
-import NetworkLabel from './components/NetworkLabel';
+import NetworkLabel from '../../components/NetworkLabel';
 import React from 'react';
 import { WalletVM } from '../../viewmodels/WalletVM';
 import shell from '../../bridges/Shell';

@@ -5,7 +5,7 @@ import { Image, PopupTitle } from '../../components';
 import { Menu, MenuButton, MenuDivider, MenuItem } from '@szhsin/react-menu';
 
 import { ApplicationPopup } from '../../viewmodels/ApplicationPopup';
-import NetworkLabel from '../app/components/NetworkLabel';
+import NetworkLabel from '../../components/NetworkLabel';
 import { Networks } from '../../viewmodels/NetworksVM';
 import React from 'react';
 import { observer } from 'mobx-react-lite';

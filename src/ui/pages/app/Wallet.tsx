@@ -14,7 +14,7 @@ import Feather from 'feather-icons-react';
 import GasnowWs from '../../../gas/Gasnow';
 import HSBar from 'react-horizontal-stacked-bar-chart';
 import { Link } from 'react-router-dom';
-import NetworkLabel from './components/NetworkLabel';
+import { NetworkMenu } from '../../components';
 import PendingTx from './components/PendingTxLabel';
 import PendingTxIndicator from './components/PendingTxIndicator';
 import Skeleton from 'react-loading-skeleton';
@@ -127,41 +127,12 @@ export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor
           </Menu>
         ) : undefined}
 
-        <Menu
-          menuButton={() => (
-            <MenuButton className="menu-button">
-              <NetworkLabel chainId={networksVM.currentChainId} />
-            </MenuButton>
-          )}
-          styles={{ minWidth: '5.5rem' }}
-          direction="bottom"
-          overflow="auto"
-          position="anchor"
-        >
-          {PublicNetworks.map((item) => {
-            return (
-              <MenuItem
-                key={item.chainId}
-                styles={{ padding: '8px 12px' }}
-                onClick={(_) => networksVM.setCurrentChainId(item.chainId)}
-              >
-                <NetworkLabel expand chainId={item.chainId} />
-              </MenuItem>
-            );
-          })}
-          <MenuDivider />
-          {Testnets.map((item) => {
-            return (
-              <MenuItem
-                key={item.chainId}
-                styles={{ padding: '8px 12px' }}
-                onClick={(_) => networksVM.setCurrentChainId(item.chainId)}
-              >
-                <NetworkLabel expand chainId={item.chainId} />
-              </MenuItem>
-            );
-          })}
-        </Menu>
+        <NetworkMenu
+          currentChainId={networksVM.currentChainId}
+          publicNetworks={PublicNetworks}
+          testnets={Testnets}
+          onNetworkSelected={(id) => networksVM.setCurrentChainId(id)}
+        />
 
         <button
           className="icon-button"

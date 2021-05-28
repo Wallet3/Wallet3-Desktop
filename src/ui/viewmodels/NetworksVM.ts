@@ -5,7 +5,7 @@ import { getProviderByChainId } from '../../common/Provider';
 import ipc from '../bridges/IPC';
 import store from 'storejs';
 
-interface INetwork {
+export interface INetwork {
   symbol: string;
   network: string;
   chainId: number;

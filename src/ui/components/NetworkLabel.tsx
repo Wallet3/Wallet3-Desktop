@@ -1,9 +1,9 @@
 import './NetworkLabel.css';
 
-import { AppsIcon, CryptoIcons } from '../../../misc/Icons';
+import { AppsIcon, CryptoIcons } from '../misc/Icons';
 
 import React from 'react';
-import i18n from '../../../../i18n';
+import i18n from '../../i18n';
 import { observer } from 'mobx-react-lite';
 
 const SVGs = new Map([
