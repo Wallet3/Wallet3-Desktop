@@ -21,25 +21,33 @@ interface Props {
 export default observer(({ app }: Props) => {
   const { confirmVM, signVM } = app;
   const [onAuthView, setOnAuthView] = useState(false);
+  const [authenticated, setAuthenticated] = useState(false);
+
   const { t } = useTranslation();
+
+  const closeWindow = () =>
+    new Promise<void>((resolve) => {
+      setAuthenticated(true);
+      setTimeout(() => {
+        resolve();
+        window.close();
+      }, 1250);
+    });
 
   const authViaTouchID = async () => {
     if (await (confirmVM ?? signVM).approveRequest('touchid')) {
-      window.close();
+      await closeWindow();
     } else {
       Anime.vibrate('div.auth > .panel');
     }
   };
 
   const authViaPassword = async (passcode: string) => {
-    const verified = await (confirmVM ?? signVM).approveRequest('passcode', passcode);
-
-    if (!verified) {
+    if (await (confirmVM ?? signVM).approveRequest('passcode', passcode)) {
+      await closeWindow();
+    } else {
       Anime.vibrate('div.auth > .panel');
-      return;
     }
-
-    window.close();
   };
 
   const onContinue = () => {
@@ -138,6 +146,7 @@ export default observer(({ app }: Props) => {
           onCancel={onAuthCancel}
           onAuthTouchID={authViaTouchID}
           onAuthPasscode={authViaPassword}
+          authenticated={authenticated}
           runTouchID={onAuthView}
         />
       </div>

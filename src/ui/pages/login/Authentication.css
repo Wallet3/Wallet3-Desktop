@@ -3,3 +3,8 @@
   position: relative;
   align-items: center;
 }
+
+.page.authentication .non-touchid {
+  margin-top: -3vh;
+  margin-right: 2px;
+}
