@@ -1,42 +1,9 @@
 .page.authentication {
   display: grid;
-}
-
-.page.authentication > div.passcode-view,
-div.touchid-view {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-top: -10vh;
+  position: relative;
   align-items: center;
 }
 
-.page.authentication > div.passcode-view > div {
-  margin-right: 2px;
-}
-
-.page.authentication > div.passcode-view,
-div.touchid-view > p {
-  font-size: 15px;
-  color: var(--font-color-title);
-}
-
-.page.authentication > div.touchid-view {
-  margin-top: -5vh;
-  outline: none;
-}
-
-.page.authentication > div.touchid-view svg {
-  width: 81px;
-  display: inline-block;
-  margin-top: 12px;
-  cursor: pointer;
-}
-
-.page.authentication > div.touchid-view > div {
-  transition: all 0.3s;
-}
-
-.page.authentication > div.touchid-view > div:hover {
-  opacity: 0.5;
+.page.authentication .container {
+  margin-top: -3vh;
 }

@@ -30,6 +30,7 @@ export default {
 
   pendingTxsChanged: 'msg-pendingtxs-changed',
   wcConnectsChanged: 'msg-wcconnects-changed',
+  authExpired: 'msg-auth-expired',
 };
 
 export const WcMessages = {

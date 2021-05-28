@@ -6,14 +6,14 @@ import TouchID from '../../assets/icons/app/touchid.svg';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 
-export default observer(({ onAuth }: { onAuth?: () => void }) => {
+export default observer(({ onAuth }: { onAuth: () => void }) => {
   const { t } = useTranslation();
 
   return (
     <div className="touchid-view">
-      <p>{t('Click to authenticate')}</p>
+      <p>{t('Click here to Authenticate')}</p>
       <div>
-        <img src={TouchID} onClick={(_) => onAuth?.()} />
+        <img src={TouchID} onClick={(_) => onAuth()} />
       </div>
     </div>
   );

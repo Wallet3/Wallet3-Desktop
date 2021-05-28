@@ -190,6 +190,8 @@ app.on('ready', async () => {
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
+  App.authExpired = true;
+
   if (process.platform !== 'darwin') {
     app.quit();
   }
@@ -212,7 +214,10 @@ app.on('browser-window-focus', () => {
 
 app.on('browser-window-blur', () => {
   console.log('deactive');
-  idleTimer = setTimeout(() => {}, 60 * 1000 * 5);
+  idleTimer = setTimeout(() => {
+    console.log('auth expired', App.authExpired);
+    App.authExpired = true;
+  }, 3 * 1000);
 });
 
 powerMonitor.on('resume', () => {
@@ -226,4 +231,6 @@ powerMonitor.on('resume', () => {
   GasnowWs.restart(true);
 });
 
-powerMonitor.on('suspend', () => {});
+powerMonitor.on('suspend', () => {
+  App.authExpired = true;
+});

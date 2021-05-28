@@ -8,7 +8,10 @@ div.touchid-view {
 
 div.touchid-view > p {
   font-size: 15px;
+  margin: 0;
+  margin-bottom: 16px;
   color: var(--font-color-title);
+  text-align: center;
 }
 
 div.touchid-view img {

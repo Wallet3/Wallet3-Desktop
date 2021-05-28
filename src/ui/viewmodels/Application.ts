@@ -13,11 +13,15 @@ export class Application {
 
   appAuthenticated = false;
   authExpired = false;
-  hasMnemonic = false;
   touchIDSupported = false;
 
   constructor() {
     makeObservable(this, {});
+
+    ipc.on(MessageKeys.authExpired, (e, { authExpired }: { authExpired: boolean }) => {
+      this.authExpired = authExpired;
+      if (authExpired) this.history.push('/authentication');
+    });
   }
 
   async init(jump = true) {
@@ -25,8 +29,7 @@ export class Application {
       MessageKeys.getInitStatus
     );
 
-    this.hasMnemonic = hasMnemonic;
-    this.touchIDSupported = touchIDSupported;
+    this.touchIDSupported =false;// touchIDSupported;
     this.authExpired = authExpired;
     this.appAuthenticated = appAuthenticated;
 
@@ -54,6 +57,7 @@ export class Application {
 
     if (verified) {
       WalletVM.initAccounts(addresses);
+      this.appAuthenticated = true;
     }
 
     return verified;

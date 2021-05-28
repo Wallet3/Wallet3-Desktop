@@ -31,12 +31,23 @@ export class App {
   windows = new Map<string, { iv: Buffer; key: Buffer }>();
   mainWindow?: BrowserWindow;
   touchBarButtons?: { walletConnect: TouchBarButton; gas: TouchBarButton; price?: TouchBarButton };
-  private authKeys = new Map<string, string>();
 
-  authExpired = false;
   currentAddressIndex = 0;
   addresses: string[] = [];
   chainId = 1;
+
+  #authKeys = new Map<string, string>();
+  #authExpired = true;
+
+  get authExpired() {
+    return this.#authExpired;
+  }
+
+  set authExpired(value: boolean) {
+    if (value === this.#authExpired) return;
+    this.#authExpired = value;
+    this.mainWindow?.webContents.send(MessageKeys.authExpired, { authExpired: this.authExpired });
+  }
 
   get chainProvider() {
     return getProviderByChainId(this.chainId);
@@ -122,6 +133,7 @@ export class App {
 
       try {
         await systemPreferences.promptTouchID(message ?? 'Unlock Wallet');
+        this.authExpired = false;
         return App.encryptIpc(true, iv, key);
       } catch (error) {
         return App.encryptIpc(false, iv, key);
@@ -168,8 +180,8 @@ export class App {
     ipcMain.handle(`${MessageKeys.readMnemonic}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
       const { authKey } = App.decryptIpc(encrypted, iv, key);
-      const password = this.authKeys.get(authKey);
-      this.authKeys.delete(authKey);
+      const password = this.#authKeys.get(authKey);
+      this.#authKeys.delete(authKey);
 
       if (!password) {
         return App.encryptIpc({}, iv, key);
@@ -182,14 +194,18 @@ export class App {
     ipcMain.handle(`${MessageKeys.verifyPassword}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
       const { password } = App.decryptIpc(encrypted, iv, key);
-      return App.encryptIpc(await KeyMan.verifyPassword(password), iv, key);
+
+      const verified = await KeyMan.verifyPassword(password);
+      if (verified) this.authExpired = false;
+
+      return App.encryptIpc(verified, iv, key);
     });
 
     ipcMain.handle(`${MessageKeys.changePassword}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
       const { authKey, newPassword } = App.decryptIpc(encrypted, iv, key);
-      const oldPassword = this.authKeys.get(authKey);
-      this.authKeys.delete(authKey);
+      const oldPassword = this.#authKeys.get(authKey);
+      this.#authKeys.delete(authKey);
 
       const mnemonic = await KeyMan.readMnemonic(oldPassword);
       if (!mnemonic) return App.encryptIpc({ success: false }, iv, key);
@@ -198,6 +214,7 @@ export class App {
       await KeyMan.savePassword(newPassword);
       if (!(await KeyMan.saveMnemonic(newPassword))) return App.encryptIpc({ success: false }, iv, key);
 
+      this.authExpired = false;
       return App.encryptIpc({ success: true }, iv, key);
     });
 
@@ -212,6 +229,7 @@ export class App {
         runInAction(() => this.addresses.push(...addrs));
 
         if (this.touchIDSupported) this.userPassword = password;
+        this.authExpired = false;
       }
 
       return App.encryptIpc({ verified, addresses: verified ? addrs : [] }, iv, key);
@@ -231,12 +249,12 @@ export class App {
     ipcMain.handle(`${MessageKeys.resetSystem}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
       const { authKey } = App.decryptIpc(encrypted, iv, key);
-      if (!this.authKeys.has(authKey)) {
+      if (!this.#authKeys.has(authKey)) {
         return App.encryptIpc({ success: false }, iv, key);
       }
 
-      const password = this.authKeys.get(authKey);
-      this.authKeys.clear();
+      const password = this.#authKeys.get(authKey);
+      this.#authKeys.clear();
 
       await KeyMan.reset(password);
       await DBMan.clean();
@@ -370,7 +388,7 @@ export class App {
           const { iv, key } = this.windows.get(popWinId);
           const { success, password } = App.decryptIpc(encrypted, iv, key) as { success: boolean; password?: string };
           const authKey = success ? randomBytes(8).toString('hex') : '';
-          if (authKey) this.authKeys.set(authKey, password || (this.touchIDSupported ? this.userPassword : undefined));
+          if (authKey) this.#authKeys.set(authKey, password || (this.touchIDSupported ? this.userPassword : undefined));
 
           resolve({ success, authKey });
         });
