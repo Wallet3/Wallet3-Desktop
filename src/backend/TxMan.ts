@@ -59,7 +59,7 @@ class TxMan {
 
       const notification = new Notification({
         title: tx.status ? i18n.t('Transaction Confirmed') : i18n.t('Transaction Failed'),
-        body: i18n.t(tx.status ? 'TxConfirmed' : 'TxFailed', { nonce: tx.nonce }), //`Transaction ${tx.nonce} ${tx.status ? 'confirmed' : 'failed'}, view it on Etherscan`,
+        body: i18n.t(tx.status ? 'TxConfirmed' : 'TxFailed', { nonce: tx.nonce }),
       }).once('click', () => {
         shell.openExternal(convertTxToUrl(tx));
       });

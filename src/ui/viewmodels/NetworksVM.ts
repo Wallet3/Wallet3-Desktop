@@ -23,7 +23,7 @@ export class NetworksVM {
   currentChainId = 1;
 
   get currentNetwork() {
-    return Networks.find((n) => n?.chainId === this.currentChainId);
+    return Networks.find((n) => n.chainId === this.currentChainId);
   }
 
   get currentProvider() {
@@ -110,6 +110,13 @@ export const Testnets: INetwork[] = [
     network: 'Kovan',
     chainId: 42,
     color: '#6186ff',
+    test: true,
+  },
+  {
+    symbol: 'MATIC',
+    network: 'Mumbai',
+    chainId: 80001,
+    color: '#8247E5',
     test: true,
   },
 ];

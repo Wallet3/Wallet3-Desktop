@@ -2,7 +2,7 @@ import './Wallet.css';
 import '@szhsin/react-menu/dist/index.css';
 
 import { Menu, MenuButton, MenuDivider, MenuItem } from '@szhsin/react-menu';
-import { Networks, NetworksVM, PublicNetworks, Testnets } from '../../viewmodels/NetworksVM';
+import { NetworksVM, PublicNetworks, Testnets } from '../../viewmodels/NetworksVM';
 import React, { useEffect } from 'react';
 
 import AnimatedNumber from 'react-animated-number';
