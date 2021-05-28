@@ -5,7 +5,7 @@ import { makeAutoObservable, runInAction } from 'mobx';
 
 import App from './Application';
 import ERC20ABI from '../../abis/ERC20.json';
-import { GasnowWs } from '../../api/Gasnow';
+import { GasnowWs } from '../../gas/Gasnow';
 import { Networks } from './NetworksVM';
 import WalletVM from './WalletVM';
 import crypto from '../bridges/Crypto';

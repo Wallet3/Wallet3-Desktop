@@ -3,7 +3,7 @@ import { BrowserWindow, Menu, TouchBar, TouchBarButton, Tray, app, nativeImage, 
 import App from './backend/App';
 import Coingecko from './api/Coingecko';
 import DBMan from './backend/DBMan';
-import GasnowWs from './api/Gasnow';
+import GasnowWs from './gas/Gasnow';
 import KeyMan from './backend/KeyMan';
 import Messages from './common/Messages';
 import TxMan from './backend/TxMan';
@@ -115,10 +115,10 @@ const createWindow = async (): Promise<void> => {
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   App.mainWindow = mainWindow;
 
-  mainWindow.once('ready-to-show', () => {
-    mainWindow.webContents.send(Messages.pendingTxsChanged, [...TxMan.pendingTxs]);
-    mainWindow.webContents.send(Messages.wcConnectsChanged, WCMan.connectedSessions);
-  });
+  // mainWindow.once('ready-to-show', () => {
+  //   mainWindow.webContents.send(Messages.pendingTxsChanged, [...TxMan.pendingTxs]);
+  //   mainWindow.webContents.send(Messages.wcConnectsChanged, WCMan.connectedSessions);
+  // });
 
   mainWindow.once('closed', () => {
     app.dock.hide();
@@ -134,14 +134,11 @@ const createWindow = async (): Promise<void> => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-  await KeyMan.init();
   await DBMan.init();
-
-  createWindow();
+  await Promise.all([KeyMan.init(), TxMan.init(), WCMan.init()]);
 
   App.init();
-  TxMan.init();
-  WCMan.init();
+  createWindow();
 
   GasnowWs.start(true);
   GasnowWs.onclose = () => GasnowWs.start(true);
@@ -200,7 +197,7 @@ app.on('browser-window-focus', () => {
 app.on('browser-window-blur', () => {
   idleTimer = setTimeout(() => {
     App.mainWindow?.webContents.send(Messages.idleExpired, { idleExpired: true });
-  }, 3 * 1000 * 60);
+  }, 5 * 1000 * 60);
 });
 
 powerMonitor.on('resume', () => {

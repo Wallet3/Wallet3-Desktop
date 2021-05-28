@@ -4,7 +4,7 @@ import { IReactionDisposer, reaction } from 'mobx';
 
 import ERC20ABI from '../abis/ERC20.json';
 import EventEmitter from 'events';
-import { GasnowWs } from '../api/Gasnow';
+import { GasnowWs } from '../gas/Gasnow';
 import KeyMan from './KeyMan';
 import WCSession from './models/WCSession';
 import WalletConnector from '@walletconnect/client';

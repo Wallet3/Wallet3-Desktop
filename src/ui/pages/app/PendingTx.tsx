@@ -2,7 +2,7 @@ import './PendingTx.css';
 
 import { Application } from '../../viewmodels/Application';
 import { CryptoIcons } from '../../misc/Icons';
-import { GasnowWs } from '../../../api/Gasnow';
+import { GasnowWs } from '../../../gas/Gasnow';
 import { NavBar } from '../../components';
 import { Networks } from '../../viewmodels/NetworksVM';
 import React from 'react';

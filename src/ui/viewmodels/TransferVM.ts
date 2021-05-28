@@ -1,5 +1,5 @@
 import { BigNumber, ethers, utils } from 'ethers';
-import Gasnow, { GasnowWs } from '../../api/Gasnow';
+import Gasnow, { GasnowWs } from '../../gas/Gasnow';
 import { IReactionDisposer, makeAutoObservable, reaction, runInAction } from 'mobx';
 import Messages, { ConfirmSendTx } from '../../common/Messages';
 import { parseEther, parseUnits } from 'ethers/lib/utils';

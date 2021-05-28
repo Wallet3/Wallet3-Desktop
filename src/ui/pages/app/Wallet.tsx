@@ -11,7 +11,7 @@ import ConnectedDAppLabel from './components/ConnectedDAppLabel';
 import { CryptoIcons } from '../../misc/Icons';
 import { CurrencyVM } from '../../viewmodels/CurrencyVM';
 import Feather from 'feather-icons-react';
-import GasnowWs from '../../../api/Gasnow';
+import GasnowWs from '../../../gas/Gasnow';
 import HSBar from 'react-horizontal-stacked-bar-chart';
 import { Link } from 'react-router-dom';
 import NetworkLabel from './components/NetworkLabel';

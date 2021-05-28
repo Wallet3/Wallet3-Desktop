@@ -1,6 +1,6 @@
 import Messages, { ConfirmSendTx } from '../../../common/Messages';
 
-import { GasnowWs } from '../../../api/Gasnow';
+import { GasnowWs } from '../../../gas/Gasnow';
 import { TxParams } from '../../../common/Messages';
 import ipc from '../../bridges/IPC';
 
