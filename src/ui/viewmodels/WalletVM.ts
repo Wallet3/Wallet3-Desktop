@@ -43,7 +43,6 @@ export class WalletVM {
     );
 
     ipc.on(Messages.pendingTxsChanged, (e, content: TxParams[]) => {
-      console.log('ipc pendingtxs', content);
       runInAction(() => (this.allPendingTxs = content));
     });
 

@@ -20,6 +20,7 @@ class GasStation {
     [1, Gasnow],
     [137, PolygonGasStation],
     [56, BscGas],
+    [80001, PolygonGasStation],
   ]);
 
   constructor() {
@@ -59,7 +60,7 @@ class GasStation {
   }
 
   getGasPrice(type: 'rapid' | 'fast' | 'standard') {
-    const station = this._stations.get(this.chainId) ?? Gasnow;
+    const station = this._stations.get(this.chainId) ?? PolygonGasStation;
 
     switch (type) {
       case 'rapid':
@@ -72,7 +73,7 @@ class GasStation {
   }
 
   refresh() {
-    (this._stations.get(this.chainId) ?? Gasnow).refresh();
+    (this._stations.get(this.chainId) ?? PolygonGasStation).refresh();
   }
 }
 

@@ -225,8 +225,8 @@ export class TransferVM {
   }
 
   dispose() {
-    console.log('dispose');
     this.gasnowDisposer?.();
+    this.gasnowDisposer = undefined;
   }
 
   async sendTx() {
