@@ -16,6 +16,9 @@ import i18n from './i18n';
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
+let tray: Tray;
+let idleTimer: NodeJS.Timeout;
+
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
   // eslint-disable-line global-require
@@ -65,7 +68,6 @@ const createTouchBar = (mainWindow: BrowserWindow) => {
   newTouchBar(App.touchBarButtons);
 };
 
-let tray: Tray;
 const createTray = async () => {
   if (tray) return;
 
@@ -187,8 +189,6 @@ app.on('activate', () => {
     createWindow();
   }
 });
-
-let idleTimer: NodeJS.Timeout;
 
 app.on('browser-window-focus', () => {
   clearTimeout(idleTimer);

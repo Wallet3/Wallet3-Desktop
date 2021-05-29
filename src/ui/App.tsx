@@ -13,6 +13,7 @@ import MainLayout from './pages/layouts/MainLayout';
 import { MnemonicVM } from './viewmodels/MnemonicVM';
 import { NetworksVM } from './viewmodels/NetworksVM';
 import { WalletVM } from './viewmodels/WalletVM';
+import mousetrap from 'mousetrap';
 import { observer } from 'mobx-react-lite';
 
 interface Props {
@@ -26,6 +27,10 @@ interface Props {
 
 export default observer((args: Props) => {
   const { app, walletVM } = args;
+
+  useEffect(() => {
+    mousetrap.bind(['command+l', 'ctrl+l'], () => app.history.push('/authentication'));
+  }, []);
 
   return (
     <Router history={app.history}>

@@ -51,7 +51,6 @@ export class ConfirmVM {
 
   constructor(params: ConfirmSendTx) {
     makeAutoObservable(this);
-    console.log(params);
 
     this._provider = getProviderByChainId(params.chainId);
     this._provider

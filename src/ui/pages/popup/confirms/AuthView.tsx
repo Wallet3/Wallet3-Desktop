@@ -28,6 +28,7 @@ export default observer(
     const [launched, setLaunced] = useState(false);
 
     const auth = async (passcode?: string) => {
+      if (loading) return;
       setLoading(true);
 
       if (touchIDSupported) {

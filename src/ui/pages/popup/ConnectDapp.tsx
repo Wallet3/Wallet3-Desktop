@@ -21,38 +21,12 @@ export default observer(({ app }: { app: ApplicationPopup }) => {
       <div className="content">
         <div className="networks">
           <NetworkMenu
-            currentChainId={vm.chainId}
+            currentChainId={vm.userChainId}
             publicNetworks={PublicNetworks}
             testnets={Testnets}
             showAutoSwitch
             onNetworkSelected={(id) => vm.setChainId(id)}
-            
           />
-          {/* <Menu
-            menuButton={() => (
-              <MenuButton className="menu-button">
-                <NetworkLabel chainId={vm?.chainId ?? 0} />
-              </MenuButton>
-            )}
-            styles={{ minWidth: '3.5rem' }}
-            direction="bottom"
-            overflow="auto"
-          >
-            <MenuItem styles={{ padding: '8px 12px' }}>
-              <NetworkLabel chainId={0} expand />
-            </MenuItem>
-            <MenuDivider />
-
-            {Networks.map((item) => {
-              return item ? (
-                <MenuItem key={item.chainId} styles={{ padding: '8px 12px' }} onClick={(_) => vm.setChainId(item.chainId)}>
-                  <NetworkLabel expand chainId={item.chainId} />
-                </MenuItem>
-              ) : (
-                <MenuDivider key={Math.random()} />
-              );
-            })}
-          </Menu> */}
         </div>
 
         <div className="appinfo">

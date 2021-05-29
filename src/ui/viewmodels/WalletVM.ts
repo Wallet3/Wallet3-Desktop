@@ -61,7 +61,6 @@ export class WalletVM {
     pendingTxs?: TxParams[];
     connectedDApps?: IWcSession[];
   }) {
-    console.log(pendingTxs);
     this.connectedDApps = connectedDApps?.sort((a, b) => b.lastUsedTimestamp - a.lastUsedTimestamp) ?? this.connectedDApps;
     this.allPendingTxs = pendingTxs ?? this.allPendingTxs;
     this.accounts = addresses.map((address, i) => new AccountVM({ address, accountIndex: i + 1 }));

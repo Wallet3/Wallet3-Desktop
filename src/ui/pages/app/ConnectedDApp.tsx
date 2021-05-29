@@ -38,11 +38,11 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
           </div>
         </div>
 
-        <h3>App Info</h3>
+        <h3>{t('App Info')}</h3>
 
         <div>
           <span>DApp:</span>
-          <span>
+          <span title={dAppVM.appName}>
             <Image src={dAppVM.appIcon} />
             {dAppVM.appName}
           </span>
@@ -50,7 +50,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
 
         <div>
           <span>{t('Description')}:</span>
-          <span>{dAppVM.appDesc}</span>
+          <span title={dAppVM.appDesc}>{dAppVM.appDesc}</span>
         </div>
 
         <div>

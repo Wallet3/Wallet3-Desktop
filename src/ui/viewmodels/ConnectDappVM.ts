@@ -9,7 +9,7 @@ type Params = {
 };
 
 export class ConnectDappVM {
-  chainId = 0;
+  userChainId = 0;
   icon = '';
   appName = '';
   url = '';
@@ -21,7 +21,7 @@ export class ConnectDappVM {
 
     const [param] = params;
     this.peerId = param.peerId;
-    this.chainId = 0; // param.chainId || 0;
+    this.userChainId = param.chainId || 0;
     this.appName = param.peerMeta.name;
     this.icon = param.peerMeta.icons[0] || '';
     this.url = param.peerMeta.url;
@@ -29,11 +29,11 @@ export class ConnectDappVM {
   }
 
   setChainId(id: number) {
-    this.chainId = id;
+    this.userChainId = id;
   }
 
   approve() {
-    ipc.invoke(WcMessages.approveWcSession(this.peerId), { userChainId: this.chainId });
+    ipc.invoke(WcMessages.approveWcSession(this.peerId), { userChainId: this.userChainId });
   }
 
   reject() {

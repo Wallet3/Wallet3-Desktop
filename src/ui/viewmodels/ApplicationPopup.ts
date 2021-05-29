@@ -9,6 +9,10 @@ import ipc from '../bridges/IPC';
 export class ApplicationPopup extends Application {
   type: PopupWindowTypes;
 
+  constructor() {
+    super();
+  }
+
   async init() {
     super.init(false);
 

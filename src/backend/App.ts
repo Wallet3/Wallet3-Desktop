@@ -11,7 +11,6 @@ import MessageKeys, {
 } from '../common/Messages';
 import { autorun, computed, makeObservable, observable, runInAction } from 'mobx';
 import { createECDH, createHash, randomBytes } from 'crypto';
-import { getProviderByChainId, sendTransaction } from '../common/Provider';
 
 import DBMan from './DBMan';
 import KeyMan from './KeyMan';
@@ -19,6 +18,7 @@ import Transaction from './models/Transaction';
 import TxMan from './TxMan';
 import WCMan from './WCMan';
 import i18n from '../i18n';
+import { sendTransaction } from '../common/Provider';
 import { utils } from 'ethers';
 
 declare const POPUP_WINDOW_WEBPACK_ENTRY: string;
@@ -37,10 +37,6 @@ export class App {
   chainId = 1;
 
   #authKeys = new Map<string, string>();
-
-  get chainProvider() {
-    return getProviderByChainId(this.chainId);
-  }
 
   get currentAddress() {
     return this.addresses[this.currentAddressIndex];
@@ -67,7 +63,6 @@ export class App {
       addresses: observable,
       chainId: observable,
       currentAddressIndex: observable,
-      chainProvider: computed,
       currentAddress: computed,
     });
 
@@ -255,7 +250,6 @@ export class App {
     ipcMain.handle(`${MessageKeys.changeChainId}`, async (e, id) =>
       runInAction(() => {
         this.chainId = id;
-        this.chainProvider.ready;
       })
     );
 
