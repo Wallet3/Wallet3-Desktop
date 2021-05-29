@@ -13,6 +13,8 @@
   gap: 12px;
   transition: all 0.3s;
   height: calc(100vh - 12px - 72px);
+  margin: 0 -12px;
+  padding: 0 12px;
 }
 
 .page.dapps > .content > div.dapp {
@@ -22,7 +24,7 @@
   padding: 10px 0 0px 0;
   display: flex;
   flex-direction: column;
-  height: 89px;
+  height: 86px;
   gap: 8px 4px;
   cursor: pointer;
   transition: all 0.3s;
@@ -37,6 +39,10 @@
   justify-content: center;
   font-size: 14px;
   color: var(--font-color-title);
+}
+
+.page.dapps > .content > div.dapp > div.name {
+  line-height: 14px;
 }
 
 .page.dapps > .content > div.dapp > div span {

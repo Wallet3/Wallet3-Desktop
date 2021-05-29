@@ -33,7 +33,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
                 <Image className="icon" src={item.peerMeta.icons[0] || ''} />
               </div>
 
-              <div>
+              <div className="name">
                 <span>{item.peerMeta.name}</span>
               </div>
 

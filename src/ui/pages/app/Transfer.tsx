@@ -98,7 +98,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
               return (
                 <MenuItem
                   key={t.id}
-                  styles={{ padding: '0.375rem 1rem' }}
+                  styles={{ padding: '5px 10px' }}
                   onClick={(_) => {
                     transferVM?.setToken(t);
                     amountInput.current.value = '';
