@@ -23,7 +23,7 @@ export class WalletVM {
   }
 
   get pendingTxs() {
-    return this.allPendingTxs.filter((tx) => tx.from === this.currentAccount.address && tx.chainId === NetVM.currentChainId);
+    return this.allPendingTxs.filter((tx) => tx.from === this.currentAccount.address);
   }
 
   get pendingTxCount() {
@@ -42,7 +42,10 @@ export class WalletVM {
       () => this.currentAccount?.refresh()
     );
 
-    ipc.on(Messages.pendingTxsChanged, (e, content: TxParams[]) => runInAction(() => (this.allPendingTxs = content)));
+    ipc.on(Messages.pendingTxsChanged, (e, content: TxParams[]) => {
+      console.log('ipc pendingtxs', content);
+      runInAction(() => (this.allPendingTxs = content));
+    });
 
     ipc.on(Messages.wcConnectsChanged, (e, content: IWcSession[]) =>
       runInAction(() => (this.connectedDApps = content.sort((a, b) => b.lastUsedTimestamp - a.lastUsedTimestamp)))
@@ -58,7 +61,8 @@ export class WalletVM {
     pendingTxs?: TxParams[];
     connectedDApps?: IWcSession[];
   }) {
-    this.connectedDApps = connectedDApps.sort((a, b) => b.lastUsedTimestamp - a.lastUsedTimestamp) ?? this.connectedDApps;
+    console.log(pendingTxs);
+    this.connectedDApps = connectedDApps?.sort((a, b) => b.lastUsedTimestamp - a.lastUsedTimestamp) ?? this.connectedDApps;
     this.allPendingTxs = pendingTxs ?? this.allPendingTxs;
     this.accounts = addresses.map((address, i) => new AccountVM({ address, accountIndex: i + 1 }));
 

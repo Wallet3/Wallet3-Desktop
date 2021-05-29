@@ -1,5 +1,4 @@
 import './Wallet.css';
-import '@szhsin/react-menu/dist/index.css';
 
 import { Menu, MenuButton, MenuDivider, MenuItem } from '@szhsin/react-menu';
 import { NetworksVM, PublicNetworks, Testnets } from '../../viewmodels/NetworksVM';
@@ -132,6 +131,7 @@ export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor
           publicNetworks={PublicNetworks}
           testnets={Testnets}
           onNetworkSelected={(id) => networksVM.setCurrentChainId(id)}
+          position="anchor"
         />
 
         <button

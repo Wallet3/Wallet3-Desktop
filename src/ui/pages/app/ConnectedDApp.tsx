@@ -1,15 +1,18 @@
 import './ConnectedDApp.css';
 
+import { NavBar, NetworkMenu } from '../../components';
+import { PublicNetworks, Testnets } from '../../viewmodels/NetworksVM';
+
 import { Application } from '../../viewmodels/Application';
+import Feather from 'feather-icons-react';
 import Image from '../../components/Image';
-import { NavBar } from '../../components';
-import NetworkLabel from '../../components/NetworkLabel';
 import React from 'react';
 import { WalletVM } from '../../viewmodels/WalletVM';
+import { observer } from 'mobx-react-lite';
 import shell from '../../bridges/Shell';
 import { useTranslation } from 'react-i18next';
 
-export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => {
+export default observer(({ app, walletVM }: { app: Application; walletVM: WalletVM }) => {
   const { t } = useTranslation();
   const { dAppVM } = walletVM;
 
@@ -19,9 +22,23 @@ export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => 
 
       <div className="form">
         <div>
-          <span>{t('Network')}:</span>
-          <NetworkLabel chainId={dAppVM.chainId} />
+          <div>
+            <Feather icon="compass" size={14} />
+            {t('Network')}:
+          </div>
+
+          <div>
+            <NetworkMenu
+              onNetworkSelected={(id) => dAppVM.switchNetwork(id)}
+              currentChainId={dAppVM.userChainId}
+              showAutoSwitch
+              publicNetworks={PublicNetworks}
+              testnets={Testnets}
+            />
+          </div>
         </div>
+
+        <h3>App Info</h3>
 
         <div>
           <span>DApp:</span>
@@ -38,7 +55,7 @@ export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => 
 
         <div>
           <span>Url:</span>
-          <span className="url" onClick={(_) => shell.open(dAppVM.appUrl)}>
+          <span className="url" onClick={(_) => shell.open(dAppVM.appUrl)} title={dAppVM.appUrl}>
             {dAppVM.appUrl}
           </span>
         </div>
@@ -59,4 +76,4 @@ export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => 
       </button>
     </div>
   );
-};
+});

@@ -24,6 +24,12 @@ class WCMan {
       const { sessionKey } = App.decryptIpc(encrypted, iv, key);
       this.disconnect(sessionKey);
     });
+
+    ipcMain.handle(`${Messages.switchDAppNetwork}-secure`, (e, encrypted, winId) => {
+      const { iv, key } = Application.windows.get(winId);
+      const { chainId, sessionKey } = App.decryptIpc(encrypted, iv, key);
+      return App.encryptIpc({ success: this.switchNetwork(sessionKey, chainId) }, iv, key);
+    });
   }
 
   async init() {
@@ -98,9 +104,10 @@ class WCMan {
     });
 
     wc.on('sessionUpdated', () => {
-      const { wcSession } = wc;
+      const { wcSession, userChainId } = wc;
       wcSession.session = JSON.stringify(wc.session);
       wcSession.lastUsedTimestamp = Date.now();
+      wcSession.userChainId = userChainId;
       wcSession.save();
     });
   }
@@ -113,6 +120,14 @@ class WCMan {
     target.dispose();
     target.wcSession.remove();
     runInAction(() => this.connects.splice(this.connects.indexOf(target), 1));
+  }
+
+  switchNetwork(sessionKey: string, toChainId: number) {
+    const target = this.connects.find((c) => c.session.key === sessionKey);
+    if (!target) return false;
+
+    target.switchNetwork(toChainId);
+    return true;
   }
 
   async clean() {

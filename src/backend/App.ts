@@ -94,7 +94,7 @@ export class App {
           touchIDSupported: this.touchIDSupported,
           appAuthenticated: this.addresses.length > 0,
           addresses: [...this.addresses],
-          connectedDApps: WCMan.connects.map((c) => c.session),
+          connectedDApps: WCMan.connectedSessions,
           pendingTxs: [...TxMan.pendingTxs],
         } as InitStatus,
         iv,
@@ -271,7 +271,8 @@ export class App {
         return App.encryptIpc('', iv, key);
       }
 
-      App.sendTx(this.chainId, params, txHex);
+      console.log(params.chainId, params);
+      App.sendTx(params.chainId || this.chainId, params, txHex);
 
       return App.encryptIpc(txHex, iv, key);
     });
@@ -310,6 +311,7 @@ export class App {
         title: i18n.t('Transaction Failed'),
         body: i18n.t('TxFailed2', { nonce: params.nonce }),
       }).show();
+      console.log('app sendtx', chainId, result);
       return undefined;
     }
 

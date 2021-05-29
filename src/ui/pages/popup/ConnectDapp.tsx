@@ -1,12 +1,11 @@
 import './ConnectDapp.css';
 import '@szhsin/react-menu/dist/index.css';
 
-import { Image, PopupTitle } from '../../components';
-import { Menu, MenuButton, MenuDivider, MenuItem } from '@szhsin/react-menu';
+import { Image, NetworkMenu, PopupTitle } from '../../components';
+import { Networks, PublicNetworks, Testnets } from '../../viewmodels/NetworksVM';
 
 import { ApplicationPopup } from '../../viewmodels/ApplicationPopup';
 import NetworkLabel from '../../components/NetworkLabel';
-import { Networks } from '../../viewmodels/NetworksVM';
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
@@ -21,7 +20,15 @@ export default observer(({ app }: { app: ApplicationPopup }) => {
 
       <div className="content">
         <div className="networks">
-          <Menu
+          <NetworkMenu
+            currentChainId={vm.chainId}
+            publicNetworks={PublicNetworks}
+            testnets={Testnets}
+            showAutoSwitch
+            onNetworkSelected={(id) => vm.setChainId(id)}
+            
+          />
+          {/* <Menu
             menuButton={() => (
               <MenuButton className="menu-button">
                 <NetworkLabel chainId={vm?.chainId ?? 0} />
@@ -45,7 +52,7 @@ export default observer(({ app }: { app: ApplicationPopup }) => {
                 <MenuDivider key={Math.random()} />
               );
             })}
-          </Menu>
+          </Menu> */}
         </div>
 
         <div className="appinfo">

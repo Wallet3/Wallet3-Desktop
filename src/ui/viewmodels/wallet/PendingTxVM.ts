@@ -53,7 +53,7 @@ export class PendingTxVM {
       from: this._tx.from,
       to: this._tx.from,
       value: '0',
-      gas: this._tx.gas,
+      gas: 21000,
       gasPrice: Number.parseInt((this._tx.gasPrice * 1.1) as any) + GasnowWs.gwei_1,
       nonce: this.nonce,
       data: '0x',

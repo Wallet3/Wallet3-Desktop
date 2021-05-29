@@ -7,7 +7,7 @@ import { Networks } from '../../../viewmodels/NetworksVM';
 import React from 'react';
 
 export default (props: IWcSession) => {
-  const network = Networks.find((n) => n.chainId === props.chainId);
+  const network = Networks.find((n) => n.chainId === props.userChainId);
 
   return (
     <div className="connectedapp">

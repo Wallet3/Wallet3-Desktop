@@ -14,13 +14,38 @@
   border-bottom: 1px dashed var(--border-color);
   margin-bottom: 4px;
   font-size: 14px;
+  align-items: center;
+}
+
+.page.dapp > .form > div:first-child {
+  margin-bottom: 12px;
+  align-items: center;
+  padding-bottom: 1px;
+}
+
+.page.dapp > .form > div:first-child > div {
+  display: flex;
+  align-items: center;
+}
+
+.page.dapp > .form > div:first-child svg {
+  margin: 2px 4px 0 0;
+}
+
+.page.dapp > .form > div .menu-button {
+  width: auto;
+  padding: 4px 8px;
+}
+
+.page.dapp > .form > h3 {
+  margin-bottom: 8px;
 }
 
 .page.dapp > .form > div > span {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 50vw;
+  max-width: 45vw;
 }
 
 .page.dapp > .form > div > span.url {

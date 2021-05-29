@@ -22,11 +22,16 @@ export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => 
 
       <div className="form">
         <div>
-          <span>{t('Chain')}:</span>
+          <span>{t('Network')}:</span>
           <span>
             <img src={CryptoIcons(chain.symbol)} alt="" />
             {chain.network}
           </span>
+        </div>
+
+        <div>
+          <span>{t('Hash')}:</span>
+          <span>{vm.hash}</span>
         </div>
 
         <div>

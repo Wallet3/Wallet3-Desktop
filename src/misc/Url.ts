@@ -34,6 +34,9 @@ export function convertTxToUrl(tx: TxParams) {
     case 250:
       url = `https://ftmscan.com/tx/${tx.hash}`;
       break;
+    case 80001:
+      url = `https://explorer-mumbai.maticvigil.com/tx/${tx.hash}`;
+      break;
   }
 
   return url;

@@ -92,7 +92,15 @@ export class WalletConnect extends EventEmitter {
     this._userChainId = value.userChainId;
   }
 
-  updateSession() {
+  switchNetwork(chainId: number) {
+    if (this.userChainId === chainId) return;
+
+    this._userChainId = chainId;
+    this.updateSession();
+    this.emit('sessionUpdated');
+  }
+
+  private updateSession() {
     if (!App.ready) return;
     this.connector?.updateSession({ chainId: this.appChainId, accounts: [App.currentAddress] });
   }
@@ -149,7 +157,6 @@ export class WalletConnect extends EventEmitter {
 
     const checkAccount = (from: string) => {
       if (from?.toLowerCase() === App.currentAddress.toLowerCase()) return true;
-      console.log(from, App.currentAddress)
       this.connector.rejectRequest({ id: request.id, error: { message: 'Update session' } });
       this.updateSession();
       return false;

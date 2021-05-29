@@ -1,6 +1,6 @@
 import '@szhsin/react-menu/dist/index.css';
 
-import { Menu, MenuButton, MenuDivider, MenuItem } from '@szhsin/react-menu';
+import { Menu, MenuButton, MenuDivider, MenuItem, MenuPosition } from '@szhsin/react-menu';
 
 import { INetwork } from '../viewmodels/NetworksVM';
 import NetworkLabel from './NetworkLabel';
@@ -16,12 +16,14 @@ export default observer(
     currentChainId,
     onNetworkSelected,
     showAutoSwitch,
+    position,
   }: {
     showAutoSwitch?: boolean;
     publicNetworks: INetwork[];
     testnets: INetwork[];
     onNetworkSelected: (chainId: number) => void;
     currentChainId: number;
+    position?: MenuPosition;
   }) => {
     return (
       <Menu
@@ -33,7 +35,7 @@ export default observer(
         styles={{ minWidth: '5.5rem' }}
         direction="bottom"
         overflow="auto"
-        position="anchor"
+        position={position || 'auto'}
       >
         {showAutoSwitch ? (
           <MenuItem styles={MenuItemStyles} onClick={(_) => onNetworkSelected(0)}>

@@ -1,14 +1,16 @@
+import { makeAutoObservable, runInAction } from 'mobx';
+
 import Messages from '../../../common/Messages';
 import ipc from '../../bridges/IPC';
+
 export class DAppVM {
   _session: IWcSession;
+  userChainId: number = 0;
 
   constructor(session: IWcSession) {
+    makeAutoObservable(this);
     this._session = session;
-  }
-
-  get chainId() {
-    return this._session.userChainId;
+    this.userChainId = session.userChainId;
   }
 
   get appName() {
@@ -33,6 +35,13 @@ export class DAppVM {
 
   disconnect() {
     DAppVM.disconnect(this._session.key);
+  }
+
+  async switchNetwork(id: number) {
+    await ipc.invokeSecure(Messages.switchDAppNetwork, { sessionKey: this._session.key, chainId: id });
+    this._session.userChainId = id;
+
+    runInAction(() => (this.userChainId = id));
   }
 
   static disconnect(sessionKey: string) {

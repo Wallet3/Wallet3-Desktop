@@ -115,10 +115,10 @@ const createWindow = async (): Promise<void> => {
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   App.mainWindow = mainWindow;
 
-  // mainWindow.once('ready-to-show', () => {
-  //   mainWindow.webContents.send(Messages.pendingTxsChanged, [...TxMan.pendingTxs]);
-  //   mainWindow.webContents.send(Messages.wcConnectsChanged, WCMan.connectedSessions);
-  // });
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.webContents.send(Messages.pendingTxsChanged, [...TxMan.pendingTxs]);
+    mainWindow.webContents.send(Messages.wcConnectsChanged, WCMan.connectedSessions);
+  });
 
   mainWindow.once('closed', () => {
     app.dock.hide();
