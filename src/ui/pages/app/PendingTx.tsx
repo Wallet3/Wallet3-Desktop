@@ -73,7 +73,7 @@ export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => 
         <div>
           <span></span>
           <span className="link" onClick={(_) => shell.open(convertTxToUrl(vm._tx))}>
-            {t('View on Etherscan')}
+            {t('View on Block Explorer')}
           </span>
         </div>
       </div>

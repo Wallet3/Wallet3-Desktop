@@ -4,6 +4,7 @@ import { ConfirmVM } from '../../../viewmodels/ConfirmVM';
 import { CryptoIcons } from '../../../misc/Icons';
 import Feather from 'feather-icons-react';
 import { Image } from '../../../components';
+import { formatAddress } from '../../../misc/Formatter';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 
@@ -41,7 +42,7 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
 
         <div>
           <span>{t('To')}:</span>
-          <span title={receiptAddress}>{receipt}</span>
+          <span title={receiptAddress}>{formatAddress(receipt)}</span>
         </div>
 
         <div>

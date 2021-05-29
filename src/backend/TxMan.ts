@@ -82,7 +82,7 @@ class TxMan {
       }
     });
 
-    this._timer = setTimeout(async () => await this.checkPendingTxs(), 20 * 1000);
+    this._timer = setTimeout(async () => await this.checkPendingTxs(), (this.pendingTxs.length > 0 ? 10 : 3) * 1000);
   }
 
   clean() {
