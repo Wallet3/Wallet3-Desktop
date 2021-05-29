@@ -16,7 +16,7 @@ export default observer(({ onReject, onContinue, signVM }: Props) => {
 
   return (
     <div className="details">
-      <div className="form sign-msg">{signVM.msg ? signVM.msg : signVM.raw.map((v) => v + '\n')}</div>
+      <pre className="form sign-msg">{signVM.msg ? signVM.msg : signVM.raw.map((v) => v + '\n')}</pre>
       <div className="actions">
         <button onClick={(_) => onReject?.()}>{t('Cancel')}</button>
         <button className="positive" onClick={(_) => onContinue?.()}>
