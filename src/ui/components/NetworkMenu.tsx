@@ -1,6 +1,7 @@
 import '@szhsin/react-menu/dist/index.css';
+import './NetworkMenu.css';
 
-import { Menu, MenuButton, MenuDivider, MenuItem, MenuPosition } from '@szhsin/react-menu';
+import { Menu, MenuButton, MenuDivider, MenuItem, MenuPosition, SubMenu } from '@szhsin/react-menu';
 
 import { INetwork } from '../viewmodels/NetworksVM';
 import NetworkLabel from './NetworkLabel';
@@ -9,22 +10,27 @@ import { observer } from 'mobx-react-lite';
 
 const MenuItemStyles = { padding: '8px 12px' };
 
+interface Props {
+  showAutoSwitch?: boolean;
+  publicNetworks: INetwork[];
+  testnets: INetwork[];
+  onNetworkSelected: (chainId: number) => void;
+  currentChainId: number;
+  position?: MenuPosition;
+  collapsed?: boolean;
+}
+
 export default observer(
-  ({
-    publicNetworks,
-    testnets,
-    currentChainId,
-    onNetworkSelected,
-    showAutoSwitch,
-    position,
-  }: {
-    showAutoSwitch?: boolean;
-    publicNetworks: INetwork[];
-    testnets: INetwork[];
-    onNetworkSelected: (chainId: number) => void;
-    currentChainId: number;
-    position?: MenuPosition;
-  }) => {
+  ({ publicNetworks, testnets, currentChainId, onNetworkSelected, showAutoSwitch, position, collapsed }: Props) => {
+    const Testnets = () =>
+      testnets.map((item) => {
+        return (
+          <MenuItem key={item.chainId} styles={MenuItemStyles} onClick={(_) => onNetworkSelected(item.chainId)}>
+            <NetworkLabel expand chainId={item.chainId} />
+          </MenuItem>
+        );
+      });
+
     return (
       <Menu
         menuButton={() => (
@@ -54,13 +60,13 @@ export default observer(
 
         <MenuDivider />
 
-        {testnets.map((item) => {
-          return (
-            <MenuItem key={item.chainId} styles={MenuItemStyles} onClick={(_) => onNetworkSelected(item.chainId)}>
-              <NetworkLabel expand chainId={item.chainId} />
-            </MenuItem>
-          );
-        })}
+        {collapsed ? (
+          <SubMenu label="Testnets" className="networks-sub-menu">
+            {Testnets()}
+          </SubMenu>
+        ) : (
+          Testnets()
+        )}
       </Menu>
     );
   }

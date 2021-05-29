@@ -1,6 +1,8 @@
 import App, { App as Application } from './App';
 import { AuthParams, ConfirmSendTx, RequestSignMessage, SendTxParams, WcMessages } from '../common/Messages';
+import { BigNumber, ethers } from 'ethers';
 import { IReactionDisposer, reaction } from 'mobx';
+import { call, getTransactionCount } from '../common/Provider';
 
 import ERC20ABI from '../abis/ERC20.json';
 import EventEmitter from 'events';
@@ -8,9 +10,7 @@ import { GasnowWs } from '../gas/Gasnow';
 import KeyMan from './KeyMan';
 import WCSession from './models/WCSession';
 import WalletConnector from '@walletconnect/client';
-import { ethers } from 'ethers';
 import { findTokenByAddress } from '../ui/misc/Tokens';
-import { getTransactionCount } from '../common/Provider';
 import { ipcMain } from 'electron';
 
 export class WalletConnect extends EventEmitter {
@@ -164,10 +164,10 @@ export class WalletConnect extends EventEmitter {
 
     switch (request.method) {
       case 'eth_sendTransaction':
-        const [param] = request.params as WCCallRequest_eth_sendTransaction[];
+        const [param, chainId] = request.params as [WCCallRequest_eth_sendTransaction, string];
         if (!checkAccount(param.from)) return;
 
-        this.eth_sendTransaction(request, param);
+        this.eth_sendTransaction(request, param, chainId ? Number.parseInt(chainId) : undefined);
         break;
       case 'eth_sign':
         break;
@@ -185,22 +185,36 @@ export class WalletConnect extends EventEmitter {
     this.emit('sessionUpdated');
   };
 
-  private eth_sendTransaction = async (request: WCCallRequestRequest, param: WCCallRequest_eth_sendTransaction) => {
+  private eth_sendTransaction = async (
+    request: WCCallRequestRequest,
+    param: WCCallRequest_eth_sendTransaction,
+    requestedChainId?: number
+  ) => {
     const receipient: { address: string; name: string } = undefined;
     let transferToken: { balance: string; symbol: string; decimals: number } = undefined;
 
     if (param.data?.startsWith('0xa9059cbb')) {
       const found = findTokenByAddress(param.to);
-      const c = new ethers.Contract(param.to, ERC20ABI, App.chainProvider);
-      const balance = (await c.balanceOf(App.currentAddress)).toString();
+      const erc20 = new ethers.utils.Interface(ERC20ABI);
+      const call_symbol = erc20.encodeFunctionData('symbol');
+      const call_decmals = erc20.encodeFunctionData('decimals');
+      const call_balance = erc20.encodeFunctionData('balanceOf', [App.currentAddress]);
+
+      const [symbolData, decimalsData, balanceOfData] = await Promise.all([
+        call<string>(requestedChainId || this.appChainId, { to: param.to, data: call_symbol }),
+        call<string>(requestedChainId || this.appChainId, { to: param.to, data: call_decmals }),
+        call<string>(requestedChainId || this.appChainId, { to: param.to, data: call_balance }),
+      ]);
+
+      const [balance] = erc20.decodeFunctionResult('balanceOf', balanceOfData) as [BigNumber];
 
       if (found) {
-        transferToken = { ...found, balance };
+        transferToken = { ...found, balance: balance.toString() };
       } else {
-        const decimals = (await c.decimals()).toNumber();
-        const symbol = await c.symbol();
+        const [symbol] = erc20.decodeFunctionResult('symbol', symbolData) as [string];
+        const [decimals] = erc20.decodeFunctionResult('decimals', decimalsData) as [number];
 
-        transferToken = { decimals, symbol, balance };
+        transferToken = { decimals, symbol, balance: balance.toString() };
       }
     }
 
@@ -224,7 +238,7 @@ export class WalletConnect extends EventEmitter {
         return;
       }
 
-      const hash = await Application.sendTx(this.appChainId, params, txHex);
+      const hash = await Application.sendTx(params.chainId || this.appChainId, params, txHex);
 
       if (!hash) {
         this.connector.rejectRequest({ id: request.id, error: { message: 'Transaction failed' } });
@@ -242,14 +256,16 @@ export class WalletConnect extends EventEmitter {
     App.createPopupWindow(
       'sendTx',
       {
-        chainId: this.appChainId,
+        chainId: requestedChainId || this.appChainId,
         from: App.currentAddress,
         accountIndex: App.currentAddressIndex,
         to: param.to,
         data: param.data || '0x',
         gas: Number.parseInt(param.gas) || 21000,
         gasPrice: Number.parseInt(param.gasPrice) || GasnowWs.gwei_20,
-        nonce: Number.parseInt(param.nonce) || (await getTransactionCount(this.appChainId, App.currentAddress)),
+        nonce:
+          Number.parseInt(param.nonce) ||
+          (await getTransactionCount(requestedChainId ?? this.appChainId, App.currentAddress)),
         value: param.value || 0,
 
         receipient,

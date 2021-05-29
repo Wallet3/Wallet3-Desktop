@@ -16,7 +16,7 @@ interface Props {
 export default observer(({ implVM, onContinue, onReject }: Props) => {
   const { t } = useTranslation();
 
-  const { receiptAddress, receipt, amount, tokenSymbol, gas, gasPrice, maxFee, nonce, totalValue } = implVM;
+  const { receiptAddress, receipt, amount, tokenSymbol, networkSymbol, gas, gasPrice, maxFee, nonce, totalValue } = implVM;
 
   const gasPriceRef = createRef<HTMLInputElement>();
   const gasLimitRef = createRef<HTMLInputElement>();
@@ -88,12 +88,16 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
 
         <div>
           <span>{t('Max Fee')}:</span>
-          <span>{maxFee} ETH</span>
+          <span>
+            {maxFee} {networkSymbol}
+          </span>
         </div>
 
         <div>
           <span>{t('Total')}:</span>
-          <span>{totalValue} ETH</span>
+          <span>
+            {totalValue} {networkSymbol}
+          </span>
         </div>
       </div>
 

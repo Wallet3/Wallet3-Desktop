@@ -58,6 +58,33 @@ export async function getTransactionCount(chainId: number, address: string) {
   }
 }
 
+export async function call<T>(
+  chainId: number,
+  args: {
+    from?: string;
+    to: string;
+    gas?: string | number;
+    gasPrice?: string | number;
+    value?: string | number;
+    data: string;
+  }
+) {
+  const [url] = Providers[`${chainId}`] as string[];
+
+  try {
+    const resp = await axios.post(url, {
+      jsonrpc: '2.0',
+      method: 'eth_call',
+      params: [args, 'latest'],
+      id: Date.now(),
+    });
+
+    return resp.data.result as T;
+  } catch (error) {
+    return undefined;
+  }
+}
+
 export async function getTransactionReceipt(chainId: number, hash: string) {
   const [url] = Providers[`${chainId}`] as string[];
 

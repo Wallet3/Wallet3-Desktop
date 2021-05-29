@@ -8,6 +8,7 @@ import { Networks } from '../../viewmodels/NetworksVM';
 import React from 'react';
 import { WalletVM } from '../../viewmodels/WalletVM';
 import { convertTxToUrl } from '../../../misc/Url';
+import { formatAddress } from '../../misc/Formatter';
 import shell from '../../bridges/Shell';
 import { useTranslation } from 'react-i18next';
 
@@ -31,17 +32,17 @@ export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => 
 
         <div>
           <span>{t('Hash')}:</span>
-          <span>{vm.hash}</span>
+          <span>{formatAddress(vm.hash)}</span>
         </div>
 
         <div>
           <span>{t('From')}:</span>
-          <span title={vm?.from}>{vm?.from}</span>
+          <span title={vm?.from}>{formatAddress(vm.from)}</span>
         </div>
 
         <div>
           <span>{t('To')}:</span>
-          <span title={vm?.to}>{vm?.to}</span>
+          <span title={vm?.to}>{formatAddress(vm.to)}</span>
         </div>
 
         <div>

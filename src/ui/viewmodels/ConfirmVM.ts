@@ -51,6 +51,8 @@ export class ConfirmVM {
 
   constructor(params: ConfirmSendTx) {
     makeAutoObservable(this);
+    console.log(params);
+
     this._provider = getProviderByChainId(params.chainId);
     this._provider
       .getBalance(params.from)
@@ -132,12 +134,12 @@ export class ConfirmVM {
 
   get tokenSymbol() {
     return (
-      this.transferToken?.symbol || this.approveToken?.symbol || Networks.find((n) => n?.chainId === this.chainId).symbol
+      this.transferToken?.symbol || this.approveToken?.symbol || Networks.find((n) => n.chainId === this.chainId).symbol
     );
   }
 
   get networkSymbol() {
-    return Networks.find((c) => c?.chainId === this.chainId).symbol ?? 'ETH';
+    return Networks.find((c) => c.chainId === this.chainId).symbol ?? 'ETH';
   }
 
   private _nonce = -1;
