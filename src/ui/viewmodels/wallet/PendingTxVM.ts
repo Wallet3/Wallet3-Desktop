@@ -35,6 +35,10 @@ export class PendingTxVM {
     return this._tx.gasPrice;
   }
 
+  get gasPriceGwei() {
+    return this._tx.gasPrice / GasnowWs.gwei_1;
+  }
+
   get gasLimit() {
     return this._tx.gas;
   }

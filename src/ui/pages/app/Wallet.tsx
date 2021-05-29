@@ -10,7 +10,7 @@ import ConnectedDAppLabel from './components/ConnectedDAppLabel';
 import { CryptoIcons } from '../../misc/Icons';
 import { CurrencyVM } from '../../viewmodels/CurrencyVM';
 import Feather from 'feather-icons-react';
-import GasnowWs from '../../../gas/Gasnow';
+import GasStation from '../../../gas';
 import HSBar from 'react-horizontal-stacked-bar-chart';
 import { Link } from 'react-router-dom';
 import { NetworkMenu } from '../../components';
@@ -54,6 +54,8 @@ export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor
 
   useEffect(() => {
     app.clearHistory();
+    if (pendingTxCount === 0) return;
+    GasStation.refresh();
   }, []);
 
   return (
@@ -80,7 +82,12 @@ export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor
                     app.history.push(`/pendingtx?hash=${item.hash}`);
                   }}
                 >
-                  <PendingTx tx={item} {...GasnowWs} />
+                  <PendingTx
+                    tx={item}
+                    rapid={GasStation.getGasPrice(item.chainId, 'rapid')}
+                    fast={GasStation.getGasPrice(item.chainId, 'fast')}
+                    standard={GasStation.getGasPrice(item.chainId, 'standard')}
+                  />
                 </MenuItem>
               );
             })}

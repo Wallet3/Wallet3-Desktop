@@ -4,9 +4,9 @@ import { GasnowWs } from './Gasnow';
 import axios from 'axios';
 
 class PolygonGasStation {
-  rapid: number = 0 * GasnowWs.gwei_1;
-  fast: number = 0 * GasnowWs.gwei_1;
-  standard: number = 0 * GasnowWs.gwei_1;
+  rapid: number = 7 * GasnowWs.gwei_1;
+  fast: number = 3 * GasnowWs.gwei_1;
+  standard: number = 1 * GasnowWs.gwei_1;
 
   get rapidGwei() {
     return this.rapid / GasnowWs.gwei_1;

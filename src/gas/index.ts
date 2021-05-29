@@ -27,16 +27,16 @@ class GasStation {
     makeAutoObservable(this);
   }
 
-  get rapid() {
-    return this.getGasPrice('rapid');
+  get rapid(): number {
+    return this.getGasPrice(this.chainId, 'rapid');
   }
 
-  get fast() {
-    return this.getGasPrice('fast');
+  get fast(): number {
+    return this.getGasPrice(this.chainId, 'fast');
   }
 
-  get standard() {
-    return this.getGasPrice('standard');
+  get standard(): number {
+    return this.getGasPrice(this.chainId, 'standard');
   }
 
   get rapidGwei() {
@@ -59,8 +59,8 @@ class GasStation {
     this._chainId = chainId;
   }
 
-  getGasPrice(type: 'rapid' | 'fast' | 'standard') {
-    const station = this._stations.get(this.chainId) ?? PolygonGasStation;
+  getGasPrice(chainId = this.chainId, type: 'rapid' | 'fast' | 'standard') {
+    const station = this._stations.get(chainId) ?? PolygonGasStation;
 
     switch (type) {
       case 'rapid':
