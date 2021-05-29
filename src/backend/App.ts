@@ -359,11 +359,11 @@ export class App {
     ipcMain.handle(`${MessageKeys.popupAuthentication}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
 
-      const authKey = randomBytes(4).toString('hex');
-      this.createPopupWindow('auth', { authKey }, { modal: true, parent: this.mainWindow });
+      const authId = randomBytes(4).toString('hex');
+      this.createPopupWindow('auth', { authId }, { modal: true, parent: this.mainWindow });
 
       const result = await new Promise<AuthenticationResult>((resolve) => {
-        ipcMain.handleOnce(`${MessageKeys.returnAuthenticationResult(authKey)}-secure`, async (e, encrypted, popWinId) => {
+        ipcMain.handleOnce(`${MessageKeys.returnAuthenticationResult(authId)}-secure`, async (e, encrypted, popWinId) => {
           const { iv, key } = this.windows.get(popWinId);
           const { success, password } = App.decryptIpc(encrypted, iv, key) as { success: boolean; password?: string };
           const authKey = success ? randomBytes(8).toString('hex') : '';

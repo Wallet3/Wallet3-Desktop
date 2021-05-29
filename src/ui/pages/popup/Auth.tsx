@@ -14,13 +14,13 @@ import { useTranslation } from 'react-i18next';
 
 export default ({ app }: { app: ApplicationPopup }) => {
   const { t } = useTranslation();
-  const { authKey } = useRouteMatch().params as { authKey: string };
+  const { authId } = useRouteMatch().params as { authId: string };
 
   const authViaTouchID = async () => {
     const success = await app.promptTouchID();
 
     if (success) {
-      ipc.invokeSecure(`${Messages.returnAuthenticationResult(authKey)}`, { success });
+      ipc.invokeSecure(`${Messages.returnAuthenticationResult(authId)}`, { success });
       window.close();
     } else {
       Anime.vibrate('div.auth > .panel');
@@ -31,7 +31,7 @@ export default ({ app }: { app: ApplicationPopup }) => {
     const success = await app.verifyPassword(passcode);
 
     if (success) {
-      ipc.invokeSecure(`${Messages.returnAuthenticationResult(authKey)}`, { success, password: crypto.sha256(passcode) });
+      ipc.invokeSecure(`${Messages.returnAuthenticationResult(authId)}`, { success, password: crypto.sha256(passcode) });
       window.close();
     } else {
       Anime.vibrate('div.auth > .panel');
@@ -39,7 +39,7 @@ export default ({ app }: { app: ApplicationPopup }) => {
   };
 
   const onCacnel = () => {
-    ipc.invokeSecure(`${Messages.returnAuthenticationResult(authKey)}`, { result: false });
+    ipc.invokeSecure(`${Messages.returnAuthenticationResult(authId)}`, { result: false });
     window.close();
   };
 

@@ -36,7 +36,7 @@ export class ApplicationPopup extends Application {
           this.history.push('/sign');
           break;
         case 'auth':
-          this.history.push(`/auth/${payload.authKey}`);
+          this.history.push(`/auth/${payload.authId}`);
           break;
       }
     });
