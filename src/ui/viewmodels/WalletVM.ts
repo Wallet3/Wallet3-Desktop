@@ -69,7 +69,7 @@ export class WalletVM {
     this.currentAccount = this.accounts.find((a) => a.address === lastUsedAccount) || this.accounts[0];
     this.currentAccount.refresh();
 
-    ipc.invokeSecure(Messages.changeAccountIndex, { index: addresses.indexOf(lastUsedAccount) });
+    ipc.invokeSecure(Messages.changeAccountIndex, { index: this.accountIndex });
     setTimeout(() => this.refresh(), 45 * 1000);
   }
 
