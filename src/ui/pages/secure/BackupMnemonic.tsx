@@ -7,12 +7,13 @@ import Mnemonic from '../../components/Mnemonic';
 import { MnemonicVM } from '../../viewmodels/MnemonicVM';
 import { NavBar } from '../../components';
 import { observer } from 'mobx-react-lite';
+import { useRouteMatch } from 'react-router';
 import { useTranslation } from 'react-i18next';
 
 export default observer(({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) => {
-  const params = new URLSearchParams(window.location.search);
-  const authKey = params.get('authKey');
   const { t } = useTranslation();
+  const { params } = useRouteMatch();
+  const { authKey } = params as { authKey: string };
 
   useEffect(() => {
     mnVM.readMnemonic(authKey);

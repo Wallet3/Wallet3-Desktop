@@ -1,43 +1,24 @@
 import { TxParams } from '../common/Messages';
 
+const Explorers = new Map<number, string>([
+  [1, 'https://etherscan.io/'],
+  [3, 'https://ropsten.etherscan.io'],
+  [4, 'https://rinkeby.etherscan.io'],
+  [5, 'https://goerli.etherscan.io'],
+  [42, 'https://kovan.etherscan.io'],
+  [56, 'https://bscscan.io'],
+  [100, 'https://blockscout.com/xdai/mainnet'],
+  [128, 'https://hecoinfo.com'],
+
+  [137, 'https://explorer.matic.network'],
+  [250, 'https://ftmscan.com'],
+  [80001, 'https://explorer-mumbai.maticvigil.com'],
+]);
+
 export function convertTxToUrl(tx: TxParams) {
-  let url = '';
+  return `${Explorers.get(tx.chainId)}/${tx.hash}`;
+}
 
-  switch (tx.chainId) {
-    case 1:
-      url = `https://etherscan.io/tx/${tx.hash}`;
-      break;
-    case 3:
-      url = `https://ropsten.etherscan.io/tx/${tx.hash}`;
-      break;
-    case 4:
-      url = `https://rinkeby.etherscan.io/tx/${tx.hash}`;
-      break;
-    case 5:
-      url = `https://goerli.etherscan.io/tx/${tx.hash}`;
-      break;
-    case 42:
-      url = `https://kovan.etherscan.io/tx/${tx.hash}`;
-      break;
-    case 56:
-      url = `https://bscscan.io/tx/${tx.hash}`;
-      break;
-    case 100:
-      url = `https://blockscout.com/xdai/mainnet/tx/${tx.hash}`;
-      break;
-    case 137:
-      url = `https://explorer.matic.network/tx/${tx.hash}`;
-      break;
-    case 128:
-      url = `https://hecoinfo.com/tx/${tx.hash}`;
-      break;
-    case 250:
-      url = `https://ftmscan.com/tx/${tx.hash}`;
-      break;
-    case 80001:
-      url = `https://explorer-mumbai.maticvigil.com/tx/${tx.hash}`;
-      break;
-  }
-
-  return url;
+export function convertToAccountUrl(chainId: number, address: string) {
+  return `${Explorers.get(chainId)}/address/${address}`;
 }

@@ -7,11 +7,13 @@ import { Application } from '../../viewmodels/Application';
 import CheckIcon from '../../../assets/icons/app/check.svg';
 import Clipboard from '../../bridges/Clipboard';
 import CopyIcon from '../../../assets/icons/app/copy.svg';
+import { NetworksVM } from '../../viewmodels/NetworksVM';
 import QRCode from 'qrcode.react';
 import Shell from '../../bridges/Shell';
 import { WalletVM } from '../../viewmodels/WalletVM';
+import { convertToAccountUrl } from '../../../misc/Url';
 
-export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => {
+export default ({ app, walletVM, networksVM }: { app: Application; walletVM: WalletVM; networksVM: NetworksVM }) => {
   const [showCheck, setShowCheck] = useState(false);
 
   const { currentAccount } = walletVM;
@@ -31,7 +33,7 @@ export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => 
           />
           <QRCode value={address} size={150} bgColor="transparent" />
           <div className="addr">
-            <span onClick={(_) => Shell.open(`https://etherscan.io/address/${address}`)}>{address}</span>
+            <span onClick={(_) => Shell.open(convertToAccountUrl(networksVM.currentChainId, address))}>{address}</span>
 
             {showCheck ? (
               <img src={CheckIcon} alt="Copied" />

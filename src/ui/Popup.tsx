@@ -37,7 +37,7 @@ export default observer(({ app }: { app: ApplicationPopup }) => {
           <ConfirmTx app={app} />
         </Route>
 
-        <Route path="/auth">
+        <Route path="/auth/:authKey">
           <Auth app={app} />
         </Route>
 

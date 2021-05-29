@@ -10,12 +10,14 @@ import { MnemonicVM } from '../../viewmodels/MnemonicVM';
 import { NavBar } from '../../components';
 import Notification from '../../bridges/Notification';
 import Passcode from 'react-codes-input';
+import { useRouteMatch } from 'react-router';
 import { useTranslation } from 'react-i18next';
 
 export default ({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) => {
   const [passcode1, setPasscode1] = useState('');
   const [passVerified, setPassVerified] = useState(false);
   const { t } = useTranslation();
+  const { authKey } = useRouteMatch().params as { authKey?: string };
 
   const onPasscode1Change = (code: string) => {
     if (code.length !== 6) return;
@@ -31,9 +33,6 @@ export default ({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) => {
   };
 
   const done = async () => {
-    const params = new URLSearchParams(window.location.search);
-    const authKey = params.get('authKey');
-
     if (authKey) {
       if (await mnVM.changePasscode(authKey, passcode1)) {
         app.history.goBack();
@@ -61,6 +60,8 @@ export default ({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) => {
         {passcode1 ? (
           <Passcode id="passcode2" codeLength={6} hide initialFocus onChange={onPasscode2Change} focusColor="#6186ff" />
         ) : undefined}
+
+        <p>Supported Characters: A-Z, 0-9</p>
       </div>
 
       <button disabled={!passVerified} onClick={(_) => done()}>

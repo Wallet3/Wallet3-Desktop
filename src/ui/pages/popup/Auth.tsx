@@ -9,19 +9,18 @@ import { PopupTitle } from '../../components';
 import React from 'react';
 import crypto from '../../bridges/Crypto';
 import ipc from '../../bridges/IPC';
+import { useRouteMatch } from 'react-router';
 import { useTranslation } from 'react-i18next';
 
 export default ({ app }: { app: ApplicationPopup }) => {
   const { t } = useTranslation();
-
-  const params = new URLSearchParams(window.location.search);
-  const authId = params.get('id');
+  const { authKey } = useRouteMatch().params as { authKey: string };
 
   const authViaTouchID = async () => {
     const success = await app.promptTouchID();
 
     if (success) {
-      ipc.invokeSecure(`${Messages.returnAuthenticationResult(authId)}`, { success });
+      ipc.invokeSecure(`${Messages.returnAuthenticationResult(authKey)}`, { success });
       window.close();
     } else {
       Anime.vibrate('div.auth > .panel');
@@ -32,7 +31,7 @@ export default ({ app }: { app: ApplicationPopup }) => {
     const success = await app.verifyPassword(passcode);
 
     if (success) {
-      ipc.invokeSecure(`${Messages.returnAuthenticationResult(authId)}`, { success, password: crypto.sha256(passcode) });
+      ipc.invokeSecure(`${Messages.returnAuthenticationResult(authKey)}`, { success, password: crypto.sha256(passcode) });
       window.close();
     } else {
       Anime.vibrate('div.auth > .panel');
@@ -40,7 +39,7 @@ export default ({ app }: { app: ApplicationPopup }) => {
   };
 
   const onCacnel = () => {
-    ipc.invokeSecure(`${Messages.returnAuthenticationResult(authId)}`, { result: false });
+    ipc.invokeSecure(`${Messages.returnAuthenticationResult(authKey)}`, { result: false });
     window.close();
   };
 

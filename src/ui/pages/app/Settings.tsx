@@ -38,14 +38,14 @@ export default observer(({ walletVM, app, currencyVM, langsVM }: IConstructor) =
     const { success, authKey } = await app.auth();
     if (!success) return;
 
-    app.history.push(`/backupMnemonic?authKey=${authKey}`);
+    app.history.push(`/backupMnemonic/${authKey}`);
   };
 
   const goToChangePasscode = async () => {
     const { success, authKey } = await app.auth();
     if (!success) return;
 
-    app.history.push(`/setupPassword?authKey=${authKey}`);
+    app.history.push(`/setupPassword/${authKey}`);
   };
 
   const goToReset = async () => {

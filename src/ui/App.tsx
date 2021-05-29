@@ -4,7 +4,7 @@ import { Account, AddToken, ConnectedDApp, ConnectedDApps, PendingTx, Transfer, 
 import { Authentication, Blank, Generate, Import, SetupPasscode, Welcome } from './pages/login/';
 import { BackupMnemonic, Reset } from './pages/secure';
 import React, { useEffect } from 'react';
-import { Route, Router, Switch } from 'react-router-dom';
+import { Route, Router, Switch, withRouter } from 'react-router-dom';
 
 import { Application } from './viewmodels/Application';
 import { CurrencyVM } from './viewmodels/CurrencyVM';
@@ -29,7 +29,7 @@ export default observer((args: Props) => {
   const { app, walletVM } = args;
 
   useEffect(() => {
-    mousetrap.bind(['command+l', 'ctrl+l'], () => app.history.push('/authentication'));
+    mousetrap.bind(['command+l', 'ctrl+l', 'command+L', 'ctrl+L'], () => app.history.push('/authentication'));
   }, []);
 
   return (
@@ -42,7 +42,7 @@ export default observer((args: Props) => {
           <Route path="/import" exact>
             <Import {...args} />
           </Route>
-          <Route path="/setupPassword" exact>
+          <Route path="/setupPassword/:authKey">
             <SetupPasscode {...args} />
           </Route>
           <Route path="/welcome" exact component={Welcome} />
@@ -73,10 +73,10 @@ export default observer((args: Props) => {
           <Route path="/connectedapps">
             <ConnectedDApps {...args} />
           </Route>
-          <Route path="/backupMnemonic">
+          <Route path="/backupMnemonic/:authKey">
             <BackupMnemonic {...args} />
           </Route>
-          <Route path="/reset">
+          <Route path="/reset/:authKey">
             <Reset {...args} />
           </Route>
 

@@ -15,6 +15,10 @@
   color: var(--font-color-title);
 }
 
+.page.setupPw > div.password > p:last-child {
+  font-size: 12px;
+}
+
 .page.setupPw > div.password > div {
   margin-right: 2px;
 }
