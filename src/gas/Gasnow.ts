@@ -36,10 +36,10 @@ export class GasnowWs {
   static readonly host = 'wss://www.gasnow.org/ws';
 
   client: WebSocket | ws;
-  rapid = GasnowWs.gwei_10 * 2;
-  fast = GasnowWs.gwei_10 * 2;
-  standard = GasnowWs.gwei_10;
-  slow = GasnowWs.gwei_1;
+  rapid = 0;
+  fast = 0;
+  standard = 0;
+  slow = 0;
   onclose?: () => void;
 
   get rapidGwei() {
@@ -124,6 +124,10 @@ export class GasnowWs {
     this.standard = gasPrices.standard;
     this.slow = gasPrices.slow;
   };
+
+  refresh() {
+    this.start();
+  }
 }
 
 export default new GasnowWs();

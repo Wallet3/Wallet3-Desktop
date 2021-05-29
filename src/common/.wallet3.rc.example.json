@@ -1,7 +1,12 @@
 {
   "1": [],
+  "3": [],
+  "4": [],
+  "5": [],
+  "42": [],
   "56": ["https://bsc-dataseed1.ninicoin.io", "https://bsc-dataseed3.binance.org"],
   "100": ["https://rpc.xdaichain.com"],
-  "137": ["https://rpc-mainnet.maticvigil.com/v1/ad9cd3ae96780b0ab3510c8ab10092aa12261f29"],
-  "250": ["https://rpcapi.fantom.network"]
+  "137": ["https://rpc-mainnet.matic.network", "https://rpc-mainnet.maticvigil.com"],
+  "250": ["https://rpcapi.fantom.network"],
+  "80001": ["https://rpc-mumbai.matic.today", "https://rpc-mumbai.maticvigil.com"]
 }

@@ -1,11 +1,12 @@
 import { BigNumber, ethers, utils } from 'ethers';
 import Gasnow, { GasnowWs } from '../../gas/Gasnow';
-import { IReactionDisposer, makeAutoObservable, reaction, runInAction } from 'mobx';
+import { IReactionDisposer, autorun, makeAutoObservable, reaction, runInAction } from 'mobx';
 import Messages, { ConfirmSendTx } from '../../common/Messages';
 import { parseEther, parseUnits } from 'ethers/lib/utils';
 
 import { AccountVM } from './AccountVM';
 import ERC20ABI from '../../abis/ERC20.json';
+import GasStation from '../../gas';
 import NetworksVM from './NetworksVM';
 import { UserToken } from './models/UserToken';
 import ipc from '../bridges/IPC';
@@ -152,29 +153,33 @@ export class TransferVM {
   private autoSetGasPrice() {
     switch (this.gasLevel) {
       case 0:
-        this.gasPrice = this.rapid;
+        this.setGasPrice(this.rapid);
         break;
       case 1:
-        this.gasPrice = this.fast;
+        this.setGasPrice(this.fast);
         break;
       case 2:
-        this.gasPrice = this.standard;
+        this.setGasPrice(this.standard);
         break;
     }
   }
 
   private initGasPrice() {
-    Gasnow.start();
+    this.gasnowDisposer = autorun(() => {
+      const rapid = GasStation.rapidGwei;
+      const fast = GasStation.fastGwei;
+      const standard = GasStation.standardGwei;
 
-    this.gasnowDisposer = reaction(
-      () => Gasnow.fast || Gasnow.rapid || Gasnow.standard,
-      () => {
-        this.rapid = Gasnow.rapidGwei;
-        this.fast = Gasnow.fastGwei;
-        this.standard = Gasnow.standardGwei;
+      runInAction(() => {
+        this.rapid = rapid;
+        this.fast = fast;
+        this.standard = standard;
         this.autoSetGasPrice();
-      }
-    );
+      });
+    });
+
+    GasStation.chainId = NetworksVM.currentChainId;
+    GasStation.refresh();
   }
 
   private initNonce() {
@@ -220,6 +225,7 @@ export class TransferVM {
   }
 
   dispose() {
+    console.log('dispose');
     this.gasnowDisposer?.();
   }
 

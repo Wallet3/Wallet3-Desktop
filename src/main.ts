@@ -204,9 +204,8 @@ powerMonitor.on('resume', () => {
   setTimeout(async () => {
     await WCMan.dispose();
     WCMan.init();
-  }, 3000);
-
-  GasnowWs.restart(true);
+    GasnowWs.restart(true);
+  }, 5000);
 });
 
 powerMonitor.on('suspend', () => {
