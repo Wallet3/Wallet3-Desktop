@@ -4,15 +4,14 @@ import { Application } from '../../viewmodels/Application';
 import Feather from 'feather-icons-react';
 import { NavBar } from '../../components';
 import React from 'react';
+import { useRouteMatch } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 export default ({ app }: { app: Application }) => {
   const { t } = useTranslation();
+  const { authKey } = useRouteMatch().params as { authKey: string };
 
   const reset = async () => {
-    const params = new URLSearchParams(window.location.search);
-    const authKey = params.get('authKey');
-
     if (await app.reset(authKey)) {
       app.history.push('/welcome');
     }

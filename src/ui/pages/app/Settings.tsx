@@ -52,7 +52,7 @@ export default observer(({ walletVM, app, currencyVM, langsVM }: IConstructor) =
     const { success, authKey } = await app.auth();
     if (!success) return;
 
-    app.history.push(`/reset?authKey=${authKey}`);
+    app.history.push(`/reset/${authKey}`);
   };
 
   const iconSize = 15;

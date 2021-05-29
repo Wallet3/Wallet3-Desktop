@@ -61,7 +61,7 @@ export default ({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) => {
           <Passcode id="passcode2" codeLength={6} hide initialFocus onChange={onPasscode2Change} focusColor="#6186ff" />
         ) : undefined}
 
-        <p>Supported Characters: A-Z, 0-9</p>
+        <p>{t('Supported Characters')}</p>
       </div>
 
       <button disabled={!passVerified} onClick={(_) => done()}>
