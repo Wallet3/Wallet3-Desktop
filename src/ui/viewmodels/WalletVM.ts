@@ -17,7 +17,7 @@ export class WalletVM {
   currentAccount: AccountVM = null;
   allPendingTxs: TxParams[] = [];
   connectedDApps: IWcSession[] = [];
-  id = 0;
+  id = 1;
 
   get accountIndex() {
     return this.accounts.indexOf(this.currentAccount);

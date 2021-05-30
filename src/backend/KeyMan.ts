@@ -29,8 +29,8 @@ class KeyMan {
 
   account: Account;
 
-  async init(accountId = 0) {
-    this.account = await DBMan.accountRepo.findOne(accountId);
+  async init(accountId = 1) {
+    [this.account] = await DBMan.accountRepo.find();
     console.log('account', this.account);
 
     this.salt = this.account?.salt;
