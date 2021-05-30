@@ -20,8 +20,6 @@ export function setTest() {
   Keys.account = 'test';
 }
 
-const sha256 = (text: string) => crypto.createHash('sha256').update(text).digest().toString('hex');
-
 class KeyMan {
   salt!: string;
   tmpMnemonic?: string;
@@ -54,7 +52,7 @@ class KeyMan {
   }
 
   async verifyPassword(userPassword: string) {
-    const user = sha256(this.getCorePassword(userPassword));
+    const user = Cipher.sha256(this.getCorePassword(userPassword)).toString('hex');
     return user === (await keytar.getPassword(Keys.password, Keys.account));
   }
 
@@ -65,7 +63,7 @@ class KeyMan {
     this.account.salt = this.salt;
     await this.account.save();
 
-    const pwHash = sha256(this.getCorePassword(userPassword));
+    const pwHash = Cipher.sha256(this.getCorePassword(userPassword)).toString('hex');
     await keytar.setPassword(Keys.password, Keys.account, pwHash);
   }
 

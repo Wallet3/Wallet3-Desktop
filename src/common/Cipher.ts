@@ -7,7 +7,7 @@ export function generateIv(size = 16): Buffer {
 }
 
 export function encrypt(iv: Buffer, text: string, password: string | Buffer): string {
-  const pw = crypto.createHash('sha512').update(password).digest().subarray(0, 32);
+  const pw = sha256(sha512(password));
   const cipher = crypto.createCipheriv(algorithm, pw, iv);
   let enc = cipher.update(text, 'utf8', 'hex');
   enc += cipher.final('hex');
@@ -15,9 +15,13 @@ export function encrypt(iv: Buffer, text: string, password: string | Buffer): st
 }
 
 export function decrypt(iv: Buffer, encrypted: string, password: string | Buffer): string {
-  const pw = crypto.createHash('sha512').update(password).digest().subarray(0, 32);
+  const pw = sha256(sha512(password));
   const decipher = crypto.createDecipheriv(algorithm, pw, iv);
   let dec = decipher.update(encrypted, 'hex', 'utf8');
   dec += decipher.final('utf8');
   return dec;
 }
+
+export const sha256 = (text: string | Buffer) => crypto.createHash('sha256').update(text).digest();
+
+export const sha512 = (text: string | Buffer) => crypto.createHash('sha512').update(text).digest();
