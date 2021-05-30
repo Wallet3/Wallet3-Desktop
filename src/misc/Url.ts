@@ -1,7 +1,7 @@
 import { TxParams } from '../common/Messages';
 
 const Explorers = new Map<number, string>([
-  [1, 'https://etherscan.io/'],
+  [1, 'https://etherscan.io'],
   [3, 'https://ropsten.etherscan.io'],
   [4, 'https://rinkeby.etherscan.io'],
   [5, 'https://goerli.etherscan.io'],
@@ -16,7 +16,8 @@ const Explorers = new Map<number, string>([
 ]);
 
 export function convertTxToUrl(tx: TxParams) {
-  return `${Explorers.get(tx.chainId)}/${tx.hash}`;
+  const url = `${Explorers.get(tx.chainId)}/tx/${tx.hash}`;
+  return url;
 }
 
 export function convertToAccountUrl(chainId: number, address: string) {

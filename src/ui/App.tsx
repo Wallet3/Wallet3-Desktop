@@ -42,7 +42,10 @@ export default observer((args: Props) => {
           <Route path="/import" exact>
             <Import {...args} />
           </Route>
-          <Route path="/setupPassword/:authKey">
+          <Route path="/setupPassword/:authKey" exact>
+            <SetupPasscode {...args} />
+          </Route>
+          <Route path="/setupPassword/" exact>
             <SetupPasscode {...args} />
           </Route>
           <Route path="/welcome" exact component={Welcome} />

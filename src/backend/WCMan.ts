@@ -61,7 +61,6 @@ class WCMan {
       wc.once('sessionApproved', () => {
         const wcSession = new WCSession();
         wcSession.userChainId = wc.userChainId;
-        wcSession.topicId = wc.session.handshakeTopic;
         wcSession.lastUsedTimestamp = Date.now();
         wcSession.session = JSON.stringify(wc.session);
 

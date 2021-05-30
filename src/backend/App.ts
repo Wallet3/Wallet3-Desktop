@@ -235,9 +235,9 @@ export class App {
       this.#authKeys.clear();
 
       await KeyMan.reset(password);
-      await DBMan.clean();
       await TxMan.clean();
       await WCMan.clean();
+      await DBMan.clean();
 
       runInAction(() => {
         this.currentAddressIndex = 0;
