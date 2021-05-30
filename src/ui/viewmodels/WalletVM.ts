@@ -9,7 +9,7 @@ import ipc from '../bridges/IPC';
 import store from 'storejs';
 
 const Keys = {
-  lastUsedAccount: 'lastUsedAccount',
+  lastUsedAccount: (walletId: number) => `w_${walletId}-lastUsedAccount`,
 };
 
 export class WalletVM {
@@ -17,6 +17,7 @@ export class WalletVM {
   currentAccount: AccountVM = null;
   allPendingTxs: TxParams[] = [];
   connectedDApps: IWcSession[] = [];
+  id = 0;
 
   get accountIndex() {
     return this.accounts.indexOf(this.currentAccount);
@@ -64,7 +65,7 @@ export class WalletVM {
     this.allPendingTxs = pendingTxs ?? this.allPendingTxs;
     this.accounts = addresses.map((address, i) => new AccountVM({ address, accountIndex: i + 1 }));
 
-    const lastUsedAccount = store.get(Keys.lastUsedAccount) || addresses[0];
+    const lastUsedAccount = store.get(Keys.lastUsedAccount(this.id)) || addresses[0];
     this.currentAccount = this.accounts.find((a) => a.address === lastUsedAccount) || this.accounts[0];
     this.currentAccount.refresh();
 
@@ -76,7 +77,7 @@ export class WalletVM {
     this.currentAccount = account;
     this.currentAccount.refresh();
     ipc.invokeSecure(Messages.changeAccountIndex, { index: this.accountIndex });
-    store.set(Keys.lastUsedAccount, account.address);
+    store.set(Keys.lastUsedAccount(this.id), account.address);
   }
 
   refresh() {

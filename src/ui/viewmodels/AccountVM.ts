@@ -6,12 +6,13 @@ import { makeAutoObservable, runInAction } from 'mobx';
 
 import { AddTokenVM } from './AddTokenVM';
 import { TransferVM } from './TransferVM';
+import WalletVM from './WalletVM';
 import store from 'storejs';
 import { utils } from 'ethers';
 
 const Keys = {
   userTokens: (chainId: number, accountIndex: number) => `userTokens-${chainId}-${accountIndex}`,
-  accountName: (accountIndex: number) => `accountName-${accountIndex}`,
+  accountName: (walletId: number, accountIndex: number) => `w_${walletId}-accountName-${accountIndex}`,
 };
 
 interface IArgs {
@@ -80,14 +81,14 @@ export class AccountVM {
 
   set name(value) {
     this._name = value;
-    store.set(Keys.accountName(this.accountIndex), value);
+    store.set(Keys.accountName(WalletVM.id, this.accountIndex), value);
   }
 
   constructor(args: IArgs) {
     makeAutoObservable(this);
     this.address = args.address;
     this.accountIndex = args.accountIndex;
-    this._name = store.get(Keys.accountName(this.accountIndex)) || '';
+    this._name = store.get(Keys.accountName(WalletVM.id, this.accountIndex)) || '';
 
     NetVM.currentProvider
       .lookupAddress(this.address)

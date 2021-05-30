@@ -1,6 +1,6 @@
-import Messages, { TxParams } from '../../common/Messages';
 import { makeAutoObservable, runInAction } from 'mobx';
 
+import Messages from '../../common/Messages';
 import { getProviderByChainId } from '../../common/Provider';
 import ipc from '../bridges/IPC';
 import store from 'storejs';
@@ -15,8 +15,7 @@ export interface INetwork {
 }
 
 const Keys = {
-  currentNetwork: 'currentNetwork',
-  currentNetworkId: 'currentNetworkId',
+  currentNetworkId: () => `currentNetworkId`,
 };
 
 export class NetworksVM {
@@ -32,7 +31,7 @@ export class NetworksVM {
 
   constructor() {
     makeAutoObservable(this);
-    this.setCurrentChainId(store.get(Keys.currentNetworkId) || 1);
+    this.setCurrentChainId(store.get(Keys.currentNetworkId()) || 1);
   }
 
   setCurrentChainId(value: number) {
@@ -40,7 +39,7 @@ export class NetworksVM {
 
     this.currentChainId = value;
     this.currentProvider.ready;
-    store.set(Keys.currentNetworkId, value);
+    store.set(Keys.currentNetworkId(), value);
     ipc.invoke(Messages.changeChainId, value);
   }
 }

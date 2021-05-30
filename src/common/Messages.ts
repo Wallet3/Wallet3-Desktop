@@ -42,7 +42,7 @@ export const WcMessages = {
 };
 
 export interface InitStatus {
-  hasMnemonic: boolean;
+  hasSecret: boolean;
   touchIDSupported: boolean;
   appAuthenticated: boolean;
   addresses?: string[];

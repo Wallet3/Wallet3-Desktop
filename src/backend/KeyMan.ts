@@ -1,20 +1,19 @@
 import * as Cipher from '../common/Cipher';
 import * as crypto from 'crypto';
+import * as ethSignUtil from 'eth-sig-util';
 import * as ethers from 'ethers';
 import * as keytar from 'keytar';
-import * as metamaskSign from 'eth-sig-util';
 
+import Account, { AccountType } from './models/Account';
+
+import DBMan from './DBMan';
 import { TxParams } from '../common/Messages';
 
-const BasePath = `m/44'/60'/0'/0`;
+const BasePath = `m/44\'/60\'/0\'/0`;
 
 const Keys = {
-  salt: 'wallet3-salt',
   password: 'wallet3-password',
-  basePath: 'wallet3-basePath',
-  pathIndex: 'wallet3-pathIndex',
   account: 'wallet3-master',
-  mnemonic: 'wallet3-mnemonic',
 };
 
 export function setTest() {
@@ -28,13 +27,17 @@ class KeyMan {
   tmpMnemonic?: string;
   basePath = BasePath;
   pathIndex = 0;
-  hasMnemonic = false;
+  hasSecret = false;
 
-  async init() {
-    this.salt = await keytar.getPassword(Keys.salt, Keys.account);
-    this.hasMnemonic = (await keytar.getPassword(Keys.mnemonic, Keys.account)) ? true : false;
-    this.basePath = (await keytar.getPassword(Keys.basePath, Keys.account)) || BasePath;
-    this.pathIndex = Number.parseInt((await keytar.getPassword(Keys.pathIndex, Keys.account)) || '0');
+  account: Account;
+
+  async init(accountId = 0) {
+    this.account = await DBMan.accountRepo.findOne(accountId);
+
+    this.salt = this.account?.salt;
+    this.hasSecret = this.account?.secret && this.account?.iv && this.salt ? true : false;
+    this.basePath = this.account?.basePath ?? BasePath;
+    this.pathIndex = this.account?.basePathIndex ?? 0;
   }
 
   async setFullPath(fullPath: string) {
@@ -42,8 +45,9 @@ class KeyMan {
     this.basePath = fullPath.substring(0, lastSlash);
     this.pathIndex = Number.parseInt(fullPath.substring(lastSlash + 1)) || 0;
 
-    await keytar.setPassword(Keys.basePath, Keys.account, this.basePath);
-    await keytar.setPassword(Keys.pathIndex, Keys.account, `${this.pathIndex}`);
+    this.account.basePath = this.basePath;
+    this.account.basePathIndex = this.pathIndex;
+    await this.account.save();
   }
 
   async verifyPassword(userPassword: string) {
@@ -53,7 +57,10 @@ class KeyMan {
 
   async savePassword(userPassword: string) {
     this.salt = Cipher.generateIv().toString('hex');
-    await keytar.setPassword(Keys.salt, Keys.account, this.salt);
+
+    this.account = this.account ?? new Account();
+    this.account.salt = this.salt;
+    await this.account.save();
 
     const pwHash = sha256(this.getCorePassword(userPassword));
     await keytar.setPassword(Keys.password, Keys.account, pwHash);
@@ -80,9 +87,13 @@ class KeyMan {
     const iv = Cipher.generateIv();
     const encryptedMnemonic = Cipher.encrypt(iv, this.tmpMnemonic, this.getCorePassword(userPassword));
 
-    await keytar.setPassword(Keys.mnemonic, Keys.account, `${iv.toString('hex')}:${encryptedMnemonic}`);
+    this.account.secret = encryptedMnemonic;
+    this.account.iv = iv.toString('hex');
+    this.account.type = AccountType.mnemonic;
+    this.account.save();
+
     this.tmpMnemonic = undefined;
-    this.hasMnemonic = true;
+    this.hasSecret = true;
 
     return true;
   }
@@ -90,8 +101,8 @@ class KeyMan {
   async readMnemonic(userPassword: string) {
     if (!(await this.verifyPassword(userPassword))) return undefined;
 
-    const formatted = await keytar.getPassword(Keys.mnemonic, Keys.account);
-    const [iv, enMnemonic] = formatted.split(':');
+    const iv = this.account.iv;
+    const enMnemonic = this.account.secret;
 
     return Cipher.decrypt(Buffer.from(iv, 'hex'), enMnemonic, this.getCorePassword(userPassword));
   }
@@ -124,7 +135,7 @@ class KeyMan {
     const privKey = await this.getPrivateKey(userPassword, accountIndex);
     if (!privKey) return '';
 
-    return metamaskSign.signTypedData_v4(Buffer.from(ethers.utils.arrayify(privKey)), { data: typedData });
+    return ethSignUtil.signTypedData_v4(Buffer.from(ethers.utils.arrayify(privKey)), { data: typedData });
   }
 
   async genAddresses(userPassword: string, count: number) {
@@ -145,15 +156,11 @@ class KeyMan {
     if (!(await this.verifyPassword(password))) return false;
 
     this.salt = undefined;
-    this.hasMnemonic = false;
+    this.hasSecret = false;
     this.basePath = BasePath;
     this.pathIndex = 0;
 
-    const tasks = [Keys.mnemonic, Keys.salt, Keys.basePath, Keys.pathIndex].map((key) =>
-      keytar.deletePassword(key, Keys.account)
-    );
-
-    return Promise.all(tasks);
+    await this.account?.remove();
   }
 
   private async getPrivateKey(userPassword: string, accountIndex = 0) {

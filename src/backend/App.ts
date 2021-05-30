@@ -85,7 +85,7 @@ export class App {
 
       return App.encryptIpc(
         {
-          hasMnemonic: KeyMan.hasMnemonic,
+          hasSecret: KeyMan.hasSecret,
           touchIDSupported: this.touchIDSupported,
           appAuthenticated: this.addresses.length > 0,
           addresses: [...this.addresses],
@@ -135,7 +135,7 @@ export class App {
 
     ipcMain.handle(`${MessageKeys.setupMnemonic}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
-      if (KeyMan.hasMnemonic) return App.encryptIpc({ success: false }, iv, key);
+      if (KeyMan.hasSecret) return App.encryptIpc({ success: false }, iv, key);
 
       const { password: userPassword } = App.decryptIpc(encrypted, iv, key);
 

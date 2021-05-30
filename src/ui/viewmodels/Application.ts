@@ -23,7 +23,7 @@ export class Application {
   }
 
   async init(jump = true) {
-    const { hasMnemonic, touchIDSupported, appAuthenticated, addresses, pendingTxs, connectedDApps } =
+    const { hasSecret, touchIDSupported, appAuthenticated, addresses, pendingTxs, connectedDApps } =
       await ipc.invokeSecure<InitStatus>(MessageKeys.getInitStatus);
 
     this.touchIDSupported = touchIDSupported;
@@ -37,7 +37,7 @@ export class Application {
 
     if (!jump) return;
 
-    if (!hasMnemonic) {
+    if (!hasSecret) {
       this.history.push('/welcome');
     } else {
       this.history.push('/authentication');

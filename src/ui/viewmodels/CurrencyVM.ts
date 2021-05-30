@@ -1,4 +1,5 @@
 import Coingecko from '../../api/Coingecko';
+import WalletVM from './WalletVM';
 import { makeAutoObservable } from 'mobx';
 import numeral from 'numeral';
 import store from 'storejs';
@@ -20,12 +21,13 @@ export class CurrencyVM {
   constructor() {
     makeAutoObservable(this);
 
-    this.currentCurrency = this.supportedCurrencies.find((c) => c.currency === (store.get('currency') || 'USD'));
+    const savedCurrency = store.get(`w_${WalletVM.id}-currency`) || 'USD';
+    this.currentCurrency = this.supportedCurrencies.find((c) => c.currency === savedCurrency);
   }
 
   setCurrency(currency: Currency) {
     this.currentCurrency = currency;
-    store.set('currency', currency.currency);
+    store.set(`w_${WalletVM.id}-currency`, currency.currency);
   }
 
   format(usd: number) {
