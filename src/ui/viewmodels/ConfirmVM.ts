@@ -281,16 +281,11 @@ export class ConfirmVM {
       viaTouchID: via === 'touchid',
     } as SendTxParams;
 
-    let txHex = '';
     if (this.args.walletConnect) {
       const { peerId, reqid } = this.args.walletConnect;
-      txHex = await ipc.invokeSecure(`${WcMessages.approveWcCallRequest(peerId, reqid)}`, params);
+      ipc.invokeSecure(`${WcMessages.approveWcCallRequest(peerId, reqid)}`, params);
     } else {
-      txHex = await ipc.invokeSecure(`${Messages.sendTx}`, params);
-    }
-
-    if (txHex) {
-      this._provider.sendTransaction(txHex).catch(console.error);
+      ipc.invokeSecure(`${Messages.sendTx}`, params);
     }
 
     return true;

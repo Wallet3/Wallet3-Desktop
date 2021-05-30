@@ -62,6 +62,7 @@
   opacity: 0.55;
   cursor: pointer;
   transition: all 0.3s;
+  margin-top: 2px;
 }
 
 .page.dapps > .content > div.dapp svg:hover {
