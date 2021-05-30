@@ -1,6 +1,6 @@
 import App, { App as Application } from './App';
 import { AuthParams, ConfirmSendTx, RequestSignMessage, SendTxParams, WcMessages } from '../common/Messages';
-import { BigNumber, ethers } from 'ethers';
+import { BigNumber, ethers, utils } from 'ethers';
 import { IReactionDisposer, reaction } from 'mobx';
 import { call, getTransactionCount } from '../common/Provider';
 
@@ -169,10 +169,10 @@ export class WalletConnect extends EventEmitter {
 
         this.eth_sendTransaction(request, param, chainId ? Number.parseInt(chainId) : undefined);
         break;
-      case 'eth_sign':
-        break;
       case 'eth_signTransaction':
-        break;
+        this.connector.rejectRequest({ id: request.id, error: { message: 'Use eth_sendTransaction' } });
+        return;
+      case 'eth_sign':
       case 'personal_sign':
         if (!checkAccount(request.params[1])) return;
         this.sign(request, request.params, 'personal_sign');
@@ -334,9 +334,19 @@ export class WalletConnect extends EventEmitter {
       this.connector.rejectRequest({ id: request.id, error: { message: 'User rejected' } });
     });
 
+    let msg: string | object;
+    switch (type) {
+      case 'personal_sign':
+        msg = Buffer.from(utils.arrayify(params[0])).toString('utf8');
+        break;
+      case 'signTypedData':
+        msg = params[1]; // JSON.stringify(JSON.parse(params[1]).message);
+        break;
+    }
+
     App.createPopupWindow('sign', {
       raw: params,
-      msg: params[0].startsWith('0x') ? Buffer.from(params[0].substring(2), 'hex').toString('utf8') : '',
+      msg,
       walletConnect: { peerId: this.peerId, reqid: request.id },
     } as RequestSignMessage);
   };

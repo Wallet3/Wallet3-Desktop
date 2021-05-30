@@ -124,7 +124,7 @@ class KeyMan {
     const privKey = await this.getPrivateKey(userPassword, accountIndex);
     if (!privKey) return '';
 
-    return metamaskSign.signTypedData_v4(Buffer.from(privKey.substring(2), 'hex'), { data: typedData });
+    return metamaskSign.signTypedData_v4(Buffer.from(ethers.utils.arrayify(privKey)), { data: typedData });
   }
 
   async genAddresses(userPassword: string, count: number) {
