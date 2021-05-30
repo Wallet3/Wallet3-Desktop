@@ -2,6 +2,7 @@ import * as Cipher from '../common/Cipher';
 import * as crypto from 'crypto';
 import * as ethers from 'ethers';
 import * as keytar from 'keytar';
+import * as metamaskSign from 'eth-sig-util';
 
 import { TxParams } from '../common/Messages';
 
@@ -119,16 +120,11 @@ class KeyMan {
     return await signer.signMessage(typeof msg === 'string' ? ethers.utils.arrayify(msg) : msg);
   }
 
-  async signTypedData(
-    userPassword: string,
-    accountIndex = 0,
-    msg: { domain: TypedDataDomain; types: Record<string, Array<TypedDataField>>; message: Record<string, any> }
-  ) {
+  async signTypedData_v4(userPassword: string, accountIndex = 0, typedData: any) {
     const privKey = await this.getPrivateKey(userPassword, accountIndex);
     if (!privKey) return '';
 
-    const signer = new ethers.Wallet(privKey);
-    return await signer._signTypedData(msg.domain, msg.types, msg.message);
+    return metamaskSign.signTypedData_v4(Buffer.from(privKey.substring(2), 'hex'), { data: typedData });
   }
 
   async genAddresses(userPassword: string, count: number) {

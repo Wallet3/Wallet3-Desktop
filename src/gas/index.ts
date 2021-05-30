@@ -73,7 +73,8 @@ class GasStation {
   }
 
   refresh() {
-    (this._stations.get(this.chainId) ?? PolygonGasStation).refresh();
+    PolygonGasStation.refresh(); // (this._stations.get(this.chainId) ?? PolygonGasStation).refresh();
+    Gasnow.refresh();
   }
 }
 

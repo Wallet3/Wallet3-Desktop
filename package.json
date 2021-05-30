@@ -121,6 +121,7 @@
     "axios": "^0.21.1",
     "delay": "^5.0.0",
     "electron-squirrel-startup": "^1.0.0",
+    "eth-sig-util": "^3.0.1",
     "ethers": "^5.2.0",
     "feather-icons": "^4.28.0",
     "feather-icons-react": "^0.4.3",

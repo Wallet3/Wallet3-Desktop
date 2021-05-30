@@ -178,6 +178,7 @@ export class WalletConnect extends EventEmitter {
         this.sign(request, request.params, 'personal_sign');
         break;
       case 'eth_signTypedData':
+        if (!checkAccount(request.params[0])) return;
         this.sign(request, request.params, 'signTypedData');
         break;
     }
@@ -295,12 +296,11 @@ export class WalletConnect extends EventEmitter {
         return Application.encryptIpc(false, iv, key);
       }
 
-      let msg: any;
       let signed = '';
 
       switch (type) {
         case 'personal_sign':
-          msg = params[0];
+          const msg = params[0];
           signed = await KeyMan.personalSignMessage(password, App.currentAddressIndex, msg);
 
           if (!signed) {
@@ -311,10 +311,9 @@ export class WalletConnect extends EventEmitter {
           this.connector.approveRequest({ id: request.id, result: signed });
           return Application.encryptIpc(true, iv, key);
         case 'signTypedData':
-          msg = params[1];
           try {
-            const typedData = JSON.parse(msg);
-            signed = await KeyMan.signTypedData(password, App.currentAddressIndex, typedData);
+            const typedData = JSON.parse(params[1]);
+            signed = await KeyMan.signTypedData_v4(password, App.currentAddressIndex, typedData);
           } catch (error) {
             this.connector.rejectRequest({ id: request.id, error: { message: 'Invalid Typed Data' } });
             return Application.encryptIpc(false, iv, key);
