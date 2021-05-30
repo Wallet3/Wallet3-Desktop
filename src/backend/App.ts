@@ -138,6 +138,7 @@ export class App {
       if (KeyMan.hasSecret) return App.encryptIpc({ success: false }, iv, key);
 
       const { password: userPassword } = App.decryptIpc(encrypted, iv, key);
+      await DBMan.init();
 
       await KeyMan.savePassword(userPassword);
       if (!(await KeyMan.saveMnemonic(userPassword))) return App.encryptIpc({ success: false }, iv, key);
@@ -146,7 +147,7 @@ export class App {
       runInAction(() => (this.addresses = addresses));
 
       if (this.touchIDSupported) this.userPassword = userPassword;
-      await DBMan.init();
+
       TxMan.init();
 
       return App.encryptIpc({ addresses, success: true }, iv, key);

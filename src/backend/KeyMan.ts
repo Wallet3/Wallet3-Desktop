@@ -26,27 +26,30 @@ class KeyMan {
   salt!: string;
   tmpMnemonic?: string;
   basePath = BasePath;
-  pathIndex = 0;
+  basePathIndex = 0;
   hasSecret = false;
 
   account: Account;
 
   async init(accountId = 0) {
     this.account = await DBMan.accountRepo.findOne(accountId);
+    console.log('account', this.account);
 
     this.salt = this.account?.salt;
     this.hasSecret = this.account?.secret && this.account?.iv && this.salt ? true : false;
     this.basePath = this.account?.basePath ?? BasePath;
-    this.pathIndex = this.account?.basePathIndex ?? 0;
+    this.basePathIndex = this.account?.basePathIndex ?? 0;
   }
 
   async setFullPath(fullPath: string) {
     const lastSlash = fullPath.lastIndexOf('/');
     this.basePath = fullPath.substring(0, lastSlash);
-    this.pathIndex = Number.parseInt(fullPath.substring(lastSlash + 1)) || 0;
+    this.basePathIndex = Number.parseInt(fullPath.substring(lastSlash + 1)) || 0;
+
+    if (!this.account) return;
 
     this.account.basePath = this.basePath;
-    this.account.basePathIndex = this.pathIndex;
+    this.account.basePathIndex = this.basePathIndex;
     await this.account.save();
   }
 
@@ -90,6 +93,8 @@ class KeyMan {
     this.account.secret = encryptedMnemonic;
     this.account.iv = iv.toString('hex');
     this.account.type = AccountType.mnemonic;
+    this.account.basePath = this.basePath;
+    this.account.basePathIndex = this.basePathIndex;
     this.account.save();
 
     this.tmpMnemonic = undefined;
@@ -143,10 +148,10 @@ class KeyMan {
     if (!mnemonic) return undefined;
 
     const hd = ethers.utils.HDNode.fromMnemonic(mnemonic);
-    const addresses = [hd.derivePath(`${this.basePath}/${this.pathIndex}`).address];
+    const addresses = [hd.derivePath(`${this.basePath}/${this.basePathIndex}`).address];
 
     for (let i = 1; i < count; i++) {
-      addresses.push(hd.derivePath(`${this.basePath}/${this.pathIndex + i}`).address);
+      addresses.push(hd.derivePath(`${this.basePath}/${this.basePathIndex + i}`).address);
     }
 
     return addresses;
@@ -158,7 +163,7 @@ class KeyMan {
     this.salt = undefined;
     this.hasSecret = false;
     this.basePath = BasePath;
-    this.pathIndex = 0;
+    this.basePathIndex = 0;
 
     await this.account?.remove();
   }
@@ -168,7 +173,7 @@ class KeyMan {
     if (!mnemonic) return undefined;
 
     const root = ethers.utils.HDNode.fromMnemonic(mnemonic);
-    const account = root.derivePath(`${this.basePath}/${this.pathIndex + accountIndex}`);
+    const account = root.derivePath(`${this.basePath}/${this.basePathIndex + accountIndex}`);
     return account.privateKey;
   }
 

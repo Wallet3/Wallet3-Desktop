@@ -37,7 +37,7 @@ test(
 
     KeyMan.setFullPath(`m/44'/60'/5'/2/0`);
     expect(KeyMan.basePath).toBe(`m/44'/60'/5'/2`);
-    expect(KeyMan.pathIndex).toBe(0);
+    expect(KeyMan.basePathIndex).toBe(0);
 
     const addresses = await KeyMan.genAddresses('111222', 5);
 
