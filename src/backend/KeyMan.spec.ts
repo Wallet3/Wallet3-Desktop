@@ -1,8 +1,7 @@
 import * as ethers from 'ethers';
 
-import KeyMan, { setTest } from './KeyMan';
+import KeyMan from './KeyMan';
 
-setTest();
 const mnemonic = 'afford candy jewel raven version roast unfair female diary render buffalo buddy comic mimic control';
 
 test('derive path', () => {
@@ -26,14 +25,9 @@ test('personal_sign', () => {
 test(
   'custom path',
   async () => {
-    await KeyMan.reset('');
-
     KeyMan.setTmpMnemonic(
       'become replace lecture bleak reform topple fringe menu original damage equip crime sorry alarm erase'
     );
-
-    await KeyMan.savePassword('111222');
-    await KeyMan.saveMnemonic('111222');
 
     KeyMan.setFullPath(`m/44'/60'/5'/2/0`);
     expect(KeyMan.basePath).toBe(`m/44'/60'/5'/2`);

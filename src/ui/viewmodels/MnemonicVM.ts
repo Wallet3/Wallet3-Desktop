@@ -1,8 +1,8 @@
 import MessageKeys, { BooleanResult, GenMnemonic, SetupMnemonic } from '../../common/Messages';
 import { action, makeAutoObservable, runInAction } from 'mobx';
 
+import App from './Application';
 import WalletVM from './WalletVM';
-import crypto from '../bridges/Crypto';
 import ipc from '../bridges/IPC';
 
 export class MnemonicVM {
@@ -27,7 +27,7 @@ export class MnemonicVM {
   }
 
   async setupMnemonic(passcode: string) {
-    const password = crypto.sha256(passcode);
+    const password = App.hashPassword(passcode);
     const { success, addresses } = await ipc.invokeSecure<SetupMnemonic>(MessageKeys.setupMnemonic, { password });
     if (success) WalletVM.initAccounts({ addresses });
 
@@ -46,7 +46,7 @@ export class MnemonicVM {
   async changePasscode(authKey: string, passcode: string) {
     const { success } = await ipc.invokeSecure<BooleanResult>(`${MessageKeys.changePassword}`, {
       authKey,
-      newPassword: crypto.sha256(passcode),
+      newPassword: App.hashPassword(passcode),
     });
 
     return success;

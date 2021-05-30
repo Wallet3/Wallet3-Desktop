@@ -48,6 +48,7 @@ export interface InitStatus {
   addresses?: string[];
   pendingTxs: TxParams[];
   connectedDApps: IWcSession[];
+  machineId: string;
 }
 
 export interface InitVerifyPassword {

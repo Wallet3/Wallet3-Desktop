@@ -2,12 +2,12 @@ import './Auth.css';
 
 import * as Anime from '../../misc/Anime';
 
-import { ApplicationPopup } from '../../viewmodels/ApplicationPopup';
+import App, { ApplicationPopup } from '../../viewmodels/ApplicationPopup';
+
 import AuthView from './confirms/AuthView';
 import Messages from '../../../common/Messages';
 import { PopupTitle } from '../../components';
 import React from 'react';
-import crypto from '../../bridges/Crypto';
 import ipc from '../../bridges/IPC';
 import { useRouteMatch } from 'react-router';
 import { useTranslation } from 'react-i18next';
@@ -31,7 +31,7 @@ export default ({ app }: { app: ApplicationPopup }) => {
     const success = await app.verifyPassword(passcode);
 
     if (success) {
-      ipc.invokeSecure(`${Messages.returnAuthenticationResult(authId)}`, { success, password: crypto.sha256(passcode) });
+      ipc.invokeSecure(`${Messages.returnAuthenticationResult(authId)}`, { success, password: App.hashPassword(passcode) });
       window.close();
     } else {
       Anime.vibrate('div.auth > .panel');

@@ -277,7 +277,7 @@ export class ConfirmVM {
       nonce: this.args.nonce,
       data: this.args.data,
 
-      password: via === 'passcode' ? crypto.sha256(passcode) : undefined,
+      password: via === 'passcode' ? App.hashPassword(passcode) : undefined,
       viaTouchID: via === 'touchid',
     } as SendTxParams;
 

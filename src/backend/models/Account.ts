@@ -18,7 +18,7 @@ export default class Account extends BaseEntity {
   salt: string;
 
   @Column({ nullable: true })
-  secret: string;
+  kc_unique: string;
 
   @Column({ default: 10 })
   addrs: number;

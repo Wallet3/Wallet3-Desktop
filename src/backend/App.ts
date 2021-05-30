@@ -18,6 +18,7 @@ import Transaction from './models/Transaction';
 import TxMan from './TxMan';
 import WCMan from './WCMan';
 import i18n from '../i18n';
+import macaddr from 'macaddress';
 import { sendTransaction } from '../common/Provider';
 import { utils } from 'ethers';
 
@@ -80,7 +81,7 @@ export class App {
       return mainEcdhKey;
     });
 
-    ipcMain.handle(`${MessageKeys.getInitStatus}-secure`, (e, _, winId) => {
+    ipcMain.handle(`${MessageKeys.getInitStatus}-secure`, async (e, _, winId) => {
       const { iv, key } = this.windows.get(winId);
 
       return App.encryptIpc(
@@ -91,6 +92,7 @@ export class App {
           addresses: [...this.addresses],
           connectedDApps: WCMan.connectedSessions,
           pendingTxs: [...TxMan.pendingTxs],
+          machineId: Cipher.sha256(await macaddr.one()).toString('hex'),
         } as InitStatus,
         iv,
         key

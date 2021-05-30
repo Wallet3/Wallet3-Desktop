@@ -36,7 +36,7 @@ export class SignVM {
 
     await ipc.invokeSecure(
       `${WcMessages.approveWcCallRequest(this.params.walletConnect.peerId, this.params.walletConnect.reqid)}`,
-      { password: via === 'passcode' ? crypto.sha256(passcode) : undefined, viaTouchID: via === 'touchid' }
+      { password: via === 'passcode' ? App.hashPassword(passcode) : undefined, viaTouchID: via === 'touchid' }
     );
 
     return true;

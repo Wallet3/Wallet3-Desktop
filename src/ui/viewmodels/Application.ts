@@ -13,6 +13,7 @@ export class Application {
 
   appAuthenticated = false;
   touchIDSupported = false;
+  machineId = '';
 
   constructor() {
     makeObservable(this, {});
@@ -23,11 +24,12 @@ export class Application {
   }
 
   async init(jump = true) {
-    const { hasSecret, touchIDSupported, appAuthenticated, addresses, pendingTxs, connectedDApps } =
+    const { hasSecret, touchIDSupported, appAuthenticated, addresses, pendingTxs, connectedDApps, machineId } =
       await ipc.invokeSecure<InitStatus>(MessageKeys.getInitStatus);
 
     this.touchIDSupported = touchIDSupported;
     this.appAuthenticated = appAuthenticated;
+    this.machineId = machineId;
 
     Coingecko.start(30);
 
@@ -45,7 +47,7 @@ export class Application {
   }
 
   async authInitialization(passcode: string) {
-    const password = crypto.sha256(passcode);
+    const password = this.hashPassword(passcode);
     const { addresses, verified } = await ipc.invokeSecure<InitVerifyPassword>(MessageKeys.initVerifyPassword, {
       password,
       count: 10,
@@ -60,8 +62,12 @@ export class Application {
   }
 
   async verifyPassword(passcode: string) {
-    const password = crypto.sha256(passcode);
+    const password = this.hashPassword(passcode);
     return await ipc.invokeSecure<boolean>(MessageKeys.verifyPassword, { password });
+  }
+
+  hashPassword(passcode: string) {
+    return crypto.sha256(`ethereum.wallet3-${passcode}-${this.machineId}`);
   }
 
   async promptTouchID(message?: string) {

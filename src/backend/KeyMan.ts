@@ -8,17 +8,16 @@ import Account, { AccountType } from './models/Account';
 
 import DBMan from './DBMan';
 import { TxParams } from '../common/Messages';
+import macaddr from 'macaddress';
 
 const BasePath = `m/44\'/60\'/0\'/0`;
 
 const Keys = {
   password: 'wallet3-password',
-  account: 'wallet3-master',
+  secret: 'wallet3-secret',
+  masterAccount: (machine_id: string) => `wallet3-master-${machine_id}`,
+  secretAccount: (kc_unique: string) => `wallet3-account-${kc_unique}`,
 };
-
-export function setTest() {
-  Keys.account = 'test';
-}
 
 class KeyMan {
   salt!: string;
@@ -28,13 +27,17 @@ class KeyMan {
   hasSecret = false;
 
   account: Account;
+  machineId: string;
 
   async init(accountId = 1) {
+    this.machineId = Cipher.sha256(await macaddr.one())
+      .toString('hex')
+      .slice(-8);
+
     [this.account] = await DBMan.accountRepo.find();
-    console.log('account', this.account);
 
     this.salt = this.account?.salt;
-    this.hasSecret = this.account?.secret && this.account?.iv && this.salt ? true : false;
+    this.hasSecret = this.account?.kc_unique && this.account?.iv && this.salt ? true : false;
     this.basePath = this.account?.basePath ?? BasePath;
     this.basePathIndex = this.account?.basePathIndex ?? 0;
   }
@@ -53,7 +56,7 @@ class KeyMan {
 
   async verifyPassword(userPassword: string) {
     const user = Cipher.sha256(this.getCorePassword(userPassword)).toString('hex');
-    return user === (await keytar.getPassword(Keys.password, Keys.account));
+    return user === (await keytar.getPassword(Keys.password, Keys.masterAccount(this.machineId)));
   }
 
   async savePassword(userPassword: string) {
@@ -64,7 +67,7 @@ class KeyMan {
     await this.account.save();
 
     const pwHash = Cipher.sha256(this.getCorePassword(userPassword)).toString('hex');
-    await keytar.setPassword(Keys.password, Keys.account, pwHash);
+    await keytar.setPassword(Keys.password, Keys.masterAccount(this.machineId), pwHash);
   }
 
   genMnemonic(length = 12) {
@@ -88,12 +91,14 @@ class KeyMan {
     const iv = Cipher.generateIv();
     const encryptedMnemonic = Cipher.encrypt(iv, this.tmpMnemonic, this.getCorePassword(userPassword));
 
-    this.account.secret = encryptedMnemonic;
+    this.account.kc_unique = this.account.kc_unique ?? crypto.randomBytes(4).toString('hex');
     this.account.iv = iv.toString('hex');
     this.account.type = AccountType.mnemonic;
     this.account.basePath = this.basePath;
     this.account.basePathIndex = this.basePathIndex;
-    this.account.save();
+
+    await this.account.save();
+    await keytar.setPassword(Keys.secret, Keys.secretAccount(this.account.kc_unique), encryptedMnemonic);
 
     this.tmpMnemonic = undefined;
     this.hasSecret = true;
@@ -105,7 +110,7 @@ class KeyMan {
     if (!(await this.verifyPassword(userPassword))) return undefined;
 
     const iv = this.account.iv;
-    const enMnemonic = this.account.secret;
+    const enMnemonic = await keytar.getPassword(Keys.secret, Keys.secretAccount(this.account.kc_unique));
 
     return Cipher.decrypt(Buffer.from(iv, 'hex'), enMnemonic, this.getCorePassword(userPassword));
   }
@@ -163,7 +168,10 @@ class KeyMan {
     this.basePath = BasePath;
     this.basePathIndex = 0;
 
+    await keytar.deletePassword(Keys.secret, Keys.secretAccount(this.account.kc_unique));
     await this.account?.remove();
+
+    this.account = undefined;
   }
 
   private async getPrivateKey(userPassword: string, accountIndex = 0) {
