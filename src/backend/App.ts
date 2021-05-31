@@ -1,5 +1,4 @@
 import * as Cipher from '../common/Cipher';
-import * as crypto from 'crypto';
 import * as keytar from 'keytar';
 
 import { BrowserWindow, Notification, TouchBar, TouchBarButton, ipcMain, systemPreferences } from 'electron';
@@ -35,7 +34,6 @@ const Keys = {
 export class App {
   touchIDSupported = systemPreferences.canPromptTouchID();
 
-  #userPassword?: string; // keep password in memory for TouchID users
   windows = new Map<string, { iv: Buffer; key: Buffer }>();
   mainWindow?: BrowserWindow;
   touchBarButtons?: { walletConnect: TouchBarButton; gas: TouchBarButton; price?: TouchBarButton };
@@ -45,7 +43,8 @@ export class App {
   chainId = 1;
   machineId: string;
 
-  #authKeys = new Map<string, string>();
+  #userPassword?: string; // keep encrypted password in memory for TouchID users
+  #authKeys = new Map<string, string>(); // authId => key
 
   get currentAddress() {
     return this.addresses[this.currentAddressIndex];
