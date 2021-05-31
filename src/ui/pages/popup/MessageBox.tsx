@@ -17,8 +17,21 @@ export default ({ app }: { app: ApplicationPopup }) => {
       <div className="content">{msgboxVM.message}</div>
 
       <div className="actions">
-        <button onClick={(_) => msgboxVM.reject()}>{t('Cancel')}</button>
-        <button className="positive" onClick={(_) => msgboxVM.approve()}>
+        <button
+          onClick={(_) => {
+            msgboxVM.reject();
+            window.close();
+          }}
+        >
+          {t('Cancel')}
+        </button>
+        <button
+          className="positive"
+          onClick={(_) => {
+            msgboxVM.approve();
+            window.close();
+          }}
+        >
           {t('OK')}
         </button>
       </div>

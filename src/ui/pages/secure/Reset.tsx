@@ -12,6 +12,14 @@ export default ({ app }: { app: Application }) => {
   const { authKey } = useRouteMatch().params as { authKey: string };
 
   const reset = async () => {
+    const approved = await app.ask({
+      title: t('Reset'),
+      message: t('Your all wallet data will be deleted, are you sure?'),
+      icon: 'alert-triangle',
+    });
+
+    if (!approved) return;
+
     if (await app.reset(authKey)) {
       app.history.push('/welcome');
     }

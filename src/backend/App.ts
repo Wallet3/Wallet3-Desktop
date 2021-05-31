@@ -403,14 +403,26 @@ export class App {
         });
       });
 
-      ipcMain.handle(`${MessageKeys.popupMessageBox}-secure`, async (e, encrypted, winId) => {
-        const { iv, key } = this.windows.get(winId);
+      return App.encryptIpc(result, iv, key);
+    });
 
-        const reqid = randomBytes(4).toString('hex');
-        
+    ipcMain.handle(`${MessageKeys.popupMessageBox}-secure`, async (e, encrypted, winId) => {
+      const { iv, key } = this.windows.get(winId);
+
+      const params = App.decryptIpc(encrypted, iv, key);
+      const reqid = randomBytes(4).toString('hex');
+      this.createPopupWindow('msgbox', { reqid, ...params }, { modal: true, parent: this.mainWindow, height: 250 });
+
+      const approved = await new Promise<boolean>((resolve) => {
+        ipcMain.handleOnce(`${MessageKeys.returnMsgBoxResult(reqid)}-secure`, async (e, encrypted, popWinId) => {
+          const { iv, key } = this.windows.get(popWinId);
+          const { approved } = App.decryptIpc(encrypted, iv, key) as { approved: boolean };
+
+          resolve(approved);
+        });
       });
 
-      return App.encryptIpc(result, iv, key);
+      return App.encryptIpc({ approved }, iv, key);
     });
   };
 

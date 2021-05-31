@@ -96,6 +96,11 @@ export class Application {
   connectWallet(uri: string) {
     return ipc.invokeSecure(MessageKeys.connectWallet, { uri, modal: true });
   }
+
+  async ask(msg: { title: string; icon: string; message: string }) {
+    const { approved } = await ipc.invokeSecure<{ approved: boolean }>(MessageKeys.popupMessageBox, msg);
+    return approved;
+  }
 }
 
 export default new Application();

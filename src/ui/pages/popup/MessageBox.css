@@ -3,6 +3,13 @@
   grid-template-rows: auto 1fr auto;
 }
 
+.page.messagebox > .content {
+  padding: 10px 0;
+  box-sizing: border-box;
+  font-size: 14px;
+  color: var(--font-color-title);
+}
+
 .page.messagebox > .actions {
   display: grid;
   grid-template-columns: 1fr 1fr;

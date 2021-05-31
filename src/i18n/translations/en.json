@@ -94,5 +94,6 @@
   "Quit": "Quit",
   "Unlock Wallet": "Unlock Wallet",
   "App Info": "App Info",
-  "Supported Characters": "Supported Characters: A-Z, 0-9"
+  "Supported Characters": "Supported Characters: A-Z, 0-9",
+  "Your all wallet data will be deleted, are you sure?": "Your all wallet data will be deleted, are you sure?"
 }
