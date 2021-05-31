@@ -1,4 +1,6 @@
 import * as Cipher from '../common/Cipher';
+import * as crypto from 'crypto';
+import * as keytar from 'keytar';
 
 import { BrowserWindow, Notification, TouchBar, TouchBarButton, ipcMain, systemPreferences } from 'electron';
 import MessageKeys, {
@@ -25,10 +27,15 @@ import { utils } from 'ethers';
 declare const POPUP_WINDOW_WEBPACK_ENTRY: string;
 declare const POPUP_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
+const Keys = {
+  appLaunchKey: 'wallet3-applaunchkey',
+  appAccount: (id: string) => `wallet3-core-${id}`,
+};
+
 export class App {
   touchIDSupported = systemPreferences.canPromptTouchID();
 
-  userPassword?: string; // keep password in memory for TouchID users
+  #userPassword?: string; // keep password in memory for TouchID users
   windows = new Map<string, { iv: Buffer; key: Buffer }>();
   mainWindow?: BrowserWindow;
   touchBarButtons?: { walletConnect: TouchBarButton; gas: TouchBarButton; price?: TouchBarButton };
@@ -36,6 +43,7 @@ export class App {
   currentAddressIndex = 0;
   addresses: string[] = [];
   chainId = 1;
+  machineId: string;
 
   #authKeys = new Map<string, string>();
 
@@ -47,7 +55,26 @@ export class App {
     return this.addresses.length > 0;
   }
 
-  init() {
+  async decryptUserPassword() {
+    const secret = await keytar.getPassword(Keys.appLaunchKey, Keys.appAccount(this.machineId));
+    const [iv, key] = secret.split(':');
+    return Cipher.decrypt(Buffer.from(iv, 'hex'), this.#userPassword, Buffer.from(key, 'hex'));
+  }
+
+  async encryptUserPassword(password: string) {
+    const secret = await keytar.getPassword(Keys.appLaunchKey, Keys.appAccount(this.machineId));
+    const [iv, key] = secret.split(':');
+    this.#userPassword = Cipher.encrypt(Buffer.from(iv, 'hex'), password, Buffer.from(key, 'hex'));
+  }
+
+  async init() {
+    this.machineId = Cipher.sha256(await macaddr.one()).toString('hex');
+
+    const launchIv = Cipher.generateIv().toString('hex');
+    const launchKey = Cipher.generateIv(32).toString('hex');
+
+    await keytar.setPassword(Keys.appLaunchKey, Keys.appAccount(this.machineId), `${launchIv}:${launchKey}`);
+
     autorun(() => {
       console.log('pending', TxMan.pendingTxs.length);
       this.mainWindow?.webContents.send(MessageKeys.pendingTxsChanged, [...TxMan.pendingTxs]);
@@ -92,7 +119,7 @@ export class App {
           addresses: [...this.addresses],
           connectedDApps: WCMan.connectedSessions,
           pendingTxs: [...TxMan.pendingTxs],
-          machineId: Cipher.sha256(await macaddr.one()).toString('hex'),
+          machineId: this.machineId,
         } as InitStatus,
         iv,
         key
@@ -148,7 +175,7 @@ export class App {
       const addresses = await KeyMan.genAddresses(userPassword, 10);
       runInAction(() => (this.addresses = addresses));
 
-      if (this.touchIDSupported) this.userPassword = userPassword;
+      if (this.touchIDSupported) this.encryptUserPassword(userPassword);
 
       TxMan.init();
 
@@ -196,7 +223,7 @@ export class App {
       await KeyMan.savePassword(newPassword);
       if (!(await KeyMan.saveMnemonic(newPassword))) return App.encryptIpc({ success: false }, iv, key);
 
-      if (this.touchIDSupported) this.userPassword = newPassword;
+      if (this.touchIDSupported) this.encryptUserPassword(newPassword);
       return App.encryptIpc({ success: true }, iv, key);
     });
 
@@ -210,7 +237,7 @@ export class App {
         addrs = await KeyMan.genAddresses(password, count);
         runInAction(() => this.addresses.push(...addrs));
 
-        if (this.touchIDSupported) this.userPassword = password;
+        if (this.touchIDSupported) this.encryptUserPassword(password);
       }
 
       return App.encryptIpc({ verified, addresses: verified ? addrs : [] }, iv, key);
@@ -259,7 +286,7 @@ export class App {
     ipcMain.handle(`${MessageKeys.sendTx}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
       const params: SendTxParams = App.decryptIpc(encrypted, iv, key);
-      const password = this.extractPassword(params);
+      const password = await this.extractPassword(params);
       if (!password) return App.encryptIpc('', iv, key);
 
       const txHex = await KeyMan.signTx(password, this.currentAddressIndex, params);
@@ -290,14 +317,14 @@ export class App {
     return Cipher.encrypt(iv, JSON.stringify(obj), key);
   };
 
-  extractPassword = (params: SendTxParams) => {
+  extractPassword = async (params: SendTxParams) => {
     if (!this.ready) return '';
 
-    const password = params.viaTouchID ? this.userPassword : params.password;
     if (params.from.toLowerCase() !== this.currentAddress.toLowerCase()) {
       return '';
     }
 
+    const password = params.viaTouchID ? await this.decryptUserPassword() : params.password;
     return password;
   };
 
@@ -370,7 +397,8 @@ export class App {
           const { iv, key } = this.windows.get(popWinId);
           const { success, password } = App.decryptIpc(encrypted, iv, key) as { success: boolean; password?: string };
           const authKey = success ? randomBytes(8).toString('hex') : '';
-          if (authKey) this.#authKeys.set(authKey, password || (this.touchIDSupported ? this.userPassword : undefined));
+          if (authKey)
+            this.#authKeys.set(authKey, password || (this.touchIDSupported ? await this.decryptUserPassword() : ''));
 
           resolve({ success, authKey });
         });

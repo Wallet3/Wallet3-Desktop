@@ -230,7 +230,7 @@ export class WalletConnect extends EventEmitter {
       const { iv, key } = App.windows.get(winId);
       const params: SendTxParams = Application.decryptIpc(encrypted, iv, key);
 
-      const password = App.extractPassword(params);
+      const password = await App.extractPassword(params);
       if (!password) return Application.encryptIpc('', iv, key);
 
       const txHex = await KeyMan.signTx(password, App.currentAddressIndex, params);
@@ -289,7 +289,7 @@ export class WalletConnect extends EventEmitter {
       const { iv, key } = App.windows.get(winId);
       let { password, viaTouchID }: AuthParams = Application.decryptIpc(encrypted, iv, key);
 
-      password = password ?? (viaTouchID ? App.userPassword : undefined);
+      password = password ?? (viaTouchID ? await App.decryptUserPassword() : undefined);
 
       if (!password) {
         this.connector.rejectRequest({ id: request.id, error: { message: 'Permission Denied' } });

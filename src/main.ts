@@ -139,7 +139,7 @@ app.on('ready', async () => {
   await DBMan.init();
   await Promise.all([KeyMan.init(), TxMan.init(), WCMan.init()]);
 
-  App.init();
+  await App.init();
   createWindow();
 
   GasnowWs.start(true);
@@ -198,6 +198,12 @@ app.on('browser-window-blur', () => {
   idleTimer = setTimeout(() => {
     App.mainWindow?.webContents.send(Messages.idleExpired, { idleExpired: true });
   }, 5 * 1000 * 60);
+});
+
+app.on('web-contents-created', (event, contents) => {
+  contents.on('will-navigate', (event, navigationUrl) => {
+    event.preventDefault();
+  });
 });
 
 powerMonitor.on('resume', () => {
