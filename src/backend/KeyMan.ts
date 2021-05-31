@@ -160,8 +160,8 @@ class KeyMan {
     return addresses;
   }
 
-  async reset(password: string) {
-    if (!(await this.verifyPassword(password))) return false;
+  async reset(password: string, viaPassword = true) {
+    if (viaPassword && !(await this.verifyPassword(password))) return false;
 
     this.hasSecret = false;
     this.basePath = BasePath;

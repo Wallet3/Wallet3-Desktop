@@ -8,3 +8,23 @@
   margin-top: -3vh;
   margin-right: 2px;
 }
+
+.page.authentication > .reset-bar {
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  font-size: 10px;
+}
+
+.page.authentication > .reset-bar > span {
+  cursor: pointer;
+  color: var(--font-color-title);
+  transition: all 0.3s;
+}
+
+.page.authentication > .reset-bar > span:hover {
+  opacity: 0.5;
+}

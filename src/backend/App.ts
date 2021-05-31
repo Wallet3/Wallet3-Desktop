@@ -256,14 +256,15 @@ export class App {
     ipcMain.handle(`${MessageKeys.resetSystem}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);
       const { authKey } = App.decryptIpc(encrypted, iv, key);
-      if (!this.#authKeys.has(authKey)) {
+
+      if (!this.#authKeys.has(authKey) && authKey !== 'forgotpassword-reset') {
         return App.encryptIpc({ success: false }, iv, key);
       }
 
       const password = this.#authKeys.get(authKey);
       this.#authKeys.clear();
 
-      await KeyMan.reset(password);
+      await KeyMan.reset(password, authKey === 'forgotpassword-reset' ? false : true);
       await TxMan.clean();
       await WCMan.clean();
       await DBMan.clean();

@@ -12,6 +12,7 @@ export default ({ app }: { app: Application }) => {
   const { touchIDSupported, appAuthenticated } = app;
   const { t } = useTranslation();
   const [validated, setValidated] = useState(false);
+  const [failedCount, setFailedCount] = useState(0);
 
   const goApp = () => {
     setValidated(true);
@@ -23,6 +24,7 @@ export default ({ app }: { app: Application }) => {
       goApp();
     } else {
       Anime.vibrate('.page.authentication > .container');
+      setFailedCount((c) => c + 1);
     }
   };
 
@@ -35,6 +37,21 @@ export default ({ app }: { app: Application }) => {
       goApp();
     } else {
       Anime.vibrate('.page.authentication > .container');
+      setFailedCount((c) => c + 1);
+    }
+  };
+
+  const resetApp = async () => {
+    const approved = await app.ask({
+      title: t('Reset'),
+      message: t('Your all data will be deleted, are you sure?'),
+      icon: 'alert-triangle',
+    });
+
+    if (!approved) return;
+
+    if (await app.reset('forgotpassword-reset')) {
+      app.history.push('/welcome');
     }
   };
 
@@ -50,6 +67,8 @@ export default ({ app }: { app: Application }) => {
     return () => (document.onkeydown = undefined);
   }, []);
 
+  console.log(failedCount);
+
   return (
     <div className="page authentication ">
       <div className={`container ${!appAuthenticated || !touchIDSupported ? 'non-touchid' : ''}`}>
@@ -61,6 +80,12 @@ export default ({ app }: { app: Application }) => {
 
         {validated ? <Validation /> : undefined}
       </div>
+
+      {failedCount >= 5 && !appAuthenticated ? (
+        <div className="reset-bar">
+          <span onClick={resetApp}>{t('Forgot Password? Reset Wallet')}</span>
+        </div>
+      ) : undefined}
     </div>
   );
 };
