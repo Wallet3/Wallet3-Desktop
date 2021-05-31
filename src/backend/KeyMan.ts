@@ -20,7 +20,6 @@ const Keys = {
 };
 
 class KeyMan {
-  salt!: string;
   tmpMnemonic?: string;
   basePath = BasePath;
   basePathIndex = 0;
@@ -36,8 +35,7 @@ class KeyMan {
 
     [this.account] = await DBMan.accountRepo.find();
 
-    this.salt = this.account?.salt;
-    this.hasSecret = this.account?.kc_unique && this.account?.iv && this.salt ? true : false;
+    this.hasSecret = this.account?.kc_unique && this.account?.iv && this.account.salt ? true : false;
     this.basePath = this.account?.basePath ?? BasePath;
     this.basePathIndex = this.account?.basePathIndex ?? 0;
   }
@@ -60,10 +58,13 @@ class KeyMan {
   }
 
   async savePassword(userPassword: string) {
-    this.salt = Cipher.generateIv().toString('hex');
+    const iv = Cipher.generateIv();
 
+    const salt = Cipher.encrypt(iv, Cipher.generateIv().toString('hex'), userPassword);
     this.account = this.account ?? new Account();
-    this.account.salt = this.salt;
+    this.account.iv = iv.toString('hex');
+    this.account.salt = salt;
+
     await this.account.save();
 
     const pwHash = Cipher.sha256(this.getCorePassword(userPassword)).toString('hex');
@@ -88,14 +89,13 @@ class KeyMan {
     if (!ethers.utils.isValidMnemonic(this.tmpMnemonic)) return false;
     if (!(await this.verifyPassword(userPassword))) return false;
 
-    const iv = Cipher.generateIv();
-    const encryptedMnemonic = Cipher.encrypt(iv, this.tmpMnemonic, this.getCorePassword(userPassword));
-
     this.account.kc_unique = this.account.kc_unique ?? crypto.randomBytes(4).toString('hex');
-    this.account.iv = iv.toString('hex');
     this.account.type = AccountType.mnemonic;
     this.account.basePath = this.basePath;
     this.account.basePathIndex = this.basePathIndex;
+
+    const iv = Buffer.from(this.account.iv, 'hex');
+    const encryptedMnemonic = Cipher.encrypt(iv, this.tmpMnemonic, this.getCorePassword(userPassword));
 
     await this.account.save();
     await keytar.setPassword(Keys.secret, Keys.secretAccount(this.account.kc_unique), encryptedMnemonic);
@@ -163,7 +163,6 @@ class KeyMan {
   async reset(password: string) {
     if (!(await this.verifyPassword(password))) return false;
 
-    this.salt = undefined;
     this.hasSecret = false;
     this.basePath = BasePath;
     this.basePathIndex = 0;
@@ -184,7 +183,8 @@ class KeyMan {
   }
 
   private getCorePassword(userPassword: string) {
-    return `${this.salt}-${userPassword}`;
+    const salt = Cipher.decrypt(Buffer.from(this.account.iv, 'hex'), this.account.salt, userPassword);
+    return `${salt}-${userPassword}`;
   }
 }
 

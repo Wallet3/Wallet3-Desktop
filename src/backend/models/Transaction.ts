@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'transactions' })
 export default class Transaction extends BaseEntity {
   @PrimaryColumn()
   hash: string;

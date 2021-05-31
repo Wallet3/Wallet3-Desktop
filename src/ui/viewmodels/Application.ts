@@ -67,7 +67,7 @@ export class Application {
   }
 
   hashPassword(passcode: string) {
-    return crypto.sha256(`ethereum.wallet3-${passcode}-${this.machineId}`);
+    return crypto.sha256(`Ethereum.Wallet3-${passcode}-${this.machineId}`);
   }
 
   async promptTouchID(message?: string) {

@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({})
+@Entity({ name: 'dapps' })
 export default class WCSession extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
