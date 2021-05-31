@@ -1,4 +1,4 @@
-import { Auth, ConfirmTx, ConnectDapp, QRScanner } from './pages/popup';
+import { Auth, ConfirmTx, ConnectDapp, MessageBox, QRScanner } from './pages/popup';
 import React, { useEffect } from 'react';
 import { Route, Router, Switch } from 'react-router-dom';
 
@@ -9,13 +9,16 @@ import { observer } from 'mobx-react-lite';
 
 export default observer(({ app }: { app: ApplicationPopup }) => {
   useEffect(() => {
-    mousetrap.bind('esc', () => {
-      app.confirmVM?.rejectRequest();
-      app.connectDappVM?.reject();
-      app.signVM?.rejectRequest();
+    if (app.confirmVM || app.connectDappVM || app.signVM || app.msgboxVM) {
+      mousetrap.bind('esc', () => {
+        app.confirmVM?.rejectRequest();
+        app.connectDappVM?.reject();
+        app.signVM?.rejectRequest();
+        app.msgboxVM?.reject();
 
-      window.close();
-    });
+        window.close();
+      });
+    }
   }, []);
 
   return (
@@ -39,6 +42,10 @@ export default observer(({ app }: { app: ApplicationPopup }) => {
 
         <Route path="/auth/:authId">
           <Auth app={app} />
+        </Route>
+
+        <Route path="/msgbox">
+          <MessageBox app={app} />
         </Route>
 
         <Route path="*" component={Blank} />

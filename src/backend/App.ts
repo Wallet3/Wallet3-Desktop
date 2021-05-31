@@ -403,6 +403,13 @@ export class App {
         });
       });
 
+      ipcMain.handle(`${MessageKeys.popupMessageBox}-secure`, async (e, encrypted, winId) => {
+        const { iv, key } = this.windows.get(winId);
+
+        const reqid = randomBytes(4).toString('hex');
+        
+      });
+
       return App.encryptIpc(result, iv, key);
     });
   };

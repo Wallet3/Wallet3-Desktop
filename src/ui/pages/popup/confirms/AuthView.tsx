@@ -6,22 +6,17 @@ import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 
+interface Props {
+  onCancel?: () => void;
+  onAuthTouchID?: () => Promise<void>;
+  onAuthPasscode?: (passcode: string) => Promise<void>;
+  touchIDSupported: boolean;
+  runTouchID?: boolean;
+  authenticated?: boolean;
+}
+
 export default observer(
-  ({
-    touchIDSupported,
-    onCancel,
-    onAuthTouchID,
-    onAuthPasscode,
-    authenticated,
-    runTouchID,
-  }: {
-    onCancel?: () => void;
-    onAuthTouchID?: () => Promise<void>;
-    onAuthPasscode?: (passcode: string) => Promise<void>;
-    touchIDSupported: boolean;
-    runTouchID?: boolean;
-    authenticated?: boolean;
-  }) => {
+  ({ touchIDSupported, onCancel, onAuthTouchID, onAuthPasscode, authenticated, runTouchID }: Props) => {
     const { t } = useTranslation();
 
     const [loading, setLoading] = useState(false);

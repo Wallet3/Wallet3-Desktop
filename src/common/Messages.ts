@@ -21,6 +21,8 @@ export default {
   disconnectDApp: 'msg-disconnect-dapp',
   switchDAppNetwork: 'msg-switch-dapp-network',
   sendLocalNotification: 'msg-send-notification',
+  popupMessageBox: 'msg-popup-msgbox',
+  returnMsgBoxResult: (id: string) => `msg-return-msgbox-result-${id}`,
 
   scanQR: 'msg-scan-qr',
   connectWallet: 'msg-connect-wallet',
@@ -121,4 +123,4 @@ export interface RequestSignMessage {
   walletConnect: WCParams;
 }
 
-export type PopupWindowTypes = 'connectDapp' | 'sign' | 'sendTx' | 'scanQR' | 'auth';
+export type PopupWindowTypes = 'connectDapp' | 'sign' | 'sendTx' | 'scanQR' | 'auth' | 'msgbox';

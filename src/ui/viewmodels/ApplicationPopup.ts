@@ -3,6 +3,7 @@ import Messages, { ConfirmSendTx, PopupWindowTypes } from '../../common/Messages
 import { Application } from './Application';
 import { ConfirmVM } from './ConfirmVM';
 import { ConnectDappVM } from './ConnectDappVM';
+import { MessageBoxVM } from './MessageBoxVM';
 import { SignVM } from './SignVM';
 import ipc from '../bridges/IPC';
 
@@ -38,6 +39,10 @@ export class ApplicationPopup extends Application {
         case 'auth':
           this.history.push(`/auth/${payload.authId}`);
           break;
+        case 'msgbox':
+          this.msgboxVM = new MessageBoxVM(payload);
+          this.history.push('/msgbox');
+          break;
       }
     });
   }
@@ -45,6 +50,7 @@ export class ApplicationPopup extends Application {
   confirmVM?: ConfirmVM;
   connectDappVM?: ConnectDappVM;
   signVM?: SignVM;
+  msgboxVM?: MessageBoxVM;
 }
 
 export default new ApplicationPopup();
