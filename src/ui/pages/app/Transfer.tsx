@@ -125,6 +125,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
           <span>{t('Nonce')}:</span>
           <input
             type="text"
+            maxLength={64}
             placeholder={`${transferVM?.nonce}`}
             onChange={(e) => transferVM?.setNonce(Number.parseInt(e.target.value))}
           />
@@ -183,6 +184,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
               ref={gasInput}
               type="text"
               placeholder="20"
+              maxLength={16}
               onClick={(_) => {
                 setActiveGas(3);
                 transferVM?.setGasPrice(Number.parseFloat(gasInput.current.value) || 0);

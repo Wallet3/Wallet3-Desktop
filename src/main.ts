@@ -167,10 +167,16 @@ app.on('ready', async () => {
     walletConnect.enabled = App.ready;
   });
 
-  globalShortcut.register('CommandOrControl+C+D', () => {
+  const scanQR = () => {
     if (!App.ready) return;
     App.createPopupWindow('scanQR', {});
-  });
+  };
+
+  globalShortcut.register('CommandOrControl+Option+S', scanQR);
+  globalShortcut.register('CommandOrControl+Alt+S', scanQR);
+
+  globalShortcut.register('CommandOrControl+Option+3', () => createWindow());
+  globalShortcut.register('CommandOrControl+Alt+3', () => createWindow());
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common

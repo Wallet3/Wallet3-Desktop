@@ -53,17 +53,17 @@ export default observer(({ app }: Props) => {
   const onContinue = () => {
     anime({
       targets: '.page.confirm > .container > .details',
-      translateX: [0, '-100vw'],
+      translateX: ['-100vw'],
       easing: 'linear',
-      opacity: [1, 0],
+      opacity: [0],
       duration: 300,
     });
 
     anime({
       targets: '.page.confirm > .container > .auth',
-      translateX: ['100vw', 0],
+      translateX: [0],
       easing: 'linear',
-      opacity: [0, 1],
+      opacity: [1],
       duration: 300,
       complete: () => setOnAuthView(true),
     });
@@ -77,20 +77,21 @@ export default observer(({ app }: Props) => {
   const onAuthCancel = () => {
     anime({
       targets: '.page.confirm > .container > .details',
-      translateX: ['-100vw', 0],
+      translateX: [0],
       easing: 'linear',
-      opacity: [0, 1],
+      opacity: [1],
       duration: 300,
     });
 
     anime({
       targets: '.page.confirm > .container > .auth',
-      translateX: [0, '100vw'],
+      translateX: ['100vw'],
       easing: 'linear',
-      opacity: [1, 0],
+      opacity: [0],
       duration: 300,
     });
 
+    (document.querySelector('.positive') as HTMLButtonElement)?.focus();
     setOnAuthView(false);
   };
 
@@ -109,6 +110,7 @@ export default observer(({ app }: Props) => {
 
     document.onkeydown = (ev) => {
       if (ev.code !== 'Enter') return;
+
       if (onAuthView) return;
       if (confirmVM && !confirmVM?.isValid) return;
 
