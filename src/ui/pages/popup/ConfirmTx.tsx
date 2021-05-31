@@ -110,6 +110,7 @@ export default observer(({ app }: Props) => {
     document.onkeydown = (ev) => {
       if (ev.code !== 'Enter') return;
       if (onAuthView) return;
+      if (confirmVM && !confirmVM?.isValid) return;
 
       ev.preventDefault();
       ev.stopPropagation();

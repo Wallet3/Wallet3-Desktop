@@ -156,7 +156,14 @@ export class ConfirmVM {
   }
 
   get isValid() {
-    return this.gas >= 21000 && this.gas <= 12_500_000 && this.gasPrice > 0 && this.nonce >= 0 && this.data;
+    return (
+      this.gas >= 21000 &&
+      this.gas <= 12_500_000 &&
+      this.gasPrice > 0 &&
+      this.nonce >= 0 &&
+      this.data &&
+      this.nativeBalance.gt(0)
+    );
   }
 
   get data() {
