@@ -43,7 +43,7 @@ export default observer((args: Props) => {
   return (
     <SkeletonTheme color="#eeeeee90" highlightColor="#f5f5f5d0">
       <div className="layout">
-        <div>
+        <div className="ui">
           <Switch>
             <Route path={`${path}/settings`}>
               <Settings {...args} />

@@ -1,7 +1,7 @@
 .page.main {
   padding: 0;
   display: grid;
-  grid-template-rows: auto auto auto 1fr;
+  grid-template-rows: auto auto auto auto 1fr;
 }
 
 .page.main > .utility-bar {
@@ -202,4 +202,21 @@
 
 .page.main > .assets > table td:last-child {
   padding-left: 0px;
+}
+
+.page.main > .nfts {
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.page.main > .nfts > .tokens {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: var(--font-color-title);
+}
+
+.page.main > .nfts > .tokens.empty {
+  justify-content: center;
+  opacity: 0.5;
 }

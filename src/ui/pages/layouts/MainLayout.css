@@ -9,6 +9,10 @@ div[class$='-SkeletonTheme'] {
   grid-template-rows: 1fr auto;
 }
 
+.layout > .ui {
+  display: grid;
+}
+
 .layout > .tabs {
   display: grid;
   grid-template-columns: 1fr 1fr;

@@ -23,8 +23,8 @@ class POAP {
     );
 
     return details.map(async (basic) => {
-      const uri = await this.contract.tokenURI(basic.tokenId);
-      const metadata = (await axios.get(uri)).data as {
+      const tokenURI = await this.contract.tokenURI(basic.tokenId);
+      const metadata = (await axios.get(tokenURI)).data as {
         description: string;
         external_url: string;
         home_url: string;
@@ -33,7 +33,9 @@ class POAP {
         year: number;
         tags: string[];
       };
-      return { ...basic, uri, metadata };
+      return { ...basic, tokenURI, metadata };
     });
   }
 }
+
+export default new POAP();

@@ -5,6 +5,7 @@ import NetVM, { Networks } from './NetworksVM';
 import { makeAutoObservable, runInAction } from 'mobx';
 
 import { AddTokenVM } from './AddTokenVM';
+import { NFT } from './models/NFT';
 import { TransferVM } from './TransferVM';
 import WalletVM from './WalletVM';
 import store from 'storejs';
@@ -33,6 +34,7 @@ export class AccountVM {
   private _name = '';
 
   allTokens: UserToken[] = [];
+  nfts: NFT[] = [];
   chains: Debank.IChainBalance[] = [];
 
   nativeToken: UserToken = null;

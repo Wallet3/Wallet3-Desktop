@@ -233,9 +233,13 @@ export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor
         <div className="nav-title">
           <h3 className="title">NFTs</h3>
 
-          <Link to={`/userTokens`}>
+          <Link to={`/nfts`}>
             <Feather icon="more-horizontal" size={16} strokeWidth={1} />
           </Link>
+        </div>
+
+        <div className={`tokens ${accountVM.nfts.length === 0 ? 'empty' : ''}`}>
+          {accountVM.nfts.length === 0 ? 'No NFTs Here' : ''}
         </div>
       </div>
     </div>

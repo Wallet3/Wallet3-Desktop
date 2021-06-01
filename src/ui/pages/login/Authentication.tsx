@@ -67,8 +67,6 @@ export default ({ app }: { app: Application }) => {
     return () => (document.onkeydown = undefined);
   }, []);
 
-  console.log(failedCount);
-
   return (
     <div className="page authentication ">
       <div className={`container ${!appAuthenticated || !touchIDSupported ? 'non-touchid' : ''}`}>
