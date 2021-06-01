@@ -204,10 +204,10 @@ export class AccountVM {
     }
   };
 
-  refreshNFTs = () => {
+  refreshNFTs = async () => {
     if (NetVM.currentChainId !== 1 || this.nfts?.length > 0) return;
 
-    POAP.getNFTs(this.address).then(async (data) => {
+    const poap = POAP.getNFTs(this.address).then(async (data) => {
       const nfts = data.map((item) => {
         const nft = new NFT();
         nft.tokenId = item.tokenId;
@@ -219,13 +219,10 @@ export class AccountVM {
         return nft;
       });
 
-      runInAction(() => {
-        this.nfts = this.nfts ?? [];
-        this.nfts.push(...nfts);
-      });
+      return nfts;
     });
 
-    Rarible.getItemsByOwner(this.address).then(async (items) => {
+    const rarible = Rarible.getItemsByOwner(this.address).then(async (items) => {
       const nfts = items
         .map((item) => {
           const nft = new NFT();
@@ -238,10 +235,17 @@ export class AccountVM {
         })
         .filter((i) => i);
 
-      runInAction(() => {
-        this.nfts = this.nfts ?? [];
-        this.nfts.push(...nfts);
-      });
+      return nfts;
+    });
+
+    let nfts = (await Promise.all([poap, rarible])).flat();
+    nfts = nfts.filter(
+      (item, index) => index === nfts.findIndex((i) => i.contract === item.contract && i.tokenId === item.tokenId)
+    );
+
+    runInAction(() => {
+      this.nfts = this.nfts ?? [];
+      this.nfts.push(...nfts);
     });
   };
 }

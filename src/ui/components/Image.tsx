@@ -1,4 +1,5 @@
-import { AppsIcon } from '../misc/Icons';
+import { AppsIcon, DefaultCoin } from '../misc/Icons';
+
 import React from 'react';
 
 interface ImgHTMLAttributes {
@@ -13,6 +14,7 @@ interface ImgHTMLAttributes {
   useMap?: string;
   width?: number | string;
   className?: string;
+  defaultType?: 'app' | 'nft';
 }
 
 export default (props: ImgHTMLAttributes) => {
@@ -21,7 +23,7 @@ export default (props: ImgHTMLAttributes) => {
       {...props}
       onError={(e) => {
         (e.target as HTMLImageElement).onerror = null;
-        (e.target as HTMLImageElement).src = AppsIcon;
+        (e.target as HTMLImageElement).src = props.defaultType === 'nft' ? DefaultCoin : AppsIcon;
       }}
     />
   );

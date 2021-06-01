@@ -19,3 +19,4 @@ export const FlagIcons = (country: string) => {
 };
 
 export const AppsIcon = Apps;
+export { DefaultCoin };

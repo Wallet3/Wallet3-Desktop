@@ -1,0 +1,43 @@
+.page.nfts {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+}
+
+.page.nfts > .content {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  margin: 0 -12px;
+  padding: 0 12px;
+  gap: 12px;
+  overflow-y: auto;
+  height: calc(100vh - 12px - 72px);
+}
+
+.page.nfts > .content > .card {
+  position: relative;
+  width: calc(50vw - 20px);
+  height: 220px;
+  cursor: pointer;
+}
+
+.page.nfts > .content > .card > img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.page.nfts > .content > .card > .title {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  color: white;
+  font-size: 12px;
+  padding: 2px 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

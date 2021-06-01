@@ -1,7 +1,6 @@
 import './UserTokens.css';
 
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-import { Observer, observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 
 import { AccountVM } from '../../viewmodels/AccountVM';
@@ -11,6 +10,7 @@ import Feather from 'feather-icons-react';
 import { Link } from 'react-router-dom';
 import { NavBar } from '../../components';
 import { Toggle } from 'react-toggle-component';
+import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 
 export default observer(({ accountVM, app }: { accountVM?: AccountVM; app: Application }) => {

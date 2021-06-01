@@ -1,5 +1,6 @@
 import './Wallet.css';
 
+import { Image, NetworkMenu } from '../../components';
 import { Menu, MenuButton, MenuDivider, MenuItem } from '@szhsin/react-menu';
 import { NetworksVM, PublicNetworks, Testnets } from '../../viewmodels/NetworksVM';
 import React, { useEffect } from 'react';
@@ -13,7 +14,6 @@ import Feather from 'feather-icons-react';
 import GasStation from '../../../gas';
 import HSBar from 'react-horizontal-stacked-bar-chart';
 import { Link } from 'react-router-dom';
-import { NetworkMenu } from '../../components';
 import PendingTx from './components/PendingTxLabel';
 import PendingTxIndicator from './components/PendingTxIndicator';
 import Skeleton from 'react-loading-skeleton';
@@ -233,7 +233,7 @@ export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor
         <div className="nav-title">
           <h3 className="title">NFTs</h3>
 
-          <Link to={`/nfts`}>
+          <Link to={`/userNFTs`}>
             <Feather icon="more-horizontal" size={16} strokeWidth={1} />
           </Link>
         </div>
@@ -246,7 +246,7 @@ export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor
               accountVM.nfts.slice(0, 12).map((nft) => {
                 return (
                   <div className="nft" key={`${nft.contract}:${nft.tokenId}`}>
-                    <img src={nft.image_url} alt="" />
+                    <Image src={nft.image_url} alt={nft.name} defaultType="nft" />
                   </div>
                 );
               })
