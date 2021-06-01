@@ -13,6 +13,7 @@ import { TransferVM } from '../../viewmodels/TransferVM';
 import { WalletVM } from '../../viewmodels/WalletVM';
 import { formatNum } from '../../misc/Formatter';
 import { observer } from 'mobx-react-lite';
+import { useRouteMatch } from 'react-router';
 import { useTranslation } from 'react-i18next';
 
 const AddressSearchStyle = {
@@ -32,16 +33,17 @@ const AddressSearchStyle = {
 export default observer(({ app, walletVM }: { app: Application; walletVM: WalletVM }) => {
   const { t } = useTranslation();
 
+  const { tokenId } = useRouteMatch().params as { tokenId?: string };
+
   const [activeGas, setActiveGas] = useState(1);
   const [transferVM, setVM] = useState<TransferVM>(null);
   const amountInput = useRef<HTMLInputElement>();
   const gasInput = useRef<HTMLInputElement>();
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
     const { transferVM } = walletVM.currentAccount;
 
-    transferVM.selectToken(params.get('token'));
+    transferVM.selectToken(tokenId);
     setVM(transferVM);
 
     return () => transferVM.dispose();

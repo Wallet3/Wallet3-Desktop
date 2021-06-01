@@ -55,7 +55,10 @@ export default observer((args: Props) => {
           <Route path="/app">
             <MainLayout {...args} />
           </Route>
-          <Route path="/send">
+          <Route path="/send" exact>
+            <Transfer {...args} />
+          </Route>
+          <Route path="/send/:tokenId" exact>
             <Transfer {...args} />
           </Route>
           <Route path="/account" exact>

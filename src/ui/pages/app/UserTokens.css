@@ -38,6 +38,10 @@
   outline: none;
 }
 
+.page.tokens > .content .tokens .token.even {
+  background-color: rgba(211, 211, 211, 0.21);
+}
+
 .page.tokens > .content .tokens .token > img {
   width: 18px;
   height: 18px;

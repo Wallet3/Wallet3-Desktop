@@ -204,7 +204,7 @@ export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor
                         {token ? (
                           <Link
                             className="button"
-                            to={`/send?token=${token.id}`}
+                            to={`/send/${token.id}`}
                             title={`${token.symbol}: $${token.amount * token.price || 0}`}
                           >
                             <div>
