@@ -238,8 +238,22 @@ export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor
           </Link>
         </div>
 
-        <div className={`tokens ${accountVM.nfts.length === 0 ? 'empty' : ''}`}>
-          {accountVM.nfts.length === 0 ? 'No NFTs Here' : ''}
+        <div className={`tokens ${accountVM.nfts?.length === 0 || !accountVM.nfts ? 'empty' : ''}`}>
+          {accountVM.nfts ? (
+            accountVM.nfts.length === 0 ? (
+              'No NFTs Here'
+            ) : (
+              accountVM.nfts.map((nft) => {
+                return (
+                  <div className="nft">
+                    <img src={nft.image_url} alt="" />
+                  </div>
+                );
+              })
+            )
+          ) : (
+            <Skeleton />
+          )}
         </div>
       </div>
     </div>

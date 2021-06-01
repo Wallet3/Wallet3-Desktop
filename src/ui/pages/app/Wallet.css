@@ -220,3 +220,22 @@
   justify-content: center;
   opacity: 0.5;
 }
+
+.page.main > .nfts > .tokens.empty .react-loading-skeleton {
+  width: calc(100vw - 24px);
+  height: 48px;
+}
+
+.page.main > .nfts > .tokens > .nft {
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.page.main > .nfts > .tokens > .nft:hover {
+  opacity: 0.85;
+}
+
+.page.main > .nfts > .tokens > .nft img {
+  width: 48px;
+  height: 48px;
+}

@@ -6,8 +6,10 @@ import { makeAutoObservable, runInAction } from 'mobx';
 
 import { AddTokenVM } from './AddTokenVM';
 import { NFT } from './models/NFT';
+import POAP from '../../nft/POAP';
 import { TransferVM } from './TransferVM';
 import WalletVM from './WalletVM';
+import delay from 'delay';
 import store from 'storejs';
 import { utils } from 'ethers';
 
@@ -34,7 +36,7 @@ export class AccountVM {
   private _name = '';
 
   allTokens: UserToken[] = [];
-  nfts: NFT[] = [];
+  nfts: NFT[] = null;
   chains: Debank.IChainBalance[] = [];
 
   nativeToken: UserToken = null;
@@ -105,6 +107,8 @@ export class AccountVM {
 
     this.refreshChainOverview();
     this.refreshChainTokens();
+
+    this.refreshNFTs();
   }
 
   moveToken(srcIndex: number, dstIndex: number) {
@@ -197,5 +201,27 @@ export class AccountVM {
     } catch (error) {
       return [];
     }
+  };
+
+  refreshNFTs = () => {
+    if (NetVM.currentChainId !== 1) return;
+
+    POAP.getNFTs(this.address).then(async (data) => {
+      const nfts = data.map((item) => {
+        const nft = new NFT();
+        nft.tokenId = item.tokenId;
+        nft.tokenURI = item.tokenURI;
+        nft.image_url = item.metadata.image_url;
+        nft.name = item.metadata.name;
+        nft.description = item.metadata.description;
+        nft.contract = item.contract;
+        return nft;
+      });
+
+      runInAction(() => {
+        this.nfts = this.nfts ?? [];
+        this.nfts.push(...nfts);
+      });
+    });
   };
 }

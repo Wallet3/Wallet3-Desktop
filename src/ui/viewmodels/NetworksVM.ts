@@ -53,17 +53,17 @@ export const PublicNetworks: INetwork[] = [
     order: 1,
   },
   {
-    symbol: 'BSC',
-    network: 'BSC',
-    chainId: 56,
-    color: '#f3ba2f',
-    order: 2,
-  },
-  {
     symbol: 'MATIC',
     network: 'Polygon',
     chainId: 137,
     color: '#8247E5',
+    order: 2,
+  },
+  {
+    symbol: 'BSC',
+    network: 'BSC',
+    chainId: 56,
+    color: '#f3ba2f',
     order: 3,
   },
   {

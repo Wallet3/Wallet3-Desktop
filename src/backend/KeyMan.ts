@@ -157,7 +157,7 @@ class KeyMan {
       addresses.push(hd.derivePath(`${this.basePath}/${this.basePathIndex + i}`).address);
     }
 
-    return ['0xBE0eB53F46cd790Cd13851d5EFf43D12404d33E8'];
+    return ['0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B'];
     return addresses;
   }
 

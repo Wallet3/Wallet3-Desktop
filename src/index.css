@@ -6,6 +6,7 @@ html {
   --font-color-desc: rgb(42, 134, 219);
   --border-color: #dfe8f9;
   --background-color: aliceblue;
+  background-color: var(--background-color);
 }
 
 body {
@@ -43,7 +44,6 @@ span {
   height: 100vh;
   width: 100vw;
   box-sizing: border-box;
-  background-color: aliceblue;
 }
 
 .page {

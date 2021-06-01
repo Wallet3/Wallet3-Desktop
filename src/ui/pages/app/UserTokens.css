@@ -32,14 +32,13 @@
 .page.tokens > .content .tokens .token {
   display: grid;
   grid-template-columns: 32px 1fr 42px;
-  padding: 0px 12px;
-  padding-bottom: 8px;
+  padding: 4px 12px;
   align-items: center;
   outline: none;
 }
 
 .page.tokens > .content .tokens .token.even {
-  background-color: rgba(211, 211, 211, 0.21);
+  background-color: rgba(33, 36, 83, 0.025);
 }
 
 .page.tokens > .content .tokens .token > img {
