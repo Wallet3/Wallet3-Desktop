@@ -6,6 +6,7 @@ import { makeAutoObservable, runInAction } from 'mobx';
 import App from './Application';
 import ERC20ABI from '../../abis/ERC20.json';
 import { GasnowWs } from '../../gas/Gasnow';
+import KnownAddresses from '../misc/KnownAddresses';
 import { Networks } from './NetworksVM';
 import { findTokenByAddress } from '../misc/Tokens';
 import { formatUnits } from 'ethers/lib/utils';
@@ -96,6 +97,12 @@ export class ConfirmVM {
 
   get receipt() {
     return this.args.receipient?.name || this.args.receipient?.address || this.args.to;
+  }
+
+  get verifiedName() {
+    return (
+      KnownAddresses[this.approveToken?.spender] || KnownAddresses[this.transferToken?.to] || KnownAddresses[this.args.to]
+    );
   }
 
   get receiptAddress() {

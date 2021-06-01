@@ -6,5 +6,5 @@ export function formatNum(value: number, symbol = '$') {
 }
 
 export function formatAddress(value: string) {
-  return `${value.substring(0, 10)}......${value.substring(value.length - 8)}`;
+  return value.startsWith('0x') ? `${value.substring(0, 10)}......${value.substring(value.length - 8)}` : value;
 }

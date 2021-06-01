@@ -17,7 +17,19 @@ interface Props {
 export default observer(({ implVM, onContinue, onReject }: Props) => {
   const { t } = useTranslation();
 
-  const { receiptAddress, receipt, amount, tokenSymbol, networkSymbol, gas, gasPrice, maxFee, nonce, totalValue } = implVM;
+  const {
+    receiptAddress,
+    receipt,
+    amount,
+    tokenSymbol,
+    networkSymbol,
+    gas,
+    gasPrice,
+    maxFee,
+    nonce,
+    totalValue,
+    verifiedName,
+  } = implVM;
 
   const gasPriceRef = createRef<HTMLInputElement>();
   const gasLimitRef = createRef<HTMLInputElement>();
@@ -40,9 +52,12 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
           </div>
         ) : undefined}
 
-        <div>
+        <div className={`to`}>
           <span>{t('To')}:</span>
-          <span title={receiptAddress}>{formatAddress(receipt)}</span>
+          <span className={`${verifiedName ? 'verified' : ''}`} title={receiptAddress}>
+            {verifiedName || formatAddress(receipt)}
+            {verifiedName ? <Feather icon="award" size={12} /> : undefined}
+          </span>
         </div>
 
         <div>

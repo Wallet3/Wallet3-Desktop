@@ -334,13 +334,15 @@ export class WalletConnect extends EventEmitter {
       this.connector.rejectRequest({ id: request.id, error: { message: 'User rejected' } });
     });
 
-    let msg: string | object;
+    let msg: string;
     switch (type) {
       case 'personal_sign':
         msg = Buffer.from(utils.arrayify(params[0])).toString('utf8');
         break;
       case 'signTypedData':
-        msg = params[1]; // JSON.stringify(JSON.parse(params[1]).message);
+        const data = JSON.parse(params[1]);
+        delete data.types;
+        msg = JSON.stringify(data);
         break;
     }
 

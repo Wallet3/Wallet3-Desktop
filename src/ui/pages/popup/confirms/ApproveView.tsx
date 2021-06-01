@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { ConfirmVM } from '../../../viewmodels/ConfirmVM';
 import { CryptoIcons } from '../../../misc/Icons';
 import Feather from 'feather-icons-react';
+import { formatAddress } from '../../../misc/Formatter';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 
@@ -13,7 +14,7 @@ interface Props {
 }
 
 export default observer(({ confirmVM, onReject, onContinue }: Props) => {
-  const { approveToken, tokenSymbol, gas, gasPrice, maxFee, nonce, totalValue, networkSymbol } = confirmVM;
+  const { approveToken, tokenSymbol, gas, gasPrice, maxFee, nonce, totalValue, networkSymbol, verifiedName } = confirmVM;
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -27,7 +28,10 @@ export default observer(({ confirmVM, onReject, onContinue }: Props) => {
 
         <div>
           <span>{t('Spender')}:</span>
-          <span title={approveToken.spender}>{approveToken.spender}</span>
+          <span className={verifiedName ? 'verified' : ''} title={approveToken.spender}>
+            {verifiedName || formatAddress(approveToken.spender)}
+            {verifiedName ? <Feather icon="award" size={12} /> : undefined}
+          </span>
         </div>
 
         <div>
