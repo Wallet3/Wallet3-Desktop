@@ -1,10 +1,10 @@
 import Messages, { ConfirmSendTx, PopupWindowTypes } from '../../common/Messages';
 
 import { Application } from './Application';
-import { ConfirmVM } from './ConfirmVM';
-import { ConnectDappVM } from './ConnectDappVM';
-import { MessageBoxVM } from './MessageBoxVM';
-import { SignVM } from './SignVM';
+import { ConfirmVM } from './popups/ConfirmVM';
+import { ConnectDappVM } from './popups/ConnectDappVM';
+import { MessageBoxVM } from './popups/MessageBoxVM';
+import { SignVM } from './popups/SignVM';
 import ipc from '../bridges/IPC';
 
 export class ApplicationPopup extends Application {

@@ -1,5 +1,5 @@
-import Messages from '../../common/Messages';
-import ipc from '../bridges/IPC';
+import Messages from '../../../common/Messages';
+import ipc from '../../bridges/IPC';
 
 export class MessageBoxVM {
   icon?: string;

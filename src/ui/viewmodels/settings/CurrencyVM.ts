@@ -1,5 +1,5 @@
-import Coingecko from '../../api/Coingecko';
-import WalletVM from './WalletVM';
+import Coingecko from '../../../api/Coingecko';
+import WalletVM from '../WalletVM';
 import { makeAutoObservable } from 'mobx';
 import numeral from 'numeral';
 import store from 'storejs';

@@ -1,18 +1,18 @@
 import { BigNumber, ethers, utils } from 'ethers';
-import Messages, { ConfirmSendTx, SendTxParams, WcMessages } from '../../common/Messages';
+import Messages, { ConfirmSendTx, SendTxParams, WcMessages } from '../../../common/Messages';
 import { formatEther, parseUnits } from '@ethersproject/units';
 import { makeAutoObservable, runInAction } from 'mobx';
 
-import App from './Application';
-import ERC20ABI from '../../abis/ERC20.json';
-import { GasnowWs } from '../../gas/Gasnow';
-import KnownAddresses from '../misc/KnownAddresses';
-import { Networks } from './NetworksVM';
-import { findTokenByAddress } from '../misc/Tokens';
+import App from '../Application';
+import ERC20ABI from '../../../abis/ERC20.json';
+import { GasnowWs } from '../../../gas/Gasnow';
+import KnownAddresses from '../../misc/KnownAddresses';
+import { Networks } from '../NetworksVM';
+import { findTokenByAddress } from '../../misc/Tokens';
 import { formatUnits } from 'ethers/lib/utils';
-import { getProviderByChainId } from '../../common/Provider';
-import i18n from '../../i18n';
-import ipc from '../bridges/IPC';
+import { getProviderByChainId } from '../../../common/Provider';
+import i18n from '../../../i18n';
+import ipc from '../../bridges/IPC';
 
 const Transfer = '0xa9059cbb';
 const Approve = '0x095ea7b3';

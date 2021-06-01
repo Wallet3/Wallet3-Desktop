@@ -8,7 +8,7 @@ import AnimatedNumber from 'react-animated-number';
 import { Application } from '../../viewmodels/Application';
 import ConnectedDAppLabel from './components/ConnectedDAppLabel';
 import { CryptoIcons } from '../../misc/Icons';
-import { CurrencyVM } from '../../viewmodels/CurrencyVM';
+import { CurrencyVM } from '../../viewmodels/settings/CurrencyVM';
 import Feather from 'feather-icons-react';
 import GasStation from '../../../gas';
 import HSBar from 'react-horizontal-stacked-bar-chart';

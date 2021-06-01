@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { ConfirmVM } from '../../../viewmodels/ConfirmVM';
+import { ConfirmVM } from '../../../viewmodels/popups/ConfirmVM';
 import { CryptoIcons } from '../../../misc/Icons';
 import Feather from 'feather-icons-react';
 import { formatAddress } from '../../../misc/Formatter';

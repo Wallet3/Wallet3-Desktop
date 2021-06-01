@@ -1,5 +1,5 @@
-import { WcMessages } from '../../common/Messages';
-import ipc from '../bridges/IPC';
+import { WcMessages } from '../../../common/Messages';
+import ipc from '../../bridges/IPC';
 import { makeAutoObservable } from 'mobx';
 
 type Params = {

@@ -23,6 +23,9 @@ export default class Transaction extends BaseEntity {
   @Column()
   gasPrice: number;
 
+  @Column({ default: 0 })
+  gasTip: number;
+
   @Column()
   nonce: number;
 

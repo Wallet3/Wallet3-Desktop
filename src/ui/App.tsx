@@ -7,8 +7,8 @@ import React, { useEffect } from 'react';
 import { Route, Router, Switch, withRouter } from 'react-router-dom';
 
 import { Application } from './viewmodels/Application';
-import { CurrencyVM } from './viewmodels/CurrencyVM';
-import { LangsVM } from './viewmodels/LangsVM';
+import { CurrencyVM } from './viewmodels/settings/CurrencyVM';
+import { LangsVM } from './viewmodels/settings/LangsVM';
 import MainLayout from './pages/layouts/MainLayout';
 import { MnemonicVM } from './viewmodels/MnemonicVM';
 import { NetworksVM } from './viewmodels/NetworksVM';

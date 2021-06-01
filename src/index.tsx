@@ -5,8 +5,8 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import App, { Application } from './ui/viewmodels/Application';
-import currencyVM, { CurrencyVM } from './ui/viewmodels/CurrencyVM';
-import langsVM, { LangsVM } from './ui/viewmodels/LangsVM';
+import currencyVM, { CurrencyVM } from './ui/viewmodels/settings/CurrencyVM';
+import langsVM, { LangsVM } from './ui/viewmodels/settings/LangsVM';
 import mnVM, { MnemonicVM } from './ui/viewmodels/MnemonicVM';
 import networksVM, { NetworksVM } from './ui/viewmodels/NetworksVM';
 import walletVM, { WalletVM } from './ui/viewmodels/WalletVM';

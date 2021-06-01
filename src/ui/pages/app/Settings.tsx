@@ -3,10 +3,10 @@ import './Settings.css';
 import { Menu, MenuButton, MenuDivider, MenuItem } from '@szhsin/react-menu';
 
 import { Application } from '../../viewmodels/Application';
-import { CurrencyVM } from '../../viewmodels/CurrencyVM';
+import { CurrencyVM } from '../../viewmodels/settings/CurrencyVM';
 import DisplayCurrency from './components/DisplayCurrency';
 import Feather from 'feather-icons-react';
-import { LangsVM } from '../../viewmodels/LangsVM';
+import { LangsVM } from '../../viewmodels/settings/LangsVM';
 import { NetworksVM } from '../../viewmodels/NetworksVM';
 import React from 'react';
 import Select from 'react-select';

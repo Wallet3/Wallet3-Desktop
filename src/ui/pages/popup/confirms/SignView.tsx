@@ -1,7 +1,7 @@
 import './SignView.css';
 
 import React from 'react';
-import { SignVM } from '../../../viewmodels/SignVM';
+import { SignVM } from '../../../viewmodels/popups/SignVM';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 
