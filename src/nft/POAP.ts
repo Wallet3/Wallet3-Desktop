@@ -4,10 +4,10 @@ import POAPAbi from '../abis/POAP.json';
 import axios from 'axios';
 import { getProviderByChainId } from '../common/Provider';
 
-const Contract = '0x22C1f6050E56d2876009903609a2cC3fEf83B415';
+const ContractAddr = '0x22C1f6050E56d2876009903609a2cC3fEf83B415';
 
 class POAP {
-  readonly contract = new ethers.Contract(Contract, POAPAbi, getProviderByChainId(1));
+  readonly contract = new ethers.Contract(ContractAddr, POAPAbi, getProviderByChainId(1));
 
   async balanceOf(address: string) {
     const amount: BigNumber = await this.contract.balanceOf(address);
@@ -36,7 +36,7 @@ class POAP {
           year: number;
           tags: string[];
         };
-        return { ...basic, tokenURI, metadata, contract: Contract };
+        return { ...basic, tokenURI, metadata, contract: ContractAddr };
       })
     );
   }

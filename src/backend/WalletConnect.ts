@@ -69,6 +69,7 @@ export class WalletConnect extends EventEmitter {
   connectViaSession(session: IWcSession) {
     this.connector = new WalletConnector({ session });
 
+    this.connector.on('session_request', this.handleSessionRequest);
     this.connector.on('call_request', this.handleCallRequest);
     this.connector.on('disconnect', () => this.emit('disconnect', this));
     this.peerId = session.peerId;

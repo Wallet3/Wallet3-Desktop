@@ -214,6 +214,8 @@
   align-items: center;
   font-size: 12px;
   color: var(--font-color-title);
+  overflow-x: auto;
+  gap: 12px;
 }
 
 .page.main > .nfts > .tokens.empty {
@@ -229,13 +231,26 @@
 .page.main > .nfts > .tokens > .nft {
   cursor: pointer;
   transition: all 0.3s;
+  opacity: 0.25;
 }
 
 .page.main > .nfts > .tokens > .nft:hover {
-  opacity: 0.85;
+  opacity: 1;
 }
 
 .page.main > .nfts > .tokens > .nft img {
   width: 48px;
   height: 48px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.page.main > .nfts ::-webkit-scrollbar {
+  width: 0; /* Remove scrollbar space */
+  height: 0;
+  background: transparent; /* Optional: just make scrollbar invisible */
+}
+/* Optional: show position indicator in red */
+.page.main > .nfts ::-webkit-scrollbar-thumb {
+  height: 0;
 }

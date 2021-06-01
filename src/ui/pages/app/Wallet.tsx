@@ -243,9 +243,9 @@ export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor
             accountVM.nfts.length === 0 ? (
               'No NFTs Here'
             ) : (
-              accountVM.nfts.map((nft) => {
+              accountVM.nfts.slice(0, 12).map((nft) => {
                 return (
-                  <div className="nft">
+                  <div className="nft" key={`${nft.contract}:${nft.tokenId}`}>
                     <img src={nft.image_url} alt="" />
                   </div>
                 );

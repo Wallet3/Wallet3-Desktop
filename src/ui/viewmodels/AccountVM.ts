@@ -1,5 +1,6 @@
 import * as Debank from '../../api/Debank';
 
+import { BigNumber, utils } from 'ethers';
 import { IUserToken, UserToken } from './models/UserToken';
 import NetVM, { Networks } from './NetworksVM';
 import { makeAutoObservable, runInAction } from 'mobx';
@@ -7,11 +8,11 @@ import { makeAutoObservable, runInAction } from 'mobx';
 import { AddTokenVM } from './AddTokenVM';
 import { NFT } from './models/NFT';
 import POAP from '../../nft/POAP';
+import Rarible from '../../nft/Rarible';
 import { TransferVM } from './TransferVM';
 import WalletVM from './WalletVM';
 import delay from 'delay';
 import store from 'storejs';
-import { utils } from 'ethers';
 
 const Keys = {
   userTokens: (chainId: number, accountIndex: number) => `userTokens-${chainId}-${accountIndex}`,
@@ -204,7 +205,7 @@ export class AccountVM {
   };
 
   refreshNFTs = () => {
-    if (NetVM.currentChainId !== 1) return;
+    if (NetVM.currentChainId !== 1 || this.nfts?.length > 0) return;
 
     POAP.getNFTs(this.address).then(async (data) => {
       const nfts = data.map((item) => {
@@ -217,6 +218,25 @@ export class AccountVM {
         nft.contract = item.contract;
         return nft;
       });
+
+      runInAction(() => {
+        this.nfts = this.nfts ?? [];
+        this.nfts.push(...nfts);
+      });
+    });
+
+    Rarible.getItemsByOwner(this.address).then(async (items) => {
+      const nfts = items
+        .map((item) => {
+          const nft = new NFT();
+          nft.tokenId = BigNumber.from(item.tokenId);
+          nft.contract = item.contract;
+          nft.description = item.description;
+          nft.name = item.name;
+          nft.image_url = item.image?.url.BIG;
+          return nft.image_url ? nft : undefined;
+        })
+        .filter((i) => i);
 
       runInAction(() => {
         this.nfts = this.nfts ?? [];
