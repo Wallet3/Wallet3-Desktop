@@ -5,11 +5,11 @@ import { IUserToken, UserToken } from './models/UserToken';
 import NetVM, { Networks } from './NetworksVM';
 import { makeAutoObservable, runInAction } from 'mobx';
 
-import { AddTokenVM } from './AddTokenVM';
+import { AddTokenVM } from './account/AddTokenVM';
 import { NFT } from './models/NFT';
 import POAP from '../../nft/POAP';
 import Rarible from '../../nft/Rarible';
-import { TransferVM } from './TransferVM';
+import { TransferVM } from './account/TransferVM';
 import WalletVM from './WalletVM';
 import delay from 'delay';
 import store from 'storejs';
@@ -34,13 +34,13 @@ export class AccountVM {
   address: string = '';
   ens = '';
   accountIndex = -1;
-  private _name = '';
 
   allTokens: UserToken[] = [];
   nfts: NFT[] = null;
   chains: Debank.IChainBalance[] = [];
-
   nativeToken: UserToken = null;
+
+  private _name = '';
 
   get netWorth() {
     if (this.chains.length === 0) return undefined;
@@ -240,7 +240,9 @@ export class AccountVM {
 
     let nfts = (await Promise.all([poap, rarible])).flat();
     nfts = nfts.filter(
-      (item, index) => index === nfts.findIndex((i) => i.contract === item.contract && i.tokenId === item.tokenId)
+      (item, index) =>
+        index ===
+        nfts.findIndex((i) => i.contract?.toLowerCase() === item.contract.toLowerCase() && i.tokenId.eq(item.tokenId))
     );
 
     runInAction(() => {

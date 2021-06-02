@@ -1,0 +1,9 @@
+.page.nft {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+}
+
+.page.nft > .content {
+  display: grid;
+}

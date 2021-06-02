@@ -245,9 +245,11 @@ export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor
             ) : (
               accountVM.nfts.slice(0, 12).map((nft) => {
                 return (
-                  <div className="nft" key={`${nft.contract}:${nft.tokenId}`}>
-                    <Image src={nft.image_url} alt={nft.name} defaultType="nft" />
-                  </div>
+                  <Link to={`/transferNFT/${nft.contract}:${nft.tokenId}`}>
+                    <div className="nft" key={`${nft.contract}:${nft.tokenId}`}>
+                      <Image src={nft.image_url} alt={nft.name} defaultType="nft" />
+                    </div>
+                  </Link>
                 );
               })
             )

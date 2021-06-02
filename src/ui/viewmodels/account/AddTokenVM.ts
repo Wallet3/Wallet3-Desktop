@@ -1,11 +1,11 @@
 import { ethers, utils } from 'ethers';
 import { makeAutoObservable, runInAction } from 'mobx';
 
-import { AccountVM } from './AccountVM';
-import ERC20ABI from '../../abis/ERC20.json';
-import MKRABI from '../../abis/MKR.json';
-import NetworksVM from './NetworksVM';
-import { UserToken } from './models/UserToken';
+import { AccountVM } from '../AccountVM';
+import ERC20ABI from '../../../abis/ERC20.json';
+import MKRABI from '../../../abis/MKR.json';
+import NetworksVM from '../NetworksVM';
+import { UserToken } from '../models/UserToken';
 
 function hex2str(hex: string) {
   var hex = hex.toString(); //force conversion

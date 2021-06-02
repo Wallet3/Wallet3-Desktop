@@ -228,17 +228,16 @@
   height: 48px;
 }
 
-.page.main > .nfts > .tokens > .nft {
-  cursor: pointer;
+.page.main > .nfts > .tokens .nft {
   transition: all 0.3s;
   opacity: 0.25;
 }
 
-.page.main > .nfts > .tokens > .nft:hover {
+.page.main > .nfts > .tokens .nft:hover {
   opacity: 1;
 }
 
-.page.main > .nfts > .tokens > .nft img {
+.page.main > .nfts > .tokens .nft img {
   width: 48px;
   height: 48px;
   object-fit: cover;

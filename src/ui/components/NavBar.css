@@ -2,6 +2,7 @@
   display: flex;
   color: var(--font-color);
   align-items: center;
+  padding-top: 10px;
 }
 
 .nav > button {
@@ -18,5 +19,6 @@
 }
 
 .nav > h3 {
+  margin: 8px 0;
   margin-left: 8px;
 }

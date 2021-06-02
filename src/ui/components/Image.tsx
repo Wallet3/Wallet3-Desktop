@@ -18,6 +18,9 @@ interface ImgHTMLAttributes {
 }
 
 export default (props: ImgHTMLAttributes) => {
+  const imgProps = { ...props };
+  delete imgProps.defaultType;
+
   return (
     <img
       {...props}

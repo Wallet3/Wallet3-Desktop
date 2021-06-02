@@ -5,8 +5,9 @@ import { Image, NavBar } from '../../components';
 import { AccountVM } from '../../viewmodels/AccountVM';
 import { Application } from '../../viewmodels/Application';
 import React from 'react';
+import { observer } from 'mobx-react-lite';
 
-export default ({ app, accountVM }: { app: Application; accountVM: AccountVM }) => {
+export default observer(({ app, accountVM }: { app: Application; accountVM: AccountVM }) => {
   const { nfts } = accountVM;
 
   return (
@@ -16,7 +17,7 @@ export default ({ app, accountVM }: { app: Application; accountVM: AccountVM }) 
       <div className="content">
         {(nfts || []).map((item) => {
           return (
-            <div className="card">
+            <div className="card" key={`${item.contract}:${item.tokenId}`}>
               <Image src={item.image_url} defaultType="nft" />
 
               <div className="title">{item.name}</div>
@@ -26,4 +27,4 @@ export default ({ app, accountVM }: { app: Application; accountVM: AccountVM }) 
       </div>
     </div>
   );
-};
+});

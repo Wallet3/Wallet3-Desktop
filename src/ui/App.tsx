@@ -1,6 +1,16 @@
 import './App.css';
 
-import { Account, AddToken, ConnectedDApp, ConnectedDApps, PendingTx, Transfer, UserNFTs, UserTokens } from './pages/app';
+import {
+  Account,
+  AddToken,
+  ConnectedDApp,
+  ConnectedDApps,
+  PendingTx,
+  Transfer,
+  TransferNFT,
+  UserNFTs,
+  UserTokens,
+} from './pages/app';
 import { Authentication, Blank, Generate, Import, SetupPasscode, Welcome } from './pages/login/';
 import { BackupMnemonic, Reset } from './pages/secure';
 import React, { useEffect } from 'react';
@@ -60,6 +70,9 @@ export default observer((args: Props) => {
           </Route>
           <Route path="/send/:tokenId" exact>
             <Transfer {...args} />
+          </Route>
+          <Route path="/transferNFT/:nftId" exact>
+            <TransferNFT {...args} accountVM={walletVM.currentAccount} />
           </Route>
           <Route path="/account" exact>
             <Account {...args} />

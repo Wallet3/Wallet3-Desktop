@@ -9,7 +9,7 @@ import Feather from 'feather-icons-react';
 import { NavBar } from '../../components';
 import { ReactSearchAutocomplete } from 'react-search-autocomplete';
 import TokenLabel from '../../components/TokenLabel';
-import { TransferVM } from '../../viewmodels/TransferVM';
+import { TransferVM } from '../../viewmodels/account/TransferVM';
 import { WalletVM } from '../../viewmodels/WalletVM';
 import { formatNum } from '../../misc/Formatter';
 import { observer } from 'mobx-react-lite';

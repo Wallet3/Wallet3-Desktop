@@ -12,7 +12,7 @@
   overflow-y: auto;
   gap: 12px;
   transition: all 0.3s;
-  height: calc(100vh - 12px - 72px);
+  height: calc(100vh - 24px - 48px);
   margin: 0 -12px;
   padding: 0 12px;
 }

@@ -2,6 +2,8 @@
   display: grid;
   grid-template-rows: auto 1fr;
   overflow: hidden;
+  padding-bottom: 0px;
+  max-height: 100vh;
 }
 
 .page.nfts > .content {
@@ -12,7 +14,7 @@
   padding: 0 12px;
   gap: 12px;
   overflow-y: auto;
-  height: calc(100vh - 12px - 72px);
+  height: calc(100vh - 12px - 48px);
 }
 
 .page.nfts > .content > .card {
@@ -20,6 +22,11 @@
   width: calc(50vw - 20px);
   height: 220px;
   cursor: pointer;
+  transition: all 0.3s;
+}
+
+.page.nfts > .content > .card:hover {
+  opacity: 0.8;
 }
 
 .page.nfts > .content > .card > img {

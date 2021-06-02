@@ -1,15 +1,15 @@
 import { BigNumber, ethers, utils } from 'ethers';
-import Gasnow, { GasnowWs } from '../../gas/Gasnow';
+import Gasnow, { GasnowWs } from '../../../gas/Gasnow';
 import { IReactionDisposer, autorun, makeAutoObservable, reaction, runInAction } from 'mobx';
-import Messages, { ConfirmSendTx } from '../../common/Messages';
+import Messages, { ConfirmSendTx } from '../../../common/Messages';
 import { parseEther, parseUnits } from 'ethers/lib/utils';
 
-import { AccountVM } from './AccountVM';
-import ERC20ABI from '../../abis/ERC20.json';
-import GasStation from '../../gas';
-import NetworksVM from './NetworksVM';
-import { UserToken } from './models/UserToken';
-import ipc from '../bridges/IPC';
+import { AccountVM } from '../AccountVM';
+import ERC20ABI from '../../../abis/ERC20.json';
+import GasStation from '../../../gas';
+import NetworksVM from '../NetworksVM';
+import { UserToken } from '../models/UserToken';
+import ipc from '../../bridges/IPC';
 
 export class TransferVM {
   private readonly _accountVM: AccountVM;
