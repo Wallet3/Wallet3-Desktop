@@ -5,8 +5,8 @@ export default class WCSession extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'text' })
-  session: string;
+  @Column({ type: 'simple-json' })
+  session: IWcSession;
 
   @Column()
   userChainId: number;

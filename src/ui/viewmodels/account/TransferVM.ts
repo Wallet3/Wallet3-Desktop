@@ -5,12 +5,12 @@ import Messages, { ConfirmSendTx } from '../../../common/Messages';
 import { parseEther, parseUnits } from 'ethers/lib/utils';
 
 import { AccountVM } from '../AccountVM';
+import ERC1155ABI from '../../../abis/ERC1155.json';
 import ERC20ABI from '../../../abis/ERC20.json';
 import ERC721ABI from '../../../abis/ERC721.json';
 import GasStation from '../../../gas';
 import { NFT } from '../models/NFT';
 import NetworksVM from '../NetworksVM';
-import RaribleNFTABI from '../../../abis/RariableNFT.json';
 import { UserToken } from '../models/UserToken';
 import ipc from '../../bridges/IPC';
 
@@ -295,12 +295,12 @@ export class TransferVM {
         break;
       case 'rariable':
         try {
-          const erc721 = new ethers.Contract(nft.contract, RaribleNFTABI, NetworksVM.currentProvider);
-          const iface = new ethers.utils.Interface(RaribleNFTABI);
+          const erc1155 = new ethers.Contract(nft.contract, ERC1155ABI, NetworksVM.currentProvider);
+          const iface = new ethers.utils.Interface(ERC1155ABI);
           const empty = ethers.utils.arrayify('0x');
           data = iface.encodeFunctionData('safeTransferFrom', [this.self, this.receiptAddress, nft.tokenId, 1, empty]);
           gas = (
-            await erc721.estimateGas.safeTransferFrom(this.self, this.receiptAddress, nft.tokenId, 1, empty)
+            await erc1155.estimateGas.safeTransferFrom(this.self, this.receiptAddress, nft.tokenId, 1, empty)
           ).toNumber();
         } catch (error) {
           gas = 100_000;

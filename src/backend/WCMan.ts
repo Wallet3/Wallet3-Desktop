@@ -62,7 +62,7 @@ class WCMan {
         const wcSession = new WCSession();
         wcSession.userChainId = wc.userChainId;
         wcSession.lastUsedTimestamp = Date.now();
-        wcSession.session = JSON.stringify(wc.session);
+        wcSession.session = wc.session;
 
         wc.wcSession = wcSession;
         DBMan.wcsessionRepo.save(wcSession);
@@ -74,7 +74,7 @@ class WCMan {
   }
 
   recoverSessions(wcSessions: WCSession[]) {
-    const sessions: IWcSession[] = wcSessions.map((s) => JSON.parse(s.session));
+    const sessions: IWcSession[] = wcSessions.map((s) => s.session);
 
     const wcs = this.connectSessions(sessions);
     wcs.filter((i) => i).map((wc, i) => (wc.wcSession = wcSessions[i]));
@@ -104,7 +104,7 @@ class WCMan {
 
     wc.on('sessionUpdated', () => {
       const { wcSession, userChainId } = wc;
-      wcSession.session = JSON.stringify(wc.session);
+      wcSession.session = wc.session;
       wcSession.lastUsedTimestamp = Date.now();
       wcSession.userChainId = userChainId;
       wcSession.save();

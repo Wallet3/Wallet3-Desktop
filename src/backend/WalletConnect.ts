@@ -192,7 +192,6 @@ export class WalletConnect extends EventEmitter {
     param: WCCallRequest_eth_sendTransaction,
     requestedChainId?: number
   ) => {
-    const receipient: { address: string; name: string } = undefined;
     let transferToken: { balance: string; symbol: string; decimals: number } = undefined;
 
     if (param.data?.startsWith('0xa9059cbb')) {
@@ -254,6 +253,13 @@ export class WalletConnect extends EventEmitter {
       clearHandlers();
       this.connector.rejectRequest({ id: request.id, error: { message: 'User rejected' } });
     });
+
+    const receipient: { address: string; name: string } = App.addresses.find((addr) => addr === utils.getAddress(param.to))
+      ? {
+          address: param.to,
+          name: `Account ${App.addresses.indexOf(utils.getAddress(param.to)) + 1}`,
+        }
+      : undefined;
 
     App.createPopupWindow(
       'sendTx',
