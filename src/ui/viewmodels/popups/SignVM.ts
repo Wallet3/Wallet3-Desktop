@@ -10,7 +10,8 @@ export class SignVM {
   raw: string[] = [];
   method = 'Sign';
   flag = 'edit';
-  msg = '';
+  msg: string | object = '';
+  json = false;
 
   params: RequestSignMessage;
 
@@ -19,6 +20,11 @@ export class SignVM {
     this.raw = params.raw;
     this.params = params;
     this.msg = params.msg;
+    this.json = params.json ?? false;
+
+    if (this.json) {
+      this.msg = JSON.parse(this.msg);
+    }
   }
 
   async approveRequest(via: 'touchid' | 'passcode', passcode?: string) {

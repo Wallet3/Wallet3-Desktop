@@ -13,8 +13,8 @@
 .page.confirm > .container > .details {
   display: grid;
   grid-template-rows: 1fr auto;
-  padding-top: 12px;
-  max-height: calc(100vh - 24px - 51px); /* exactly 51px: (39+12) + 12*2 */
+  padding-top: 10px;
+  max-height: calc(100vh - 24px - 49px); /* exactly 51px: (39+12) + 12*2 */
 }
 
 .page.confirm > .container > .details > .form > div {

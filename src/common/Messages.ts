@@ -121,6 +121,7 @@ export interface RequestSignMessage {
   raw: string[];
   msg?: string;
   walletConnect: WCParams;
+  json?: boolean;
 }
 
 export type PopupWindowTypes = 'connectDapp' | 'sign' | 'sendTx' | 'scanQR' | 'auth' | 'msgbox';

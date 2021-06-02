@@ -280,7 +280,7 @@ export class WalletConnect extends EventEmitter {
         transferToken,
         walletConnect: { peerId: this.peerId, reqid: request.id, app: this.appMeta },
       } as ConfirmSendTx,
-      { height: 339 }
+      { height: 336 }
     );
   };
 
@@ -342,20 +342,24 @@ export class WalletConnect extends EventEmitter {
     });
 
     let msg: string;
+    let json = false;
     switch (type) {
       case 'personal_sign':
         msg = Buffer.from(utils.arrayify(params[0])).toString('utf8');
+        json = false;
         break;
       case 'signTypedData':
         const data = JSON.parse(params[1]);
         delete data.types;
         msg = JSON.stringify(data);
+        json = true;
         break;
     }
 
     App.createPopupWindow('sign', {
       raw: params,
       msg,
+      json,
       walletConnect: { peerId: this.peerId, reqid: request.id },
     } as RequestSignMessage);
   };
