@@ -6,8 +6,11 @@ import { parseEther, parseUnits } from 'ethers/lib/utils';
 
 import { AccountVM } from '../AccountVM';
 import ERC20ABI from '../../../abis/ERC20.json';
+import ERC721ABI from '../../../abis/ERC721.json';
 import GasStation from '../../../gas';
+import { NFT } from '../models/NFT';
 import NetworksVM from '../NetworksVM';
+import RaribleNFTABI from '../../../abis/RariableNFT.json';
 import { UserToken } from '../models/UserToken';
 import ipc from '../../bridges/IPC';
 
@@ -45,6 +48,10 @@ export class TransferVM {
     } catch (error) {
       return false;
     }
+  }
+
+  get isNFTValid() {
+    return this.receiptAddress && !this.insufficientFee;
   }
 
   get insufficientFee() {
@@ -183,9 +190,7 @@ export class TransferVM {
   }
 
   private initNonce() {
-    NetworksVM.currentProvider.getTransactionCount(this.self).then((nonce) => {
-      runInAction(() => (this.nonce = nonce));
-    });
+    NetworksVM.currentProvider.getTransactionCount(this.self).then((nonce) => runInAction(() => (this.nonce = nonce)));
   }
 
   private estimateGas() {
@@ -270,5 +275,57 @@ export class TransferVM {
     } as ConfirmSendTx);
 
     runInAction(() => (this.sending = false));
+  }
+
+  async sendNFT(nft: NFT) {
+    if (this.sending) return;
+    this.sending = true;
+
+    let gas = 0;
+    let data = '';
+
+    switch (nft.contractType) {
+      case 'standard':
+        {
+          const erc721 = new ethers.Contract(nft.contract, ERC721ABI, NetworksVM.currentProvider);
+          const iface = new ethers.utils.Interface(ERC721ABI);
+          gas = (await erc721.estimateGas.transferFrom(this.self, this.receiptAddress, nft.tokenId)).toNumber();
+          data = iface.encodeFunctionData('transferFrom', [this.self, this.receiptAddress, nft.tokenId]);
+        }
+        break;
+      case 'rariable':
+        try {
+          const erc721 = new ethers.Contract(nft.contract, RaribleNFTABI, NetworksVM.currentProvider);
+          const iface = new ethers.utils.Interface(RaribleNFTABI);
+          const empty = ethers.utils.arrayify('0x');
+          data = iface.encodeFunctionData('safeTransferFrom', [this.self, this.receiptAddress, nft.tokenId, 1, empty]);
+          gas = (
+            await erc721.estimateGas.safeTransferFrom(this.self, this.receiptAddress, nft.tokenId, 1, empty)
+          ).toNumber();
+        } catch (error) {
+          gas = 100_000;
+        }
+        break;
+    }
+
+    await ipc.invokeSecure<void>(Messages.createTransferTx, {
+      from: this._accountVM.address,
+      to: nft.contract,
+      value: '0',
+      gas: gas,
+      gasPrice: this.gasPrice * GasnowWs.gwei_1,
+      nonce: this.nonce,
+      data,
+      chainId: NetworksVM.currentChainId,
+
+      receipient: {
+        address: this.receiptAddress,
+        name: this.isEns ? this.receipient : '',
+      },
+
+      transferToken: undefined,
+    } as ConfirmSendTx);
+
+    this.sending = false;
   }
 }

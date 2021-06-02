@@ -4,17 +4,16 @@ import { Image, NavBar } from '../../components';
 import React, { useEffect, useState } from 'react';
 
 import { AccountVM } from '../../viewmodels/AccountVM';
-import { AddressSearchStyle } from './Transfer';
 import { Application } from '../../viewmodels/Application';
 import Feather from 'feather-icons-react';
 import { NFT } from '../../viewmodels/models/NFT';
-import { ReactSearchAutocomplete } from 'react-search-autocomplete';
 import { TransferVM } from '../../viewmodels/account/TransferVM';
 import { formatAddress } from '../../misc/Formatter';
+import { observer } from 'mobx-react-lite';
 import { useRouteMatch } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-export default ({ app, accountVM }: { app: Application; accountVM: AccountVM }) => {
+export default observer(({ app, accountVM }: { app: Application; accountVM: AccountVM }) => {
   const [transferVM, setVM] = useState<TransferVM>(null);
   const [nft, setNFT] = useState<NFT>(null);
   const [nftImageHeight, setNFTImageHeight] = useState(0);
@@ -31,7 +30,6 @@ export default ({ app, accountVM }: { app: Application; accountVM: AccountVM }) 
     return () => transferVM.dispose();
   }, []);
 
-  console.log(nftImageHeight);
   return (
     <div className="page nft">
       <NavBar title={'NFT'} onBackClick={app.history.goBack} />
@@ -65,19 +63,14 @@ export default ({ app, accountVM }: { app: Application; accountVM: AccountVM }) 
           <h4>Transfer</h4>
           <div className="to">
             <span>{t('To')}:</span>
-            <ReactSearchAutocomplete
-              showIcon={false}
-              inputDebounce={500}
-              items={transferVM?.receipients}
-              styling={AddressSearchStyle}
-              placeholder="Receipient Address or ENS"
-              onSearch={(s, r) => transferVM?.setReceipient(s)}
-              onSelect={(item) => transferVM?.setReceipient(item.name)}
-            />
+            <input type="text" spellCheck={false} onChange={(e) => transferVM.setReceipient(e.target.value)} />
             <Feather icon="edit" size={15} strokeWidth={2} className="edit-icon" />
           </div>
+          <button disabled={!transferVM?.isNFTValid} onClick={(_) => transferVM?.sendNFT(nft)}>
+            {t('Send')}
+          </button>
         </div>
       </div>
     </div>
   );
-};
+});

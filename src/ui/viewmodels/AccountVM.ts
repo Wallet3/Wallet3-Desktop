@@ -216,6 +216,7 @@ export class AccountVM {
         nft.name = item.metadata.name;
         nft.description = item.metadata.description;
         nft.contract = item.contract;
+        nft.contractType = 'standard';
         return nft;
       });
 
@@ -231,6 +232,7 @@ export class AccountVM {
           nft.description = item.description;
           nft.name = item.name;
           nft.image_url = item.image?.url.BIG;
+          nft.contractType = 'rariable';
           return nft.image_url ? nft : undefined;
         })
         .filter((i) => i);
