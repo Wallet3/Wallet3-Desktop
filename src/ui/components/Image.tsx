@@ -1,9 +1,9 @@
 import { AppsIcon, DefaultCoin } from '../misc/Icons';
-
-import React from 'react';
+import React, { CSSProperties, ReactEventHandler } from 'react';
 
 interface ImgHTMLAttributes {
   alt?: string;
+  id?: string;
   crossOrigin?: 'anonymous' | 'use-credentials' | '';
   decoding?: 'async' | 'auto' | 'sync';
   height?: number | string;
@@ -15,6 +15,8 @@ interface ImgHTMLAttributes {
   width?: number | string;
   className?: string;
   defaultType?: 'app' | 'nft';
+  onLoad?: ReactEventHandler<HTMLImageElement>;
+  style?: CSSProperties;
 }
 
 export default (props: ImgHTMLAttributes) => {
@@ -23,7 +25,7 @@ export default (props: ImgHTMLAttributes) => {
 
   return (
     <img
-      {...props}
+      {...imgProps}
       onError={(e) => {
         (e.target as HTMLImageElement).onerror = null;
         (e.target as HTMLImageElement).src = props.defaultType === 'nft' ? DefaultCoin : AppsIcon;

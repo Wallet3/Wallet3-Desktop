@@ -16,7 +16,7 @@ import { observer } from 'mobx-react-lite';
 import { useRouteMatch } from 'react-router';
 import { useTranslation } from 'react-i18next';
 
-const AddressSearchStyle = {
+export const AddressSearchStyle = {
   border: 'none',
   borderBottom: '1px solid #dfe8f9',
   borderRadius: '5px',

@@ -4,6 +4,7 @@ import { Image, NavBar } from '../../components';
 
 import { AccountVM } from '../../viewmodels/AccountVM';
 import { Application } from '../../viewmodels/Application';
+import { Link } from 'react-router-dom';
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 
@@ -17,11 +18,13 @@ export default observer(({ app, accountVM }: { app: Application; accountVM: Acco
       <div className="content">
         {(nfts || []).map((item) => {
           return (
-            <div className="card" key={`${item.contract}:${item.tokenId}`}>
-              <Image src={item.image_url} defaultType="nft" />
+            <Link to={`/transferNFT/${item.contract}:${item.tokenId}`} key={`${item.contract}:${item.tokenId}`}>
+              <div className="card">
+                <Image src={item.image_url} defaultType="nft" />
 
-              <div className="title">{item.name}</div>
-            </div>
+                <div className="title">{item.name}</div>
+              </div>
+            </Link>
           );
         })}
       </div>
