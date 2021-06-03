@@ -90,6 +90,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
           <Menu
             overflow="auto"
             styles={{ minWidth: '0', marginRight: '12px' }}
+            style={{ marginTop: 1 }}
             menuButton={() => (
               <MenuButton className="menu-button">
                 <TokenLabel symbol={transferVM?.selectedToken?.symbol} name={transferVM?.selectedToken?.symbol} />

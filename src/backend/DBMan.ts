@@ -3,7 +3,7 @@ import * as path from 'path';
 
 import { Connection, Repository, createConnection } from 'typeorm';
 
-import Account from './models/Account';
+import Key from './models/Key';
 import Transaction from './models/Transaction';
 import WCSession from './models/WCSession';
 import { app } from 'electron';
@@ -12,7 +12,7 @@ export class DBMan {
   private _connection: Connection;
   private _txRepo: Repository<Transaction>;
   private _wcSessionRepo: Repository<WCSession>;
-  private _accountRepo: Repository<Account>;
+  private _keyRepo: Repository<Key>;
   private _dbPath = '';
 
   async init() {
@@ -25,14 +25,14 @@ export class DBMan {
     this._connection = await createConnection({
       type: 'sqlite',
       database: dbPath,
-      entities: [Transaction, WCSession, Account],
+      entities: [Transaction, WCSession, Key],
       synchronize: true,
       logging: false,
     });
 
     this._txRepo = this._connection.getRepository(Transaction);
     this._wcSessionRepo = this._connection.getRepository(WCSession);
-    this._accountRepo = this._connection.getRepository(Account);
+    this._keyRepo = this._connection.getRepository(Key);
   }
 
   async clean() {
@@ -40,7 +40,7 @@ export class DBMan {
     this._connection = undefined;
     this._txRepo = undefined;
     this._wcSessionRepo = undefined;
-    this._accountRepo = undefined;
+    this._keyRepo = undefined;
     fs.unlinkSync(this._dbPath);
   }
 
@@ -53,7 +53,7 @@ export class DBMan {
   }
 
   get accountRepo() {
-    return this._accountRepo;
+    return this._keyRepo;
   }
 }
 

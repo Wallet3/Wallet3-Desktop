@@ -3,14 +3,17 @@
   align-items: center;
   text-transform: uppercase;
   font-size: 12px;
+  line-height: 12px;
+  padding-top: 1px;
 }
 
 .token-label > img {
   width: 12px;
+  height: 12px;
   margin-right: 4px;
   margin-top: -1px;
 }
 
 .token-label.expand > img {
-  margin-right: 8px;
+  margin-right: 6px;
 }

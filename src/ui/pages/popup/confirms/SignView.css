@@ -10,6 +10,13 @@
   overflow-x: auto;
 }
 
+/* .sign-msg.json::-webkit-scrollbar {
+  background-color: transparent;
+  width: 0;
+  height: 0;
+  position: absolute;
+} */
+
 .sign-msg > pre {
   word-wrap: break-word;
   text-overflow: ellipsis;

@@ -38,6 +38,7 @@ export class App {
   mainWindow?: BrowserWindow;
   touchBarButtons?: { walletConnect: TouchBarButton; gas: TouchBarButton; price?: TouchBarButton };
 
+  keyId = 0;
   currentAddressIndex = 0;
   addresses: string[] = [];
   chainId = 1;

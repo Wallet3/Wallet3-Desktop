@@ -31,7 +31,7 @@ export class SignVM {
     let verified = false;
     switch (via) {
       case 'touchid':
-        verified = await App.promptTouchID(i18n.t('Send Transaction'));
+        verified = await App.promptTouchID(i18n.t('Sign Message'));
         break;
       case 'passcode':
         verified = await App.verifyPassword(passcode);

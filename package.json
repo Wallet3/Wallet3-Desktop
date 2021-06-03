@@ -2,7 +2,7 @@
   "name": "wallet3",
   "productName": "Wallet3",
   "version": "1.0.0",
-  "description": "A Bankless Wallet",
+  "description": "A Wallet for Bankless Era",
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",
@@ -25,7 +25,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "wallet3"
+            "name": "Wallet3"
           }
         },
         {
@@ -76,7 +76,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.14.3",
-    "@babel/preset-env": "^7.14.2",
+    "@babel/preset-env": "^7.14.4",
     "@babel/preset-typescript": "^7.13.0",
     "@electron-forge/cli": "^6.0.0-beta.57",
     "@electron-forge/maker-deb": "^6.0.0-beta.57",
@@ -91,22 +91,22 @@
     "@types/mousetrap": "^1.6.8",
     "@types/numeral": "^2.0.1",
     "@types/qrcode.react": "^1.0.1",
-    "@types/react": "^17.0.8",
+    "@types/react": "^17.0.9",
     "@types/react-beautiful-dnd": "^13.0.0",
-    "@types/react-dom": "^17.0.5",
+    "@types/react-dom": "^17.0.6",
     "@types/react-router-dom": "^5.1.7",
     "@types/react-select": "^4.0.15",
     "@types/ws": "^7.4.4",
-    "@typescript-eslint/eslint-plugin": "^4.25.0",
-    "@typescript-eslint/parser": "^4.25.0",
-    "babel-jest": "^27.0.1",
+    "@typescript-eslint/eslint-plugin": "^4.26.0",
+    "@typescript-eslint/parser": "^4.26.0",
+    "babel-jest": "^27.0.2",
     "css-loader": "^5.2.6",
-    "electron": "^13.0.1",
+    "electron": "^13.1.0",
     "electron-rebuild": "^2.3.5",
     "eslint": "^7.27.0",
-    "eslint-plugin-import": "^2.23.3",
+    "eslint-plugin-import": "^2.23.4",
     "fork-ts-checker-webpack-plugin": "^6.2.10",
-    "jest": "^27.0.1",
+    "jest": "^27.0.3",
     "node-loader": "^2.0.0",
     "style-loader": "^2.0.0",
     "ts-loader": "^9.2.2",
@@ -122,10 +122,10 @@
     "delay": "^5.0.0",
     "electron-squirrel-startup": "^1.0.0",
     "eth-sig-util": "^3.0.1",
-    "ethers": "^5.2.0",
+    "ethers": "^5.3.0",
     "feather-icons": "^4.28.0",
     "feather-icons-react": "^0.4.3",
-    "i18next": "^20.3.0",
+    "i18next": "^20.3.1",
     "keytar": "^7.7.0",
     "macaddress": "^0.5.2",
     "mobx": "^6.3.2",
@@ -141,7 +141,7 @@
     "react-codes-input": "^1.2.1",
     "react-dom": "^17.0.2",
     "react-horizontal-stacked-bar-chart": "^8.15.2",
-    "react-i18next": "^11.9.0",
+    "react-i18next": "^11.10.0",
     "react-json-view": "^1.21.3",
     "react-loading-skeleton": "^2.2.0",
     "react-router-dom": "^5.2.0",
@@ -151,7 +151,7 @@
     "react-toggle-component": "^3.0.8",
     "sqlite3": "^5.0.2",
     "storejs": "^1.1.0",
-    "typeorm": "^0.2.32",
+    "typeorm": "^0.2.33",
     "ws": "^7.4.6"
   }
 }

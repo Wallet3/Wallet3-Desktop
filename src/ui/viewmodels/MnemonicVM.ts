@@ -29,7 +29,11 @@ export class MnemonicVM {
   async setupMnemonic(passcode: string) {
     const password = App.hashPassword(passcode);
     const { success, addresses } = await ipc.invokeSecure<SetupMnemonic>(MessageKeys.setupMnemonic, { password });
-    if (success) WalletVM.initAccounts({ addresses });
+    
+    if (success) {
+      App.appAuthenticated = true;
+      WalletVM.initAccounts({ addresses });
+    }
 
     return success;
   }

@@ -13,4 +13,7 @@ export default class WCSession extends BaseEntity {
 
   @Column()
   lastUsedTimestamp: number;
+
+  @Column()
+  keyId: number;
 }

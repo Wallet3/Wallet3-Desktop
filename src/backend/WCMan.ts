@@ -38,14 +38,20 @@ class WCMan {
   }
 
   async connectAndWaitSession(uri: string, modal = false) {
-    if (this.cache.has(uri)) return;
+    if (this.cache.has(uri)) return undefined;
 
     const wc = new WalletConnect(modal);
-    wc.connect(uri);
+
+    try {
+      wc.connect(uri);
+    } catch (error) {
+      return undefined;
+    }
+
     this.cache.add(uri);
 
     return await new Promise<WalletConnect>((resolve) => {
-      const timer = setTimeout(() => rejectPromise(), 15000); // waiting for 15 seconds
+      const timer = setTimeout(() => rejectPromise(), 25000); // waiting for 25 seconds
 
       const rejectPromise = () => {
         clearTimeout(timer);
@@ -63,6 +69,7 @@ class WCMan {
         wcSession.userChainId = wc.userChainId;
         wcSession.lastUsedTimestamp = Date.now();
         wcSession.session = wc.session;
+        wcSession.keyId = Application.keyId;
 
         wc.wcSession = wcSession;
         DBMan.wcsessionRepo.save(wcSession);
