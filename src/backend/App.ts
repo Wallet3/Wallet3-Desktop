@@ -278,11 +278,7 @@ export class App {
       return App.encryptIpc({ success: true }, iv, key);
     });
 
-    ipcMain.handle(`${MessageKeys.changeChainId}`, async (e, id) =>
-      runInAction(() => {
-        this.chainId = id;
-      })
-    );
+    ipcMain.handle(`${MessageKeys.changeChainId}`, async (e, id) => runInAction(() => (this.chainId = id)));
 
     ipcMain.handle(`${MessageKeys.sendTx}-secure`, async (e, encrypted, winId) => {
       const { iv, key } = this.windows.get(winId);

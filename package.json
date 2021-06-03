@@ -19,60 +19,7 @@
   },
   "license": "MIT",
   "config": {
-    "forge": {
-      "packagerConfig": {},
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "Wallet3"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
-        }
-      ],
-      "plugins": [
-        [
-          "@electron-forge/plugin-webpack",
-          {
-            "mainConfig": "./webpack.main.config.js",
-            "renderer": {
-              "config": "./webpack.renderer.config.js",
-              "entryPoints": [
-                {
-                  "html": "./src/index.html",
-                  "js": "./src/renderer.ts",
-                  "name": "main_window",
-                  "preload": {
-                    "js": "./src/preload.ts"
-                  }
-                },
-                {
-                  "html": "./src/index.html",
-                  "js": "./src/popup_renderer.ts",
-                  "name": "popup_window",
-                  "preload": {
-                    "js": "./src/preload.ts"
-                  }
-                }
-              ]
-            }
-          }
-        ]
-      ]
-    }
+    "forge": "./forge.config.js"
   },
   "devDependencies": {
     "@babel/core": "^7.14.3",
@@ -112,7 +59,8 @@
     "ts-loader": "^9.2.2",
     "ts-node": "^10.0.0",
     "typescript": "^4.3.2",
-    "url-loader": "^4.1.1"
+    "url-loader": "^4.1.1",
+    "webpack-filter-warnings-plugin": "^1.2.1"
   },
   "dependencies": {
     "@szhsin/react-menu": "^1.10.0",

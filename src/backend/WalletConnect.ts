@@ -112,7 +112,10 @@ export class WalletConnect extends EventEmitter {
       return;
     }
 
-    if (!App.ready) return;
+    if (!App.ready) {
+      this.connector.rejectSession({ message: 'Not ready' });
+      return;
+    }
 
     this.emit('sessionRequest');
 
@@ -129,6 +132,7 @@ export class WalletConnect extends EventEmitter {
       clearHandlers();
       this._userChainId = c?.userChainId || 0;
       this.connector.approveSession({ accounts: [App.currentAddress], chainId: this.appChainId });
+      console.log('init chainid', this._userChainId, this.appChainId);
       this.emit('sessionApproved', this.connector.session);
     });
 
