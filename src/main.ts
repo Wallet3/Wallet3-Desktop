@@ -83,7 +83,7 @@ const createTray = async () => {
         App.createPopupWindow('scanQR', {});
       },
     },
-    { label: i18n.t('Show Wallet 3'), click: () => createWindow(), accelerator: 'CommandOrControl+S' },
+    { label: i18n.t('Show Wallet 3'), click: () => createWindow(), accelerator: 'CommandOrControl+3' },
     { type: 'separator' },
     { label: i18n.t('Quit'), click: () => app.quit(), accelerator: 'CommandOrControl+Q' },
   ]);
@@ -114,7 +114,7 @@ const createWindow = async (): Promise<void> => {
       nodeIntegration: false,
       webSecurity: true,
       enableRemoteModule: false,
-      // devTools: !prod,
+      devTools: !prod,
     },
   });
 

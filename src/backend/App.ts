@@ -239,7 +239,7 @@ export class App {
       if (!(await KeyMan.saveMnemonic(newPassword))) return App.encryptIpc({ success: false }, key);
 
       if (this.touchIDSupported) {
-        this.initLaunchKey();
+        await this.initLaunchKey();
         this.encryptUserPassword(newPassword);
       }
 

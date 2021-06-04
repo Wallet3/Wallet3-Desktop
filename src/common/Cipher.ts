@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 
+// https://stackoverflow.com/questions/1220751/how-to-choose-an-aes-encryption-mode-cbc-ecb-ctr-ocb-cfb
 const algorithm = 'aes-256-ctr';
 
 export function generateIv(size = 16): Buffer {
