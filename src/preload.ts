@@ -1,19 +1,12 @@
 import * as crypto from 'crypto';
 
-import {
-  DesktopCapturerSource,
-  IpcRendererEvent,
-  NotificationConstructorOptions,
-  SourcesOptions,
-  clipboard,
-  contextBridge,
-  desktopCapturer,
-  ipcRenderer,
-  shell,
-} from 'electron';
+import { DesktopCapturerSource, IpcRendererEvent, SourcesOptions, desktopCapturer } from 'electron';
+import { NotificationConstructorOptions, clipboard, contextBridge, ipcRenderer, shell, webFrame } from 'electron';
 import { decrypt, encrypt } from './common/Cipher';
 
 import Messages from './common/Messages';
+
+webFrame.setVisualZoomLevelLimits(1, 1);
 
 const windowId = crypto.randomBytes(4).toString('hex');
 let ipcSecureIv: Buffer;

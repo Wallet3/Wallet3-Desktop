@@ -17,10 +17,10 @@ export default () => {
 
       <div className="actions">
         <Link className="button" to="/generate">
-          {t('CREATE')}
+          {t('Create')}
         </Link>
         <Link className="button" to="/import">
-          {t('IMPORT')}
+          {t('Import')}
         </Link>
       </div>
     </div>

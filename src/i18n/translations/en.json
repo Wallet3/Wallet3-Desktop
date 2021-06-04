@@ -1,6 +1,6 @@
 {
-  "CREATE": "CREATE",
-  "IMPORT": "IMPORT",
+  "Create": "Create",
+  "Import": "Import",
   "Net Worth": "Net Worth",
   "Assets": "Assets",
   "Wallet": "Wallet",
@@ -60,7 +60,7 @@
   "Setup Passcode": "Setup Passcode",
   "Please enter a passcode": "Please enter a passcode",
   "Please enter again": "Please enter again",
-  "DONE": "DONE",
+  "Done": "Done",
   "Reset_Tip1": "The operation is not reversible.",
   "Reset_Tip2": "Please keep your mnemonic safe.",
   "Authentication": "Authentication",

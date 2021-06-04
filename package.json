@@ -7,7 +7,7 @@
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
-    "make": "electron-forge make",
+    "make": "NODE_ENV=production && electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts .",
     "test": "jest"
@@ -54,7 +54,7 @@
     "eslint": "^7.27.0",
     "eslint-plugin-import": "^2.23.4",
     "fork-ts-checker-webpack-plugin": "^6.2.10",
-    "jest": "^27.0.3",
+    "jest": "^27.0.4",
     "node-loader": "^2.0.0",
     "style-loader": "^2.0.0",
     "ts-loader": "^9.2.2",
@@ -100,7 +100,7 @@
     "react-toggle-component": "^3.0.8",
     "sqlite3": "^5.0.2",
     "storejs": "^1.1.0",
-    "typeorm": "^0.2.33",
+    "typeorm": "^0.2.34",
     "ws": "^7.4.6"
   }
 }

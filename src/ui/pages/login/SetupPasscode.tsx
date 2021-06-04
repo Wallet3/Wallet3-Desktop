@@ -65,7 +65,7 @@ export default ({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) => {
       </div>
 
       <button disabled={!passVerified} onClick={(_) => done()}>
-        {t('DONE')}
+        {t('Done')}
       </button>
     </div>
   );
