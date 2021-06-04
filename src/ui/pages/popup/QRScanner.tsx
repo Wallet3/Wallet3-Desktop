@@ -2,9 +2,9 @@ import './QRScanner.css';
 
 import * as Anime from '../../misc/Anime';
 
+import Messages, { BooleanResult } from '../../../common/Messages';
 import React, { useEffect, useState } from 'react';
 
-import Messages from '../../../common/Messages';
 import { PopupTitle } from '../../components';
 import QRCode from '../../../assets/icons/app/qr-code.svg';
 import anime from 'animejs';
@@ -35,8 +35,8 @@ export default () => {
       if (window.closed) return;
       if (!uri) return;
 
-      const result = await ipc.invokeSecure(Messages.connectWallet, { uri });
-      if (result) {
+      const { success } = await ipc.invokeSecure<BooleanResult>(Messages.connectWallet, { uri });
+      if (success) {
         window.close();
       } else {
         Anime.vibrate('.scan-area', () => window.close());

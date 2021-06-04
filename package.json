@@ -1,6 +1,6 @@
 {
   "name": "wallet3",
-  "productName": "Wallet3",
+  "productName": "Wallet 3",
   "version": "1.0.0",
   "description": "A Wallet for Bankless Era",
   "main": ".webpack/main",
@@ -29,6 +29,7 @@
     "@electron-forge/core": "^6.0.0-beta.57",
     "@electron-forge/maker-deb": "^6.0.0-beta.57",
     "@electron-forge/maker-rpm": "^6.0.0-beta.57",
+    "@electron-forge/maker-dmg": "^6.0.0-beta.57",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.57",
     "@electron-forge/maker-zip": "^6.0.0-beta.57",
     "@electron-forge/plugin-webpack": "6.0.0-beta.57",

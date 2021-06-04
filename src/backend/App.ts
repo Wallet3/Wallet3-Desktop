@@ -137,16 +137,16 @@ export class App {
     });
 
     ipcMain.handle(`${MessageKeys.promptTouchID}-secure`, async (e, encrypted, winId) => {
-      if (!this.touchIDSupported) return false;
-
       const { iv, key } = this.windows.get(winId);
       const { message } = App.decryptIpc(encrypted, iv, key);
 
+      if (!this.touchIDSupported) return App.encryptIpc({ success: false }, iv, key);
+
       try {
         await systemPreferences.promptTouchID(message ?? i18n.t('Unlock Wallet'));
-        return App.encryptIpc(true, iv, key);
+        return App.encryptIpc({ success: true }, iv, key);
       } catch (error) {
-        return App.encryptIpc(false, iv, key);
+        return App.encryptIpc({ success: false }, iv, key);
       }
     });
 
@@ -207,7 +207,7 @@ export class App {
       const { password } = App.decryptIpc(encrypted, iv, key);
 
       const verified = await KeyMan.verifyPassword(password);
-      return App.encryptIpc(verified, iv, key);
+      return App.encryptIpc({ sucess: verified }, iv, key);
     });
 
     ipcMain.handle(`${MessageKeys.changePassword}-secure`, async (e, encrypted, winId) => {
@@ -284,18 +284,18 @@ export class App {
       const { iv, key } = this.windows.get(winId);
       const params: SendTxParams = App.decryptIpc(encrypted, iv, key);
       const password = await this.extractPassword(params);
-      if (!password) return App.encryptIpc('', iv, key);
+      if (!password) return App.encryptIpc({}, iv, key);
 
       const txHex = await KeyMan.signTx(password, this.currentAddressIndex, params);
 
       if (!txHex) {
-        return App.encryptIpc('', iv, key);
+        return App.encryptIpc({}, iv, key);
       }
 
       console.log(params.chainId, params);
       App.sendTx(params.chainId || this.chainId, params, txHex);
 
-      return App.encryptIpc(txHex, iv, key);
+      return App.encryptIpc({ txHex }, iv, key);
     });
 
     ipcMain.handle(MessageKeys.sendLocalNotification, async (e, content) => {
@@ -311,6 +311,7 @@ export class App {
   };
 
   static readonly encryptIpc = (obj: any, iv: Buffer, key: Buffer) => {
+    obj['__nonce'] = randomBytes(4).toString('hex');
     return Cipher.encrypt(iv, JSON.stringify(obj), key);
   };
 
@@ -372,7 +373,7 @@ export class App {
         popup.once('close', () => resolve(true));
       });
 
-      return App.encryptIpc(true, iv, key);
+      return App.encryptIpc({ success: true }, iv, key);
     });
 
     ipcMain.handle(`${MessageKeys.connectWallet}-secure`, async (e, encrypted, winId) => {
@@ -380,7 +381,7 @@ export class App {
       const { uri, modal } = App.decryptIpc(encrypted, iv, key);
       if (!uri) return;
 
-      return App.encryptIpc((await WCMan.connectAndWaitSession(uri, modal)) ? true : false, iv, key);
+      return App.encryptIpc({ sucess: (await WCMan.connectAndWaitSession(uri, modal)) ? true : false }, iv, key);
     });
 
     ipcMain.handle(`${MessageKeys.popupAuthentication}-secure`, async (e, encrypted, winId) => {

@@ -63,7 +63,8 @@ export class Application {
 
   async verifyPassword(passcode: string) {
     const password = this.hashPassword(passcode);
-    return await ipc.invokeSecure<boolean>(MessageKeys.verifyPassword, { password });
+    const { success } = await ipc.invokeSecure<BooleanResult>(MessageKeys.verifyPassword, { password });
+    return success;
   }
 
   hashPassword(passcode: string) {
@@ -71,7 +72,8 @@ export class Application {
   }
 
   async promptTouchID(message?: string) {
-    return await ipc.invokeSecure<boolean>(MessageKeys.promptTouchID, { message });
+    const { success } = await ipc.invokeSecure<BooleanResult>(MessageKeys.promptTouchID, { message });
+    return success;
   }
 
   async auth() {
@@ -94,7 +96,7 @@ export class Application {
   }
 
   connectWallet(uri: string) {
-    return ipc.invokeSecure(MessageKeys.connectWallet, { uri, modal: true });
+    return ipc.invokeSecure<BooleanResult>(MessageKeys.connectWallet, { uri, modal: true });
   }
 
   async ask(msg: { title: string; icon: string; message: string }) {
