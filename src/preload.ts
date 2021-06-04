@@ -38,10 +38,11 @@ export class IpcBridgeApi {
     argObj['__obfs'] = crypto.randomBytes(4).toString('hex');
 
     const serialized = JSON.stringify(argObj);
-    const encrypted = encrypt(ipcSecureIv, serialized, ipcSecureKey);
-    const returned = await ipcRenderer.invoke(`${channel}-secure`, encrypted, windowId);
+    const encrypted = encrypt(serialized, ipcSecureKey);
+    const [iv, returned] = await ipcRenderer.invoke(`${channel}-secure`, encrypted, windowId);
 
-    return returned ? (JSON.parse(decrypt(ipcSecureIv, returned, ipcSecureKey)) as T) : undefined;
+    console.log(iv, returned);
+    return returned ? (JSON.parse(decrypt(iv, returned, ipcSecureKey)) as T) : undefined;
   };
 
   on = (channel: string, listener: (event: IpcRendererEvent, ...arg: any[]) => void) => {

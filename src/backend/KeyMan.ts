@@ -35,7 +35,7 @@ class KeyMan {
 
     [this.key] = await DBMan.accountRepo.find();
 
-    this.hasSecret = this.key?.kc_unique && this.key?.iv && this.key.salt ? true : false;
+    this.hasSecret = this.key?.kc_unique && this.key?.mnIv ? true : false;
     this.basePath = this.key?.basePath ?? BasePath;
     this.basePathIndex = this.key?.basePathIndex ?? 0;
   }
@@ -58,11 +58,10 @@ class KeyMan {
   }
 
   async savePassword(userPassword: string) {
-    const iv = Cipher.generateIv();
 
-    const salt = Cipher.encrypt(iv, Cipher.generateIv().toString('hex'), userPassword);
+    const [saltIv, salt] = Cipher.encrypt(Cipher.generateIv().toString('hex'), userPassword);
     this.key = this.key ?? new Key();
-    this.key.iv = iv.toString('hex');
+    this.key.saltIv = saltIv;
     this.key.salt = salt;
 
     await this.key.save();
@@ -94,8 +93,8 @@ class KeyMan {
     this.key.basePath = this.basePath;
     this.key.basePathIndex = this.basePathIndex;
 
-    const iv = Buffer.from(this.key.iv, 'hex');
-    const encryptedMnemonic = Cipher.encrypt(iv, this.tmpMnemonic, this.getCorePassword(userPassword));
+    const [mnIv, encryptedMnemonic] = Cipher.encrypt(this.tmpMnemonic, this.getCorePassword(userPassword));
+    this.key.mnIv = mnIv;
 
     await this.key.save();
     await keytar.setPassword(Keys.secret, Keys.secretAccount(this.key.kc_unique), encryptedMnemonic);
@@ -109,7 +108,7 @@ class KeyMan {
   async readMnemonic(userPassword: string) {
     if (!(await this.verifyPassword(userPassword))) return undefined;
 
-    const iv = this.key.iv;
+    const iv = this.key.mnIv;
     const enMnemonic = await keytar.getPassword(Keys.secret, Keys.secretAccount(this.key.kc_unique));
 
     return Cipher.decrypt(Buffer.from(iv, 'hex'), enMnemonic, this.getCorePassword(userPassword));
@@ -183,7 +182,7 @@ class KeyMan {
   }
 
   private getCorePassword(userPassword: string) {
-    const salt = Cipher.decrypt(Buffer.from(this.key.iv, 'hex'), this.key.salt, userPassword);
+    const salt = Cipher.decrypt(Buffer.from(this.key.saltIv, 'hex'), this.key.salt, userPassword);
     return `${salt}-${userPassword}`;
   }
 }

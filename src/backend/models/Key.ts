@@ -9,13 +9,16 @@ export default class Key extends BaseEntity {
   name: string;
 
   @Column({ nullable: true })
-  iv: string;
-
-  @Column({ nullable: true })
-  type: number; // mnemonic, privkey, keystore
+  saltIv: string;
 
   @Column()
   salt: string;
+
+  @Column({ nullable: true })
+  mnIv: string;
+
+  @Column({ nullable: true })
+  type: number; // mnemonic, privkey, keystore
 
   @Column({ nullable: true })
   kc_unique: string;

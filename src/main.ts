@@ -114,7 +114,7 @@ const createWindow = async (): Promise<void> => {
       nodeIntegration: false,
       webSecurity: true,
       enableRemoteModule: false,
-      devTools: !prod,
+      // devTools: !prod,
     },
   });
 

@@ -57,7 +57,7 @@ const template: any[] = [
     submenu: [
       // { role: 'reload' },
       // { role: 'forceReload' },
-      // { role: 'toggleDevTools' },
+      { role: 'toggleDevTools' },
       // { type: 'separator' },
       // { role: 'resetZoom' },
       // { role: 'zoomIn' },

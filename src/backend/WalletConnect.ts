@@ -231,11 +231,13 @@ export class WalletConnect extends EventEmitter {
     ipcMain.handleOnce(`${WcMessages.approveWcCallRequest(this.peerId, request.id)}-secure`, async (e, encrypted, winId) => {
       clearHandlers();
 
-      const { iv, key } = App.windows.get(winId);
-      const params: SendTxParams = Application.decryptIpc(encrypted, iv, key);
+      const { key } = App.windows.get(winId);
+      const [iv, cipherText] = encrypted;
+
+      const params: SendTxParams = Application.decryptIpc(cipherText, iv, key);
 
       const password = await App.extractPassword(params);
-      if (!password) return Application.encryptIpc({}, iv, key);
+      if (!password) return Application.encryptIpc({}, key);
 
       const txHex = await KeyMan.signTx(password, App.currentAddressIndex, params);
       if (!txHex) {
@@ -297,14 +299,16 @@ export class WalletConnect extends EventEmitter {
     ipcMain.handleOnce(`${WcMessages.approveWcCallRequest(this.peerId, request.id)}-secure`, async (e, encrypted, winId) => {
       clearHandlers();
 
-      const { iv, key } = App.windows.get(winId);
-      let { password, viaTouchID }: AuthParams = Application.decryptIpc(encrypted, iv, key);
+      const { key } = App.windows.get(winId);
+      const [iv, cipherText] = encrypted;
+
+      let { password, viaTouchID }: AuthParams = Application.decryptIpc(cipherText, iv, key);
 
       password = password ?? (viaTouchID ? await App.decryptUserPassword() : undefined);
 
       if (!password) {
         this.connector.rejectRequest({ id: request.id, error: { message: 'Permission Denied' } });
-        return Application.encryptIpc({ success: false }, iv, key);
+        return Application.encryptIpc({ success: false }, key);
       }
 
       let signed = '';
@@ -316,27 +320,27 @@ export class WalletConnect extends EventEmitter {
 
           if (!signed) {
             this.connector.rejectRequest({ id: request.id, error: { message: 'Permission Denied' } });
-            return Application.encryptIpc({ success: false }, iv, key);
+            return Application.encryptIpc({ success: false }, key);
           }
 
           this.connector.approveRequest({ id: request.id, result: signed });
-          return Application.encryptIpc({ suceess: true }, iv, key);
+          return Application.encryptIpc({ suceess: true }, key);
         case 'signTypedData':
           try {
             const typedData = JSON.parse(params[1]);
             signed = await KeyMan.signTypedData_v4(password, App.currentAddressIndex, typedData);
           } catch (error) {
             this.connector.rejectRequest({ id: request.id, error: { message: 'Invalid Typed Data' } });
-            return Application.encryptIpc({ success: false }, iv, key);
+            return Application.encryptIpc({ success: false }, key);
           }
 
           if (!signed) {
             this.connector.rejectRequest({ id: request.id, error: { message: 'Permission Denied' } });
-            return Application.encryptIpc({ success: false }, iv, key);
+            return Application.encryptIpc({ success: false }, key);
           }
 
           this.connector.approveRequest({ id: request.id, result: signed });
-          return Application.encryptIpc({ success: true }, iv, key);
+          return Application.encryptIpc({ success: true }, key);
       }
     });
 

@@ -20,15 +20,19 @@ class WCMan {
     makeObservable(this, { connects: observable });
 
     ipcMain.handle(`${Messages.disconnectDApp}-secure`, (e, encrypted, winId) => {
-      const { iv, key } = Application.windows.get(winId);
-      const { sessionKey } = App.decryptIpc(encrypted, iv, key);
+      const { key } = Application.windows.get(winId);
+      const [iv, cipherText] = encrypted;
+
+      const { sessionKey } = App.decryptIpc(cipherText, iv, key);
       this.disconnect(sessionKey);
     });
 
     ipcMain.handle(`${Messages.switchDAppNetwork}-secure`, (e, encrypted, winId) => {
-      const { iv, key } = Application.windows.get(winId);
-      const { chainId, sessionKey } = App.decryptIpc(encrypted, iv, key);
-      return App.encryptIpc({ success: this.switchNetwork(sessionKey, chainId) }, iv, key);
+      const { key } = Application.windows.get(winId);
+      const [iv, cipherText] = encrypted;
+
+      const { chainId, sessionKey } = App.decryptIpc(cipherText, iv, key);
+      return App.encryptIpc({ success: this.switchNetwork(sessionKey, chainId) }, key);
     });
   }
 
