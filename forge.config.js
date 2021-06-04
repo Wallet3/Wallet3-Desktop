@@ -1,5 +1,11 @@
+const {
+  utils: { fromBuildIdentifier },
+} = require('@electron-forge/core');
+
 module.exports = {
-  packagerConfig: {},
+  packagerConfig: {
+    appBundleId: fromBuildIdentifier({ beta: 'eth.beta.wallet3', prod: 'eth.wallet3' }),
+  },
   makers: [
     {
       name: '@electron-forge/maker-squirrel',

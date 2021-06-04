@@ -979,7 +979,7 @@
     inquirer "^8.0.0"
     semver "^7.2.1"
 
-"@electron-forge/core@6.0.0-beta.57":
+"@electron-forge/core@6.0.0-beta.57", "@electron-forge/core@^6.0.0-beta.57":
   version "6.0.0-beta.57"
   resolved "https://registry.yarnpkg.com/@electron-forge/core/-/core-6.0.0-beta.57.tgz#748b30afb207ac1957071166403ec752c711f188"
   integrity sha512-pLYG0QefjAEjxRazgEjryb4TrxVeebGTqXqZsKOpABAlDaKU4EmBq06SeSu8H9IAzMPwzpDIa6PaXdkMclqhnA==

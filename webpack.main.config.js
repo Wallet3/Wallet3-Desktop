@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   /**
    * This is the main entry point for your application, it's the first file
@@ -10,6 +12,8 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json'],
+    alias: {
+      [path.join(__dirname, 'node_modules/sqlite3/lib/sqlite3-binding.js')]: path.join(__dirname, 'bindings/sqlite3-binding.js'),
+    },
   },
-  externals: { sqlite3: 'commonjs sqlite3' },
 };
