@@ -68,13 +68,16 @@ export class App {
     this.#userPassword = enPw;
   }
 
-  async init() {
-    this.machineId = Cipher.sha256(await macaddr.one()).toString('hex');
-
+  async initLaunchKey() {
     const launchIv = Cipher.generateIv().toString('hex');
     const launchKey = Cipher.generateIv(32).toString('hex');
 
     await keytar.setPassword(Keys.appLaunchKey, Keys.appAccount(this.machineId), `${launchIv}:${launchKey}`);
+  }
+
+  async init() {
+    this.machineId = Cipher.sha256(await macaddr.one()).toString('hex');
+    await this.initLaunchKey();
 
     autorun(() => {
       console.log('pending', TxMan.pendingTxs.length);
@@ -235,7 +238,11 @@ export class App {
       await KeyMan.savePassword(newPassword);
       if (!(await KeyMan.saveMnemonic(newPassword))) return App.encryptIpc({ success: false }, key);
 
-      if (this.touchIDSupported) this.encryptUserPassword(newPassword);
+      if (this.touchIDSupported) {
+        this.initLaunchKey();
+        this.encryptUserPassword(newPassword);
+      }
+
       return App.encryptIpc({ success: true }, key);
     });
 
@@ -332,7 +339,6 @@ export class App {
   };
 
   static readonly encryptIpc = (obj: any, key: Buffer) => {
-    obj['__obfs'] = randomBytes(4).toString('hex');
     return Cipher.encrypt(JSON.stringify(obj), key);
   };
 
