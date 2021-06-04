@@ -235,7 +235,7 @@ export class WalletConnect extends EventEmitter {
       const params: SendTxParams = Application.decryptIpc(encrypted, iv, key);
 
       const password = await App.extractPassword(params);
-      if (!password) return Application.encryptIpc('', iv, key);
+      if (!password) return Application.encryptIpc({}, iv, key);
 
       const txHex = await KeyMan.signTx(password, App.currentAddressIndex, params);
       if (!txHex) {
@@ -304,7 +304,7 @@ export class WalletConnect extends EventEmitter {
 
       if (!password) {
         this.connector.rejectRequest({ id: request.id, error: { message: 'Permission Denied' } });
-        return Application.encryptIpc(false, iv, key);
+        return Application.encryptIpc({ success: false }, iv, key);
       }
 
       let signed = '';
@@ -316,27 +316,27 @@ export class WalletConnect extends EventEmitter {
 
           if (!signed) {
             this.connector.rejectRequest({ id: request.id, error: { message: 'Permission Denied' } });
-            return Application.encryptIpc(false, iv, key);
+            return Application.encryptIpc({ success: false }, iv, key);
           }
 
           this.connector.approveRequest({ id: request.id, result: signed });
-          return Application.encryptIpc(true, iv, key);
+          return Application.encryptIpc({ suceess: true }, iv, key);
         case 'signTypedData':
           try {
             const typedData = JSON.parse(params[1]);
             signed = await KeyMan.signTypedData_v4(password, App.currentAddressIndex, typedData);
           } catch (error) {
             this.connector.rejectRequest({ id: request.id, error: { message: 'Invalid Typed Data' } });
-            return Application.encryptIpc(false, iv, key);
+            return Application.encryptIpc({ success: false }, iv, key);
           }
 
           if (!signed) {
             this.connector.rejectRequest({ id: request.id, error: { message: 'Permission Denied' } });
-            return Application.encryptIpc(false, iv, key);
+            return Application.encryptIpc({ success: false }, iv, key);
           }
 
           this.connector.approveRequest({ id: request.id, result: signed });
-          return Application.encryptIpc(true, iv, key);
+          return Application.encryptIpc({ success: true }, iv, key);
       }
     });
 

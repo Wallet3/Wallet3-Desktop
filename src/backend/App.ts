@@ -311,7 +311,7 @@ export class App {
   };
 
   static readonly encryptIpc = (obj: any, iv: Buffer, key: Buffer) => {
-    obj['__nonce'] = randomBytes(4).toString('hex');
+    obj['__obfs'] = randomBytes(4).toString('hex');
     return Cipher.encrypt(iv, JSON.stringify(obj), key);
   };
 
