@@ -51,6 +51,7 @@ export interface InitStatus {
   pendingTxs: TxParams[];
   connectedDApps: IWcSession[];
   machineId: string;
+  platform: NodeJS.Platform;
 }
 
 export interface InitVerifyPassword {

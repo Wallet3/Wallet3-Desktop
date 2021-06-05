@@ -1,7 +1,6 @@
 import { RequestSignMessage, WcMessages } from '../../../common/Messages';
 
-import App from '../Application';
-import crypto from '../../bridges/Crypto';
+import App from '../ApplicationPopup';
 import i18n from '../../../i18n';
 import ipc from '../../bridges/IPC';
 import { makeAutoObservable } from 'mobx';

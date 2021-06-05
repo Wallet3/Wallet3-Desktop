@@ -16,8 +16,6 @@ export class Application {
   machineId = '';
 
   constructor() {
-    makeObservable(this, {});
-
     ipc.on(MessageKeys.idleExpired, (e, { idleExpired }: { idleExpired: boolean }) => {
       if (idleExpired) this.history.push('/authentication');
     });
@@ -27,7 +25,7 @@ export class Application {
     const { hasSecret, touchIDSupported, appAuthenticated, addresses, pendingTxs, connectedDApps, machineId } =
       await ipc.invokeSecure<InitStatus>(MessageKeys.getInitStatus);
 
-    this.touchIDSupported = touchIDSupported;
+    this.touchIDSupported = false; // touchIDSupported;
     this.appAuthenticated = appAuthenticated;
     this.machineId = machineId;
 
@@ -46,7 +44,7 @@ export class Application {
     }
   }
 
-  async authInitialization(passcode: string) {
+  authInitialization = async (passcode: string) => {
     const password = this.hashPassword(passcode);
     const { addresses, verified } = await ipc.invokeSecure<InitVerifyPassword>(MessageKeys.initVerifyPassword, {
       password,
@@ -59,22 +57,22 @@ export class Application {
     }
 
     return verified;
-  }
+  };
 
-  async verifyPassword(passcode: string) {
+  verifyPassword = async (passcode: string) => {
     const password = this.hashPassword(passcode);
     const { success } = await ipc.invokeSecure<BooleanResult>(MessageKeys.verifyPassword, { password });
     return success;
-  }
+  };
 
-  hashPassword(passcode: string) {
+  hashPassword = (passcode: string) => {
     return crypto.sha256(`Ethereum.Wallet3-${passcode}-${this.machineId}`);
-  }
+  };
 
-  async promptTouchID(message?: string) {
+  promptTouchID = async (message?: string) => {
     const { success } = await ipc.invokeSecure<BooleanResult>(MessageKeys.promptTouchID, { message });
     return success;
-  }
+  };
 
   async auth() {
     const result = await ipc.invokeSecure<AuthenticationResult>(MessageKeys.popupAuthentication, {});

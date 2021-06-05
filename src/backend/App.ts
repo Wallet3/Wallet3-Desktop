@@ -124,6 +124,7 @@ export class App {
           connectedDApps: WCMan.connectedSessions,
           pendingTxs: [...TxMan.pendingTxs],
           machineId: this.machineId,
+          platform: process.platform,
         } as InitStatus,
         key
       );
@@ -218,9 +219,9 @@ export class App {
       const { key } = this.windows.get(winId);
       const [iv, cipherText] = encrypted;
       const { password } = App.decryptIpc(cipherText, iv, key);
-
       const verified = await KeyMan.verifyPassword(password);
-      return App.encryptIpc({ sucess: verified }, key);
+      console.log('password', password, verified);
+      return App.encryptIpc({ success: verified }, key);
     });
 
     ipcMain.handle(`${MessageKeys.changePassword}-secure`, async (e, encrypted, winId) => {
@@ -238,8 +239,9 @@ export class App {
       await KeyMan.savePassword(newPassword);
       if (!(await KeyMan.saveMnemonic(newPassword))) return App.encryptIpc({ success: false }, key);
 
+      await this.initLaunchKey();
+
       if (this.touchIDSupported) {
-        await this.initLaunchKey();
         this.encryptUserPassword(newPassword);
       }
 
@@ -252,6 +254,7 @@ export class App {
 
       const { password, count } = App.decryptIpc(cipherText, iv, key);
       const verified = await KeyMan.verifyPassword(password);
+      console.log('init verify', password, verified);
       let addrs: string[] = [];
 
       if (verified) {
@@ -410,9 +413,10 @@ export class App {
       const [iv, cipherText] = encrypted;
 
       const { uri, modal } = App.decryptIpc(cipherText, iv, key);
-      if (!uri) return;
+      if (!uri) return App.encryptIpc({ success: false }, key);
 
-      return App.encryptIpc({ sucess: (await WCMan.connectAndWaitSession(uri, modal)) ? true : false }, key);
+      const success = (await WCMan.connectAndWaitSession(uri, modal)) ? true : false;
+      return App.encryptIpc({ success }, key);
     });
 
     ipcMain.handle(`${MessageKeys.popupAuthentication}-secure`, async (e, encrypted, winId) => {

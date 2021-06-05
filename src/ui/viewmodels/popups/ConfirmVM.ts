@@ -3,7 +3,7 @@ import Messages, { ConfirmSendTx, SendTxParams, WcMessages } from '../../../comm
 import { formatEther, parseUnits } from '@ethersproject/units';
 import { makeAutoObservable, runInAction } from 'mobx';
 
-import App from '../Application';
+import App from '../ApplicationPopup';
 import ERC20ABI from '../../../abis/ERC20.json';
 import { GasnowWs } from '../../../gas/Gasnow';
 import KnownAddresses from '../../misc/KnownAddresses';
