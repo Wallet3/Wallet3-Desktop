@@ -25,7 +25,7 @@ export class Application {
     const { hasSecret, touchIDSupported, appAuthenticated, addresses, pendingTxs, connectedDApps, machineId } =
       await ipc.invokeSecure<InitStatus>(MessageKeys.getInitStatus);
 
-    this.touchIDSupported = false; // touchIDSupported;
+    this.touchIDSupported = touchIDSupported;
     this.appAuthenticated = appAuthenticated;
     this.machineId = machineId;
 

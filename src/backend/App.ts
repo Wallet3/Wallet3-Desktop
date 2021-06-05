@@ -220,7 +220,7 @@ export class App {
       const [iv, cipherText] = encrypted;
       const { password } = App.decryptIpc(cipherText, iv, key);
       const verified = await KeyMan.verifyPassword(password);
-      console.log('password', password, verified);
+
       return App.encryptIpc({ success: verified }, key);
     });
 
@@ -254,7 +254,7 @@ export class App {
 
       const { password, count } = App.decryptIpc(cipherText, iv, key);
       const verified = await KeyMan.verifyPassword(password);
-      console.log('init verify', password, verified);
+
       let addrs: string[] = [];
 
       if (verified) {
@@ -322,7 +322,6 @@ export class App {
         return App.encryptIpc({}, key);
       }
 
-      console.log(params.chainId, params);
       App.sendTx(params.chainId || this.chainId, params, txHex);
 
       return App.encryptIpc({ txHex }, key);
@@ -363,7 +362,7 @@ export class App {
         title: i18n.t('Transaction Failed'),
         body: i18n.t('TxFailed2', { nonce: params.nonce }),
       }).show();
-      console.log('app sendtx', chainId, result);
+
       return undefined;
     }
 

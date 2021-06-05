@@ -93,7 +93,7 @@ export class AccountVM {
     makeAutoObservable(this);
     this.address = args.address;
     this.accountIndex = args.accountIndex;
-    this._name = store.get(Keys.accountName(WalletVM.id, this.accountIndex)) || '';
+    this._name = store.get(Keys.accountName(WalletVM.id, this.accountIndex)) || `Account ${args.accountIndex}`;
 
     NetVM.currentProvider
       .lookupAddress(this.address)
@@ -209,7 +209,7 @@ export class AccountVM {
       this.nfts = [];
       return;
     }
-    
+
     const addr = '0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B';
 
     const poap = POAP.getNFTs(this.address).then(async (data) => {
