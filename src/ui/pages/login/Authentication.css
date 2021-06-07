@@ -34,7 +34,12 @@
   bottom: 4px;
   right: 8px;
   cursor: pointer;
-  opacity: 0.5;
+  opacity: 0.75;
+  transition: all 0.3s;
+}
+
+.page.authentication > .switch-auth-method:hover {
+  opacity: 1;
 }
 
 .page.authentication > .switch-auth-method img {
