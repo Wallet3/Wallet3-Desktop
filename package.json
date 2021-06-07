@@ -12,7 +12,12 @@
     "lint": "eslint --ext .ts .",
     "test": "jest"
   },
-  "keywords": [],
+  "keywords": [
+    "Ethereum",
+    "Wallet",
+    "WalletConnect",
+    "DeFi"
+  ],
   "author": {
     "name": "UnsignedInt8",
     "email": "unsignedint8@gmail.com"

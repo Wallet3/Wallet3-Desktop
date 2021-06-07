@@ -58,7 +58,6 @@ class KeyMan {
   }
 
   async savePassword(userPassword: string) {
-
     const [saltIv, salt] = Cipher.encrypt(Cipher.generateIv().toString('hex'), userPassword);
     this.key = this.key ?? new Key();
     this.key.saltIv = saltIv;

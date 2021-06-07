@@ -118,6 +118,8 @@ export class AccountVM {
     const [srcToken] = this.allTokens.splice(srcIndex, 1);
     this.allTokens.splice(dstIndex, 0, srcToken);
     this.allTokens.forEach((t, i) => (t.order = i + 1));
+
+    this.save();
   }
 
   save() {
