@@ -89,7 +89,7 @@ export default observer(({ app }: { app: Application }) => {
         </div>
       ) : undefined}
 
-      {appInited && touchIDSupported ? (
+      {appInited && touchIDSupported && !validated ? (
         <div className="switch-auth-method">
           {app.authMethod === 'fingerprint' ? (
             <img src={keyboardIcon} alt="Keyboard" onClick={(_) => app.switchAuthMethod('keyboard')} />

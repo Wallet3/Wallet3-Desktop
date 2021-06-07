@@ -13,10 +13,11 @@ interface Props {
   touchIDSupported: boolean;
   runTouchID?: boolean;
   authenticated?: boolean;
+  authMethod: 'fingerprint' | 'keyboard';
 }
 
 export default observer(
-  ({ touchIDSupported, onCancel, onAuthTouchID, onAuthPasscode, authenticated, runTouchID }: Props) => {
+  ({ touchIDSupported, onCancel, onAuthTouchID, onAuthPasscode, authenticated, runTouchID, authMethod }: Props) => {
     const { t } = useTranslation();
 
     const [loading, setLoading] = useState(false);
@@ -26,7 +27,7 @@ export default observer(
       if (loading) return;
       setLoading(true);
 
-      if (touchIDSupported) {
+      if (touchIDSupported && authMethod === 'fingerprint') {
         await onAuthTouchID?.();
       } else {
         await onAuthPasscode?.(passcode);
@@ -37,6 +38,7 @@ export default observer(
 
     if (runTouchID && touchIDSupported && loading === false && launched == false) {
       setLaunced(true);
+      if (authMethod !== 'fingerprint') return;
       auth();
     }
 
@@ -45,7 +47,7 @@ export default observer(
         <div className="panel">
           {authenticated ? (
             <Validation />
-          ) : touchIDSupported ? (
+          ) : touchIDSupported && authMethod === 'fingerprint' ? (
             <TouchIDView onAuth={auth} />
           ) : (
             <PasscodeView onAuth={auth} />

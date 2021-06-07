@@ -151,6 +151,7 @@ export default observer(({ app }: Props) => {
           onAuthPasscode={authViaPassword}
           authenticated={authenticated}
           runTouchID={onAuthView}
+          authMethod={app.authMethod}
         />
       </div>
     </div>

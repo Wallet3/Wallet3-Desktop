@@ -51,6 +51,7 @@ export default ({ app }: { app: ApplicationPopup }) => {
         onAuthTouchID={authViaTouchID}
         onAuthPasscode={authViaPassword}
         onCancel={onCacnel}
+        authMethod={app.authMethod}
         runTouchID
       />
     </div>

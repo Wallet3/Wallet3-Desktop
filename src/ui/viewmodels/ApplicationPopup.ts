@@ -16,6 +16,7 @@ export class ApplicationPopup extends Application {
 
   async init() {
     super.init(false);
+    console.log('authmethod', this.authMethod);
 
     ipc.once(Messages.initWindowType, (e, { type, payload }: { type: PopupWindowTypes; payload }) => {
       this.type = type;
