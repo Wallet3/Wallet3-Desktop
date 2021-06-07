@@ -1,12 +1,14 @@
 import MessageKeys, { AuthenticationResult, BooleanResult, InitStatus, InitVerifyPassword } from '../../common/Messages';
+import { action, makeObservable, observable } from 'mobx';
 
 import Coingecko from '../../api/Coingecko';
 import WalletVM from './WalletVM';
 import { createMemoryHistory } from 'history';
 import crypto from '../bridges/Crypto';
 import ipc from '../bridges/IPC';
-import { makeObservable } from 'mobx';
 import store from 'storejs';
+
+type AuthMethod = 'fingerprint' | 'keyboard';
 
 export class Application {
   readonly history = createMemoryHistory();
@@ -14,11 +16,16 @@ export class Application {
   appAuthenticated = false;
   touchIDSupported = false;
   machineId = '';
+  authMethod: AuthMethod = 'fingerprint';
 
   constructor() {
+    makeObservable(this, { authMethod: observable, switchAuthMethod: action });
+
     ipc.on(MessageKeys.idleExpired, (e, { idleExpired }: { idleExpired: boolean }) => {
       if (idleExpired) this.history.push('/authentication');
     });
+
+    this.authMethod = store.get('authMethod') || 'fingerprint';
   }
 
   async init(jump = true) {
@@ -72,6 +79,11 @@ export class Application {
   promptTouchID = async (message?: string) => {
     const { success } = await ipc.invokeSecure<BooleanResult>(MessageKeys.promptTouchID, { message });
     return success;
+  };
+
+  switchAuthMethod = async (method: AuthMethod) => {
+    this.authMethod = method;
+    store.set('authMethod', method);
   };
 
   async auth() {

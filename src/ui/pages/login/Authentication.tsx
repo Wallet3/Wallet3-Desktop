@@ -6,13 +6,17 @@ import { PasscodeView, TouchIDView, Validation } from '../../components';
 import React, { useEffect, useState } from 'react';
 
 import { Application } from '../../viewmodels/Application';
+import fingerprint from '../../../assets/icons/app/fingerprint.svg';
+import keyboardIcon from '../../../assets/icons/app/keyboard.svg';
+import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 
-export default ({ app }: { app: Application }) => {
-  const { touchIDSupported, appAuthenticated } = app;
+export default observer(({ app }: { app: Application }) => {
+  const { touchIDSupported, appAuthenticated, authMethod } = app;
   const { t } = useTranslation();
   const [validated, setValidated] = useState(false);
   const [failedCount, setFailedCount] = useState(0);
+  const [appInited] = useState(app.appAuthenticated);
 
   const goApp = () => {
     setValidated(true);
@@ -61,16 +65,16 @@ export default ({ app }: { app: Application }) => {
     if (touchIDSupported && appAuthenticated)
       document.onkeydown = (ev) => {
         if (!(ev.code === 'Enter' || ev.code === 'Space')) return;
-        authViaTouchID();
+        if (authMethod === 'fingerprint') authViaTouchID();
       };
 
     return () => (document.onkeydown = undefined);
-  }, []);
+  }, [authMethod]);
 
   return (
     <div className="page authentication ">
       <div className={`container ${!appAuthenticated || !touchIDSupported ? 'non-touchid' : ''}`}>
-        {validated ? undefined : touchIDSupported && appAuthenticated ? (
+        {validated ? undefined : touchIDSupported && appAuthenticated && authMethod === 'fingerprint' ? (
           <TouchIDView onAuth={authViaTouchID} />
         ) : (
           <PasscodeView onAuth={authViaPassword} />
@@ -84,6 +88,16 @@ export default ({ app }: { app: Application }) => {
           <span onClick={resetApp}>{t('Forgot Password? Reset Wallet')}</span>
         </div>
       ) : undefined}
+
+      {appInited && touchIDSupported ? (
+        <div className="switch-auth-method">
+          {app.authMethod === 'fingerprint' ? (
+            <img src={keyboardIcon} alt="Keyboard" onClick={(_) => app.switchAuthMethod('keyboard')} />
+          ) : (
+            <img src={fingerprint} alt="Fingerprint" onClick={(_) => app.switchAuthMethod('fingerprint')} />
+          )}
+        </div>
+      ) : undefined}
     </div>
   );
-};
+});

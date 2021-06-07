@@ -28,3 +28,16 @@
 .page.authentication > .reset-bar > span:hover {
   opacity: 0.5;
 }
+
+.page.authentication > .switch-auth-method {
+  position: absolute;
+  bottom: 4px;
+  right: 8px;
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+.page.authentication > .switch-auth-method img {
+  width: 24px;
+  height: 24px;
+}
