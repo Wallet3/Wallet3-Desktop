@@ -431,8 +431,9 @@ export class App {
 
           const { success, password } = App.decryptIpc(cipherText, iv, key) as { success: boolean; password?: string };
           const authKey = success ? randomBytes(8).toString('hex') : '';
-          if (authKey)
+          if (authKey) {
             this.#authKeys.set(authKey, password || (this.touchIDSupported ? await this.decryptUserPassword() : ''));
+          }
 
           resolve({ success, authKey });
         });

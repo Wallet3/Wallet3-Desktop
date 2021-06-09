@@ -10,7 +10,7 @@ const Explorers = new Map<number, string>([
   [100, 'https://blockscout.com/xdai/mainnet'],
   [128, 'https://hecoinfo.com'],
 
-  [137, 'https://explorer.matic.network'],
+  [137, 'https://polygonscan.com'],
   [250, 'https://ftmscan.com'],
   [80001, 'https://explorer-mumbai.maticvigil.com'],
 ]);

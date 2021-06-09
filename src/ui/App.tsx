@@ -1,5 +1,6 @@
 import './App.css';
 
+import { About, Authentication, Blank, Generate, Import, SetupPasscode, Welcome } from './pages/login/';
 import {
   Account,
   AddToken,
@@ -11,7 +12,6 @@ import {
   UserNFTs,
   UserTokens,
 } from './pages/app';
-import { Authentication, Blank, Generate, Import, SetupPasscode, Welcome } from './pages/login/';
 import { BackupMnemonic, Reset } from './pages/secure';
 import React, { useEffect } from 'react';
 import { Route, Router, Switch, withRouter } from 'react-router-dom';
@@ -100,6 +100,10 @@ export default observer((args: Props) => {
           </Route>
           <Route path="/reset/:authKey">
             <Reset {...args} />
+          </Route>
+
+          <Route path="/about">
+            <About {...args} />
           </Route>
 
           <Route path="*" component={Blank} />

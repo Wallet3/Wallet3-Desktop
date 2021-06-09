@@ -131,6 +131,12 @@ export default observer(({ walletVM, app, currencyVM, langsVM }: IConstructor) =
         <span>{t('Reset')}</span>
         <Feather icon="chevron-right" size={15} />
       </div>
+
+      <div className="setting-item click" onClick={(_) => app.history.push(`/about`)}>
+        <Feather icon="book" size={iconSize} />
+        <span>{t('About')}</span>
+        <Feather icon="chevron-right" size={15} />
+      </div>
     </div>
   );
 });

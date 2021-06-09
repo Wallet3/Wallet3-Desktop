@@ -96,5 +96,13 @@
   "Unlock Wallet": "Unlock Wallet",
   "App Info": "App Info",
   "Supported Characters": "Supported Characters: A-Z, 0-9",
-  "Your all data will be deleted, are you sure?": "Your all data will be deleted, are you sure?"
+  "Your all data will be deleted, are you sure?": "Your all data will be deleted, are you sure?",
+  "About": "About",
+  "A secure Wallet for Bankless Era": "A secure Wallet for Bankless Era.",
+  "Features": "Features",
+  "Manage all your Ethereum assets in one place": "Manage all your Ethereum assets in one place.",
+  "Connect DeFi apps with WalletConnect": "Connect DeFi apps with WalletConnect™.",
+  "Support Layer2 and EVM-compatible chains": "Support Layer2 and EVM-compatible chains.",
+  "Security First": "Security First.",
+  "Data Providers": "Data Providers"
 }
