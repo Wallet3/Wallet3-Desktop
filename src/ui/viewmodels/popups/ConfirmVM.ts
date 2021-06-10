@@ -132,7 +132,7 @@ export class ConfirmVM {
   }
 
   get gasPriceWei() {
-    return BigNumber.from(Number.parseInt((this.gasPrice * GasnowWs.gwei_1) as any) || 0);
+    return BigNumber.from(`${Number.parseInt((this.gasPrice * GasnowWs.gwei_1) as any) || 0}`);
   }
 
   get tokenSymbol() {

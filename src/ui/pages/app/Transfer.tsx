@@ -119,7 +119,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
           <input
             type="text"
             placeholder={`${transferVM?.gas}`}
-            onChange={(e) => transferVM?.setGas(Number.parseInt(e.target.value))}
+            onChange={(e) => transferVM?.setGas(Number.parseInt(e.target.value) || 0)}
           />
           <span></span>
         </div>
@@ -130,7 +130,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
             type="text"
             maxLength={64}
             placeholder={`${transferVM?.nonce}`}
-            onChange={(e) => transferVM?.setNonce(Number.parseInt(e.target.value))}
+            onChange={(e) => transferVM?.setNonce(Number.parseInt(e.target.value) || 0)}
           />
           <span></span>
         </div>

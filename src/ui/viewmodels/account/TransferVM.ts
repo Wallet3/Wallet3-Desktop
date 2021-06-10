@@ -252,14 +252,6 @@ export class TransferVM {
         .toString();
     }
 
-    console.log(
-      'receipient',
-      WalletVM.accounts.find((ac) => ac.address === utils.getAddress(this.receiptAddress))?.name ?? '',
-      this.receiptAddress,
-      utils.getAddress(this.receiptAddress),
-      WalletVM.accounts[0].address
-    );
-
     await ipc.invokeSecure<void>(Messages.createTransferTx, {
       from: this._accountVM.address,
       to,
