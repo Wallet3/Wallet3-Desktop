@@ -23,6 +23,7 @@ export default {
   sendLocalNotification: 'msg-send-notification',
   popupMessageBox: 'msg-popup-msgbox',
   returnMsgBoxResult: (id: string) => `msg-return-msgbox-result-${id}`,
+  setLang: 'msg-set-lang',
 
   scanQR: 'msg-scan-qr',
   connectWallet: 'msg-connect-wallet',

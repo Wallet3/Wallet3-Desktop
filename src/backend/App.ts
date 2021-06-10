@@ -331,6 +331,11 @@ export class App {
       new Notification(content).show();
     });
 
+    ipcMain.handle(MessageKeys.setLang, async (e, content) => {
+      const { lang } = content;
+      i18n.changeLanguage(lang);
+    });
+
     this.initPopupHandlers();
   }
 
