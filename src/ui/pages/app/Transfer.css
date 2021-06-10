@@ -5,6 +5,7 @@
 
 .page.send > .form {
   position: relative;
+  line-height: 15px;
 }
 
 .page.send > .form > .to {
