@@ -472,7 +472,7 @@ export class App {
   ) {
     let { modal, parent, height } = windowArgs || {};
 
-    height = height ?? (modal ? 340 : 315);
+    height = height ?? (modal ? 333 : 315);
     const popup = new BrowserWindow({
       width: 360,
       minWidth: 360,

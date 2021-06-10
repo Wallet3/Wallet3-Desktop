@@ -69,6 +69,7 @@ a.button {
   background: none;
   width: 100%;
   font-size: 16px;
+  /* line-height: 16px; */
   padding: 8px 0;
   padding-bottom: 6px;
   font-family: 'Avenir Next', Arial, sans-serif;

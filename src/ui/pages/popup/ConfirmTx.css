@@ -1,7 +1,6 @@
 .page.confirm {
   display: grid;
   grid-template-rows: auto 1fr;
-  overflow: hidden;
 }
 
 .page.confirm > .container {
@@ -14,7 +13,7 @@
   display: grid;
   grid-template-rows: 1fr auto;
   padding-top: 10px;
-  max-height: calc(100vh - 24px - 49px); /* exactly 51px: (39+12) + 12*2 */
+  max-height: calc(100vh - 24px - 46px); /* exactly 51px: (36+12) + 12*2 */
 }
 
 .page.confirm > .container > .details > .form > div {
@@ -27,6 +26,7 @@
   margin-bottom: 8px;
   border-bottom: 1px dashed var(--border-color);
   font-size: 15px;
+  line-height: 17px;
   font-weight: 300;
 }
 

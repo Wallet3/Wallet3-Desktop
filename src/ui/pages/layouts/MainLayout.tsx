@@ -13,6 +13,7 @@ import React from 'react';
 import { SkeletonTheme } from 'react-loading-skeleton';
 import { WalletVM } from '../../viewmodels/WalletVM';
 import { observer } from 'mobx-react-lite';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   networksVM: NetworksVM;
@@ -25,6 +26,7 @@ interface Props {
 export default observer((args: Props) => {
   const { path, url } = useRouteMatch();
   const { pathname } = useLocation();
+  const { t } = useTranslation();
 
   let activeTab = 0;
   if (pathname.endsWith('settings')) activeTab = 1;
@@ -48,14 +50,14 @@ export default observer((args: Props) => {
           <Link to={`${url}`}>
             <div className={activeTab === 0 ? 'active' : ''}>
               <Feather icon="credit-card" size={20} />
-              <span>Wallet</span>
+              <span>{t('Wallet')}</span>
             </div>
           </Link>
 
           <Link to={`${url}/settings`}>
             <div className={activeTab === 1 ? 'active' : ''}>
               <Feather icon="settings" size={20} />
-              <span>Settings</span>
+              <span>{t('Settings')}</span>
             </div>
           </Link>
         </div>

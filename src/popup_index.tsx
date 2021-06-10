@@ -1,5 +1,6 @@
 import './index.css';
 import './i18n';
+import './ui/viewmodels/settings/LangsVM';
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';

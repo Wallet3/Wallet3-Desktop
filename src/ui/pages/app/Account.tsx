@@ -12,16 +12,18 @@ import QRCode from 'qrcode.react';
 import Shell from '../../bridges/Shell';
 import { WalletVM } from '../../viewmodels/WalletVM';
 import { convertToAccountUrl } from '../../../misc/Url';
+import { useTranslation } from 'react-i18next';
 
 export default ({ app, walletVM, networksVM }: { app: Application; walletVM: WalletVM; networksVM: NetworksVM }) => {
   const [showCheck, setShowCheck] = useState(false);
+  const { t } = useTranslation();
 
   const { currentAccount } = walletVM;
   const address = currentAccount.address;
 
   return (
     <div className="page account">
-      <NavBar title="Account" onBackClick={() => app.history.goBack()} />
+      <NavBar title={t('Account')} onBackClick={() => app.history.goBack()} />
 
       <div className="content">
         <div>

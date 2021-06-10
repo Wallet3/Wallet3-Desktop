@@ -39,6 +39,7 @@
   border-bottom: 1px dashed var(--border-color);
   transition: all 0.3s;
   margin-bottom: 12px;
+  line-height: 15px;
 }
 
 .page.settings > .setting-item > svg {
