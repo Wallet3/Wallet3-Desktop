@@ -16,7 +16,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
   const Loader = () => <BarLoader width={24} height={2} />;
   return (
     <div className="page add-token">
-      <NavBar title={t('Add Token')} onBackClick={() => app.history.goBack()} />
+      <NavBar title={t('Add Tokens')} onBackClick={() => app.history.goBack()} />
 
       <div className="content">
         <input
@@ -56,7 +56,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
           app.history.goBack();
         }}
       >
-        Save
+        {t('Save')}
       </button>
     </div>
   );
