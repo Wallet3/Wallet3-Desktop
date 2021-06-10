@@ -1,19 +1,21 @@
 module.exports = {
   packagerConfig: {
-    appBundleId: 'eth.wallet3',
+    appBundleId: 'io.chainbow.wallet3',
+    appCopyright: 'ChainBow Co, Ltd.',
+    appCategoryType: 'public.app-category.finance',
+    darwinDarkModeSupport: false,
+    icon: './assets/AppIcon.png',
   },
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
       config: {
-        name: 'Wallet3',
+        name: 'Wallet 3',
       },
     },
     {
       name: '@electron-forge/maker-dmg',
-      config: {
-        
-      },
+      config: {},
     },
     {
       name: '@electron-forge/maker-deb',
