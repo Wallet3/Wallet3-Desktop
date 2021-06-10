@@ -11,16 +11,18 @@ export default () => {
   return (
     <div className="page welcome">
       <div className="brand">
-        <Logo width={128} height={72} />
-        <div className="slogan">A Wallet for Bankless Era</div>
+        <Logo className="logo animate__animated animate__fadeInUp" width={152} height={80} opacity={0} />
+        <div className="slogan animate__animated animate__fadeInUp animate__delay-1s" style={{ opacity: 0 }}>
+          A Secure Wallet for Bankless Era
+        </div>
       </div>
 
       <div className="actions">
-        <Link className="button" to="/generate">
-          {t('Create')}
+        <Link className="button positive animate__animated animate__fadeInUp animate__delay-1s" to="/generate">
+          {t('Create a new wallet')}
         </Link>
-        <Link className="button" to="/import">
-          {t('Import')}
+        <Link className="button animate__animated animate__fadeInUp animate__delay-1s" to="/import">
+          {t('Import wallet')}
         </Link>
       </div>
     </div>

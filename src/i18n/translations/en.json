@@ -1,6 +1,6 @@
 {
-  "Create": "Create",
-  "Import": "Import",
+  "Create": "Create a new wallet",
+  "Import": "Import wallet",
   "Net Worth": "Net Worth",
   "Assets": "Assets",
   "Wallet": "Wallet",
@@ -37,7 +37,7 @@
   "Mn_Sec_Tip_1": "The mnemonic consists of English words, please keep them safe.",
   "Mn_Sec_Tip_2": "Once the mnemonic gets lost, it cannot be retrieved, and you would lose all your funds.",
   "Address": "Address",
-  "NEXT": "NEXT",
+  "Next": "Next",
   "Continue": "Continue",
   "Import Mnemonic": "Import Mnemonic",
   "Import_Mn_Tip": "Enter mnemonic phrases separated by spaces",

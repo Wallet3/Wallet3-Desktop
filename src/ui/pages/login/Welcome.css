@@ -13,10 +13,14 @@
   padding-top: 24px;
 }
 
+.page.welcome > .brand > .logo {
+  opacity: 0;
+}
+
 .page.welcome > .brand > .slogan {
   font-size: 10px;
   margin-top: -16px;
-  opacity: 0.5;
+  color: rgb(160, 160, 160);
 }
 
 .page.welcome > .brand > .logo {

@@ -78,7 +78,7 @@ export default observer(({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) 
       <div className="padding"></div>
 
       <Link className="button" to="/setupPassword">
-        {t('NEXT')}
+        {t('Next')}
       </Link>
     </div>
   );

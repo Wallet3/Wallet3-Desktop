@@ -72,6 +72,7 @@
   "dependencies": {
     "@szhsin/react-menu": "^1.10.1",
     "@walletconnect/client": "^1.4.1",
+    "animate.css": "^4.1.1",
     "animejs": "^3.2.1",
     "axios": "^0.21.1",
     "delay": "^5.0.0",

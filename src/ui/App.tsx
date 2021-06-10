@@ -1,4 +1,5 @@
 import './App.css';
+import 'animate.css/animate.min.css';
 
 import { About, Authentication, Blank, Generate, Import, SetupPasscode, Welcome } from './pages/login/';
 import {
