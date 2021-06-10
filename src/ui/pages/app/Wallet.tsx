@@ -241,7 +241,7 @@ export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor
         <div className={`tokens ${accountVM.nfts?.length === 0 || !accountVM.nfts ? 'empty' : ''}`}>
           {accountVM.nfts ? (
             accountVM.nfts.length === 0 ? (
-              'No NFTs Here'
+              t('No NFTs Here')
             ) : (
               accountVM.nfts.slice(0, 12).map((nft) => {
                 return (
