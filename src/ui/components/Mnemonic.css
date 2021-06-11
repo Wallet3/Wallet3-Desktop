@@ -9,6 +9,16 @@ table.mnemonic td {
 table.mnemonic td > div {
   padding: 8px 0;
   position: relative;
+  cursor: pointer;
+}
+
+table.mnemonic td > div > .word {
+  filter: blur(7px);
+  transition: all 0.3s;
+}
+
+table.mnemonic td > div:hover .word {
+  filter: blur(0);
 }
 
 table.mnemonic td > div > .no {

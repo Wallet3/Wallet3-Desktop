@@ -29,7 +29,7 @@ export default ({ phrases }: { phrases: string[] }) => {
             <td key={`row-${ri}-${wi}`}>
               {word ? (
                 <div>
-                  <span>{word}</span>
+                  <span className='word'>{word}</span>
                   <span className="no">{index}</span>
                 </div>
               ) : index < count ? (
