@@ -1,6 +1,6 @@
 module.exports = {
   packagerConfig: {
-    appBundleId: 'io.chainbow.wallet3',
+    appBundleId: 'jp.co.chainbow.wallet3',
     appCopyright: 'ChainBow Co, Ltd.',
     appCategoryType: 'public.app-category.finance',
     darwinDarkModeSupport: false,
@@ -55,4 +55,14 @@ module.exports = {
       },
     ],
   ],
+  win32metadata: {
+    CompanyName: 'ChainBow',
+  },
+  osxSign: {
+    identity: 'Developer ID Application: ChainBow Co. Ltd (Z3N6SZF439)',
+    hardenedRuntime: true,
+    'gatekeeper-assess': false,
+    entitlements: 'sign/entitlements.plist',
+    'entitlements-inherit': 'sign/entitlements.plist',
+  },
 };
