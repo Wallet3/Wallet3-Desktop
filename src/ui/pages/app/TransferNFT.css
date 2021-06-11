@@ -82,6 +82,7 @@
 .page.nft > .content > .transfer > .to input {
   font-size: 15px;
   border: none;
+  min-width: 80vw;
   box-sizing: border-box;
   outline: none;
   background: none;
