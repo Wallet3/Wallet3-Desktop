@@ -60,7 +60,7 @@ export default observer(({ app, accountVM }: { app: Application; accountVM: Acco
         </div>
 
         <div className="transfer">
-          <h4>Transfer</h4>
+          <h4>{t('Transfer')}</h4>
           <div className="to">
             <span>{t('To')}:</span>
             <input type="text" spellCheck={false} onChange={(e) => transferVM.setReceipient(e.target.value)} />

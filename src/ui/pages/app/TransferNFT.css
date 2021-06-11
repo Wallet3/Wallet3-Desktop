@@ -61,12 +61,16 @@
   position: relative;
   display: flex;
   font-size: 15px;
+  line-height: 14px;
   border-bottom: 1px dashed var(--border-color);
   margin-bottom: 12px;
 }
 
 .page.nft > .content > .transfer > .to > span {
   left: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  width: auto;
 }
 
 .page.nft > .content > .transfer > .to > svg {
@@ -77,7 +81,6 @@
 
 .page.nft > .content > .transfer > .to input {
   font-size: 15px;
-  width: 100%;
   border: none;
   box-sizing: border-box;
   outline: none;
