@@ -29,7 +29,7 @@ export default ({ app }: { app: Application }) => {
             <Feather icon="cpu" size={14} /> {t('Support Layer2 and EVM-compatible chains')}
           </li>
           <li>
-            <Feather icon="shield" size={14} /> {t('Security First')}
+            <Feather icon="shield" size={14} /> {t('Built for Security')}
           </li>
         </ul>
 

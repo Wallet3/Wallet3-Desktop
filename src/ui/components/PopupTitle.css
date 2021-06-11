@@ -14,10 +14,15 @@
   display: flex;
   color: rgb(21, 150, 255);
   align-items: center;
+  overflow: hidden;
+  max-width: 70vw;
 }
 
 .pop-title > .title span {
   margin-left: 8px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .pop-title > .network {

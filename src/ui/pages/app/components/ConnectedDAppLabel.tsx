@@ -5,10 +5,12 @@ import { AppsIcon, CryptoIcons } from '../../../misc/Icons';
 import Image from '../../../components/Image';
 import { Networks } from '../../../viewmodels/NetworksVM';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 export default (props: IWcSession) => {
   const network = Networks.find((n) => n.chainId === props.userChainId);
-
+  const { t } = useTranslation();
+  
   return (
     <div className="connectedapp">
       <div className="dapp-logo">
@@ -22,7 +24,9 @@ export default (props: IWcSession) => {
           <span className="name">{props.peerMeta.name}</span>
         </div>
         <div className="extra">
-          <span>Last Used: {new Date(props.lastUsedTimestamp).toLocaleDateString()}</span>
+          <span>
+            {t('Last used')}: {new Date(props.lastUsedTimestamp).toLocaleDateString()}
+          </span>
         </div>
       </div>
     </div>

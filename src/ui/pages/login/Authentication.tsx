@@ -85,7 +85,7 @@ export default observer(({ app }: { app: Application }) => {
 
       {failedCount >= 5 && !appAuthenticated ? (
         <div className="reset-bar">
-          <span onClick={resetApp}>{t('Forgot Password? Reset Wallet')}</span>
+          <span onClick={resetApp}>{t('Forgot Passcode? Reset Wallet')}</span>
         </div>
       ) : undefined}
 
