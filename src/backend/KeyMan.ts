@@ -11,12 +11,13 @@ import { TxParams } from '../common/Messages';
 import macaddr from 'macaddress';
 
 const BasePath = `m/44\'/60\'/0\'/0`;
+const prod = process.env.NODE_ENV === 'production';
 
 const Keys = {
   password: 'wallet3-password',
   secret: 'wallet3-secret',
-  masterAccount: (machine_id: string) => `wallet3-master-${machine_id}`,
-  secretAccount: (kc_unique: string) => `wallet3-account-${kc_unique}`,
+  masterAccount: (machine_id: string) => (prod ? `wallet3-master-${machine_id}` : `wallet3-dev-master-${machine_id}`),
+  secretAccount: (kc_unique: string) => (prod ? `wallet3-account-${kc_unique}` : `wallet3-dev-account-${kc_unique}`),
 };
 
 class KeyMan {
@@ -53,8 +54,13 @@ class KeyMan {
   }
 
   async verifyPassword(userPassword: string) {
-    const user = Cipher.sha256(this.getCorePassword(userPassword)).toString('hex');
-    return user === (await keytar.getPassword(Keys.password, Keys.masterAccount(this.machineId)));
+    try {
+      const user = Cipher.sha256(this.getCorePassword(userPassword)).toString('hex');
+      return user === (await keytar.getPassword(Keys.password, Keys.masterAccount(this.machineId)));
+    } catch (error) {
+      console.error(error.message);
+      return false;
+    }
   }
 
   async savePassword(userPassword: string) {
@@ -107,10 +113,15 @@ class KeyMan {
   async readMnemonic(userPassword: string) {
     if (!(await this.verifyPassword(userPassword))) return undefined;
 
-    const iv = this.key.mnIv;
-    const enMnemonic = await keytar.getPassword(Keys.secret, Keys.secretAccount(this.key.kc_unique));
+    try {
+      const iv = this.key.mnIv;
+      const enMnemonic = await keytar.getPassword(Keys.secret, Keys.secretAccount(this.key.kc_unique));
 
-    return Cipher.decrypt(Buffer.from(iv, 'hex'), enMnemonic, this.getCorePassword(userPassword));
+      return Cipher.decrypt(Buffer.from(iv, 'hex'), enMnemonic, this.getCorePassword(userPassword));
+    } catch (error) {
+      console.error(error.message);
+      return undefined;
+    }
   }
 
   async signTx(userPassword: string, accountIndex = 0, txParams: TxParams) {

@@ -1,6 +1,7 @@
 import { Menu, app } from 'electron';
 
 const isMac = process.platform === 'darwin';
+const prod = process.env.NODE_ENV === 'production';
 
 const template: any[] = [
   // { role: 'appMenu' }
@@ -54,17 +55,19 @@ const template: any[] = [
   // { role: 'viewMenu' }
   {
     label: 'View',
-    submenu: [
-      // { role: 'reload' },
-      // { role: 'forceReload' },
-      { role: 'toggleDevTools' },
-      // { type: 'separator' },
-      // { role: 'resetZoom' },
-      // { role: 'zoomIn' },
-      // { role: 'zoomOut' },
-      // { type: 'separator' },
-      { role: 'togglefullscreen' },
-    ],
+    submenu: prod
+      ? [{ role: 'togglefullscreen' }]
+      : [
+          // { role: 'reload' },
+          // { role: 'forceReload' },
+          { role: 'toggleDevTools' },
+          // { type: 'separator' },
+          // { role: 'resetZoom' },
+          // { role: 'zoomIn' },
+          // { role: 'zoomOut' },
+          // { type: 'separator' },
+          { role: 'togglefullscreen' },
+        ],
   },
   // { role: 'windowMenu' }
   {

@@ -253,18 +253,24 @@ export class App {
       const [iv, cipherText] = encrypted;
 
       const { password, count } = App.decryptIpc(cipherText, iv, key);
-      const verified = await KeyMan.verifyPassword(password);
 
-      let addrs: string[] = [];
+      try {
+        const verified = await KeyMan.verifyPassword(password);
 
-      if (verified) {
-        addrs = await KeyMan.genAddresses(password, count);
-        runInAction(() => this.addresses.push(...addrs));
+        let addrs: string[] = [];
 
-        if (this.touchIDSupported) this.encryptUserPassword(password);
+        if (verified) {
+          addrs = await KeyMan.genAddresses(password, count);
+
+          runInAction(() => this.addresses.push(...addrs));
+
+          if (this.touchIDSupported) this.encryptUserPassword(password);
+        }
+
+        return App.encryptIpc({ verified, addresses: verified ? addrs : [] }, key);
+      } catch (error) {
+        return App.encryptIpc({ verified: false, addresses: [] }, key);
       }
-
-      return App.encryptIpc({ verified, addresses: verified ? addrs : [] }, key);
     });
 
     ipcMain.handle(`${MessageKeys.changeAccountIndex}-secure`, (e, encrypted, winId) => {
