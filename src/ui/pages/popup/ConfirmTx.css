@@ -63,7 +63,7 @@
 }
 
 .page.confirm > .container > .details > .form > div span.verified {
-  color: rgb(21, 150, 255);
+  color: #2ecc71;
   font-weight: 500;
 }
 

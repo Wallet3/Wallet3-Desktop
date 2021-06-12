@@ -267,16 +267,18 @@ export class WalletConnect extends EventEmitter {
         }
       : undefined;
 
+    const chainId = requestedChainId || this.appChainId;
+
     App.createPopupWindow(
       'sendTx',
       {
-        chainId: requestedChainId || this.appChainId,
+        chainId,
         from: App.currentAddress,
         accountIndex: App.currentAddressIndex,
         to: param.to,
         data: param.data || '0x',
         gas: Number.parseInt(param.gas) || 21000,
-        gasPrice: Number.parseInt(param.gasPrice) || GasnowWs.gwei_1,
+        gasPrice: Number.parseInt(param.gasPrice) || (chainId === 56 ? GasnowWs.gwei_5 : GasnowWs.gwei_1),
         nonce:
           Number.parseInt(param.nonce) ||
           (await getTransactionCount(requestedChainId ?? this.appChainId, App.currentAddress)),

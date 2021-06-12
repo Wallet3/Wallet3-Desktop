@@ -70,7 +70,7 @@ a.button {
   width: 100%;
   font-size: 16px;
   /* line-height: 16px; */
-  padding: 8px 0;
+  padding: 8px 16px;
   padding-bottom: 6px;
   font-family: 'Avenir Next', Arial, sans-serif;
   cursor: pointer;
@@ -78,6 +78,9 @@ a.button {
   outline: none;
   display: block;
   box-sizing: border-box;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 button.positive {
