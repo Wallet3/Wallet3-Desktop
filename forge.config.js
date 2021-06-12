@@ -1,3 +1,5 @@
+const { appleId, appleIdPassword } = require('./sign/appSign');
+
 module.exports = {
   packagerConfig: {
     appBundleId: 'jp.co.chainbow.wallet3',
@@ -5,6 +7,14 @@ module.exports = {
     appCategoryType: 'public.app-category.finance',
     darwinDarkModeSupport: false,
     icon: './assets/AppIcon.png',
+    osxSign: {
+      identity: 'Developer ID Application: ChainBow Co. Ltd (Z3N6SZF439)',
+      hardenedRuntime: true,
+      'gatekeeper-assess': false,
+      entitlements: 'sign/entitlements.plist',
+      'entitlements-inherit': 'sign/entitlements.plist',
+      'signature-flags': 'library',
+    },
   },
   makers: [
     {
@@ -57,12 +67,5 @@ module.exports = {
   ],
   win32metadata: {
     CompanyName: 'ChainBow',
-  },
-  osxSign: {
-    identity: 'Developer ID Application: ChainBow Co. Ltd (Z3N6SZF439)',
-    hardenedRuntime: true,
-    'gatekeeper-assess': false,
-    entitlements: 'sign/entitlements.plist',
-    'entitlements-inherit': 'sign/entitlements.plist',
   },
 };
