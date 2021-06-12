@@ -19,6 +19,7 @@ const SVGs = new Map([
   [250, [CryptoIcons('ftm'), 'Fantom']],
   [56, [CryptoIcons('bsc'), 'BSC']],
   [128, [CryptoIcons('ht'), 'Heco']],
+  [66, [CryptoIcons('okt'), 'OKEx']],
 
   [80001, [CryptoIcons('polygon'), 'Mumbai']],
 ]);

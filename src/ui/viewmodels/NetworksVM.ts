@@ -87,6 +87,13 @@ export const PublicNetworks: INetwork[] = [
     order: 5,
     color: '#01943f',
   },
+  {
+    symbol: 'OKT',
+    chainId: 66,
+    network: 'OKEx',
+    order: 6,
+    color: '#24c',
+  },
 ];
 
 export const Testnets: INetwork[] = [
