@@ -80,6 +80,13 @@ export const PublicNetworks: INetwork[] = [
     color: '#1969FF',
     order: 5,
   },
+  {
+    symbol: 'HT',
+    chainId: 128,
+    network: 'HECO',
+    order: 5,
+    color: '#01943f',
+  },
 ];
 
 export const Testnets: INetwork[] = [

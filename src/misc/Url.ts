@@ -6,7 +6,7 @@ const Explorers = new Map<number, string>([
   [4, 'https://rinkeby.etherscan.io'],
   [5, 'https://goerli.etherscan.io'],
   [42, 'https://kovan.etherscan.io'],
-  [56, 'https://bscscan.io'],
+  [56, 'https://bscscan.com'],
   [100, 'https://blockscout.com/xdai/mainnet'],
   [128, 'https://hecoinfo.com'],
 
