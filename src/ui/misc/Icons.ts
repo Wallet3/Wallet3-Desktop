@@ -18,5 +18,10 @@ export const FlagIcons = (country: string) => {
   return img;
 };
 
+export const NetworkIcons = (network: string) => {
+  const img = require(`../../assets/icons/networks/${network.toLowerCase()}.svg`).default;
+  return img;
+};
+
 export const AppsIcon = Apps;
 export { DefaultCoin };

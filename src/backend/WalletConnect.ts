@@ -276,7 +276,7 @@ export class WalletConnect extends EventEmitter {
         to: param.to,
         data: param.data || '0x',
         gas: Number.parseInt(param.gas) || 21000,
-        gasPrice: Number.parseInt(param.gasPrice) || GasnowWs.gwei_20,
+        gasPrice: Number.parseInt(param.gasPrice) || GasnowWs.gwei_1,
         nonce:
           Number.parseInt(param.nonce) ||
           (await getTransactionCount(requestedChainId ?? this.appChainId, App.currentAddress)),

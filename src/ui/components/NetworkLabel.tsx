@@ -1,6 +1,6 @@
 import './NetworkLabel.css';
 
-import { AppsIcon, CryptoIcons } from '../misc/Icons';
+import { AppsIcon, NetworkIcons } from '../misc/Icons';
 
 import React from 'react';
 import i18n from '../../i18n';
@@ -8,20 +8,20 @@ import { observer } from 'mobx-react-lite';
 
 const SVGs = new Map([
   [0, [AppsIcon, i18n.t('Auto Switch')]],
-  [1, [CryptoIcons('eth'), 'Ethereum']],
-  [3, [CryptoIcons('eth'), 'Ropsten']],
-  [4, [CryptoIcons('eth'), 'Rinkeby']],
-  [5, [CryptoIcons('eth'), 'Goerli']],
-  [42, [CryptoIcons('eth'), 'Kovan']],
+  [1, [NetworkIcons('Ethereum'), 'Ethereum']],
+  [3, [NetworkIcons('Ropsten'), 'Ropsten']],
+  [4, [NetworkIcons('Rinkeby'), 'Rinkeby']],
+  [5, [NetworkIcons('Goerli'), 'Goerli']],
+  [42, [NetworkIcons('Kovan'), 'Kovan']],
 
-  [137, [CryptoIcons('polygon'), 'Polygon']],
-  [100, [CryptoIcons('xdai'), 'xDAI']],
-  [250, [CryptoIcons('ftm'), 'Fantom']],
-  [56, [CryptoIcons('bsc'), 'BSC']],
-  [128, [CryptoIcons('ht'), 'Heco']],
-  [66, [CryptoIcons('okt'), 'OKEx']],
+  [137, [NetworkIcons('Polygon'), 'Polygon']],
+  [100, [NetworkIcons('xDAI'), 'xDAI']],
+  [250, [NetworkIcons('Fantom'), 'Fantom']],
+  [56, [NetworkIcons('bsc'), 'BSC']],
+  [128, [NetworkIcons('Heco'), 'Heco']],
+  [66, [NetworkIcons('OKEx'), 'OKEx']],
 
-  [80001, [CryptoIcons('polygon'), 'Mumbai']],
+  [80001, [NetworkIcons('Polygon'), 'Mumbai']],
 ]);
 
 interface INetworkLabel {
