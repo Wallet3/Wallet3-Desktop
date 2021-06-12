@@ -8,6 +8,8 @@ import Transaction from './models/Transaction';
 import WCSession from './models/WCSession';
 import { app } from 'electron';
 
+const prod = process.env.NODE_ENV === 'production';
+
 export class DBMan {
   private _connection: Connection;
   private _txRepo: Repository<Transaction>;
@@ -19,7 +21,7 @@ export class DBMan {
     if (this._connection) return;
 
     const userData = app.getPath('userData');
-    const dbPath = path.join(userData, 'data/app.db');
+    const dbPath = path.join(userData, prod ? 'data/app.db' : 'data/dev-app.db');
     this._dbPath = dbPath;
 
     this._connection = await createConnection({

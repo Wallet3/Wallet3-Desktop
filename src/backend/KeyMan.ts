@@ -36,9 +36,15 @@ class KeyMan {
 
     [this.key] = await DBMan.accountRepo.find();
 
-    this.hasSecret = this.key?.kc_unique && this.key?.mnIv ? true : false;
     this.basePath = this.key?.basePath ?? BasePath;
     this.basePathIndex = this.key?.basePathIndex ?? 0;
+
+    this.hasSecret =
+      this.key?.kc_unique && this.key?.mnIv
+        ? (await keytar.getPassword(Keys.secret, Keys.secretAccount(this.key.kc_unique)))
+          ? true
+          : false
+        : false;
   }
 
   async setFullPath(fullPath: string) {
