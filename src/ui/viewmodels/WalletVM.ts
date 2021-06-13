@@ -67,7 +67,7 @@ export class WalletVM {
 
     const lastUsedAccount = store.get(Keys.lastUsedAccount(this.id)) || addresses[0];
     this.currentAccount = this.accounts.find((a) => a.address === lastUsedAccount) || this.accounts[0];
-    this.currentAccount.refresh();
+    this.currentAccount?.refresh();
 
     ipc.invokeSecure(Messages.changeAccountIndex, { index: this.accountIndex });
     setTimeout(() => this.refresh(), 45 * 1000);
@@ -81,6 +81,7 @@ export class WalletVM {
   }
 
   async refresh() {
+    await this.currentAccount?.refreshChainOverview();
     await this.currentAccount?.refreshChainTokens();
     setTimeout(() => this.refresh(), (NetVM.currentChainId === 1 ? 45 : 25) * 1000);
   }

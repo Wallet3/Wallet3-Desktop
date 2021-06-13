@@ -101,13 +101,13 @@ export class AccountVM {
       .catch(() => {});
   }
 
-  refresh() {
+  async refresh() {
     this.chains = [];
     this.allTokens = [];
     this.nativeToken = null;
 
-    this.refreshChainOverview();
-    this.refreshChainTokens();
+    await this.refreshChainOverview();
+    await this.refreshChainTokens();
 
     this.refreshNFTs();
   }
@@ -129,20 +129,19 @@ export class AccountVM {
     );
   }
 
-  private refreshChainOverview = () => {
-    Debank.fetchChainsOverview(this.address).then((overview) => {
-      if (!overview) {
-        return;
-      }
+  refreshChainOverview = async () => {
+    const overview = await Debank.fetchChainsOverview(this.address);
+    if (!overview) {
+      return;
+    }
 
-      const chains = overview.chain_list.filter((c) => c.usd_value > 0);
-      if (chains.length === 0) {
-        overview.chain_list.forEach((c) => (c.usd_value = 0.000001));
-        chains.push(...overview.chain_list);
-      }
+    const chains = overview.chain_list.filter((c) => c.usd_value > 0);
+    if (chains.length === 0) {
+      overview.chain_list.forEach((c) => (c.usd_value = 0.000001));
+      chains.push(...overview.chain_list);
+    }
 
-      runInAction(() => (this.chains = chains));
-    });
+    runInAction(() => (this.chains = chains));
   };
 
   refreshChainTokens = async () => {
