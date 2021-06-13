@@ -24,7 +24,7 @@ export class WalletVM {
   }
 
   get pendingTxs() {
-    return this.allPendingTxs.filter((tx) => tx.from === this.currentAccount.address);
+    return this.allPendingTxs.filter((tx) => tx.from === this.currentAccount.address).sort((t1, t2) => t1.nonce - t2.nonce);
   }
 
   get pendingTxCount() {
@@ -81,8 +81,7 @@ export class WalletVM {
   }
 
   async refresh() {
-    await this.currentAccount?.refreshChainOverview();
-    await this.currentAccount?.refreshChainTokens();
+    await Promise.all([this.currentAccount?.refreshChainOverview(), this.currentAccount?.refreshChainTokens()]);
     setTimeout(() => this.refresh(), (NetVM.currentChainId === 1 ? 45 : 25) * 1000);
   }
 

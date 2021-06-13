@@ -14,6 +14,7 @@ import NetworksVM from '../NetworksVM';
 import { UserToken } from '../models/UserToken';
 import WalletVM from '../WalletVM';
 import ipc from '../../bridges/IPC';
+import store from 'storejs';
 
 export class TransferVM {
   private readonly _accountVM: AccountVM;
@@ -94,6 +95,8 @@ export class TransferVM {
 
     this.initGasPrice();
     this.initNonce();
+
+    this.receipients = store.get('receipients') || [];
   }
 
   setReceipient(addressOrName: string) {
@@ -277,6 +280,8 @@ export class TransferVM {
         : undefined,
     } as ConfirmSendTx);
 
+    this.saveReceipients(this.receipient);
+
     runInAction(() => (this.sending = false));
   }
 
@@ -331,6 +336,15 @@ export class TransferVM {
       transferToken: undefined,
     } as ConfirmSendTx);
 
+    this.saveReceipients(this.receipient);
+
     this.sending = false;
+  }
+
+  private saveReceipients(receipient: string) {
+    if (this.receipients.find((a) => a.name.toLowerCase() === receipient.toLowerCase())) return;
+
+    this.receipients.push({ id: Date.now(), name: receipient });
+    store.set('receipients', this.receipients);
   }
 }

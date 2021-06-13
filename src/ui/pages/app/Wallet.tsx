@@ -72,7 +72,7 @@ export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor
             overflow="auto"
             position="anchor"
           >
-            {pendingTxs.map((item) => {
+            {pendingTxs.slice(0, 10).map((item) => {
               return (
                 <MenuItem
                   key={item.hash}

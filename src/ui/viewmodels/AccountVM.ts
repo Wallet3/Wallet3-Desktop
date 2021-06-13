@@ -106,8 +106,7 @@ export class AccountVM {
     this.allTokens = [];
     this.nativeToken = null;
 
-    await this.refreshChainOverview();
-    await this.refreshChainTokens();
+    await Promise.all([this.refreshChainOverview(), this.refreshChainTokens()]);
 
     this.refreshNFTs();
   }

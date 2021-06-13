@@ -5,6 +5,8 @@ export function formatNum(value: number, symbol = '$') {
   return `${symbol} ${formatted === 'NaN' ? '0.00' : formatted}`.trim();
 }
 
-export function formatAddress(value: string) {
-  return value.startsWith('0x') ? `${value.substring(0, 10)}......${value.substring(value.length - 8)}` : value;
+export function formatAddress(value: string, topLength = 10, tailLength = 8) {
+  return value.startsWith('0x')
+    ? `${value.substring(0, topLength)}......${value.substring(value.length - tailLength)}`
+    : value;
 }

@@ -54,12 +54,14 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
       <NavBar title={t('Transfer')} onBackClick={() => app.history.goBack()} />
 
       <div className="form">
-        <div className="to">
+        <div className="to no-drag">
           <span>{t('To')}:</span>
           <ReactSearchAutocomplete
             showIcon={false}
+            showClear={false}
             inputDebounce={500}
             items={transferVM?.receipients}
+            autoFocus
             styling={AddressSearchStyle}
             placeholder="Receipient Address or ENS"
             onSearch={(s, r) => transferVM?.setReceipient(s)}

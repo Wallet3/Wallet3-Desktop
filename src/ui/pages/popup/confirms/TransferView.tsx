@@ -55,7 +55,7 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
         <div className={`to`}>
           <span>{t('To')}:</span>
           <span className={`${verifiedName ? 'verified' : ''}`} title={receiptAddress}>
-            {verifiedName || formatAddress(receipt)}
+            {verifiedName || formatAddress(receipt, 8, 5)}
             {verifiedName ? <Feather icon="award" size={12} /> : undefined}
           </span>
         </div>
