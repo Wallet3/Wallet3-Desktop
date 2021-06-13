@@ -82,7 +82,8 @@ class TxMan {
       }
     });
 
-    this._timer = setTimeout(async () => await this.checkPendingTxs(), (this.pendingTxs.length > 0 ? 10 : 3) * 1000);
+    const hasMainnetTxs = this.pendingTxs.some((t) => t.chainId === 1);
+    this._timer = setTimeout(async () => await this.checkPendingTxs(), (hasMainnetTxs ? 10 : 3) * 1000);
   }
 
   clean() {
