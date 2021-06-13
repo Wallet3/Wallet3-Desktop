@@ -80,9 +80,9 @@ export class WalletVM {
     store.set(Keys.lastUsedAccount(this.id), account.address);
   }
 
-  refresh() {
-    this.currentAccount?.refreshChainTokens();
-    setTimeout(() => this.refresh(), 45 * 1000);
+  async refresh() {
+    await this.currentAccount?.refreshChainTokens();
+    setTimeout(() => this.refresh(), (NetVM.currentChainId === 1 ? 45 : 25) * 1000);
   }
 
   pendingTxVM: PendingTxVM = null;

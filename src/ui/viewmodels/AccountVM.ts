@@ -145,54 +145,54 @@ export class AccountVM {
     });
   };
 
-  refreshChainTokens = () => {
+  refreshChainTokens = async () => {
     const nativeSymbols = Networks.map((n) => n?.symbol.toLowerCase());
     const userConfigs = this.loadTokenConfigs();
 
-    Debank.getTokenBalances(this.address, NetVM.currentNetwork.symbol).then(async (tokens) => {
-      let assets = NetVM.currentNetwork.test
-        ? []
-        : tokens
-            .filter((t) => t.amount * (t.price || 0) > 0.1 && !nativeSymbols.includes(t.id))
-            .sort((a, b) => b.amount * b.price - a.amount * a.price)
-            .map((t, i) => {
-              const token = new UserToken();
-              token.id = t.id;
-              token.name = t.name;
-              token.symbol = t.display_symbol || t.symbol;
-              token.amount = t.amount;
-              token.decimals = t.decimals;
-              token.price = t.price;
+    const tokens = await Debank.getTokenBalances(this.address, NetVM.currentNetwork.symbol);
 
-              const userConfig = userConfigs.find((c) => c.id === t.id);
-              token.order = userConfig?.order ?? i + 1000;
-              token.show = userConfig?.show ?? true;
+    let assets = NetVM.currentNetwork.test
+      ? []
+      : tokens
+          .filter((t) => t.amount * (t.price || 0) > 0.1 && !nativeSymbols.includes(t.id))
+          .sort((a, b) => b.amount * b.price - a.amount * a.price)
+          .map((t, i) => {
+            const token = new UserToken();
+            token.id = t.id;
+            token.name = t.name;
+            token.symbol = t.display_symbol || t.symbol;
+            token.amount = t.amount;
+            token.decimals = t.decimals;
+            token.price = t.price;
 
-              const foundIndex = userConfigs.findIndex((c) => c.id === t.id);
-              if (foundIndex >= 0) userConfigs.splice(foundIndex, 1);
+            const userConfig = userConfigs.find((c) => c.id === t.id);
+            token.order = userConfig?.order ?? i + 1000;
+            token.show = userConfig?.show ?? true;
 
-              return token;
-            });
+            const foundIndex = userConfigs.findIndex((c) => c.id === t.id);
+            if (foundIndex >= 0) userConfigs.splice(foundIndex, 1);
 
-      assets.push(...userConfigs);
-      assets = assets.sort((a, b) => a.order - b.order);
+            return token;
+          });
 
-      const nativeT = tokens.find((t) => nativeSymbols.includes(t.id));
-      const balance = await NetVM.currentProvider.getBalance(this.address);
-      const nativeToken = new UserToken();
-      nativeToken.id = NetVM.currentNetwork.symbol.toLowerCase();
-      nativeToken.amount = Number.parseFloat(utils.formatEther(balance));
-      nativeToken.decimals = 18;
-      nativeToken.name = NetVM.currentNetwork.symbol;
-      nativeToken.symbol = NetVM.currentNetwork.symbol;
-      nativeToken.wei = balance.toString();
-      nativeToken.price = nativeT?.price ?? 0;
-      assets.unshift(nativeToken);
+    assets.push(...userConfigs);
+    assets = assets.sort((a, b) => a.order - b.order);
 
-      runInAction(() => {
-        this.nativeToken = nativeToken;
-        this.allTokens = assets;
-      });
+    const nativeT = tokens.find((t) => nativeSymbols.includes(t.id));
+    const balance = await NetVM.currentProvider.getBalance(this.address);
+    const nativeToken = new UserToken();
+    nativeToken.id = NetVM.currentNetwork.symbol.toLowerCase();
+    nativeToken.amount = Number.parseFloat(utils.formatEther(balance));
+    nativeToken.decimals = 18;
+    nativeToken.name = NetVM.currentNetwork.symbol;
+    nativeToken.symbol = NetVM.currentNetwork.symbol;
+    nativeToken.wei = balance.toString();
+    nativeToken.price = nativeT?.price ?? 0;
+    assets.unshift(nativeToken);
+
+    runInAction(() => {
+      this.nativeToken = nativeToken;
+      this.allTokens = assets;
     });
   };
 
