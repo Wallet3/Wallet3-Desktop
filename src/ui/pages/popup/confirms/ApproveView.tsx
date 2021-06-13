@@ -29,7 +29,7 @@ export default observer(({ confirmVM, onReject, onContinue }: Props) => {
         <div>
           <span>{t('Spender')}:</span>
           <span className={verifiedName ? 'verified' : ''} title={approveToken.spender}>
-            {verifiedName || formatAddress(approveToken.spender)}
+            {verifiedName || formatAddress(approveToken.spender, 8, 5)}
             {verifiedName ? <Feather icon="award" size={12} /> : undefined}
           </span>
         </div>
