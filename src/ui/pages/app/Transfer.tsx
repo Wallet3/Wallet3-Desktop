@@ -137,6 +137,8 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
           <span></span>
         </div>
 
+        <h6>{t('Gas Price')}</h6>
+
         <div className="gas">
           <div
             className={`${activeGas === 0 ? 'active' : ''}`}
