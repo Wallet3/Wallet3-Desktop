@@ -19,15 +19,21 @@ export default ({ app }: { app: ApplicationPopup }) => {
 
   const closeWindow = () => {
     setAuthenticated(true);
-    setTimeout(() => window.close(), 1250);
+
+    return new Promise<void>((resolve) => {
+      setTimeout(() => {
+        resolve();
+        setTimeout(() => window.close(), 0);
+      }, 1250);
+    });
   };
 
   const authViaTouchID = async () => {
     const success = await app.promptTouchID();
 
     if (success) {
+      await closeWindow();
       ipc.invokeSecure(`${Messages.returnAuthenticationResult(authId)}`, { success });
-      closeWindow();
     } else {
       Anime.vibrate('div.auth > .panel');
     }
@@ -37,8 +43,8 @@ export default ({ app }: { app: ApplicationPopup }) => {
     const success = await app.verifyPassword(passcode);
 
     if (success) {
+      await closeWindow();
       ipc.invokeSecure(`${Messages.returnAuthenticationResult(authId)}`, { success, password: App.hashPassword(passcode) });
-      closeWindow();
     } else {
       Anime.vibrate('div.auth > .panel');
     }
