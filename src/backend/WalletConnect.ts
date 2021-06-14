@@ -1,12 +1,12 @@
 import App, { App as Application } from './App';
 import { AuthParams, ConfirmSendTx, RequestSignMessage, SendTxParams, WcMessages } from '../common/Messages';
 import { BigNumber, ethers, utils } from 'ethers';
+import Gasnow, { GasnowWs } from '../gas/Gasnow';
 import { IReactionDisposer, reaction } from 'mobx';
 import { call, getTransactionCount } from '../common/Provider';
 
 import ERC20ABI from '../abis/ERC20.json';
 import EventEmitter from 'events';
-import { GasnowWs } from '../gas/Gasnow';
 import KeyMan from './KeyMan';
 import WCSession from './models/WCSession';
 import WalletConnector from '@walletconnect/client';
@@ -268,6 +268,8 @@ export class WalletConnect extends EventEmitter {
       : undefined;
 
     const chainId = requestedChainId || this.appChainId;
+    let defaultGasPrice = chainId === 56 ? GasnowWs.gwei_5 : GasnowWs.gwei_1;
+    defaultGasPrice = chainId === 1 ? Gasnow.fast : defaultGasPrice;
 
     App.createPopupWindow(
       'sendTx',
@@ -278,7 +280,7 @@ export class WalletConnect extends EventEmitter {
         to: param.to,
         data: param.data || '0x',
         gas: Number.parseInt(param.gas) || 21000,
-        gasPrice: Number.parseInt(param.gasPrice) || (chainId === 56 ? GasnowWs.gwei_5 : GasnowWs.gwei_1),
+        gasPrice: Number.parseInt(param.gasPrice) || defaultGasPrice,
         nonce:
           Number.parseInt(param.nonce) ||
           (await getTransactionCount(requestedChainId ?? this.appChainId, App.currentAddress)),

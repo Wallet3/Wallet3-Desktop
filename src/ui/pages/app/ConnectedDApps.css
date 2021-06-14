@@ -2,6 +2,7 @@
   display: grid;
   grid-template-rows: auto 1fr;
   overflow: hidden;
+  max-height: 100vh;
 }
 
 .page.dapps > .content {

@@ -48,12 +48,12 @@
 .page.connectdapp > .content > div.networks {
   display: flex;
   justify-content: flex-end;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 .page.connectdapp > .content > div.networks > button {
   width: auto;
-  padding: 4px 8px;
+  padding: 6px 8px;
 }
 
 .page.connectdapp > .actions {
