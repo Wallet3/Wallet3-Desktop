@@ -5,8 +5,11 @@
   "5": [],
   "42": [],
   "56": ["https://bsc-dataseed1.ninicoin.io", "https://bsc-dataseed3.binance.org"],
+  "66": ["https://exchainrpc.okex.org"],
   "100": ["https://rpc.xdaichain.com"],
+  "128": ["https://http-mainnet-node.huobichain.com"],
   "137": ["https://rpc-mainnet.matic.network", "https://rpc-mainnet.maticvigil.com"],
   "250": ["https://rpcapi.fantom.network"],
+
   "80001": ["https://rpc-mumbai.matic.today", "https://rpc-mumbai.maticvigil.com"]
 }
