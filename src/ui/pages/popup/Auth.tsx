@@ -3,11 +3,11 @@ import './Auth.css';
 import * as Anime from '../../misc/Anime';
 
 import App, { ApplicationPopup } from '../../viewmodels/ApplicationPopup';
+import React, { useState } from 'react';
 
 import AuthView from './confirms/AuthView';
 import Messages from '../../../common/Messages';
 import { PopupTitle } from '../../components';
-import React from 'react';
 import ipc from '../../bridges/IPC';
 import { useRouteMatch } from 'react-router';
 import { useTranslation } from 'react-i18next';
@@ -15,13 +15,19 @@ import { useTranslation } from 'react-i18next';
 export default ({ app }: { app: ApplicationPopup }) => {
   const { t } = useTranslation();
   const { authId } = useRouteMatch().params as { authId: string };
+  const [authenticated, setAuthenticated] = useState(false);
+
+  const closeWindow = () => {
+    setAuthenticated(true);
+    setTimeout(() => window.close(), 1250);
+  };
 
   const authViaTouchID = async () => {
     const success = await app.promptTouchID();
 
     if (success) {
       ipc.invokeSecure(`${Messages.returnAuthenticationResult(authId)}`, { success });
-      window.close();
+      closeWindow();
     } else {
       Anime.vibrate('div.auth > .panel');
     }
@@ -32,7 +38,7 @@ export default ({ app }: { app: ApplicationPopup }) => {
 
     if (success) {
       ipc.invokeSecure(`${Messages.returnAuthenticationResult(authId)}`, { success, password: App.hashPassword(passcode) });
-      window.close();
+      closeWindow();
     } else {
       Anime.vibrate('div.auth > .panel');
     }
@@ -53,6 +59,7 @@ export default ({ app }: { app: ApplicationPopup }) => {
         onCancel={onCacnel}
         authMethod={app.authMethod}
         runTouchID
+        authenticated={authenticated}
       />
     </div>
   );

@@ -53,7 +53,7 @@ export default observer(
             <PasscodeView onAuth={auth} />
           )}
         </div>
-        <button disabled={loading} onClick={(_) => onCancel?.()}>
+        <button disabled={loading || authenticated} onClick={(_) => onCancel?.()}>
           {t('Cancel')}
         </button>
       </div>
