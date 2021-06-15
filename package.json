@@ -1,7 +1,7 @@
 {
   "name": "wallet3",
   "productName": "Wallet 3",
-  "version": "1.0.0-rc.1",
+  "version": "1.0.0-rc.2",
   "description": "A Secure Wallet for Bankless Era",
   "main": ".webpack/main",
   "scripts": {

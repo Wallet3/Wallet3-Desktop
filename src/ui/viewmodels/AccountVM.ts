@@ -131,6 +131,7 @@ export class AccountVM {
   refreshChainOverview = async () => {
     const overview = await Debank.fetchChainsOverview(this.address);
     if (!overview) {
+      runInAction(() => (this.chains = []));
       return;
     }
 
