@@ -1,5 +1,5 @@
 import MessageKeys, { AuthenticationResult, BooleanResult, InitStatus, InitVerifyPassword } from '../../common/Messages';
-import { action, makeObservable, observable } from 'mobx';
+import { action, makeObservable, observable, runInAction } from 'mobx';
 
 import Coingecko from '../../api/Coingecko';
 import WalletVM from './WalletVM';
@@ -17,9 +17,10 @@ export class Application {
   touchIDSupported = false;
   machineId = '';
   authMethod: AuthMethod = 'fingerprint';
+  isMac = true;
 
   constructor() {
-    makeObservable(this, { authMethod: observable, switchAuthMethod: action });
+    makeObservable(this, { authMethod: observable, isMac: observable, switchAuthMethod: action });
 
     ipc.on(MessageKeys.idleExpired, (e, { idleExpired }: { idleExpired: boolean }) => {
       if (idleExpired) this.history.push('/authentication');
@@ -29,12 +30,13 @@ export class Application {
   }
 
   async init(jump = true) {
-    const { hasSecret, touchIDSupported, appAuthenticated, addresses, pendingTxs, connectedDApps, machineId } =
+    const { hasSecret, touchIDSupported, appAuthenticated, addresses, pendingTxs, connectedDApps, machineId, platform } =
       await ipc.invokeSecure<InitStatus>(MessageKeys.getInitStatus);
 
     this.touchIDSupported = touchIDSupported;
     this.appAuthenticated = appAuthenticated;
     this.machineId = machineId;
+    runInAction(() => (this.isMac = platform === 'darwin'));
 
     Coingecko.start(30);
 

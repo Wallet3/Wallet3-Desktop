@@ -107,7 +107,7 @@ const createWindow = async (): Promise<void> => {
     minWidth: 360,
     minHeight: 540,
     frame: false,
-    titleBarStyle: 'hiddenInset',
+    titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : undefined,
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       contextIsolation: true,

@@ -1,0 +1,44 @@
+.system-title-bar {
+  display: flex;
+  column-gap: 8px;
+}
+
+.system-title-bar > button {
+  border-radius: 50%;
+  width: 12.5px !important;
+  height: 12.5px !important;
+  padding: 0px;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: default;
+  box-sizing: border-box;
+}
+
+.system-title-bar > button.close {
+  background-color: #ff5f57;
+  border: 1px solid #e2463f;
+}
+
+.system-title-bar > button.minimize {
+  background-color: #ffbd2e;
+  border: 1px solid #e1a116;
+}
+
+.system-title-bar > button.maximize {
+  background-color: #28c940;
+  border: 1px solid #12ac28;
+}
+
+.system-title-bar > button img {
+  width: 5px;
+  height: 5px;
+  opacity: 0;
+  user-select: none;
+  transition: opacity 0.1s;
+}
+
+.system-title-bar > button:hover img {
+  opacity: 1;
+}

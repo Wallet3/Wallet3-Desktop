@@ -23,6 +23,7 @@ import { LangsVM } from './viewmodels/settings/LangsVM';
 import MainLayout from './pages/layouts/MainLayout';
 import { MnemonicVM } from './viewmodels/MnemonicVM';
 import { NetworksVM } from './viewmodels/NetworksVM';
+import { TitleBar } from './components';
 import { WalletVM } from './viewmodels/WalletVM';
 import mousetrap from 'mousetrap';
 import { observer } from 'mobx-react-lite';
@@ -46,6 +47,7 @@ export default observer((args: Props) => {
   return (
     <Router history={app.history}>
       <div id="app">
+        {app.isMac ? undefined : <TitleBar />}
         <Switch>
           <Route path="/generate" exact>
             <Generate {...args} />
