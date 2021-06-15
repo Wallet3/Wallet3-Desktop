@@ -74,6 +74,7 @@
     "webpack-filter-warnings-plugin": "^1.2.1"
   },
   "dependencies": {
+    "@electron/remote": "^1.1.0",
     "@szhsin/react-menu": "^1.10.1",
     "@walletconnect/client": "^1.4.1",
     "animate.css": "^4.1.1",

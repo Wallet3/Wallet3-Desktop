@@ -25,6 +25,7 @@ import { MnemonicVM } from './viewmodels/MnemonicVM';
 import { NetworksVM } from './viewmodels/NetworksVM';
 import { TitleBar } from './components';
 import { WalletVM } from './viewmodels/WalletVM';
+import WindowApi from './bridges/Window';
 import mousetrap from 'mousetrap';
 import { observer } from 'mobx-react-lite';
 
@@ -47,7 +48,13 @@ export default observer((args: Props) => {
   return (
     <Router history={app.history}>
       <div id="app">
-        {app.isMac ? undefined : <TitleBar />}
+        {app.isMac ? undefined : (
+          <TitleBar
+            onClose={() => window.close()}
+            onMaximize={() => WindowApi.maximize()}
+            onMinimize={() => WindowApi.minimize()}
+          />
+        )}
         <Switch>
           <Route path="/generate" exact>
             <Generate {...args} />

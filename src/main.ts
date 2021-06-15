@@ -91,14 +91,17 @@ const createTray = async () => {
   tray.setContextMenu(menu);
 };
 
+const prod = process.env.NODE_ENV === 'production';
+const isMac = process.platform === 'darwin';
+
+if (!isMac) require('@electron/remote/main').initialize();
+
 const createWindow = async (): Promise<void> => {
   if (App.mainWindow) {
     App.mainWindow.show();
     App.mainWindow.focus();
     return;
   }
-
-  const prod = process.env.NODE_ENV === 'production';
 
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -107,13 +110,13 @@ const createWindow = async (): Promise<void> => {
     minWidth: 360,
     minHeight: 540,
     frame: false,
-    titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : undefined,
+    titleBarStyle: isMac ? 'hiddenInset' : undefined,
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       contextIsolation: true,
       nodeIntegration: false,
       webSecurity: true,
-      enableRemoteModule: false,
+      enableRemoteModule: isMac ? false : true,
       devTools: !prod,
     },
   });

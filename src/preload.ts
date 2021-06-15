@@ -1,6 +1,6 @@
 import * as crypto from 'crypto';
 
-import { DesktopCapturerSource, IpcRendererEvent, SourcesOptions, desktopCapturer } from 'electron';
+import { BrowserWindow, DesktopCapturerSource, IpcRendererEvent, SourcesOptions, desktopCapturer } from 'electron';
 import { NotificationConstructorOptions, clipboard, contextBridge, ipcRenderer, shell, webFrame } from 'electron';
 import { decrypt, encrypt } from './common/Cipher';
 
@@ -9,7 +9,6 @@ import Messages from './common/Messages';
 webFrame.setVisualZoomLevelLimits(1, 1);
 
 const windowId = crypto.randomBytes(4).toString('hex');
-let ipcSecureIv: Buffer;
 let ipcSecureKey: Buffer;
 
 async function initSecureContext() {
@@ -22,7 +21,6 @@ async function initSecureContext() {
   });
 
   ipcSecureKey = ecdh.computeSecret(mainKey);
-  ipcSecureIv = crypto.createHash('sha256').update(ipcSecureKey).digest().subarray(0, 16);
 }
 
 initSecureContext();
@@ -106,3 +104,25 @@ export class NotificationApi {
 }
 
 contextBridge.exposeInMainWorld(NotificationApi.API_KEY, new NotificationApi());
+
+export class WindowApi {
+  static readonly API_KEY = 'wallet3_window';
+
+  maximize = () => {
+    const currenWindow = require('@electron/remote').getCurrentWindow() as BrowserWindow;
+    const screen = require('@electron/remote').screen;
+
+    const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+    if (currenWindow.getBounds().width === width || currenWindow.getBounds().height === height) {
+      currenWindow.setSize(360, 540, true);
+    } else {
+      currenWindow.maximize();
+    }
+  };
+
+  minimize = () => {
+    require('@electron/remote').getCurrentWindow().minimize();
+  };
+}
+
+contextBridge.exposeInMainWorld(WindowApi.API_KEY, new WindowApi());
