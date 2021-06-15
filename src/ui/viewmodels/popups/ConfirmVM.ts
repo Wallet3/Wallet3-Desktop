@@ -95,7 +95,7 @@ export class ConfirmVM {
     this._data = params.data;
   }
 
-  get receipt() {
+  get receipient() {
     return this.args.receipient?.name || this.args.receipient?.address || this.args.to;
   }
 
@@ -111,7 +111,7 @@ export class ConfirmVM {
     }
   }
 
-  get receiptAddress() {
+  get receipientAddress() {
     return this.args.receipient?.address || this.args.to;
   }
 

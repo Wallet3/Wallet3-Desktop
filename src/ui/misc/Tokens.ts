@@ -1,5 +1,3 @@
-import { comparer } from 'mobx';
-
 export interface IToken {
   address: string;
   decimals: number;

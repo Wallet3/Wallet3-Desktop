@@ -1,4 +1,6 @@
-export default {
+import Tokens from './Tokens';
+
+const KnownAddresses = {
   '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D': 'Uniswap V2',
   '0xE592427A0AEce92De3Edee1F18E0157C05861564': 'Uniswap V3',
   '0x7Be8076f4EA4A4AD08075C2508e481d6C946D12b': 'OpenSea',
@@ -8,6 +10,7 @@ export default {
   '0xd1917932A7Db6Af687B523D5Db5d7f5c2734763F': 'Bulksender.app',
   '0xA0c68C638235ee32657e8f720a23ceC1bFc77C77': 'Polygon (Matic): Bridge',
   '0xDef1C0ded9bec7F1a1670819833240f027b25EfF': '0x: Exchange Proxy',
+  '0x881D40237659C251811CEC9c364ef91dC08D300C': 'Metamask Router',
   '0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9': 'Aave',
   '0x3FDA67f7583380E67ef93072294a7fAc882FD7E7': 'Compound',
   '0x3E66B66Fd1d0b02fDa6C811Da9E0547970DB2f21': 'Balancer',
@@ -37,3 +40,7 @@ export default {
   '0xbEadf48d62aCC944a06EEaE0A9054A90E5A7dc97': 'Aave Polygon',
   '0x1C232F01118CB8B424793ae03F870aa7D0ac7f77': 'Honeyswap',
 };
+
+Tokens.forEach((t) => (KnownAddresses[t.address] = t.symbol));
+
+export default KnownAddresses;

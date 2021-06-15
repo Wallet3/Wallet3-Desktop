@@ -20,8 +20,8 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
   const { t } = useTranslation();
 
   const {
-    receiptAddress,
-    receipt,
+    receipientAddress,
+    receipient,
     amount,
     tokenSymbol,
     networkSymbol,
@@ -59,10 +59,10 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
           <span>{t('To')}:</span>
           <span
             className={`${verifiedName ? 'verified' : ''}`}
-            title={receiptAddress}
-            onClick={(_) => Shell.open(convertToAccountUrl(chainId, receiptAddress))}
+            title={receipientAddress}
+            onClick={(_) => Shell.open(convertToAccountUrl(chainId, receipientAddress))}
           >
-            {verifiedName || formatAddress(receipt, 8, 5)}
+            {verifiedName || receipient || formatAddress(receipientAddress, 8, 5)}
             {verifiedName ? <Feather icon="award" size={12} /> : undefined}
           </span>
         </div>
