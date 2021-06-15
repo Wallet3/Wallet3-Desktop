@@ -100,9 +100,15 @@ export class ConfirmVM {
   }
 
   get verifiedName() {
-    return (
-      KnownAddresses[this.approveToken?.spender] || KnownAddresses[this.transferToken?.to] || KnownAddresses[this.args.to]
-    );
+    try {
+      return (
+        KnownAddresses[this.approveToken?.spender] ||
+        KnownAddresses[this.transferToken?.to] ||
+        KnownAddresses[utils.getAddress(this.args.to)]
+      );
+    } catch (error) {
+      return undefined;
+    }
   }
 
   get receiptAddress() {

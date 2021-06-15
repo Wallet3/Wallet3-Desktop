@@ -55,6 +55,10 @@
   max-width: 50vw;
 }
 
+.page.confirm > .container > .details > .form > div.to > span:last-child {
+  cursor: pointer;
+}
+
 .page.confirm > .container > .details > .form > div span > svg {
   display: inline-block;
   margin-bottom: -1px;

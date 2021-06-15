@@ -76,7 +76,7 @@ const createTray = async () => {
   tray = new Tray(nativeImage.createFromDataURL(require('./assets/icons/app/tray.png').default));
   const menu = Menu.buildFromTemplate([
     {
-      label: i18n.t('Connect DApp'),
+      label: i18n.t('WalletConnect'),
       accelerator: 'CommandOrControl+D',
       click: () => {
         if (!App.ready) return;

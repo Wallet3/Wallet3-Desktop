@@ -4,6 +4,8 @@ import { ConfirmVM } from '../../../viewmodels/popups/ConfirmVM';
 import { CryptoIcons } from '../../../misc/Icons';
 import Feather from 'feather-icons-react';
 import { Image } from '../../../components';
+import Shell from '../../../bridges/Shell';
+import { convertToAccountUrl } from '../../../../misc/Url';
 import { formatAddress } from '../../../misc/Formatter';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
@@ -28,6 +30,7 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
     maxFee,
     nonce,
     totalValue,
+    chainId,
     verifiedName,
   } = implVM;
 
@@ -54,7 +57,11 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
 
         <div className={`to`}>
           <span>{t('To')}:</span>
-          <span className={`${verifiedName ? 'verified' : ''}`} title={receiptAddress}>
+          <span
+            className={`${verifiedName ? 'verified' : ''}`}
+            title={receiptAddress}
+            onClick={(_) => Shell.open(convertToAccountUrl(chainId, receiptAddress))}
+          >
             {verifiedName || formatAddress(receipt, 8, 5)}
             {verifiedName ? <Feather icon="award" size={12} /> : undefined}
           </span>
@@ -62,8 +69,8 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
 
         <div>
           <span>{t('Amount')}:</span>
-          <span>
-            {amount} <img src={CryptoIcons(tokenSymbol)} alt={tokenSymbol} /> {tokenSymbol}
+          <span title={`${amount} ${tokenSymbol}`}>
+            {amount.substring(0, 12)} <img src={CryptoIcons(tokenSymbol)} alt={tokenSymbol} /> {tokenSymbol}
           </span>
         </div>
 
@@ -111,8 +118,8 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
 
         <div>
           <span>{t('Total')}:</span>
-          <span>
-            {totalValue} {networkSymbol}
+          <span title={`${totalValue} ${tokenSymbol}`}>
+            {totalValue.substring(0, 12)} {networkSymbol}
           </span>
         </div>
       </div>
