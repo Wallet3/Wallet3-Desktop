@@ -1,8 +1,8 @@
 import './PopupTitle.css';
 
-import { CryptoIcons } from '../misc/Icons';
 import Feather from 'feather-icons-react';
 import Logo from './Logo';
+import { NetworkIcons } from '../misc/Icons';
 import { Networks } from '../viewmodels/NetworksVM';
 import React from 'react';
 
@@ -17,7 +17,7 @@ export default ({ title, icon, chainId }: { title?: string; icon?: string; chain
 
       {chainId ? (
         <div className="network">
-          <img src={CryptoIcons(network.symbol)} alt="" />
+          <img src={NetworkIcons(network.network)} alt="" />
           <span>{network.network}</span>
         </div>
       ) : (
