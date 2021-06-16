@@ -3,6 +3,8 @@ import React, { useEffect } from 'react';
 import { ConfirmVM } from '../../../viewmodels/popups/ConfirmVM';
 import { CryptoIcons } from '../../../misc/Icons';
 import Feather from 'feather-icons-react';
+import Shell from '../../../bridges/Shell';
+import { convertToAccountUrl } from '../../../../misc/Url';
 import { formatAddress } from '../../../misc/Formatter';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
@@ -14,7 +16,8 @@ interface Props {
 }
 
 export default observer(({ confirmVM, onReject, onContinue }: Props) => {
-  const { approveToken, tokenSymbol, gas, gasPrice, maxFee, nonce, totalValue, networkSymbol, verifiedName } = confirmVM;
+  const { approveToken, tokenSymbol, gas, gasPrice, maxFee, nonce, totalValue, networkSymbol, verifiedName, chainId } =
+    confirmVM;
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -28,7 +31,11 @@ export default observer(({ confirmVM, onReject, onContinue }: Props) => {
 
         <div>
           <span>{t('Spender')}:</span>
-          <span className={verifiedName ? 'verified' : ''} title={approveToken.spender}>
+          <span
+            className={`spender ${verifiedName ? 'verified' : ''}`}
+            title={approveToken.spender}
+            onClick={(_) => Shell.open(convertToAccountUrl(chainId, approveToken?.spender))}
+          >
             {verifiedName || formatAddress(approveToken.spender, 8, 5)}
             {verifiedName ? <Feather icon="award" size={12} /> : undefined}
           </span>
@@ -36,7 +43,7 @@ export default observer(({ confirmVM, onReject, onContinue }: Props) => {
 
         <div>
           <span>{t('Funds Limit')}:</span>
-          <span title={`${approveToken.limitAmount} ${tokenSymbol}`}>
+          <div className="funds-limit" title={`${approveToken.limitAmount} ${tokenSymbol}`}>
             <input
               type="text"
               className={`funds-limit ${approveToken.isMax ? 'max' : ''}`}
@@ -44,7 +51,7 @@ export default observer(({ confirmVM, onReject, onContinue }: Props) => {
               onChange={(e) => confirmVM.setApproveAmount(e.target.value)}
             />
             <img src={CryptoIcons(tokenSymbol)} alt={tokenSymbol} /> {tokenSymbol}
-          </span>
+          </div>
         </div>
 
         <div>

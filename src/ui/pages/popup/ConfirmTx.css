@@ -37,14 +37,29 @@
   padding-bottom: 8px;
 }
 
-.page.confirm > .container > .details > .form .funds-limit {
-  max-width: 60vw;
+.page.confirm > .container > .details > .form span.spender {
+  cursor: pointer;
+}
+
+.page.confirm > .container > .details > .form div.funds-limit {
+  display: flex;
+  align-items: center;
+  column-gap: 2px;
+}
+
+.page.confirm > .container > .details > .form div.funds-limit > img {
+  width: 13px;
+  height: 13px;
+}
+
+.page.confirm > .container > .details > .form input.funds-limit {
+  max-width: 45vw;
   text-align: end;
   min-width: 32vw;
   -webkit-app-region: no-drag;
 }
 
-.page.confirm > .container > .details > .form .funds-limit.max {
+.page.confirm > .container > .details > .form input.funds-limit.max {
   color: deeppink;
 }
 
