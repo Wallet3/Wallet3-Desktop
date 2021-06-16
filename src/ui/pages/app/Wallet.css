@@ -5,40 +5,7 @@
 }
 
 .page.main > .utility-bar {
-  display: flex;
-  justify-content: flex-end;
-  column-gap: 2px;
   margin-top: -5px;
-  height: 26px;
-}
-
-.page.main > .utility-bar > button {
-  border: none;
-  width: auto;
-  height: auto;
-  padding: 0;
-  margin: 0;
-  cursor: pointer;
-  font-size: 12px;
-}
-
-.page.main > .utility-bar > button:hover {
-  background-color: transparent;
-}
-
-.page.main > .utility-bar > button.menu-button {
-  padding: 5px 6px;
-}
-
-.page.main > .utility-bar > button.menu-button:hover {
-  color: var(--theme-color);
-  background-color: var(--border-color);
-}
-
-.page.main > .utility-bar > button.icon-button {
-  color: var(--theme-color);
-  margin-right: -2px;
-  padding: 0 6px !important;
 }
 
 .page.main h3.title {

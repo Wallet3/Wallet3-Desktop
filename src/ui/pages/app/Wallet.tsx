@@ -18,6 +18,7 @@ import PendingTx from './components/PendingTxLabel';
 import PendingTxIndicator from './components/PendingTxIndicator';
 import Skeleton from 'react-loading-skeleton';
 import { UserToken } from '../../../ui/viewmodels/models/UserToken';
+import UtilityBar from './components/UtilityBar';
 import WalletConnectIndicator from './components/WalletConnectIndicator';
 import { WalletVM } from '../../viewmodels/WalletVM';
 import { formatNum } from '../../misc/Formatter';
@@ -60,7 +61,7 @@ export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor
 
   return (
     <div className="page main">
-      <div className="utility-bar">
+      {/* <div className="utility-bar">
         {pendingTxCount > 0 ? (
           <Menu
             menuButton={() => (
@@ -148,7 +149,9 @@ export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor
         >
           <Feather icon="user" size={16} strokeWidth={1} />
         </button>
-      </div>
+      </div> */}
+
+      <UtilityBar app={app} networksVM={networksVM} walletVM={walletVM} />
 
       <div className="net-worth">
         <h3 className="title">{t('Net Worth')}</h3>

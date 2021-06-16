@@ -6,7 +6,7 @@
   "Wallet": "ウォレット",
   "Settings": "設定",
   "Connect": "コネクト",
-  "Send": "トランスファー",
+  "Send": "送金",
   "Tokens": "トークン",
   "Add Tokens": "トークンの追加",
   "Name": "名前",
@@ -107,5 +107,6 @@
   "Built for Security": "セキュリティのために構築されています",
   "Data Providers": "データプロバイダー",
   "No NFTs Here": "NFT はありません",
-  "Forgot Passcode? Reset Wallet": "パスコードを忘れた場合"
+  "Forgot Passcode? Reset Wallet": "パスコードを忘れた場合",
+  "See All": "すべて見る"
 }
