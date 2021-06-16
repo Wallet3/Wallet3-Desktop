@@ -30,7 +30,7 @@ module.exports = [
       {
         loader: 'url-loader',
         options: {
-          limit: 32768,
+          limit: 232768,
         },
       },
     ],
