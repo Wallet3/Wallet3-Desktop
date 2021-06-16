@@ -52,7 +52,12 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 50vw;
+  max-width: 45vw;
+}
+
+.page.confirm > .container > .details > .form > div div.numeric {
+  display: grid;
+  grid-template-columns: 1fr auto;
 }
 
 .page.confirm > .container > .details > .form > div.to > span:last-child {

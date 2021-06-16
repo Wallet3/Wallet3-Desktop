@@ -8,6 +8,7 @@ import React from 'react';
 
 export default ({ title, icon, chainId }: { title?: string; icon?: string; chainId?: number }) => {
   const network = Networks.find((n) => n?.chainId === chainId);
+
   return (
     <div className="pop-title">
       <div className="title">
@@ -16,7 +17,7 @@ export default ({ title, icon, chainId }: { title?: string; icon?: string; chain
       </div>
 
       {chainId ? (
-        <div className="network">
+        <div className="network" title={network.network}>
           <img src={NetworkIcons(network.network)} alt="" />
           <span>{network.network}</span>
         </div>

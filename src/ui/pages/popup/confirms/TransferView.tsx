@@ -69,10 +69,12 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
 
         <div>
           <span>{t('Amount')}:</span>
-          <span title={`${amount} ${tokenSymbol}`}>
-            {amount.substring(0, 12) + (amount.length > 12 ? '...' : '')}
-            <img src={CryptoIcons(tokenSymbol)} alt={tokenSymbol} /> {tokenSymbol}
-          </span>
+          <div className="numeric" title={`${amount} ${tokenSymbol}`}>
+            <span>{amount}</span>
+            <span>
+              <img src={CryptoIcons(tokenSymbol)} alt={tokenSymbol} /> {tokenSymbol}
+            </span>
+          </div>
         </div>
 
         <div>
@@ -112,16 +114,18 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
 
         <div>
           <span>{t('Max Fee')}:</span>
-          <span>
-            {maxFee} {networkSymbol}
-          </span>
+          <div className="numeric">
+            <span>{maxFee}</span>
+            <span>{networkSymbol}</span>
+          </div>
         </div>
 
         <div>
           <span>{t('Total')}:</span>
-          <span title={`${totalValue} ${tokenSymbol}`}>
-            {totalValue.substring(0, 13) + (totalValue.length > 13 ? '...' : '')} {networkSymbol}
-          </span>
+          <div className="numeric" title={`${totalValue} ${tokenSymbol}`}>
+            <span>{totalValue}</span>
+            <span>{networkSymbol}</span>
+          </div>
         </div>
       </div>
 

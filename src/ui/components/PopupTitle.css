@@ -36,3 +36,7 @@
   width: 19px;
   height: 19px;
 }
+
+.pop-title > .network > span {
+  display: none;
+}
