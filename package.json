@@ -27,7 +27,7 @@
     "forge": "./forge.config.js"
   },
   "devDependencies": {
-    "@babel/core": "^7.14.5",
+    "@babel/core": "^7.14.6",
     "@babel/preset-env": "^7.14.5",
     "@babel/preset-typescript": "^7.14.5",
     "@electron-forge/cli": "^6.0.0-beta.57",
@@ -51,8 +51,8 @@
     "@types/react-router-dom": "^5.1.7",
     "@types/react-select": "^4.0.15",
     "@types/ws": "^7.4.4",
-    "@typescript-eslint/eslint-plugin": "^4.26.1",
-    "@typescript-eslint/parser": "^4.26.1",
+    "@typescript-eslint/eslint-plugin": "^4.27.0",
+    "@typescript-eslint/parser": "^4.27.0",
     "babel-jest": "^27.0.2",
     "css-loader": "^5.2.6",
     "delay": "^5.0.0",
@@ -99,7 +99,7 @@
     "react-codes-input": "^1.2.1",
     "react-dom": "^17.0.2",
     "react-horizontal-stacked-bar-chart": "^8.15.2",
-    "react-i18next": "^11.10.0",
+    "react-i18next": "^11.11.0",
     "react-json-view": "^1.21.3",
     "react-loading-skeleton": "^2.2.0",
     "react-router-dom": "^5.2.0",
@@ -110,6 +110,6 @@
     "sqlite3": "^5.0.2",
     "storejs": "^1.1.0",
     "typeorm": "^0.2.34",
-    "ws": "^7.4.6"
+    "ws": "^7.5.0"
   }
 }
