@@ -10,7 +10,7 @@ import MessageKeys, {
   SendTxParams,
   TxParams,
 } from '../common/Messages';
-import { autorun, computed, makeObservable, observable, runInAction } from 'mobx';
+import { autorun, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
 import { createECDH, createHash, randomBytes } from 'crypto';
 
 import DBMan from './DBMan';
@@ -79,13 +79,15 @@ export class App {
     this.machineId = Cipher.sha256(await macaddr.one()).toString('hex');
     await this.initLaunchKey();
 
-    autorun(() => {
-      this.mainWindow?.webContents.send(MessageKeys.pendingTxsChanged, [...TxMan.pendingTxs]);
-    });
+    reaction(
+      () => TxMan.pendingTxs.length,
+      () => this.mainWindow?.webContents.send(MessageKeys.pendingTxsChanged, [...TxMan.pendingTxs])
+    );
 
-    autorun(() => {
-      this.mainWindow?.webContents.send(MessageKeys.wcConnectsChanged, WCMan.connectedSessions);
-    });
+    reaction(
+      () => WCMan.connectedSessions,
+      () => this.mainWindow?.webContents.send(MessageKeys.wcConnectsChanged, WCMan.connectedSessions)
+    );
   }
 
   constructor() {
@@ -481,7 +483,7 @@ export class App {
   ) {
     let { modal, parent, height } = windowArgs || {};
 
-    height = height ?? (modal ? 333 : 315);
+    height = height ?? (modal ? 333 : 320);
     const popup = new BrowserWindow({
       width: 360,
       minWidth: 360,

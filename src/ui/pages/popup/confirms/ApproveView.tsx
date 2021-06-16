@@ -21,7 +21,7 @@ export default observer(({ confirmVM, onReject, onContinue }: Props) => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    window.resizeTo(360, 375);
+    window.resizeTo(360, 365);
   }, []);
 
   return (

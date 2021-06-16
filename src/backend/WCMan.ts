@@ -1,5 +1,5 @@
 import Application, { App } from './App';
-import { makeObservable, observable, runInAction } from 'mobx';
+import { computed, makeObservable, observable, runInAction } from 'mobx';
 
 import DBMan from './DBMan';
 import Messages from '../common/Messages';
@@ -17,7 +17,7 @@ class WCMan {
   }
 
   constructor() {
-    makeObservable(this, { connects: observable });
+    makeObservable(this, { connects: observable, connectedSessions: computed });
 
     ipcMain.handle(`${Messages.disconnectDApp}-secure`, (e, encrypted, winId) => {
       const { key } = Application.windows.get(winId);

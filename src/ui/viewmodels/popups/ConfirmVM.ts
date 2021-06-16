@@ -96,7 +96,7 @@ export class ConfirmVM {
   }
 
   get receipient() {
-    return this.args.receipient?.name || this.args.receipient?.address || this.args.to;
+    return this.args.receipient?.name;
   }
 
   get verifiedName() {

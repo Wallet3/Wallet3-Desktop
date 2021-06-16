@@ -67,7 +67,7 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
           </span>
         </div>
 
-        <div>
+        <div className="amount">
           <span>{t('Amount')}:</span>
           <div className="numeric" title={`${amount} ${tokenSymbol}`}>
             <span>{amount}</span>

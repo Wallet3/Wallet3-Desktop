@@ -271,27 +271,22 @@ export class WalletConnect extends EventEmitter {
     let defaultGasPrice = chainId === 56 ? GasnowWs.gwei_5 : GasnowWs.gwei_1;
     defaultGasPrice = chainId === 1 ? Gasnow.fast : defaultGasPrice;
 
-    App.createPopupWindow(
-      'sendTx',
-      {
-        chainId,
-        from: App.currentAddress,
-        accountIndex: App.currentAddressIndex,
-        to: param.to,
-        data: param.data || '0x',
-        gas: Number.parseInt(param.gas) || 21000,
-        gasPrice: Number.parseInt(param.gasPrice) || defaultGasPrice,
-        nonce:
-          Number.parseInt(param.nonce) ||
-          (await getTransactionCount(requestedChainId ?? this.appChainId, App.currentAddress)),
-        value: param.value || 0,
+    App.createPopupWindow('sendTx', {
+      chainId,
+      from: App.currentAddress,
+      accountIndex: App.currentAddressIndex,
+      to: param.to,
+      data: param.data || '0x',
+      gas: Number.parseInt(param.gas) || 21000,
+      gasPrice: Number.parseInt(param.gasPrice) || defaultGasPrice,
+      nonce:
+        Number.parseInt(param.nonce) || (await getTransactionCount(requestedChainId ?? this.appChainId, App.currentAddress)),
+      value: param.value || 0,
 
-        receipient,
-        transferToken,
-        walletConnect: { peerId: this.peerId, reqid: request.id, app: this.appMeta },
-      } as ConfirmSendTx,
-      { height: 333 }
-    );
+      receipient,
+      transferToken,
+      walletConnect: { peerId: this.peerId, reqid: request.id, app: this.appMeta },
+    } as ConfirmSendTx);
   };
 
   private sign = async (request: WCCallRequestRequest, params: string[], type: 'personal_sign' | 'signTypedData') => {
