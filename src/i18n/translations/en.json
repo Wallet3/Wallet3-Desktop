@@ -66,7 +66,7 @@
   "Reset_Tip2": "Please keep your mnemonic safe.",
   "Authentication": "Authentication",
   "Approve": "Approve",
-  "Approve_Tip": "By granting this transaction, the spender can spend your funds without your knowledge. Please be careful to check the granting limit below.",
+  "Approve_Tip": "By granting this transaction, the spender can spend your funds without your knowledge. Please be careful to check the funds limit below.",
   "Spender": "Spender",
   "Funds Limit": "Funds Limit",
   "Contract Interaction": "Contract Interaction",

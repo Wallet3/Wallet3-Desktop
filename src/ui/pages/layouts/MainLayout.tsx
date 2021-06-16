@@ -28,8 +28,8 @@ export default observer((args: Props) => {
   const { pathname } = useLocation();
   const { t } = useTranslation();
 
-  let activeTab = 0;
-  if (pathname.endsWith('settings')) activeTab = 1;
+  let activeTab = '';
+  if (pathname.endsWith('settings')) activeTab = 'settings';
 
   return (
     <SkeletonTheme color="#eeeeee90" highlightColor="#f5f5f5d0">
@@ -48,14 +48,21 @@ export default observer((args: Props) => {
 
         <div className="tabs">
           <Link to={`${url}`}>
-            <div className={activeTab === 0 ? 'active' : ''}>
+            <div className={activeTab === '' ? 'active' : ''}>
               <Feather icon="credit-card" size={20} />
               <span>{t('Wallet')}</span>
             </div>
           </Link>
 
+          <Link to={`${url}/dapps`}>
+            <div className={activeTab === 'dapps' ? 'active' : ''}>
+              <Feather icon="compass" size={20} />
+              <span>DApps</span>
+            </div>
+          </Link>
+
           <Link to={`${url}/settings`}>
-            <div className={activeTab === 1 ? 'active' : ''}>
+            <div className={activeTab === 'settings' ? 'active' : ''}>
               <Feather icon="settings" size={20} />
               <span>{t('Settings')}</span>
             </div>
