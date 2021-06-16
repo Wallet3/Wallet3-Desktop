@@ -97,7 +97,6 @@ export async function getTransactionReceipt(chainId: number, hash: string) {
     });
 
     if (!resp.data.result) {
-      console.log(resp.data);
       return null;
     }
 

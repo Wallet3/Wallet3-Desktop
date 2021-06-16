@@ -80,12 +80,10 @@ export class App {
     await this.initLaunchKey();
 
     autorun(() => {
-      console.log('pending', TxMan.pendingTxs.length);
       this.mainWindow?.webContents.send(MessageKeys.pendingTxsChanged, [...TxMan.pendingTxs]);
     });
 
     autorun(() => {
-      console.log('wc connects', WCMan.connects.length);
       this.mainWindow?.webContents.send(MessageKeys.wcConnectsChanged, WCMan.connectedSessions);
     });
   }
