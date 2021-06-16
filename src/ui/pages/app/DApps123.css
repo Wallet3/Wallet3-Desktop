@@ -1,0 +1,9 @@
+.page.dapps123 {
+  padding: 0;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.page.dapps123 > .utility-bar {
+  margin-top: -5px;
+}
