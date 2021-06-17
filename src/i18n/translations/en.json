@@ -107,5 +107,8 @@
   "Built for Security": "Built for Security.",
   "Data Providers": "Data Providers",
   "No NFTs Here": "No NFTs Here",
-  "Forgot Passcode? Reset Wallet": "Forgot Passcode? Reset Wallet"
+  "Forgot Passcode? Reset Wallet": "Forgot Passcode? Reset Wallet",
+  "dexs": "Dexs",
+  "lending": "Lending",
+  "others": "Others"
 }

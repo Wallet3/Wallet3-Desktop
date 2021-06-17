@@ -37,6 +37,9 @@ export default ({ app }: { app: Application }) => {
         <div className="data-providers">
           <img src={DeBank} alt="DeBank" />
         </div>
+
+        <h3>Copyright</h3>
+        <span className="copyright">&copy; 2021 ChainBow Co, Ltd. Business Source License.</span>
       </div>
     </div>
   );

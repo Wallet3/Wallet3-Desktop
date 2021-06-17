@@ -44,3 +44,8 @@
 .page.about > .content > .data-providers img {
   width: 150px;
 }
+
+.page.about > .content > .copyright {
+  font-size: 12px;
+  margin-top: 8px;
+}
