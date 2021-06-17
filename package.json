@@ -22,7 +22,7 @@
     "name": "ChainBow Co, Ltd.",
     "email": "team@chainbow.io"
   },
-  "license": "MIT",
+  "license": "Business Source License",
   "config": {
     "forge": "./forge.config.js"
   },
