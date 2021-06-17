@@ -33,40 +33,42 @@ const LogoImage = ({ name }: { name: string }) => {
 export default observer(({ app, networksVM, walletVM }: IConstructor) => {
   const { t } = useTranslation();
   const { currentChainId } = networksVM;
-  const dapps = DApps[currentChainId] || {};
-  const categories = Object.getOwnPropertyNames(dapps);
+  const dapps = DApps[currentChainId];
+  const categories = Object.getOwnPropertyNames(dapps || {});
 
   return (
     <div className="page dapps123">
       <UtilityBar app={app} networksVM={networksVM} walletVM={walletVM} />
 
       <div className="list">
-        {categories
-          ? categories.map((category) => {
-              const projects = dapps[category] as { name: string; url: string }[];
-              return (
-                <div className="category" key={category}>
-                  <h3>{t(category)}</h3>
+        {dapps ? (
+          categories.map((category) => {
+            const projects = dapps[category] as { name: string; url: string }[];
+            return (
+              <div className="category" key={category}>
+                <h3>{t(category)}</h3>
 
-                  <div className="projects">
-                    {projects.map((project) => {
-                      return (
-                        <div
-                          className="project"
-                          key={project.url}
-                          title={project.name}
-                          onClick={(_) => Shell.open(project.url)}
-                        >
-                          <LogoImage name={project.name} />
-                          <span>{project.name}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
+                <div className="projects">
+                  {projects.map((project) => {
+                    return (
+                      <div
+                        className="project"
+                        key={project.url}
+                        title={project.name}
+                        onClick={(_) => Shell.open(project.url)}
+                      >
+                        <LogoImage name={project.name} />
+                        <span>{project.name}</span>
+                      </div>
+                    );
+                  })}
                 </div>
-              );
-            })
-          : undefined}
+              </div>
+            );
+          })
+        ) : (
+          <div className="empty">Nothing Here</div>
+        )}
       </div>
     </div>
   );

@@ -68,3 +68,12 @@
 .page.dapps123 > .list > .category > .projects > .project:hover span {
   opacity: 1;
 }
+
+.page.dapps123 > .list > .empty {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  color: var(--font-color-title);
+  height: 100%;
+}
