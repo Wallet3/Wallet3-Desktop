@@ -2,7 +2,7 @@
   padding: 0;
   display: grid;
   grid-template-rows: auto 1fr;
-  max-height: calc(100vh - 24px - 48px);
+  max-height: calc(100vh - 24px - 49px); /* 1px border height + 48px tabs height */
 }
 
 .page.dapps123 > .utility-bar {
