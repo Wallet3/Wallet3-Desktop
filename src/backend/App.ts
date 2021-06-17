@@ -19,7 +19,6 @@ import Transaction from './models/Transaction';
 import TxMan from './TxMan';
 import WCMan from './WCMan';
 import i18n from '../i18n';
-import macaddr from 'macaddress';
 import { sendTransaction } from '../common/Provider';
 import { utils } from 'ethers';
 
@@ -42,7 +41,7 @@ export class App {
   currentAddressIndex = 0;
   addresses: string[] = [];
   chainId = 1;
-  machineId: string;
+  machineId = 'default';
 
   #userPassword?: string; // keep encrypted password in memory for TouchID users
   #authKeys = new Map<string, string>(); // authId => key
@@ -76,7 +75,6 @@ export class App {
   }
 
   async init() {
-    this.machineId = Cipher.sha256(await macaddr.one()).toString('hex');
     await this.initLaunchKey();
 
     reaction(

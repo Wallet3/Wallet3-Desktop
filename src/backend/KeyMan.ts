@@ -27,13 +27,8 @@ class KeyMan {
   hasSecret = false;
 
   key: Key;
-  machineId: string;
 
   async init(accountId = 1) {
-    this.machineId = Cipher.sha256(await macaddr.one())
-      .toString('hex')
-      .slice(-8);
-
     [this.key] = await DBMan.accountRepo.find();
 
     this.basePath = this.key?.basePath ?? BasePath;
@@ -62,7 +57,7 @@ class KeyMan {
   async verifyPassword(userPassword: string) {
     try {
       const user = Cipher.sha256(this.getCorePassword(userPassword)).toString('hex');
-      return user === (await keytar.getPassword(Keys.password, Keys.masterAccount(this.machineId)));
+      return user === (await keytar.getPassword(Keys.password, Keys.masterAccount('default')));
     } catch (error) {
       console.error(error.message);
       return false;
@@ -78,7 +73,7 @@ class KeyMan {
     await this.key.save();
 
     const pwHash = Cipher.sha256(this.getCorePassword(userPassword)).toString('hex');
-    await keytar.setPassword(Keys.password, Keys.masterAccount(this.machineId), pwHash);
+    await keytar.setPassword(Keys.password, Keys.masterAccount('default'), pwHash);
   }
 
   genMnemonic(length = 12) {
