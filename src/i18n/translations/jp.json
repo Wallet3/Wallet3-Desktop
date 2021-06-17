@@ -109,7 +109,9 @@
   "No NFTs Here": "NFT はありません",
   "Forgot Passcode? Reset Wallet": "パスコードを忘れた場合",
   "See All": "すべて見る",
+  "dexs": "分散型取引所",
   "lending": "貸し借し",
   "others": "その他",
-  "synthetic": "合成資産・デリバティブ"
+  "synthetic": "合成資産・デリバティブ",
+  "insurance": "保険"
 }

@@ -109,7 +109,8 @@
   "No NFTs Here": "No NFTs Here",
   "Forgot Passcode? Reset Wallet": "Forgot Passcode? Reset Wallet",
   "dexs": "Dexs",
-  "lending": "Lending",
+  "lending": "Lending & Borrowing",
   "others": "Others",
-  "synthetic": "Synthetic Assets & Derivatives"
+  "synthetic": "Synthetic Assets & Derivatives",
+  "insurance": "Insurance"
 }

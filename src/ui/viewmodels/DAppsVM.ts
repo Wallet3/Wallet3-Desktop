@@ -32,7 +32,8 @@ const ethereum = {
   others: [
     { name: 'Pooltogether', url: 'https://pooltogether.com' },
     { name: 'yearn', url: 'https://yearn.finance' },
-    { name: 'Dfi.money', url: 'https://dfi.money' },
+    { name: 'TokenSets', url: 'https://www.tokensets.com' },
+    { name: 'Tornado', url: 'https://tornado.cash' },
   ],
 };
 
@@ -88,10 +89,15 @@ const bsc = {
   others: [{ name: 'Dfi.money', url: 'https://dfi.money' }],
 };
 
+const heco = {
+  dexs: [{ name: 'mdex', url: 'https://ht.mdex.com/#/swap' }],
+};
+
 export default {
   1: ethereum,
   137: polygon,
   100: xdai,
   250: fantom,
   56: bsc,
+  128: heco,
 };

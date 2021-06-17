@@ -24,20 +24,21 @@
 }
 
 .page.dapps123 > .list > .category > h3 {
-  font-size: 16px;
-  text-transform: capitalize;
+  font-size: 12px;
+  line-height: 12.5px;
+  text-transform: uppercase;
   margin: 0;
   margin-bottom: 6px;
   font-weight: 400;
-  /* border-bottom: 1px dashed var(--border-color); */
-  /* padding-bottom: 2px; */
+  opacity: 0.85;
+  color: var(--font-color-title);
 }
 
 .page.dapps123 > .list > .category > .projects {
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
-  gap: 16px 20px;
+  gap: 14px 20px;
   transition: all 0.3s;
 }
 

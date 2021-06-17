@@ -109,8 +109,9 @@
   "No NFTs Here": "暂时没有 NFT",
   "Forgot Passcode? Reset Wallet": "忘记密码？ 重置钱包",
   "See All": "查看全部",
-  "Dexs": "Dexs",
+  "dexs": "去中心化交易所",
   "lending": "借贷",
   "others": "其它",
-  "synthetic": "合成资产 & 衍生品"
+  "synthetic": "合成资产 & 衍生品",
+  "insurance": "保险"
 }
