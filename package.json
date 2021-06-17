@@ -22,7 +22,7 @@
     "name": "ChainBow Co, Ltd.",
     "email": "team@chainbow.io"
   },
-  "license": "Business Source License",
+  "license": "BUSL-1.1",
   "config": {
     "forge": "./forge.config.js"
   },
@@ -69,12 +69,12 @@
     "style-loader": "^2.0.0",
     "ts-loader": "^9.2.3",
     "ts-node": "^10.0.0",
-    "typescript": "^4.3.2",
+    "typescript": "^4.3.3",
     "url-loader": "^4.1.1",
     "webpack-filter-warnings-plugin": "^1.2.1"
   },
   "dependencies": {
-    "@electron/remote": "^1.1.0",
+    "@electron/remote": "^1.2.0",
     "@szhsin/react-menu": "^1.10.1",
     "@walletconnect/client": "^1.4.1",
     "animate.css": "^4.1.1",
