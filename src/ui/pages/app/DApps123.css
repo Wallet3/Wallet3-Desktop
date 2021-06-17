@@ -20,14 +20,14 @@
 }
 
 .page.dapps123 > .list > .category {
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
 .page.dapps123 > .list > .category > h3 {
   font-size: 16px;
   text-transform: capitalize;
   margin: 0;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   font-weight: 400;
   /* border-bottom: 1px dashed var(--border-color); */
   /* padding-bottom: 2px; */
@@ -54,6 +54,7 @@
 
 .page.dapps123 > .list > .category > .projects > .project img {
   height: 27px;
+  max-width: 50vw;
 }
 
 .page.dapps123 > .list > .category > .projects > .project span {

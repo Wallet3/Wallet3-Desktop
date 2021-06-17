@@ -18,6 +18,11 @@ const ethereum = {
     { name: 'Liquity', url: 'https://app.liquity.fi' },
   ],
 
+  synthetic: [
+    { name: 'Synthetix', url: 'https://synthetix.io' },
+    { name: 'UMA', url: 'https://umaproject.org' },
+  ],
+
   insurance: [
     { name: 'Nexus Mutual', url: 'https://app.nexusmutual.io' },
     { name: 'Opyn', url: 'https://www.opyn.co' },
@@ -38,6 +43,7 @@ const polygon = {
     { name: 'Sushiswap', url: 'https://app.sushi.com' },
     { name: 'Dodo', url: 'https://app.dodoex.io' },
     { name: 'Quickswap', url: 'https://quickswap.exchange' },
+    { name: 'Kyber', url: 'https://kyberswap.com' },
   ],
 
   lending: [
