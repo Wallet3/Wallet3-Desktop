@@ -15,7 +15,7 @@ export class Application {
 
   appAuthenticated = false;
   touchIDSupported = false;
-  machineId = '';
+
   authMethod: AuthMethod = 'fingerprint';
   isMac = true;
 
@@ -30,12 +30,11 @@ export class Application {
   }
 
   async init(jump = true) {
-    const { hasSecret, touchIDSupported, appAuthenticated, addresses, pendingTxs, connectedDApps, machineId, platform } =
+    const { hasSecret, touchIDSupported, appAuthenticated, addresses, pendingTxs, connectedDApps, platform } =
       await ipc.invokeSecure<InitStatus>(MessageKeys.getInitStatus);
 
     this.touchIDSupported = touchIDSupported;
     this.appAuthenticated = appAuthenticated;
-    this.machineId = machineId;
     runInAction(() => (this.isMac = platform === 'darwin'));
 
     Coingecko.start(30);
@@ -75,7 +74,7 @@ export class Application {
   };
 
   hashPassword = (passcode: string) => {
-    return crypto.sha256(`Ethereum.Wallet3-${passcode}-${this.machineId}`);
+    return crypto.sha256(`Ethereum.Wallet3-${passcode}`);
   };
 
   promptTouchID = async (message?: string) => {

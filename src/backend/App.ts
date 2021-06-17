@@ -123,7 +123,6 @@ export class App {
           addresses: [...this.addresses],
           connectedDApps: WCMan.connectedSessions,
           pendingTxs: [...TxMan.pendingTxs],
-          machineId: this.machineId,
           platform: process.platform,
         } as InitStatus,
         key
