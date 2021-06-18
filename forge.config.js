@@ -25,19 +25,31 @@ module.exports = {
       name: '@electron-forge/maker-squirrel',
       config: {
         name: 'Wallet 3',
+        icon: 'assets/AppIcon.png',
       },
     },
     {
       name: '@electron-forge/maker-dmg',
-      config: {},
+      config: {
+        icon: 'assets/AppIcon.png',
+        additionalDMGOptions: {
+          backgroundColor: '#6186ff',
+        },
+      },
     },
     {
       name: '@electron-forge/maker-deb',
-      config: {},
+      config: {
+        name: 'Wallet 3',
+        icon: 'assets/AppIcon.png',
+      },
     },
     {
       name: '@electron-forge/maker-rpm',
-      config: {},
+      config: {
+        icon: 'assets/AppIcon.png',
+        name: 'Wallet 3',
+      },
     },
   ],
   plugins: [
