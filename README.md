@@ -20,7 +20,7 @@ A seed file used to persist entropy across boots <br>
 Intel random instructions — for example, RDSEED and RDRAND (only on an Intel-based Mac) <br> <br>
 Source: https://support.apple.com/en-ie/guide/security/seca0c73a75b/web
 
-So, hardware wallet is good, but we don't think users need to go out and buy an expensive hardware wallet.
+So, a hardware wallet is good, but we don't think users need to go out and buy an expensive hardware wallet.
 
 ## Features
 
@@ -57,6 +57,6 @@ Wallet 3 is available in the following languages:
 3. Fill RPC urls: `src/common/.wallet3.rc.json`
 4. Launch: `yarn start`
 
-## License
+## Copyright & License
 
-Business Source Lincese 1.1
+&copy; 2021 ChainBow Co, Ltd. Business Source Lincese 1.1
