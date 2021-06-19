@@ -32,9 +32,8 @@ module.exports = {
       name: '@electron-forge/maker-dmg',
       config: {
         icon: 'assets/AppIcon.png',
-        additionalDMGOptions: {
-          backgroundColor: '#6186ff',
-        },
+        background: 'assets/DMGBG.png',
+        backgroundColor: '#6186ff',
       },
     },
     {
