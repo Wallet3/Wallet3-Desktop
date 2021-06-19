@@ -5,12 +5,12 @@
   "description": "A Secure Wallet for Bankless Era",
   "main": ".webpack/main",
   "scripts": {
-    "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "NODE_ENV=production && electron-forge make",
-    "publish": "electron-forge publish",
-    "lint": "eslint --ext .ts .",
-    "test": "jest"
+    "start": "npx electron-forge start",
+    "package": "npx electron-forge package",
+    "make": "npx cross-env NODE_ENV=production && npx electron-forge make",
+    "publish": "npx electron-forge publish",
+    "lint": "npx eslint --ext .ts .",
+    "test": "npx jest"
   },
   "keywords": [
     "Ethereum",

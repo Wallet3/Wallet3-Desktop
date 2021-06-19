@@ -1,4 +1,5 @@
-const { appleId, appleIdPassword } = require('./sign/appSign');
+// const { appleId, appleIdPassword } = require('./sign/appSign');
+const package = require('./package.json')
 
 module.exports = {
   packagerConfig: {
@@ -7,6 +8,7 @@ module.exports = {
     appCategoryType: 'public.app-category.finance',
     darwinDarkModeSupport: false,
     icon: './assets/AppIcon.png',
+    //executableName: `${package.name}`, //uncomment for linux
     osxSign: {
       identity: 'Developer ID Application: ChainBow Co. Ltd (Z3N6SZF439)',
       hardenedRuntime: true,
@@ -24,14 +26,14 @@ module.exports = {
     {
       name: '@electron-forge/maker-squirrel',
       config: {
-        name: 'Wallet 3',
         icon: 'assets/AppIcon.png',
       },
     },
     {
       name: '@electron-forge/maker-dmg',
       config: {
-        icon: 'assets/AppIcon.png',
+        name: `${package.name}-${process.platform}-${process.arch}-${package.version}`,
+        icon: 'assets/AppIcon.icns',
         background: 'assets/DMGBG.png',
         backgroundColor: '#6186ff',
       },
@@ -39,7 +41,6 @@ module.exports = {
     {
       name: '@electron-forge/maker-deb',
       config: {
-        name: 'Wallet 3',
         icon: 'assets/AppIcon.png',
       },
     },
@@ -47,7 +48,6 @@ module.exports = {
       name: '@electron-forge/maker-rpm',
       config: {
         icon: 'assets/AppIcon.png',
-        name: 'Wallet 3',
       },
     },
   ],
