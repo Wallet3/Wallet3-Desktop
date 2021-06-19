@@ -1,6 +1,6 @@
 # Wallet 3 - A Secure Wallet for Bankless Era
 
-Wallet 3 is a secure crypto wallet for desktop users. It has a simple, UX-friendly design for users. With WalletConnect, the user can experience the powerful DeFi ecosystem.
+Wallet 3 is a secure crypto wallet for desktop users. It has a simple, UX-friendly design for users. With WalletConnect, users can experience the powerful DeFi ecosystem.
 
 ## Cutting-edge security
 
@@ -59,4 +59,4 @@ Wallet 3 is available in the following languages:
 
 ## Copyright & License
 
-&copy; 2021 ChainBow Co, Ltd. Business Source Lincese 1.1
+&copy; 2021 ChainBow Co, Ltd. Business Source License 1.1
