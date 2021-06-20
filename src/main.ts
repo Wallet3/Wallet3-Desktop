@@ -28,6 +28,8 @@ if (require('electron-squirrel-startup')) {
 }
 
 const createTouchBar = (mainWindow: BrowserWindow) => {
+  if (process.platform !== 'darwin') return;
+
   const newTouchBar = ({
     walletConnect,
     gas,
