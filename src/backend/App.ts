@@ -31,7 +31,7 @@ const Keys = {
 };
 
 export class App {
-  touchIDSupported = systemPreferences.canPromptTouchID();
+  touchIDSupported = process.platform === 'darwin' && systemPreferences.canPromptTouchID();
 
   windows = new Map<string, { key: Buffer }>();
   mainWindow?: BrowserWindow;
