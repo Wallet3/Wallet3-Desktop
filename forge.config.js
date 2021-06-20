@@ -1,4 +1,4 @@
-// const { appleId, appleIdPassword } = require('./sign/appSign');
+const { appleId, appleIdPassword } = require('./sign/appSign');
 const package = require('./package.json')
 
 module.exports = {
@@ -8,7 +8,7 @@ module.exports = {
     appCategoryType: 'public.app-category.finance',
     darwinDarkModeSupport: false,
     icon: './assets/AppIcon.png',
-    //executableName: `${package.name}`, //uncomment for linux
+    // executableName: `${package.name}`, //uncomment for linux
     osxSign: {
       identity: 'Developer ID Application: ChainBow Co. Ltd (Z3N6SZF439)',
       hardenedRuntime: true,
@@ -17,40 +17,40 @@ module.exports = {
       'entitlements-inherit': 'sign/entitlements.plist',
       'signature-flags': 'library',
     },
-    // osxNotarize: {
-    //   appleId,
-    //   appleIdPassword,
-    // },
+    osxNotarize: {
+      appleId,
+      appleIdPassword,
+    },
   },
-  makers: [
-    {
-      name: '@electron-forge/maker-squirrel',
-      config: {
-        icon: 'assets/AppIcon.png',
-      },
-    },
-    {
-      name: '@electron-forge/maker-dmg',
-      config: {
-        name: `${package.name}-${process.platform}-${process.arch}-${package.version}`,
-        icon: 'assets/AppIcon.icns',
-        background: 'assets/DMGBG.png',
-        backgroundColor: '#6186ff',
-      },
-    },
-    {
-      name: '@electron-forge/maker-deb',
-      config: {
-        icon: 'assets/AppIcon.png',
-      },
-    },
-    {
-      name: '@electron-forge/maker-rpm',
-      config: {
-        icon: 'assets/AppIcon.png',
-      },
-    },
-  ],
+  // makers: [
+  //   {
+  //     name: '@electron-forge/maker-squirrel',
+  //     config: {
+  //       icon: 'assets/AppIcon.png',
+  //     },
+  //   },
+  //   {
+  //     name: '@electron-forge/maker-dmg',
+  //     config: {
+  //       name: `${package.name}-${process.platform}-${process.arch}-${package.version}`,
+  //       icon: 'assets/AppIcon.icns',
+  //       background: 'assets/DMGBG.png',
+  //       backgroundColor: '#6186ff',
+  //     },
+  //   },
+  //   {
+  //     name: '@electron-forge/maker-deb',
+  //     config: {
+  //       icon: 'assets/AppIcon.png',
+  //     },
+  //   },
+  //   {
+  //     name: '@electron-forge/maker-rpm',
+  //     config: {
+  //       icon: 'assets/AppIcon.png',
+  //     },
+  //   },
+  // ],
   plugins: [
     [
       '@electron-forge/plugin-webpack',

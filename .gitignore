@@ -89,3 +89,4 @@ typings/
 # Electron-Forge
 out/
 appSign.js
+dist

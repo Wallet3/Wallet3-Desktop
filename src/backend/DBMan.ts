@@ -25,7 +25,7 @@ export class DBMan {
     this._dbPath = dbPath;
 
     this._connection = await createConnection({
-      type: 'sqlite',
+      type: 'better-sqlite3',
       database: dbPath,
       entities: [Transaction, WCSession, Key],
       synchronize: true,
