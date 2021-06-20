@@ -75,22 +75,18 @@
     "ts-node": "^10.0.0",
     "typescript": "^4.3.4",
     "url-loader": "^4.1.1",
-    "webpack-filter-warnings-plugin": "^1.2.1"
-  },
-  "dependencies": {
+    "webpack-filter-warnings-plugin": "^1.2.1",
     "@electron/remote": "^1.2.0",
     "@szhsin/react-menu": "^1.10.1",
     "@walletconnect/client": "^1.4.1",
     "animate.css": "^4.1.1",
     "animejs": "^3.2.1",
     "axios": "^0.21.1",
-    "better-sqlite3": "^7.4.1",
     "eth-sig-util": "^3.0.1",
     "ethers": "^5.3.1",
     "feather-icons": "^4.28.0",
     "feather-icons-react": "^0.4.3",
     "i18next": "^20.3.2",
-    "keytar": "^7.7.0",
     "mobx": "^6.3.2",
     "mobx-react-lite": "^3.2.0",
     "mousetrap": "^1.6.5",
@@ -112,7 +108,11 @@
     "react-spinners": "^0.11.0",
     "react-toggle-component": "^3.0.8",
     "storejs": "^1.1.0",
-    "typeorm": "^0.2.34",
+    "typeorm": "^0.2.34"
+  },
+  "dependencies": {
+    "keytar": "^7.7.0",
+    "better-sqlite3": "^7.4.1",
     "ws": "^7.5.0"
   }
 }
