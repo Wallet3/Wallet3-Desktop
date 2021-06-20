@@ -6,7 +6,7 @@ Wallet 3 is a secure crypto wallet for desktop users. It has a simple, UX-friend
 
 Wallet 3 utilizes the latest macOS security features to protect users. The private key is stored in the keychain which is secured by Secure Enclave, inaccessible to anyone other than the user.
 
-Wallet 3 **DO NOT** trust users' desktop environment. After Wallet 3 is launced,  the app creates a secure pipline for IPC communication. And no sensitive data will be resident in the memory.
+Wallet 3 **DO NOT** trust users' desktop environment. After Wallet 3 is launced,  the app creates a secure pipline for inter-process communication. And no sensitive data will be resident in the memory.
 
 ### About hardware wallet
 
