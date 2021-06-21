@@ -110,11 +110,9 @@ export class WindowApi {
 
   maximize = () => {
     const currenWindow = require('@electron/remote').getCurrentWindow() as BrowserWindow;
-    const screen = require('@electron/remote').screen;
 
-    const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-    if (currenWindow.getBounds().width >= width * 0.98 || currenWindow.getBounds().height >= height * 0.98) {
-      currenWindow.setSize(360, 540, true);
+    if (currenWindow.isMaximized()) {
+      currenWindow.unmaximize();
     } else {
       currenWindow.maximize();
     }

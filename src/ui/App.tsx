@@ -48,7 +48,7 @@ export default observer((args: Props) => {
   return (
     <Router history={app.history}>
       <div id="app">
-        {app.isMac || app.platform === 'win32' ? undefined : (
+        {app.isMac ? undefined : (
           <TitleBar
             onClose={() => window.close()}
             onMaximize={() => WindowApi.maximize()}
