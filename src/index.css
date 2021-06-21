@@ -33,6 +33,7 @@ body {
   -webkit-app-region: no-drag;
 }
 
+textarea,
 input,
 span {
   -webkit-app-region: no-drag;
