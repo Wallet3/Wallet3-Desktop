@@ -14,6 +14,7 @@ import { autorun } from 'mobx';
 import delay from 'delay';
 import { globalShortcut } from 'electron';
 import i18n from './i18n';
+import updateapp from 'update-electron-app';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -188,6 +189,8 @@ app.on('ready', async () => {
 
   globalShortcut.register('CommandOrControl+Option+3', () => createWindow());
   globalShortcut.register('CommandOrControl+Alt+3', () => createWindow());
+
+  updateapp({ notifyUser: true });
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common

@@ -4,6 +4,9 @@
   "version": "1.0.1",
   "description": "A Secure Wallet for Bankless Era",
   "main": ".webpack/main",
+  "repository": {
+    "url": "https://github.com/Wallet3/Wallet3.git"
+  },
   "scripts": {
     "start": "npx electron-forge start",
     "package": "npx electron-forge package",
@@ -109,6 +112,7 @@
     "sqlite3": "^5.0.2",
     "storejs": "^1.1.0",
     "typeorm": "^0.2.34",
+    "update-electron-app": "^2.0.1",
     "ws": "^7.5.0"
   }
 }
