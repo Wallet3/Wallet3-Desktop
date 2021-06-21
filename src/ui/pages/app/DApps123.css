@@ -58,6 +58,7 @@
   padding: 8px 0;
   padding-bottom: 7px;
   border-radius: 5px;
+  -webkit-app-region: no-drag;
 }
 
 .page.dapps123 > .list > .category > .projects > .project img {
