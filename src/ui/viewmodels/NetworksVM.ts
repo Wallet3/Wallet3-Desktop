@@ -1,7 +1,7 @@
+import { getProviderByChainId, markRpcFailed } from '../../common/Provider';
 import { makeAutoObservable, runInAction } from 'mobx';
 
 import Messages from '../../common/Messages';
-import { getProviderByChainId } from '../../common/Provider';
 import ipc from '../bridges/IPC';
 import store from 'storejs';
 
@@ -41,6 +41,10 @@ export class NetworksVM {
     this.currentProvider.ready;
     store.set(Keys.currentNetworkId(), value);
     ipc.invoke(Messages.changeChainId, value);
+  }
+
+  reportFailedRpc(network: number, rpc: string) {
+    markRpcFailed(network, rpc);
   }
 }
 

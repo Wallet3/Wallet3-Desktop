@@ -491,6 +491,7 @@ export class App {
       show: false,
       frame: false,
       alwaysOnTop: true,
+      acceptFirstMouse: true,
       webPreferences: {
         preload: POPUP_WINDOW_PRELOAD_WEBPACK_ENTRY,
         contextIsolation: true,

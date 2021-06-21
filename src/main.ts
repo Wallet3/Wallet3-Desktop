@@ -21,6 +21,11 @@ declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 let tray: Tray;
 let idleTimer: NodeJS.Timeout;
 
+const prod = process.env.NODE_ENV === 'production';
+const isMac = process.platform === 'darwin';
+
+if (!isMac) require('@electron/remote/main').initialize();
+
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
   // eslint-disable-line global-require
@@ -28,7 +33,7 @@ if (require('electron-squirrel-startup')) {
 }
 
 const createTouchBar = (mainWindow: BrowserWindow) => {
-  if (process.platform !== 'darwin') return;
+  if (!isMac) return;
 
   const newTouchBar = ({
     walletConnect,
@@ -93,11 +98,6 @@ const createTray = async () => {
   tray.setContextMenu(menu);
 };
 
-const prod = process.env.NODE_ENV === 'production';
-const isMac = process.platform === 'darwin';
-
-if (!isMac) require('@electron/remote/main').initialize();
-
 const createWindow = async (): Promise<void> => {
   if (App.mainWindow) {
     App.mainWindow.show();
@@ -113,6 +113,7 @@ const createWindow = async (): Promise<void> => {
     minHeight: 540,
     frame: false,
     titleBarStyle: isMac ? 'hiddenInset' : undefined,
+    acceptFirstMouse: true,
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       contextIsolation: true,
@@ -133,13 +134,13 @@ const createWindow = async (): Promise<void> => {
   });
 
   mainWindow.once('closed', () => {
-    app.dock.hide();
+    if (isMac) app.dock.hide();
     App.mainWindow = undefined;
   });
 
   createTouchBar(mainWindow);
   createTray();
-  app.dock.show();
+  if (isMac) app.dock.show();
 };
 
 // This method will be called when Electron has finished
@@ -207,9 +208,7 @@ app.on('browser-window-focus', () => {
 });
 
 app.on('browser-window-blur', () => {
-  idleTimer = setTimeout(() => {
-    App.mainWindow?.webContents.send(Messages.idleExpired, { idleExpired: true });
-  }, 5 * 1000 * 60);
+  idleTimer = setTimeout(() => App.mainWindow?.webContents.send(Messages.idleExpired, { idleExpired: true }), 5 * 1000 * 60);
 });
 
 app.on('web-contents-created', (event, contents) => {
