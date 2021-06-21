@@ -28,6 +28,11 @@
 
 .page.settings > .drop-menu.accounts {
   margin-bottom: 16px;
+  -webkit-app-region: no-drag;
+}
+
+.page.settings > .drop-menu.accounts * {
+  -webkit-app-region: no-drag;
 }
 
 .page.settings > .setting-item {
