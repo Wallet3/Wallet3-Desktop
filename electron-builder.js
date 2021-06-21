@@ -16,7 +16,7 @@ module.exports = {
   mac: {
     icon: 'assets/AppIcon.icns',
     category: 'public.app-category.productivity',
-    artifactName: '${productName}-${version}-${os}.${ext}',
+    artifactName: '${productName}-${platform}-${arch}-${version}.${ext}',
     target: [
       'dmg',
       'zip',
@@ -27,11 +27,13 @@ module.exports = {
   win: {
     target: 'nsis',
     icon: 'assets/AppIcon.ico',
-    artifactName: '${productName}-${version}-${os}.${ext}',
+    artifactName: '${productName}-${platform}-${arch}-${version}.${ext}',
     publish: [ 'github' ]
   },
   linux: {
     target: 'AppImage',
+    artifactName: '${productName}-${platform}-${arch}-${version}.${ext}',
+    icon: 'assets/AppIcon.png',
     publish: [ 'github' ]
   },
   nsis: {

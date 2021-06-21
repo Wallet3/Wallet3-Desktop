@@ -14,12 +14,18 @@ import { autorun } from 'mobx';
 import delay from 'delay';
 import { globalShortcut } from 'electron';
 import i18n from './i18n';
+import updateapp from 'update-electron-app';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
 let tray: Tray;
 let idleTimer: NodeJS.Timeout;
+
+const prod = process.env.NODE_ENV === 'production';
+const isMac = process.platform === 'darwin';
+
+if (!isMac) require('@electron/remote/main').initialize();
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -28,7 +34,7 @@ if (require('electron-squirrel-startup')) {
 }
 
 const createTouchBar = (mainWindow: BrowserWindow) => {
-  if (process.platform !== 'darwin') return;
+  if (!isMac) return;
 
   const newTouchBar = ({
     walletConnect,
@@ -93,11 +99,6 @@ const createTray = async () => {
   tray.setContextMenu(menu);
 };
 
-const prod = process.env.NODE_ENV === 'production';
-const isMac = process.platform === 'darwin';
-
-if (!isMac) require('@electron/remote/main').initialize();
-
 const createWindow = async (): Promise<void> => {
   if (App.mainWindow) {
     App.mainWindow.show();
@@ -111,8 +112,9 @@ const createWindow = async (): Promise<void> => {
     width: 360,
     minWidth: 360,
     minHeight: 540,
-    frame: false,
-    titleBarStyle: isMac ? 'hiddenInset' : undefined,
+    frame: process.platform === 'win32' ? true : false, // https://github.com/electron/electron/issues/20754
+    titleBarStyle: isMac ? 'hiddenInset' : null,
+    acceptFirstMouse: true,
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       contextIsolation: true,
@@ -133,13 +135,13 @@ const createWindow = async (): Promise<void> => {
   });
 
   mainWindow.once('closed', () => {
-    app.dock.hide();
+    if (isMac) app.dock.hide();
     App.mainWindow = undefined;
   });
 
   createTouchBar(mainWindow);
   createTray();
-  app.dock.show();
+  if (isMac) app.dock.show();
 };
 
 // This method will be called when Electron has finished
@@ -187,6 +189,8 @@ app.on('ready', async () => {
 
   globalShortcut.register('CommandOrControl+Option+3', () => createWindow());
   globalShortcut.register('CommandOrControl+Alt+3', () => createWindow());
+
+  updateapp({ notifyUser: true });
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -207,9 +211,7 @@ app.on('browser-window-focus', () => {
 });
 
 app.on('browser-window-blur', () => {
-  idleTimer = setTimeout(() => {
-    App.mainWindow?.webContents.send(Messages.idleExpired, { idleExpired: true });
-  }, 5 * 1000 * 60);
+  idleTimer = setTimeout(() => App.mainWindow?.webContents.send(Messages.idleExpired, { idleExpired: true }), 5 * 1000 * 60);
 });
 
 app.on('web-contents-created', (event, contents) => {

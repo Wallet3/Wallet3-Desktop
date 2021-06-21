@@ -3,10 +3,8 @@ import * as ethers from 'ethers';
 
 import axios from 'axios';
 
-// For bsc
-// https://bscproject.org/#/rpcserver
-
-const cache = new Map<number, ethers.providers.BaseProvider>();
+const cache = new Map<number, ethers.providers.JsonRpcProvider>();
+const failedRPCs = new Set<string>();
 
 export function getProviderByChainId(chainId: number) {
   if (cache.has(chainId)) {
@@ -18,44 +16,54 @@ export function getProviderByChainId(chainId: number) {
     throw new Error(`Unsupported chain:${chainId}`);
   }
 
-  const provider = new ethers.providers.JsonRpcProvider(list[0], chainId);
+  const [rpc] = list.filter((rpc) => !failedRPCs.has(rpc));
+  const provider = new ethers.providers.JsonRpcProvider(rpc || list[0], chainId);
   cache.set(chainId, provider);
   return provider;
 }
 
+export function markRpcFailed(network: number, rpc: string) {
+  cache.delete(network);
+  failedRPCs.add(rpc);
+}
+
 export async function sendTransaction(chainId: number, txHex: string) {
-  const [url] = Providers[`${chainId}`] as string[];
+  const rpcs = Providers[`${chainId}`] as string[];
 
-  try {
-    const resp = await axios.post(url, {
-      jsonrpc: '2.0',
-      method: 'eth_sendRawTransaction',
-      params: [txHex],
-      id: Date.now(),
-    });
+  for (let url of rpcs) {
+    try {
+      const resp = await axios.post(url, {
+        jsonrpc: '2.0',
+        method: 'eth_sendRawTransaction',
+        params: [txHex],
+        id: Date.now(),
+      });
 
-    return resp.data as { id: number; result: string };
-  } catch (error) {
-    return undefined;
+      return resp.data as { id: number; result: string };
+    } catch (error) {}
   }
+
+  return undefined;
 }
 
 export async function getTransactionCount(chainId: number, address: string) {
-  const [url] = Providers[`${chainId}`] as string[];
+  const rpcs = Providers[`${chainId}`] as string[];
 
-  try {
-    const resp = await axios.post(url, {
-      jsonrpc: '2.0',
-      method: 'eth_getTransactionCount',
-      params: [address, 'latest'],
-      id: Date.now(),
-    });
+  for (let url of rpcs) {
+    try {
+      const resp = await axios.post(url, {
+        jsonrpc: '2.0',
+        method: 'eth_getTransactionCount',
+        params: [address, 'latest'],
+        id: Date.now(),
+      });
 
-    const { result } = resp.data as { id: number; result: string };
-    return Number.parseInt(result);
-  } catch (error) {
-    return 0;
+      const { result } = resp.data as { id: number; result: string };
+      return Number.parseInt(result);
+    } catch (error) {}
   }
+
+  return 0;
 }
 
 export async function call<T>(
@@ -69,47 +77,51 @@ export async function call<T>(
     data: string;
   }
 ) {
-  const [url] = Providers[`${chainId}`] as string[];
+  const rpcs = Providers[`${chainId}`] as string[];
 
-  try {
-    const resp = await axios.post(url, {
-      jsonrpc: '2.0',
-      method: 'eth_call',
-      params: [args, 'latest'],
-      id: Date.now(),
-    });
+  for (let url of rpcs) {
+    try {
+      const resp = await axios.post(url, {
+        jsonrpc: '2.0',
+        method: 'eth_call',
+        params: [args, 'latest'],
+        id: Date.now(),
+      });
 
-    return resp.data.result as T;
-  } catch (error) {
-    return undefined;
+      return resp.data.result as T;
+    } catch (error) {}
   }
+
+  return undefined;
 }
 
 export async function getTransactionReceipt(chainId: number, hash: string) {
-  const [url] = Providers[`${chainId}`] as string[];
+  const rpcs = Providers[`${chainId}`] as string[];
 
-  try {
-    const resp = await axios.post(url, {
-      jsonrpc: '2.0',
-      method: 'eth_getTransactionReceipt',
-      params: [hash],
-      id: Date.now(),
-    });
+  for (let url of rpcs) {
+    try {
+      const resp = await axios.post(url, {
+        jsonrpc: '2.0',
+        method: 'eth_getTransactionReceipt',
+        params: [hash],
+        id: Date.now(),
+      });
 
-    if (!resp.data.result) {
-      return null;
-    }
+      if (!resp.data.result) {
+        return null;
+      }
 
-    return resp.data.result as {
-      transactionHash: string;
-      transactionIndex: string;
-      blockNumber: string;
-      blockHash: string;
-      contractAddress: string;
-      status: string;
-      gasUsed: string;
-    };
-  } catch (error) {
-    return undefined;
+      return resp.data.result as {
+        transactionHash: string;
+        transactionIndex: string;
+        blockNumber: string;
+        blockHash: string;
+        contractAddress: string;
+        status: string;
+        gasUsed: string;
+      };
+    } catch (error) {}
   }
+
+  return undefined;
 }

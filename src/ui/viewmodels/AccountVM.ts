@@ -106,7 +106,11 @@ export class AccountVM {
     this.allTokens = [];
     this.nativeToken = null;
 
-    await Promise.all([this.refreshChainOverview(), this.refreshChainTokens()]);
+    try {
+      await Promise.all([this.refreshChainOverview(), this.refreshChainTokens()]);
+    } catch (error) {
+      await this.refreshChainTokens();
+    }
 
     this.refreshNFTs();
   }
@@ -177,8 +181,14 @@ export class AccountVM {
     assets.push(...userConfigs);
     assets = assets.sort((a, b) => a.order - b.order);
 
-    const nativeT = tokens.find((t) => nativeSymbols.includes(t.id));
-    const balance = await NetVM.currentProvider.getBalance(this.address);
+    const nativeCurrency = tokens.find((t) => nativeSymbols.includes(t.id));
+
+    const rpc = NetVM.currentProvider.connection.url;
+    const network = NetVM.currentChainId;
+    const balancePromise = NetVM.currentProvider.getBalance(this.address);
+    balancePromise.catch(() => NetVM.reportFailedRpc(network, rpc));
+
+    const balance = await balancePromise;
     const nativeToken = new UserToken();
     nativeToken.id = NetVM.currentNetwork.symbol.toLowerCase();
     nativeToken.amount = Number.parseFloat(utils.formatEther(balance));
@@ -186,7 +196,7 @@ export class AccountVM {
     nativeToken.name = NetVM.currentNetwork.symbol;
     nativeToken.symbol = NetVM.currentNetwork.symbol;
     nativeToken.wei = balance.toString();
-    nativeToken.price = nativeT?.price ?? 0;
+    nativeToken.price = nativeCurrency?.price ?? 0;
     assets.unshift(nativeToken);
 
     runInAction(() => {
