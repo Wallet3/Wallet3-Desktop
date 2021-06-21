@@ -17,7 +17,10 @@ export class Application {
   touchIDSupported = false;
 
   authMethod: AuthMethod = 'fingerprint';
-  isMac = true;
+  platform: NodeJS.Platform = 'darwin';
+  get isMac() {
+    return this.platform === 'darwin';
+  }
 
   constructor() {
     makeObservable(this, { authMethod: observable, isMac: observable, switchAuthMethod: action });
@@ -35,7 +38,7 @@ export class Application {
 
     this.touchIDSupported = touchIDSupported;
     this.appAuthenticated = appAuthenticated;
-    runInAction(() => (this.isMac = platform === 'darwin'));
+    runInAction(() => (this.platform = platform));
 
     Coingecko.start(30);
 
