@@ -1,5 +1,5 @@
 // const { appleId, appleIdPassword } = require('./sign/appSign');
-const package = require('./package.json')
+const package = require('./package.json');
 
 module.exports = {
   packagerConfig: {
@@ -32,7 +32,7 @@ module.exports = {
     {
       name: '@electron-forge/maker-dmg',
       config: {
-        name: `${package.name}-${process.platform}-${process.arch}-${package.version}`,
+        name: `${package.productName}-${process.platform}-${process.arch}-${package.version}`,
         icon: 'assets/AppIcon.icns',
         background: 'assets/DMGBG.png',
         backgroundColor: '#6186ff',
@@ -81,6 +81,6 @@ module.exports = {
     ],
   ],
   win32metadata: {
-    CompanyName: 'ChainBow',
+    CompanyName: 'ChainBow Co, Ltd.',
   },
 };

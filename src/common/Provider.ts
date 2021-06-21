@@ -3,9 +3,6 @@ import * as ethers from 'ethers';
 
 import axios from 'axios';
 
-// For bsc
-// https://bscproject.org/#/rpcserver
-
 const cache = new Map<number, ethers.providers.JsonRpcProvider>();
 const failedRPCs = new Set<string>();
 
