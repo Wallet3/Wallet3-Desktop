@@ -111,8 +111,8 @@ const createWindow = async (): Promise<void> => {
     width: 360,
     minWidth: 360,
     minHeight: 540,
-    frame: process.platform === 'win32' ? true : false,
-    titleBarStyle: isMac ? 'hiddenInset' : undefined,
+    frame: process.platform === 'win32' ? true : false, // https://github.com/electron/electron/issues/20754
+    titleBarStyle: isMac ? 'hiddenInset' : null,
     acceptFirstMouse: true,
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,

@@ -113,7 +113,7 @@ export class WindowApi {
     const screen = require('@electron/remote').screen;
 
     const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-    if (currenWindow.getBounds().width === width || currenWindow.getBounds().height === height) {
+    if (currenWindow.getBounds().width >= width * 0.98 || currenWindow.getBounds().height >= height * 0.98) {
       currenWindow.setSize(360, 540, true);
     } else {
       currenWindow.maximize();
