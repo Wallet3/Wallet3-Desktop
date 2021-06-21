@@ -10,11 +10,12 @@
   "scripts": {
     "start": "npx electron-forge start",
     "package": "npx electron-forge package",
-    "build:mac:arm64": "npx electron-builder build --mac --arm64",
+    "build:mac:arm64": "npx yarn run package --arch=arm64 && npx electron-builder build --mac --arm64",
     "build:mac:x64": "npx electron-builder build --mac --x64",
     "build:win": "npx electron-builder build --win --x64",
     "build:linux": "npx electron-builder build --linux --x64",
     "build:x64": "npx yarn run package --arch=x64 && npx yarn run build:mac:x64 && npx yarn run build:win && npx yarn run build:linux",
+    "build": "npx yarn run x64 && npx yarn run build:mac:arm64",
     "make": "npx cross-env NODE_ENV=production && npx electron-forge make",
     "publish": "npx electron-forge publish",
     "lint": "npx eslint --ext .ts .",
