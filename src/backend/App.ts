@@ -489,8 +489,7 @@ export class App {
       modal,
       parent,
       show: false,
-      frame: process.platform === 'win32' ? true : false,
-      titleBarStyle: process.platform === 'win32' ? 'hidden' : undefined,
+      frame: false,
       alwaysOnTop: true,
       acceptFirstMouse: true,
       webPreferences: {

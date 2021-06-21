@@ -107,11 +107,13 @@
   font-size: 12px;
   display: grid;
   grid-template-columns: 1fr auto auto;
+  -webkit-app-region: no-drag;
 }
 
 .page.send > .form > .tokens > .balance {
   cursor: pointer;
   margin: 2px 8px;
+  -webkit-app-region: no-drag;
 }
 
 .page.send > .form > .tokens > .menu-button {
@@ -142,6 +144,7 @@
   cursor: pointer;
   opacity: 0.25;
   transition: all 0.3s;
+  -webkit-app-region: no-drag;
 }
 
 .page.send > .form > .gas > div:hover {

@@ -24,6 +24,18 @@ body {
 *.button {
   transition: all 0.3s;
   cursor: pointer;
+  -webkit-app-region: no-drag;
+}
+
+.menu-button,
+.rc-menu__item,
+.react-toggle {
+  -webkit-app-region: no-drag;
+}
+
+input,
+span {
+  -webkit-app-region: no-drag;
 }
 
 .no-drag {
@@ -91,6 +103,7 @@ button.positive {
 
 a {
   text-decoration: none;
+  -webkit-app-region: no-drag;
 }
 
 button:hover,
