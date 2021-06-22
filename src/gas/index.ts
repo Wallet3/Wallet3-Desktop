@@ -2,6 +2,7 @@ import Gasnow, { GasnowWs } from './Gasnow';
 import { autorun, makeAutoObservable, reaction } from 'mobx';
 
 import BscGas from './BscGas';
+import CheapStation from './CheapStation';
 import PolygonGasStation from './PolygonGasStation';
 
 interface IGasStation {
@@ -18,9 +19,17 @@ class GasStation {
   private _chainId = 1;
   private _stations = new Map<number, IGasStation>([
     [1, Gasnow],
+    [100, new CheapStation(100)],
+    [250, new CheapStation(250)],
+    [128, new CheapStation(128)],
     [137, PolygonGasStation],
+    [66, new CheapStation(66)],
     [56, BscGas],
-    [80001, PolygonGasStation],
+    [3, new CheapStation(3)],
+    [4, new CheapStation(4)],
+    [5, new CheapStation(5)],
+    [42, new CheapStation(42)],
+    [80001, new CheapStation(80001)],
   ]);
 
   constructor() {
@@ -60,20 +69,20 @@ class GasStation {
   }
 
   getGasPrice(chainId = this.chainId, type: 'rapid' | 'fast' | 'standard') {
-    const station = this._stations.get(chainId) ?? PolygonGasStation;
+    const station = this._stations.get(chainId);
 
     switch (type) {
       case 'rapid':
-        return station.rapid;
+        return station?.rapid ?? 5 * GasnowWs.gwei_1;
       case 'fast':
-        return station.fast;
+        return station?.fast ?? 1 * GasnowWs.gwei_1;
       case 'standard':
-        return station.standard;
+        return station?.standard ?? 1 * GasnowWs.gwei_1;
     }
   }
 
   refresh() {
-    PolygonGasStation.refresh(); // (this._stations.get(this.chainId) ?? PolygonGasStation).refresh();
+    this._stations.get(this.chainId)?.refresh();
     Gasnow.refresh();
   }
 }
