@@ -483,19 +483,19 @@ const HECO_USDT = {
 const HECO_DOT = {
   address: '0xA2c49cEe16a5E5bDEFDe931107dc1fae9f7773E3',
   decimals: 18,
-  symbol: 'DOT',
+  symbol: 'HDOT',
 };
 
 const HECO_BCH = {
   address: '0xeF3CEBD77E0C52cb6f60875d9306397B5Caca375',
   decimals: 18,
-  symbol: 'BCH',
+  symbol: 'HBCH',
 };
 
 const HECO_LTC = {
   address: '0xecb56cf772B5c9A6907FB7d32387Da2fCbfB63b4',
   decimals: 18,
-  symbol: 'LTC',
+  symbol: 'HLTC',
 };
 
 export const HecoPopularTokens = [

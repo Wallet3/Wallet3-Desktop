@@ -184,11 +184,6 @@ export class AccountVM {
       new UserToken().init(t, i + 1)
     );
 
-    defaultTokens.forEach((t) => {
-      const token = assets.find((ut) => ut.id.toLowerCase() === t.id.toLowerCase());
-      if (token) token.symbol = t.symbol;
-    });
-
     assets.push(...defaultTokens.filter((dt) => !assets.find((ut) => dt.id.toLowerCase() === ut.id.toLowerCase())));
 
     assets = assets.sort((a, b) => a.order - b.order);
