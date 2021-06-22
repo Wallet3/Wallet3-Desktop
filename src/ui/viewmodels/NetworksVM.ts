@@ -1,4 +1,12 @@
-import { BscPopularTokens, EthereumPopularTokens, IToken } from '../misc/Tokens';
+import {
+  BscPopularTokens,
+  EthereumPopularTokens,
+  FTMPopularTokens,
+  HecoPopularTokens,
+  IToken,
+  PolygonPopularTokens,
+  xDaiPopularTokens,
+} from '../misc/Tokens';
 import { getProviderByChainId, markRpcFailed } from '../../common/Provider';
 
 import Messages from '../../common/Messages';
@@ -65,7 +73,7 @@ export const PublicNetworks: INetwork[] = [
     chainId: 137,
     color: '#8247E5',
     order: 2,
-    defaultTokens: [],
+    defaultTokens: PolygonPopularTokens,
   },
   {
     symbol: 'xDAI',
@@ -73,7 +81,7 @@ export const PublicNetworks: INetwork[] = [
     chainId: 100,
     color: '#48A9A6',
     order: 3,
-    defaultTokens: [],
+    defaultTokens: xDaiPopularTokens,
   },
   {
     symbol: 'FTM',
@@ -81,7 +89,7 @@ export const PublicNetworks: INetwork[] = [
     network: 'Fantom',
     color: '#1969FF',
     order: 4,
-    defaultTokens: [],
+    defaultTokens: FTMPopularTokens,
   },
   {
     symbol: 'HT',
@@ -89,7 +97,7 @@ export const PublicNetworks: INetwork[] = [
     network: 'HECO',
     order: 6,
     color: '#01943f',
-    defaultTokens: [],
+    defaultTokens: HecoPopularTokens,
   },
   {
     symbol: 'OKT',

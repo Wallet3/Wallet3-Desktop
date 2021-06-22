@@ -61,7 +61,10 @@ const xdai = {
     { name: 'Bao', url: 'https://alpha.baoswap.xyz' },
   ],
 
-  lending: [{ name: 'Agave', url: 'https://agave.finance' }],
+  lending: [
+    { name: 'Honeycomb', url: 'https://1hive.io' },
+    { name: 'Agave', url: 'https://agave.finance' },
+  ],
 };
 
 const fantom = {
