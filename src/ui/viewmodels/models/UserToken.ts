@@ -106,11 +106,12 @@ export class UserToken {
     }
   }
 
-  init(token: IToken, order?: number) {
+  init(token: IToken, { order, show }: { order?: number; show?: boolean } = {}) {
     this._id = token.address;
     this._symbol = token.symbol;
     this._decimals = token.decimals;
     this._order = order;
+    this._show = show;
     return this;
   }
 

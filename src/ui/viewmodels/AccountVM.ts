@@ -181,7 +181,7 @@ export class AccountVM {
     assets.push(...userConfigs);
 
     const defaultTokens = Networks.find((n) => n.chainId === NetVM.currentChainId).defaultTokens.map((t, i) =>
-      new UserToken().init(t, i + 1)
+      new UserToken().init(t, { order: i + 1, show: false })
     );
 
     assets.push(...defaultTokens.filter((dt) => !assets.find((ut) => dt.id.toLowerCase() === ut.id.toLowerCase())));

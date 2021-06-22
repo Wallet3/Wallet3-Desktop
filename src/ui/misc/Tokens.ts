@@ -459,13 +459,13 @@ const HECO_BTC = {
 const HECO_USDC = {
   address: '0x9362Bbef4B8313A8Aa9f0c9808B80577Aa26B73B',
   decimals: 6,
-  symbol: 'USDC',
+  symbol: 'USDC-HECO',
 };
 
 const HECO_DAI = {
   address: '0x3D760a45D0887DFD89A2F5385a236B29Cb46ED2a',
   decimals: 18,
-  symbol: 'DAI',
+  symbol: 'DAI-HECO',
 };
 
 const HECO_UNI = {
@@ -477,7 +477,7 @@ const HECO_UNI = {
 const HECO_USDT = {
   address: '0xa71EdC38d189767582C38A3145b5873052c3e47a',
   decimals: 18,
-  symbol: 'USDT',
+  symbol: 'USDTHECO',
 };
 
 const HECO_DOT = {
