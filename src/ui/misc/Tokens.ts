@@ -383,7 +383,7 @@ const FTM_AAVE = {
 const FTM_ETH = {
   address: '0x658b0c7613e890EE50B8C4BC6A3f41ef411208aD',
   decimals: 18,
-  symbol: 'ETH',
+  symbol: 'FETH',
 };
 
 const FTM_LINK = {
