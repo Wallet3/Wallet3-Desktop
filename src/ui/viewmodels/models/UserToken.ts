@@ -1,3 +1,4 @@
+import { IToken } from '../../misc/Tokens';
 import { makeAutoObservable } from 'mobx';
 
 export interface IUserToken {
@@ -103,6 +104,14 @@ export class UserToken {
       this._show = token.w;
       this._amount = token.v;
     }
+  }
+
+  init(token: IToken, order?: number) {
+    this._id = token.address;
+    this._symbol = token.symbol;
+    this._decimals = token.decimals;
+    this._order = order;
+    return this;
   }
 
   toObject(): IUserToken {

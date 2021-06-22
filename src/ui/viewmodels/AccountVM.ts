@@ -103,8 +103,8 @@ export class AccountVM {
 
   async refresh() {
     this.chains = [];
-    this.allTokens = [];
     this.nativeToken = null;
+    this.allTokens = [];
 
     try {
       await Promise.all([this.refreshChainOverview(), this.refreshChainTokens()]);
@@ -179,6 +179,13 @@ export class AccountVM {
           });
 
     assets.push(...userConfigs);
+
+    assets.push(
+      ...Networks.find((n) => n.chainId === NetVM.currentChainId)
+        .defaultTokens.map((t, i) => new UserToken().init(t, i + 1))
+        .filter((dt) => !assets.find((ut) => dt.id.toLowerCase() === ut.id.toLowerCase()))
+    );
+
     assets = assets.sort((a, b) => a.order - b.order);
 
     const nativeCurrency = tokens.find((t) => nativeSymbols.includes(t.id));

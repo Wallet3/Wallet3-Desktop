@@ -1,6 +1,7 @@
 import { BigNumber, ethers, utils } from 'ethers';
 import Messages, { ConfirmSendTx, SendTxParams, WcMessages } from '../../../common/Messages';
 import { formatEther, parseUnits } from '@ethersproject/units';
+import { getProviderByChainId, markRpcFailed } from '../../../common/Provider';
 import { makeAutoObservable, runInAction } from 'mobx';
 
 import App from '../ApplicationPopup';
@@ -10,7 +11,6 @@ import KnownAddresses from '../../misc/KnownAddresses';
 import { Networks } from '../NetworksVM';
 import { findTokenByAddress } from '../../misc/Tokens';
 import { formatUnits } from 'ethers/lib/utils';
-import { getProviderByChainId } from '../../../common/Provider';
 import i18n from '../../../i18n';
 import ipc from '../../bridges/IPC';
 
@@ -43,7 +43,7 @@ export class ConfirmVM {
     iface?: ethers.utils.Interface;
   } = undefined;
 
-  private _provider: ethers.providers.BaseProvider;
+  private _provider: ethers.providers.JsonRpcProvider;
   private _value: string | number = '';
   private _data: string = '';
 
@@ -54,7 +54,7 @@ export class ConfirmVM {
     this._provider
       .getBalance(params.from)
       .then((v) => runInAction(() => (this.nativeBalance = v)))
-      .catch(() => console.log('balance error'));
+      .catch(() => markRpcFailed(params.chainId, this._provider.connection.url));
 
     if (Methods.has(params.data?.substring(0, 10))) {
       const [method, icon] = Methods.get(params.data.substring(0, 10));

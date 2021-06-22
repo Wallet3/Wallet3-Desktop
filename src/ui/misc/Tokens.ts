@@ -290,7 +290,7 @@ export function findTokenByAddress(address: string) {
   return all.find((t) => t.address.toUpperCase() === upper);
 }
 
-export const EthereumPopularTokens = [DAI, USDC, USDT, UNI, SUSHI, COMP, MKR, CRV, LINK, AAVE];
+export const EthereumPopularTokens = [DAI, USDC, USDT, UNI, SUSHI, COMP, MKR, CRV, LINK, AAVE, DPI];
 
 const CAKE = {
   address: '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82',
@@ -328,7 +328,7 @@ const BSC_ETH = {
   symbol: 'ETH',
 };
 
-export const BscPopularTokens = [BSC_ETH, BUSD, CAKE, XVS, ALPACA, BSC_DAI, BSC_USDC];
+export const BscPopularTokens = [BSC_ETH, BSC_DAI, BSC_USDC, BUSD, CAKE, XVS, ALPACA];
 
-const all = [...Stablecoins, ...ETHTokens, ...BTCTokens, ...AlgorithmStablecoins, ...DeFiTokens, ...BscPopularTokens];
+const all = [...Stablecoins, WETH, ...BTCTokens, ...AlgorithmStablecoins, ...DeFiTokens, ...BscPopularTokens];
 export default all;

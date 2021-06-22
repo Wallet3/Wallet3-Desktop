@@ -1,8 +1,9 @@
+import { BscPopularTokens, EthereumPopularTokens, IToken } from '../misc/Tokens';
 import { getProviderByChainId, markRpcFailed } from '../../common/Provider';
-import { makeAutoObservable, runInAction } from 'mobx';
 
 import Messages from '../../common/Messages';
 import ipc from '../bridges/IPC';
+import { makeAutoObservable } from 'mobx';
 import store from 'storejs';
 
 export interface INetwork {
@@ -12,6 +13,7 @@ export interface INetwork {
   color: string;
   test?: boolean;
   order?: number;
+  defaultTokens: IToken[];
 }
 
 const Keys = {
@@ -55,6 +57,7 @@ export const PublicNetworks: INetwork[] = [
     chainId: 1,
     color: '#6186ff',
     order: 1,
+    defaultTokens: EthereumPopularTokens,
   },
   {
     symbol: 'MATIC',
@@ -62,6 +65,7 @@ export const PublicNetworks: INetwork[] = [
     chainId: 137,
     color: '#8247E5',
     order: 2,
+    defaultTokens: [],
   },
   {
     symbol: 'xDAI',
@@ -69,6 +73,7 @@ export const PublicNetworks: INetwork[] = [
     chainId: 100,
     color: '#48A9A6',
     order: 3,
+    defaultTokens: [],
   },
   {
     symbol: 'FTM',
@@ -76,6 +81,7 @@ export const PublicNetworks: INetwork[] = [
     network: 'Fantom',
     color: '#1969FF',
     order: 4,
+    defaultTokens: [],
   },
   {
     symbol: 'HT',
@@ -83,6 +89,7 @@ export const PublicNetworks: INetwork[] = [
     network: 'HECO',
     order: 6,
     color: '#01943f',
+    defaultTokens: [],
   },
   {
     symbol: 'OKT',
@@ -90,6 +97,7 @@ export const PublicNetworks: INetwork[] = [
     network: 'OKEx',
     order: 7,
     color: '#24c',
+    defaultTokens: [],
   },
   {
     symbol: 'BSC',
@@ -97,6 +105,7 @@ export const PublicNetworks: INetwork[] = [
     chainId: 56,
     color: '#f3ba2f',
     order: 5,
+    defaultTokens: BscPopularTokens,
   },
 ];
 
@@ -107,6 +116,7 @@ export const Testnets: INetwork[] = [
     chainId: 3,
     color: '#6186ff',
     test: true,
+    defaultTokens: [],
   },
   {
     symbol: 'ETH',
@@ -114,6 +124,7 @@ export const Testnets: INetwork[] = [
     chainId: 4,
     color: '#6186ff',
     test: true,
+    defaultTokens: [],
   },
   {
     symbol: 'ETH',
@@ -121,6 +132,7 @@ export const Testnets: INetwork[] = [
     chainId: 5,
     color: '#6186ff',
     test: true,
+    defaultTokens: [],
   },
   {
     symbol: 'ETH',
@@ -128,6 +140,7 @@ export const Testnets: INetwork[] = [
     chainId: 42,
     color: '#6186ff',
     test: true,
+    defaultTokens: [],
   },
   {
     symbol: 'MATIC',
@@ -135,6 +148,7 @@ export const Testnets: INetwork[] = [
     chainId: 80001,
     color: '#8247E5',
     test: true,
+    defaultTokens: [],
   },
 ];
 
