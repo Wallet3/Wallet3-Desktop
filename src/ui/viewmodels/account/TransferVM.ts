@@ -70,7 +70,7 @@ export class TransferVM {
     return parseUnits(this.amount || '0', this.selectedToken?.decimals ?? 18);
   }
 
-  get maxSelectedTokenBalance() {
+  get selectedTokenMaxBalance() {
     return utils.formatUnits(this.selectedTokenBalance, this.selectedToken?.decimals);
   }
 

@@ -232,3 +232,12 @@ powerMonitor.on('resume', () => {
 powerMonitor.on('suspend', () => {
   App.mainWindow?.webContents.send(Messages.idleExpired, { idleExpired: true });
 });
+
+if (!app.requestSingleInstanceLock()) {
+  app.quit();
+} else {
+  app.on('second-instance', (event, commandLine, workingDirectory) => {
+    if (App.mainWindow?.isMinimized()) App.mainWindow?.restore();
+    App.mainWindow?.focus();
+  });
+}
