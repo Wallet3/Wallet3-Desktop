@@ -1,4 +1,5 @@
-const package = require('./package.json');
+const { appleId, appleIdPassword } = require( './sign/appSign' );
+const package = require( './package.json' );
 
 module.exports = {
   packagerConfig: {
@@ -15,12 +16,16 @@ module.exports = {
       'entitlements-inherit': 'sign/entitlements.plist',
       'signature-flags': 'library',
     },
+    osxNotarize: {
+      appleId,
+      appleIdPassword,
+    },
   },
   makers: [
     {
       name: '@electron-forge/maker-dmg',
       config: {
-        name: `${package.name}-${process.platform}-${process.arch}-${package.version}`,
+        name: `${package.name}-mac-${process.arch}-${package.version}`,
         icon: 'assets/AppIcon.icns',
         background: 'assets/DMGBG.png',
         backgroundColor: '#6186ff',

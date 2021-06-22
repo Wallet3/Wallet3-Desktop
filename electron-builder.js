@@ -8,11 +8,13 @@ module.exports = {
   ],
   appId: 'jp.co.chainbow.wallet3',
   productName: 'Wallet 3',
+  artifactName: '${name}-${os}-${arch}-${version}.${ext}',
   copyright: 'Copyright © 2021 ChainBow Co. Ltd.',
   protocols: {
     name: 'ChainBow',
     schemes: [ 'ethereum', 'wallet3' ]
   },
+  npmRebuild: 'false',
   afterSign: "sign/appSign.js",
   mac: {
     icon: 'assets/AppIcon.icns',
@@ -20,7 +22,6 @@ module.exports = {
     // backgroundColor: '#6186ff',
     //entitlements: "sign/entitlements.plist",
     category: 'public.app-category.finance',
-    artifactName: '${name}-${os}-${arch}-${version}.${ext}',
     target: [
       'dmg',
       'zip',
@@ -31,12 +32,10 @@ module.exports = {
   win: {
     target: 'nsis',
     icon: 'assets/AppIcon.ico',
-    artifactName: '${name}-${os}-${arch}-${version}.${ext}',
     publish: [ 'github' ]
   },
   linux: {
     target: 'AppImage',
-    artifactName: '${name}-${os}-${arch}-${version}.${ext}',
     icon: 'assets/AppIcon.png',
     publish: [ 'github' ]
   },
