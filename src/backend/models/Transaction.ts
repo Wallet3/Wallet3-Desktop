@@ -50,3 +50,37 @@ export default class Transaction extends BaseEntity {
   @Column({ nullable: true })
   gasUsed: number;
 }
+
+export interface ITransaction {
+  hash: string;
+
+  chainId: number;
+
+  from: string;
+
+  to: string;
+
+  value: string;
+
+  gas: number;
+
+  gasPrice: number;
+
+  tipPrice: number;
+
+  nonce: number;
+
+  data: string;
+
+  timestamp: number;
+
+  blockNumber: number;
+
+  blockHash: string;
+
+  status: boolean;
+
+  transactionIndex: number;
+
+  gasUsed: number;
+}

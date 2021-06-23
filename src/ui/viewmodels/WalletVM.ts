@@ -4,6 +4,7 @@ import { makeAutoObservable, reaction, runInAction, when } from 'mobx';
 
 import { AccountVM } from './AccountVM';
 import { DAppVM } from './wallet/DAppVM';
+import { HistoryTxsVM } from './wallet/HistoryTxsVM';
 import { PendingTxVM } from './wallet/PendingTxVM';
 import ipc from '../bridges/IPC';
 import store from 'storejs';
@@ -95,6 +96,12 @@ export class WalletVM {
 
   selectDAppSession(session: IWcSession) {
     this.dAppVM = new DAppVM(session);
+  }
+
+  private _historyTxsVM: HistoryTxsVM = null;
+
+  get historyTxsVM() {
+    return (this._historyTxsVM = this._historyTxsVM ?? new HistoryTxsVM());
   }
 }
 

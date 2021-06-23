@@ -2,3 +2,13 @@
   display: grid;
   grid-template-rows: auto 1fr;
 }
+
+.page.history .tx {
+  display: grid;
+  grid-template-rows: auto auto;
+}
+
+.page.history .tx > div {
+  display: flex;
+  justify-content: space-between;
+}
