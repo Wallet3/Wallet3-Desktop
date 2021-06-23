@@ -131,7 +131,7 @@ export default observer(({ app, walletVM, networksVM }: Props) => {
             <span>{t('Profile')}</span>
           </div>
         </MenuItem>
-        <MenuItem styles={MenuItemStyle}>
+        <MenuItem styles={MenuItemStyle} onClick={(_) => app.history.push('/history')}>
           <div className="profile-item">
             <Feather icon="database" size={13} />
             <span>{t('History')}</span>

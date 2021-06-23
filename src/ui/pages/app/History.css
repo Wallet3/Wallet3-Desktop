@@ -1,0 +1,4 @@
+.page.history {
+  display: grid;
+  grid-template-rows: auto 1fr;
+}

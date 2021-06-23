@@ -7,6 +7,7 @@ import {
   AddToken,
   ConnectedDApp,
   ConnectedDApps,
+  History,
   PendingTx,
   Transfer,
   TransferNFT,
@@ -101,6 +102,9 @@ export default observer((args: Props) => {
           </Route>
           <Route path="/connectedapp">
             <ConnectedDApp {...args} />
+          </Route>
+          <Route path="/history">
+            <History {...args} />
           </Route>
           <Route path="/connectedapps">
             <ConnectedDApps {...args} />
