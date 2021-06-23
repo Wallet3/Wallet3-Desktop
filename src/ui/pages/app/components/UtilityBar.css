@@ -33,3 +33,13 @@
   margin-right: -2px;
   padding: 0 6px !important;
 }
+
+.utility-bar .profile-item {
+  display: flex;
+  align-items: center;
+  line-height: 12.5px;
+}
+
+.utility-bar .profile-item svg {
+  margin-right: 8px;
+}

@@ -22,6 +22,14 @@ interface Props {
   networksVM: NetworksVM;
 }
 
+const MenuItemStyle = {
+  padding: '8px 12px',
+  fontSize: '12px',
+  display: 'flex',
+  alignItems: 'center',
+  lineHeight: '12px',
+};
+
 export default observer(({ app, walletVM, networksVM }: Props) => {
   const { t } = useTranslation();
   const { currentAccount: accountVM, pendingTxCount, pendingTxs, connectedDApps, appCount } = walletVM;
@@ -90,10 +98,7 @@ export default observer(({ app, walletVM, networksVM }: Props) => {
 
           {appCount > 6 ? <MenuDivider /> : undefined}
           {appCount > 6 ? (
-            <MenuItem
-              styles={{ padding: '8px 12px', fontSize: 12, display: 'flex', justifyContent: 'center' }}
-              onClick={(_) => app.history.push('/connectedapps')}
-            >
+            <MenuItem styles={MenuItemStyle} onClick={(_) => app.history.push('/connectedapps')}>
               <span>{`${t('See All')} (${appCount})`}</span>
             </MenuItem>
           ) : undefined}
@@ -108,13 +113,31 @@ export default observer(({ app, walletVM, networksVM }: Props) => {
         position="anchor"
       />
 
-      <button
-        className="icon-button"
-        title={`${accountVM?.ens || accountVM?.address} (Account ${accountVM.accountIndex})` ?? 'Show Address'}
-        onClick={(_) => app.history.push('/account')}
+      <Menu
+        direction="bottom"
+        styles={{ minWidth: '5.5rem' }}
+        menuButton={() => (
+          <MenuButton
+            className="icon-button"
+            title={`${accountVM?.ens || accountVM?.address} (Account ${accountVM.accountIndex})` ?? 'Show Address'}
+          >
+            <Feather icon="user" size={16} strokeWidth={1} />
+          </MenuButton>
+        )}
       >
-        <Feather icon="user" size={16} strokeWidth={1} />
-      </button>
+        <MenuItem styles={MenuItemStyle} onClick={(_) => app.history.push('/account')}>
+          <div className="profile-item">
+            <Feather icon="share-2" size={13} />
+            <span>{t('Profile')}</span>
+          </div>
+        </MenuItem>
+        <MenuItem styles={MenuItemStyle}>
+          <div className="profile-item">
+            <Feather icon="database" size={13} />
+            <span>{t('History')}</span>
+          </div>
+        </MenuItem>
+      </Menu>
     </div>
   );
 });
