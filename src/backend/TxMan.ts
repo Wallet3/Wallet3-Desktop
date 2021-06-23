@@ -86,6 +86,10 @@ class TxMan {
     this._timer = setTimeout(async () => await this.checkPendingTxs(), (hasMainnetTxs ? 10 : 3) * 1000);
   }
 
+  async getHistoryTxs(from?: string) {
+    return await this.findTxs({ where: { from, to: from } });
+  }
+
   clean() {
     clearTimeout(this._timer);
 

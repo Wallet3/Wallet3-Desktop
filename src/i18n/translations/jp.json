@@ -45,7 +45,7 @@
   "Derivation Path": "派生パス",
   "Derivation_Tip": "これが何かわからない場合は無視してください",
   "Please enter passcode": "パスコードを入力してください",
-  "Click here to Authenticate": "認証するにはここをクリックしてください",
+  "Authenticate with Touch ID": "認証するにはここをクリックしてください",
   "Pending Transaction": "保留中のトランザクション",
   "Chain": "ネットワーク",
   "From": "リミッター",

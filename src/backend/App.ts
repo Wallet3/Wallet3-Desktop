@@ -339,6 +339,11 @@ export class App {
       i18n.changeLanguage(lang);
     });
 
+    ipcMain.handle(MessageKeys.getHistoryTxs, async () => {
+      const txs = await TxMan.getHistoryTxs(this.currentAddress);
+      return [...txs];
+    });
+
     this.initPopupHandlers();
   }
 

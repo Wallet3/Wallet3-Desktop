@@ -24,6 +24,7 @@ export default {
   popupMessageBox: 'msg-popup-msgbox',
   returnMsgBoxResult: (id: string) => `msg-return-msgbox-result-${id}`,
   setLang: 'msg-set-lang',
+  getHistoryTxs: 'msg-get-history-txs',
 
   scanQR: 'msg-scan-qr',
   connectWallet: 'msg-connect-wallet',

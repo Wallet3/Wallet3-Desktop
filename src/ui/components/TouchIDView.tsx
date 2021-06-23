@@ -11,7 +11,7 @@ export default observer(({ onAuth }: { onAuth: () => void }) => {
 
   return (
     <div className="touchid-view">
-      <p>{t('Click here to Authenticate')}</p>
+      <p>{t('Authenticate with Touch ID')}</p>
       <div>
         <img src={TouchID} onClick={(_) => onAuth()} />
       </div>

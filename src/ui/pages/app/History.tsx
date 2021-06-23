@@ -12,6 +12,10 @@ export default observer(({ app }: { app: Application }) => {
   return (
     <div className="page history">
       <NavBar title={t('History')} onBackClick={() => app.history.goBack()} />
+
+      <div className='content'>
+
+      </div>
     </div>
   );
 });
