@@ -4,6 +4,7 @@ import 'react-virtualized/styles.css';
 import { Application } from '../../viewmodels/Application';
 import { List } from 'react-virtualized';
 import { NavBar } from '../../components';
+import { NetworkIcons } from '../../../ui/misc/Icons';
 import { Networks } from '../../viewmodels/NetworksVM';
 import React from 'react';
 import { WalletVM } from '../../viewmodels/WalletVM';
@@ -36,18 +37,23 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
     const failed = tx.status === false && confirmed;
     const status = failed ? 'failed' : confirmed ? 'confirmed' : 'pending';
     const timestamp = new Date(tx.timestamp);
+    const networkIcon = NetworkIcons(network.network);
 
     return (
       <div className="tx" key={tx.hash || key} style={style}>
-        <div>
-          <span className="method">{method}</span>
-          <span title={`${value} ${network.symbol}`}>{`${value} ${network.symbol}`}</span>
-        </div>
-        <div>
-          <span>
-            {`${timestamp.getMonth() + 1}/${timestamp.getDate()} To: ${formatAddress(to || vm.txs[index].to, 8, 5)}`}
-          </span>
-          <span className={`${status} status`}>{status}</span>
+        <img src={networkIcon} />
+
+        <div className="info">
+          <div>
+            <span className="method">{method}</span>
+            <span title={`${value} ${network.symbol}`}>{`${value} ${network.symbol}`}</span>
+          </div>
+          <div>
+            <span>
+              {`${timestamp.getMonth() + 1}/${timestamp.getDate()} To: ${formatAddress(to || vm.txs[index].to, 6, 4)}`}
+            </span>
+            <span className={`${status} status`}>{status}</span>
+          </div>
         </div>
       </div>
     );
@@ -59,7 +65,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
 
       <div className="content">
         <List
-          height={window.innerHeight - 24 - 48}
+          height={window.innerHeight - 12 - 48}
           rowCount={vm?.txs.length ?? 0}
           rowHeight={48}
           width={window.innerWidth}
