@@ -27,6 +27,7 @@
 
 .page.main > .net-worth > .value > span {
   width: 100%;
+  -webkit-app-region: drag;
 }
 
 .page.main > .net-worth > .asset-percent {
