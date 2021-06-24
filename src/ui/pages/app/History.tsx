@@ -16,7 +16,7 @@ import { utils } from 'ethers';
 
 export default observer(({ app, walletVM }: { app: Application; walletVM: WalletVM }) => {
   const { t } = useTranslation();
-  const { historyTxsVM: vm } = walletVM;
+  const { historyTxsVM: vm, currentAccount } = walletVM;
 
   useEffect(() => {
     vm.fetchTxs();
@@ -26,19 +26,28 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
     const tx = vm.txs[index];
 
     const network = Networks.find((n) => n.chainId === tx.chainId);
-    const { method, to } = parseMethod(tx);
+    const { method, to } = parseMethod(tx, {
+      owner: currentAccount.address,
+      nativeSymbol: network.symbol,
+    });
+
     const value = utils.formatEther(tx.value);
     const confirmed = tx.blockNumber > 0;
+    const failed = tx.status === false && confirmed;
+    const status = failed ? 'failed' : confirmed ? 'confirmed' : 'pending';
+    const timestamp = new Date(tx.timestamp);
 
     return (
       <div className="tx" key={tx.hash || key} style={style}>
         <div>
           <span className="method">{method}</span>
-          <span>{`${value} ${network.symbol}`}</span>
+          <span title={`${value} ${network.symbol}`}>{`${value} ${network.symbol}`}</span>
         </div>
         <div>
-          <div>{`To: ${formatAddress(to || vm.txs[index].to, 8, 5)}`}</div>
-          <div className={confirmed ? 'confirmed' : 'pending'}>{confirmed ? 'Confirmed' : 'Pending'}</div>
+          <span>
+            {`${timestamp.getMonth() + 1}/${timestamp.getDate()} To: ${formatAddress(to || vm.txs[index].to, 8, 5)}`}
+          </span>
+          <span className={`${status} status`}>{status}</span>
         </div>
       </div>
     );
@@ -52,8 +61,8 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
         <List
           height={window.innerHeight - 24 - 48}
           rowCount={vm?.txs.length ?? 0}
-          rowHeight={64}
-          width={window.innerWidth - 24}
+          rowHeight={48}
+          width={window.innerWidth}
           rowRenderer={rowRenderer}
         />
       </div>

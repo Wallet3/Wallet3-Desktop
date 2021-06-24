@@ -87,7 +87,7 @@ class TxMan {
   }
 
   async getHistoryTxs(from?: string) {
-    return await this.findTxs({ where: { from, to: from } });
+    return await this.findTxs({ where: [{ from }, { to: from }], order: { timestamp: 'DESC' } });
   }
 
   clean() {

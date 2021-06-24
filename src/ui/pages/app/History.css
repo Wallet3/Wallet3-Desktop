@@ -3,12 +3,67 @@
   grid-template-rows: auto 1fr;
 }
 
+.page.history > .content {
+  width: 100%;
+  margin: 0 -12px;
+}
+
 .page.history .tx {
   display: grid;
   grid-template-rows: auto auto;
+  font-size: 14px;
+  line-height: 15px;
+  width: calc(100vw - 24px) !important;
+  padding: 4px 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  overflow: hidden;
+}
+
+.page.history .tx:hover {
+  opacity: 0.7;
 }
 
 .page.history .tx > div {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  height: 20px;
+}
+
+.page.history .tx > div:last-child {
+  border-bottom: 1px dashed var(--border-color);
+}
+
+.page.history .tx > div span {
+  max-width: 64vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.page.history .tx .method {
+  font-weight: 600;
+}
+
+.page.history .tx .status {
+  border: none;
+  font-size: 11px;
+  line-height: 11px;
+  border-radius: 5px;
+  padding: 3px 8px;
+  color: white;
+  text-transform: capitalize;
+}
+
+.page.history .tx .pending {
+  background-color: deepskyblue;
+}
+
+.page.history .tx .confirmed {
+  background-color: #2ecc71;
+}
+
+.page.history .tx .failed {
+  background-color: red;
 }
