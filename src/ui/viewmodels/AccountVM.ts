@@ -212,7 +212,7 @@ export class AccountVM {
     });
   };
 
-  private loadTokenConfigs = () => {
+  loadTokenConfigs = () => {
     try {
       const json = store.get(Keys.userTokens(NetVM.currentChainId, this.accountIndex)) || '[]';
       const tokens = JSON.parse(json) as IUserToken[];

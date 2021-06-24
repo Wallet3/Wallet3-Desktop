@@ -1,6 +1,7 @@
+import { BigNumber, utils } from 'ethers';
+
 import ERC20ABI from '../abis/ERC20.json';
 import { ITransaction } from '../backend/models/Transaction';
-import { utils } from 'ethers';
 
 const Methods = new Map([
   ['0xa9059cbb', 'Transfer Token'],
@@ -19,10 +20,12 @@ export function parseMethod(tx: ITransaction, args?: { owner?: string; nativeSym
   const func = tx.data.substring(0, 10);
   const method = Methods.get(func) ?? 'Contract Interaction';
   let to: string = undefined;
+  let amount: BigNumber;
 
   if (method === 'Transfer Token') {
-    const { dst } = erc20.decodeFunctionData('transfer', tx.data);
+    const { dst, wad } = erc20.decodeFunctionData('transfer', tx.data);
     to = dst;
+    amount = wad;
   }
 
   if (method === 'Approve') {
@@ -30,5 +33,5 @@ export function parseMethod(tx: ITransaction, args?: { owner?: string; nativeSym
     to = guy;
   }
 
-  return { method, to };
+  return { method, to, amount };
 }

@@ -7,6 +7,7 @@ import { NavBar } from '../../components';
 import { NetworkIcons } from '../../../ui/misc/Icons';
 import { Networks } from '../../viewmodels/NetworksVM';
 import React from 'react';
+import Tokens from '../../../ui/misc/Tokens';
 import { WalletVM } from '../../viewmodels/WalletVM';
 import { formatAddress } from '../../misc/Formatter';
 import { observer } from 'mobx-react-lite';
@@ -18,6 +19,7 @@ import { utils } from 'ethers';
 export default observer(({ app, walletVM }: { app: Application; walletVM: WalletVM }) => {
   const { t } = useTranslation();
   const { historyTxsVM: vm, currentAccount } = walletVM;
+  const userTokens = currentAccount.loadTokenConfigs();
 
   useEffect(() => {
     vm.fetchTxs();
@@ -27,17 +29,29 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
     const tx = vm.txs[index];
 
     const network = Networks.find((n) => n.chainId === tx.chainId);
-    const { method, to } = parseMethod(tx, {
+    const { method, to, amount } = parseMethod(tx, {
       owner: currentAccount.address,
       nativeSymbol: network.symbol,
     });
 
-    const value = utils.formatEther(tx.value);
     const confirmed = tx.blockNumber > 0;
     const failed = tx.status === false && confirmed;
     const status = failed ? 'failed' : confirmed ? 'confirmed' : 'pending';
     const timestamp = new Date(tx.timestamp);
     const networkIcon = NetworkIcons(network.network);
+    let value = utils.formatEther(tx.value);
+    let tokenSymbol = network.symbol;
+
+    if (method.startsWith('Transfer')) {
+      const token =
+        Tokens.find((t) => t.address.toLowerCase() === tx.to.toLowerCase()) ||
+        userTokens.find((t) => t.id.toLowerCase() === tx.to.toLowerCase());
+
+      if (token) {
+        value = utils.formatUnits(amount, token.decimals);
+        tokenSymbol = token.symbol;
+      }
+    }
 
     return (
       <div className="tx" key={tx.hash || key} style={style}>
@@ -46,7 +60,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
         <div className="info">
           <div>
             <span className="method">{method}</span>
-            <span title={`${value} ${network.symbol}`}>{`${value} ${network.symbol}`}</span>
+            <span title={`${value} ${tokenSymbol}`}>{`${value} ${tokenSymbol}`}</span>
           </div>
           <div>
             <span>
