@@ -50,7 +50,7 @@
 }
 
 .page.history .tx .info > div span {
-  max-width: 45vw;
+  max-width: 60vw;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

@@ -68,10 +68,9 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
         <div className="info">
           <div>
             <span className="method">{t(method)}</span>
-            <span title={`${value} ${tokenSymbol}`}>
-              <span>{value}</span>
-              <span>{tokenSymbol}</span>
-            </span>
+            <div title={`${value} ${tokenSymbol}`}>
+              <span style={{ maxWidth: '32vw' }}>{value}</span> <span>{tokenSymbol}</span>
+            </div>
           </div>
           <div>
             <span>
