@@ -1,5 +1,3 @@
-import { TxParams } from '../common/Messages';
-
 const Explorers = new Map<number, string>([
   [1, 'https://etherscan.io'],
   [3, 'https://ropsten.etherscan.io'],
@@ -16,7 +14,7 @@ const Explorers = new Map<number, string>([
   [80001, 'https://explorer-mumbai.maticvigil.com'],
 ]);
 
-export function convertTxToUrl(tx: TxParams) {
+export function convertTxToUrl(tx: { chainId: number; hash?: string }) {
   const url = `${Explorers.get(tx.chainId)}/tx/${tx.hash}`;
   return url;
 }
