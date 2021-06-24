@@ -19,6 +19,7 @@
   cursor: pointer;
   transition: all 0.3s;
   overflow: hidden;
+  -webkit-app-region: no-drag;
 }
 
 .page.history .tx > img {
@@ -49,7 +50,7 @@
 }
 
 .page.history .tx .info > div span {
-  max-width: 64vw;
+  max-width: 45vw;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

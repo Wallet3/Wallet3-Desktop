@@ -44,6 +44,8 @@
   word-wrap: break-word;
   overflow: hidden;
   text-overflow: ellipsis;
+  overflow-y: auto;
+  user-select: text;
 }
 
 .tx-details > div:last-child {
