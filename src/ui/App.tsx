@@ -8,7 +8,7 @@ import {
   ConnectedDApp,
   ConnectedDApps,
   History,
-  PendingTx,
+  Transaction,
   Transfer,
   TransferNFT,
   UserNFTs,
@@ -16,7 +16,7 @@ import {
 } from './pages/app';
 import { BackupMnemonic, Reset } from './pages/secure';
 import React, { useEffect } from 'react';
-import { Route, Router, Switch, withRouter } from 'react-router-dom';
+import { Route, Router, Switch } from 'react-router-dom';
 
 import { Application } from './viewmodels/Application';
 import { CurrencyVM } from './viewmodels/settings/CurrencyVM';
@@ -97,8 +97,8 @@ export default observer((args: Props) => {
           <Route path={`/addToken`}>
             <AddToken {...args} />
           </Route>
-          <Route path="/pendingtx">
-            <PendingTx {...args} />
+          <Route path="/tx">
+            <Transaction {...args} />
           </Route>
           <Route path="/connectedapp">
             <ConnectedDApp {...args} />

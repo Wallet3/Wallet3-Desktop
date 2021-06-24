@@ -1,6 +1,6 @@
 import './TxDetails.css';
 
-import { CryptoIcons } from '../../../misc/Icons';
+import { NetworkIcons } from '../../../misc/Icons';
 import { Networks } from '../../../viewmodels/NetworksVM';
 import React from 'react';
 import { convertTxToUrl } from '../../../../misc/Url';
@@ -31,7 +31,7 @@ export default observer((vm: Props) => {
       <div>
         <span>{t('Network')}:</span>
         <span>
-          <img src={CryptoIcons(chain.symbol)} alt="" />
+          <img src={NetworkIcons(chain.network)} alt={chain.network} />
           {chain.network}
         </span>
       </div>

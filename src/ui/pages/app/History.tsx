@@ -56,8 +56,13 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
     const txFromTo = from ? 'From' : 'To';
     const txFromToAddr = from || to || tx.to;
 
+    const onClick = () => {
+      vm.selectTx(tx);
+      app.history.push('/tx');
+    };
+
     return (
-      <div className="tx" key={tx.hash || key} style={style}>
+      <div className="tx" key={tx.hash || key} style={style} onClick={(_) => onClick()}>
         <img src={networkIcon} />
 
         <div className="info">

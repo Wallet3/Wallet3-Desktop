@@ -4,8 +4,8 @@ import ConnectedDApp from './ConnectedDApp';
 import ConnectedDApps from './ConnectedDApps';
 import DApps123 from './DApps123';
 import History from './History';
-import PendingTx from './PendingTx';
 import Settings from './Settings';
+import Transaction from './Transaction';
 import Transfer from './Transfer';
 import TransferNFT from './TransferNFT';
 import UserNFTs from './UserNFTs';
@@ -20,7 +20,7 @@ export {
   Account,
   UserTokens,
   AddToken,
-  PendingTx,
+  Transaction,
   ConnectedDApp,
   ConnectedDApps,
   UserNFTs,

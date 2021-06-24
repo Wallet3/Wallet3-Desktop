@@ -119,5 +119,7 @@
   "Transfer Token": "転送トークン",
   "Confirmed": "確認済み",
   "Pending": "ペンディング",
-  "Failed": "失敗"
+  "Failed": "失敗",
+  "Profile": "プロフィール",
+  "History": "取引履歴"
 }

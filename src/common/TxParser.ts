@@ -2,6 +2,7 @@ import { BigNumber, utils } from 'ethers';
 
 import ERC20ABI from '../abis/ERC20.json';
 import { ITransaction } from '../backend/models/Transaction';
+import i18n from '../i18n';
 
 const Methods = new Map([
   ['0xa9059cbb', 'Transfer Token'],
@@ -12,9 +13,9 @@ const erc20 = new utils.Interface(ERC20ABI);
 
 export function parseMethod(tx: ITransaction, args?: { owner?: string; nativeSymbol?: string }) {
   if (tx.data.length === 2) {
-    if (tx.to === args?.owner) return { method: `Receive ${args?.nativeSymbol ?? 'Ether'}`, from: tx.from };
+    if (tx.to === args?.owner) return { method: `${i18n.t('Receive')} ${args?.nativeSymbol ?? 'Ether'}`, from: tx.from };
 
-    return { method: `Sent ${args?.nativeSymbol ?? 'Ether'}` };
+    return { method: `${i18n.t('Sent')} ${args?.nativeSymbol ?? 'Ether'}` };
   }
 
   const func = tx.data.substring(0, 10);

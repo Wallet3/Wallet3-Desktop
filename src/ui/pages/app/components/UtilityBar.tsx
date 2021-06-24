@@ -54,7 +54,7 @@ export default observer(({ app, walletVM, networksVM }: Props) => {
                 styles={{ padding: '8px 12px' }}
                 onClick={(_) => {
                   walletVM.selectPendingTx(item);
-                  app.history.push(`/pendingtx?hash=${item.hash}`);
+                  app.history.push(`/tx?hash=${item.hash}`);
                 }}
               >
                 <PendingTx

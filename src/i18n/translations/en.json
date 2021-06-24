@@ -118,5 +118,7 @@
   "Transfer Token": "Transfer Token",
   "Confirmed": "Confirmed",
   "Pending": "Pending",
-  "Failed": "Failed"
+  "Failed": "Failed",
+  "Profile": "Profile",
+  "History": "History"
 }

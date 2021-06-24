@@ -1,10 +1,11 @@
-import './PendingTx.css';
+import './Transaction.css';
 
 import { Application } from '../../viewmodels/Application';
 import { NavBar } from '../../components';
 import React from 'react';
 import TxDetails from './components/TxDetails';
 import { WalletVM } from '../../viewmodels/WalletVM';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => {
@@ -13,9 +14,13 @@ export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => 
 
   let vm = pendingTxVM || historyTxsVM.selectedTx;
 
+  useEffect(() => {
+    return () => walletVM.clean();
+  }, []);
+
   return (
     <div className="page pending-tx">
-      <NavBar title={t('Pending Transaction')} onBackClick={() => app.history.goBack()} />
+      <NavBar title={t(pendingTxVM ? 'Pending Transaction' : 'History')} onBackClick={() => app.history.goBack()} />
 
       <TxDetails
         chainId={vm.chainId}

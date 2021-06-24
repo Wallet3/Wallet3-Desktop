@@ -103,6 +103,11 @@ export class WalletVM {
   get historyTxsVM() {
     return (this._historyTxsVM = this._historyTxsVM ?? new HistoryTxsVM());
   }
+
+  clean() {
+    this.pendingTxVM = null;
+    this._historyTxsVM?.selectTx(undefined);
+  }
 }
 
 export default new WalletVM();

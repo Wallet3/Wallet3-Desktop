@@ -119,5 +119,7 @@
   "Transfer Token": "轉賬通證",
   "Confirmed": "已確認",
   "Pending": "確認中",
-  "Failed": "失敗"
+  "Failed": "失敗",
+  "Profile": "賬戶",
+  "History": "交易歷史"
 }
