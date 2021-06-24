@@ -12,7 +12,7 @@ const erc20 = new utils.Interface(ERC20ABI);
 
 export function parseMethod(tx: ITransaction, args?: { owner?: string; nativeSymbol?: string }) {
   if (tx.data.length === 2) {
-    if (tx.to === args?.owner) return { method: `Receive ${args?.nativeSymbol ?? 'Ether'}` };
+    if (tx.to === args?.owner) return { method: `Receive ${args?.nativeSymbol ?? 'Ether'}`, from: tx.from };
 
     return { method: `Sent ${args?.nativeSymbol ?? 'Ether'}` };
   }

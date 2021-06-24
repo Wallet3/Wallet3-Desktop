@@ -29,7 +29,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
     const tx = vm.txs[index];
 
     const network = Networks.find((n) => n.chainId === tx.chainId);
-    const { method, to, amount } = parseMethod(tx, {
+    const { method, to, amount, from } = parseMethod(tx, {
       owner: currentAccount.address,
       nativeSymbol: network.symbol,
     });
@@ -53,20 +53,23 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
       }
     }
 
+    const txFromTo = from ? 'From' : 'To';
+    const txFromToAddr = from || to || tx.to;
+
     return (
       <div className="tx" key={tx.hash || key} style={style}>
         <img src={networkIcon} />
 
         <div className="info">
           <div>
-            <span className="method">{method}</span>
+            <span className="method">{t(method)}</span>
             <span title={`${value} ${tokenSymbol}`}>{`${value} ${tokenSymbol}`}</span>
           </div>
           <div>
             <span>
-              {`${timestamp.getMonth() + 1}/${timestamp.getDate()} To: ${formatAddress(to || vm.txs[index].to, 6, 4)}`}
+              {`${timestamp.getMonth() + 1}/${timestamp.getDate()} ${txFromTo}: ${formatAddress(txFromToAddr, 6, 4)}`}
             </span>
-            <span className={`${status} status`}>{status}</span>
+            <span className={`${status} status`}>{t(status)}</span>
           </div>
         </div>
       </div>

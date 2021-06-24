@@ -113,5 +113,11 @@
   "lending": "貸し借し",
   "others": "その他",
   "synthetic": "合成資産・デリバティブ",
-  "insurance": "保険"
+  "insurance": "保険",
+  "Sent": "セント",
+  "Receive": "受け取り",
+  "Transfer Token": "転送トークン",
+  "Confirmed": "確認済み",
+  "Pending": "ペンディング",
+  "Failed": "失敗"
 }

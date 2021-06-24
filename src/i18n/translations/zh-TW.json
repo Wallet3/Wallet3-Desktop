@@ -113,5 +113,11 @@
   "lending": "借貸",
   "others": "其它",
   "synthetic": "合成資產 & 衍生品",
-  "insurance": "保險"
+  "insurance": "保險",
+  "Sent": "發送",
+  "Receive": "接收",
+  "Transfer Token": "轉賬通證",
+  "Confirmed": "已確認",
+  "Pending": "確認中",
+  "Failed": "失敗"
 }

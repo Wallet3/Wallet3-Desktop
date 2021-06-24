@@ -112,5 +112,11 @@
   "lending": "Lending & Borrowing",
   "others": "Others",
   "synthetic": "Synthetic Assets & Derivatives",
-  "insurance": "Insurance"
+  "insurance": "Insurance",
+  "Sent": "Sent",
+  "Receive": "Receive",
+  "Transfer Token": "Transfer Token",
+  "Confirmed": "Confirmed",
+  "Pending": "Pending",
+  "Failed": "Failed"
 }

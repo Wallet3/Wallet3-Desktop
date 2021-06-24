@@ -113,5 +113,11 @@
   "lending": "借贷",
   "others": "其它",
   "synthetic": "合成资产 & 衍生品",
-  "insurance": "保险"
+  "insurance": "保险",
+  "Sent": "发送",
+  "Receive": "接收",
+  "Transfer Token": "转账通证",
+  "Confirmed": "已确认",
+  "Pending": "确认中",
+  "Failed": "失败"
 }

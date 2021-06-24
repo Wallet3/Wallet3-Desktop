@@ -8,8 +8,10 @@ import { WalletVM } from '../../viewmodels/WalletVM';
 import { useTranslation } from 'react-i18next';
 
 export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => {
-  const { pendingTxVM: vm } = walletVM;
+  const { pendingTxVM, historyTxsVM } = walletVM;
   const { t } = useTranslation();
+
+  let vm = pendingTxVM || historyTxsVM.selectedTx;
 
   return (
     <div className="page pending-tx">
@@ -20,21 +22,23 @@ export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => 
         from={vm.from}
         to={vm.to}
         hash={vm.hash}
-        gasLimit={vm.gasLimit}
-        gasPriceGwei={vm.gasPriceGwei}
+        gasLimit={vm.gas}
+        gasPrice={vm.gasPrice}
         data={vm.data}
         nonce={vm.nonce}
         value={vm.value}
       />
 
-      <div className="actions">
-        <button onClick={(_) => vm.cancelTx().then(() => app.history.goBack())}>
-          <span>{t('Cancel Tx')}</span>
-        </button>
-        <button onClick={(_) => vm.speedUp().then(() => app.history.goBack())}>
-          <span>{t('Speed Up')}</span>
-        </button>
-      </div>
+      {pendingTxVM ? (
+        <div className="actions">
+          <button onClick={(_) => pendingTxVM.cancelTx().then(() => app.history.goBack())}>
+            <span>{t('Cancel Tx')}</span>
+          </button>
+          <button onClick={(_) => pendingTxVM.speedUp().then(() => app.history.goBack())}>
+            <span>{t('Speed Up')}</span>
+          </button>
+        </div>
+      ) : undefined}
     </div>
   );
 };

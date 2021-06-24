@@ -17,7 +17,7 @@ interface Props {
   to: string;
   value: string;
   gasLimit: number | string;
-  gasPriceGwei: string | number;
+  gasPrice: number;
   nonce: number;
   data: string;
 }
@@ -63,7 +63,7 @@ export default observer((vm: Props) => {
 
       <div>
         <span>{t('Gas Price')}:</span>
-        <span>{`${vm.gasPriceGwei} Gwei`}</span>
+        <span>{`${vm.gasPrice / 1000000000} Gwei`}</span>
       </div>
 
       <div>
