@@ -5,10 +5,11 @@ const ethereum = {
     { name: 'Sushiswap', url: 'https://app.sushi.com' },
     { name: 'Balancer', url: 'https://app.balancer.fi' },
     { name: 'dydx', url: 'https://dydx.exchange' },
-    { name: 'Dodo', url: 'https://app.dodoex.io' },
+    { name: 'Matcha', url: 'https://matcha.xyz' },
     { name: 'Tokenlon', url: 'https://tokenlon.im' },
     { name: 'Loopring', url: 'https://loopring.org' },
     { name: 'Kyber', url: 'https://kyberswap.com' },
+    { name: 'Dodo', url: 'https://app.dodoex.io' },
   ],
 
   lending: [
