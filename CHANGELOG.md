@@ -1,3 +1,8 @@
+### 1.1.0
+1. Support tx history
+2. Optimize RPC providers selection
+3. Mirror bugs fixes
+
 ### 1.0.0
 
 0. Security First
