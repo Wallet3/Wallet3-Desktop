@@ -47,6 +47,14 @@ export class PendingTxVM {
     return this._tx.data;
   }
 
+  get status() {
+    return false;
+  }
+
+  get blockNumber() {
+    return 0;
+  }
+
   async cancelTx() {
     await ipc.invokeSecure<void>(Messages.createTransferTx, {
       chainId: this._tx.chainId,

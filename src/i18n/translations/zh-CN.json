@@ -121,5 +121,6 @@
   "Pending": "确认中",
   "Failed": "失败",
   "Profile": "账户",
-  "History": "交易历史"
+  "History": "交易历史",
+  "Stauts": "状态"
 }

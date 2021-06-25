@@ -31,6 +31,8 @@ export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => 
         gasPrice={vm.gasPrice}
         data={vm.data}
         nonce={vm.nonce}
+        status={vm.status}
+        blockNumber={vm.blockNumber}
         value={vm.value}
       />
 

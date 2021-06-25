@@ -19,12 +19,15 @@ interface Props {
   gasLimit: number | string;
   gasPrice: number;
   nonce: number;
+  status: boolean;
+  blockNumber?: number;
   data: string;
 }
 
 export default observer((vm: Props) => {
   const { t } = useTranslation();
   const chain = Networks.find((n) => n?.chainId === vm.chainId);
+  const status = vm.blockNumber > 0 ? (vm.status ? 'Confirmed' : 'Failed') : 'Pending';
 
   return (
     <div className="tx-details">
@@ -69,6 +72,11 @@ export default observer((vm: Props) => {
       <div>
         <span>{t('Nonce')}:</span>
         <span>{vm.nonce}</span>
+      </div>
+
+      <div>
+        <span>{t('Status')}:</span>
+        <span>{t(status)}</span>
       </div>
 
       <div className="data">
