@@ -65,7 +65,10 @@ export default observer(({ accountVM, app }: { accountVM?: AccountVM; app: Appli
 
                             <Toggle
                               checked
-                              onToggle={(_) => (t.show = !t.show)}
+                              onToggle={(_) => {
+                                t.show = !t.show;
+                                accountVM.save();
+                              }}
                               rightBorderColor="#6186ffa0"
                               rightKnobColor="#6186ffa0"
                               borderWidth="1px"
