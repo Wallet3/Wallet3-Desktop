@@ -19,7 +19,8 @@
     "make": "npx cross-env NODE_ENV=production && npx electron-forge make",
     "publish": "npx electron-forge publish",
     "lint": "npx eslint --ext .ts .",
-    "test": "npx jest"
+    "test": "npx jest",
+    "postinstall": "electron-builder install-app-deps"
   },
   "keywords": [
     "Ethereum",
