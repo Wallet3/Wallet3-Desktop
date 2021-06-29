@@ -27,7 +27,7 @@ export class WalletConnect extends EventEmitter {
   }
 
   get walletKey() {
-    return KeyMan.currentWalletKey;
+    return KeyMan.current;
   }
 
   private _userChainId = 0; // 0 - auto switch

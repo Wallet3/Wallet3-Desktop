@@ -52,7 +52,7 @@ export class App {
   }
 
   get walletKey() {
-    return KeyMan.currentWalletKey;
+    return KeyMan.current;
   }
 
   async decryptUserPassword() {

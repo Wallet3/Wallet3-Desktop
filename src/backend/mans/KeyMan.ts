@@ -3,18 +3,20 @@ import Store from '../Store';
 import { WalletKey } from '../lib/WalletKey';
 
 class KeyMan {
-  currentWalletKey: WalletKey;
+  current: WalletKey;
+  tmp?: WalletKey;
 
   async init() {
     const index = Store.get('keyIndex') || 1;
 
     const keys = await DBMan.accountRepo.find();
-    console.log(keys.map((k) => k.id));
     const key = keys.find((k) => k.id === index) || keys[0];
 
-    this.currentWalletKey = new WalletKey();
-    this.currentWalletKey.init(key);
+    this.current = new WalletKey();
+    await this.current.init(key);
   }
+
+  
 }
 
 export default new KeyMan();

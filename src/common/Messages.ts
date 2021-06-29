@@ -16,6 +16,7 @@ export default {
   clearHistory: 'msg-clear-history',
   changeChainId: 'msg-change-chain-id',
   changeAccountIndex: 'msg-change-account-index',
+  changeWalletIndex: 'msg-change-wallet-index',
   popupAuthentication: 'msg-popup-authentication',
   returnAuthenticationResult: (id: string) => `msg-return-authentication-${id}`,
   disconnectDApp: 'msg-disconnect-dapp',
