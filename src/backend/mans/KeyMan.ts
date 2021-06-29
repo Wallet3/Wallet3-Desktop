@@ -1,12 +1,12 @@
 import DBMan from './DBMan';
-// import Store from '../Store';
+import Store from '../Store';
 import { WalletKey } from '../lib/WalletKey';
 
 class KeyMan {
   currentWalletKey: WalletKey;
 
   async init() {
-    const index = 1; //Store.get('keyIndex') || 1;
+    const index = Store.get('keyIndex') || 1;
 
     const keys = await DBMan.accountRepo.find();
     console.log(keys.map((k) => k.id));
