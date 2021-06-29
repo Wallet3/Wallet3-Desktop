@@ -14,8 +14,8 @@ module.exports = {
     name: 'ChainBow',
     schemes: [ 'ethereum', 'wallet3' ]
   },
-  npmRebuild: 'false',
-  // afterSign: "sign/appSign.js",
+  //npmRebuild: 'false',
+  afterSign: "sign/appSign.js",
   mac: {
     icon: 'assets/AppIcon.icns',
     // background: 'assets/DMGBG.png',
