@@ -1,10 +1,10 @@
-import Application, { App } from './App';
+import Application, { App } from '../App';
 import { computed, makeObservable, observable, runInAction } from 'mobx';
 
 import DBMan from './DBMan';
-import Messages from '../common/Messages';
-import WCSession from './models/WCSession';
-import { WalletConnect } from './WalletConnect';
+import Messages from '../../common/Messages';
+import WCSession from '../models/WCSession';
+import { WalletConnect } from '../lib/WalletConnect';
 import { ipcMain } from 'electron';
 
 class WCMan {

@@ -1,13 +1,13 @@
-import * as Cipher from '../common/Cipher';
+import * as Cipher from '../../common/Cipher';
 import * as crypto from 'crypto';
 import * as ethSignUtil from 'eth-sig-util';
 import * as ethers from 'ethers';
 import * as keytar from 'keytar';
 
-import Key, { AccountType } from './models/Key';
+import Key, { AccountType } from '../models/Key';
 
-import DBMan from './DBMan';
-import { TxParams } from '../common/Messages';
+import DBMan from '../mans/DBMan';
+import { TxParams } from '../../common/Messages';
 
 const BasePath = `m/44\'/60\'/0\'/0`;
 const prod = process.env.NODE_ENV === 'production';

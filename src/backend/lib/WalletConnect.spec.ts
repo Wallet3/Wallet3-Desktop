@@ -1,8 +1,8 @@
 import * as metamaskSign from 'eth-sig-util';
 
-import ERC20ABI from '../abis/ERC20.json';
+import ERC20ABI from '../../abis/ERC20.json';
 import { ethers } from 'ethers';
-import { getProviderByChainId } from '../common/Provider';
+import { getProviderByChainId } from '../../common/Provider';
 
 const provider = getProviderByChainId(1);
 

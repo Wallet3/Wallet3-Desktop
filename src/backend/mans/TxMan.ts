@@ -3,10 +3,10 @@ import { Notification, app, shell } from 'electron';
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import DBMan from './DBMan';
-import Transaction from './models/Transaction';
-import { convertTxToUrl } from '../misc/Url';
-import { getTransactionReceipt } from '../common/Provider';
-import i18n from '../i18n';
+import Transaction from '../models/Transaction';
+import { convertTxToUrl } from '../../misc/Url';
+import { getTransactionReceipt } from '../../common/Provider';
+import i18n from '../../i18n';
 
 class TxMan {
   private _timer: NodeJS.Timer;

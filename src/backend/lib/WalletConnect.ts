@@ -1,16 +1,16 @@
-import App, { App as Application } from './App';
-import { AuthParams, ConfirmSendTx, RequestSignMessage, SendTxParams, WcMessages } from '../common/Messages';
+import App, { App as Application } from '../App';
+import { AuthParams, ConfirmSendTx, RequestSignMessage, SendTxParams, WcMessages } from '../../common/Messages';
 import { BigNumber, ethers, utils } from 'ethers';
-import Gasnow, { GasnowWs } from '../gas/Gasnow';
+import Gasnow, { GasnowWs } from '../../gas/Gasnow';
 import { IReactionDisposer, reaction } from 'mobx';
-import { call, getTransactionCount } from '../common/Provider';
+import { call, getTransactionCount } from '../../common/Provider';
 
-import ERC20ABI from '../abis/ERC20.json';
+import ERC20ABI from '../../abis/ERC20.json';
 import EventEmitter from 'events';
-import WCSession from './models/WCSession';
+import WCSession from '../models/WCSession';
 import WalletConnector from '@walletconnect/client';
 import WalletKey from './WalletKey';
-import { findTokenByAddress } from '../ui/misc/Tokens';
+import { findTokenByAddress } from '../../ui/misc/Tokens';
 import { ipcMain } from 'electron';
 
 export class WalletConnect extends EventEmitter {

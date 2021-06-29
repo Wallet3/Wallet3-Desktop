@@ -13,11 +13,11 @@ import MessageKeys, {
 import { autorun, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
 import { createECDH, createHash, randomBytes } from 'crypto';
 
-import DBMan from './DBMan';
+import DBMan from './mans/DBMan';
 import Transaction from './models/Transaction';
-import TxMan from './TxMan';
-import WCMan from './WCMan';
-import WalletKey from './WalletKey';
+import TxMan from './mans/TxMan';
+import WCMan from './mans/WCMan';
+import WalletKey from './lib/WalletKey';
 import i18n from '../i18n';
 import { sendTransaction } from '../common/Provider';
 import { utils } from 'ethers';
