@@ -6,10 +6,10 @@ import App from './backend/App';
 import Coingecko from './api/Coingecko';
 import DBMan from './backend/DBMan';
 import GasnowWs from './gas/Gasnow';
-import KeyMan from './backend/KeyMan';
 import Messages from './common/Messages';
 import TxMan from './backend/TxMan';
 import WCMan from './backend/WCMan';
+import WalletKey from './backend/WalletKey';
 import { autorun } from 'mobx';
 import delay from 'delay';
 import { globalShortcut } from 'electron';
@@ -150,7 +150,7 @@ const createWindow = async (): Promise<void> => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
   await DBMan.init();
-  await Promise.all([KeyMan.init(), TxMan.init(), WCMan.init()]);
+  await Promise.all([WalletKey.init(), TxMan.init(), WCMan.init()]);
 
   await App.init();
   createWindow();

@@ -19,13 +19,17 @@ const Keys = {
   secretAccount: (kc_unique: string) => (prod ? `wallet3-account-${kc_unique}` : `wallet3-dev-account-${kc_unique}`),
 };
 
-class KeyMan {
-  tmpMnemonic?: string;
+class WalletKey {
   basePath = BasePath;
   basePathIndex = 0;
   hasSecret = false;
 
-  key: Key;
+  private tmpMnemonic?: string;
+  private key: Key;
+
+  get id() {
+    return this.key?.id;
+  }
 
   async init(accountId = 1) {
     [this.key] = await DBMan.accountRepo.find();
@@ -197,4 +201,4 @@ class KeyMan {
   }
 }
 
-export default new KeyMan();
+export default new WalletKey();

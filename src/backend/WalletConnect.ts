@@ -7,9 +7,9 @@ import { call, getTransactionCount } from '../common/Provider';
 
 import ERC20ABI from '../abis/ERC20.json';
 import EventEmitter from 'events';
-import KeyMan from './KeyMan';
 import WCSession from './models/WCSession';
 import WalletConnector from '@walletconnect/client';
+import WalletKey from './WalletKey';
 import { findTokenByAddress } from '../ui/misc/Tokens';
 import { ipcMain } from 'electron';
 
@@ -239,7 +239,7 @@ export class WalletConnect extends EventEmitter {
       const password = await App.extractPassword(params);
       if (!password) return Application.encryptIpc({}, key);
 
-      const txHex = await KeyMan.signTx(password, App.currentAddressIndex, params);
+      const txHex = await WalletKey.signTx(password, App.currentAddressIndex, params);
       if (!txHex) {
         this.connector.rejectRequest({ id: request.id, error: { message: 'Invalid data' } });
         return;
@@ -315,7 +315,7 @@ export class WalletConnect extends EventEmitter {
       switch (type) {
         case 'personal_sign':
           const msg = params[0];
-          signed = await KeyMan.personalSignMessage(password, App.currentAddressIndex, msg);
+          signed = await WalletKey.personalSignMessage(password, App.currentAddressIndex, msg);
 
           if (!signed) {
             this.connector.rejectRequest({ id: request.id, error: { message: 'Permission Denied' } });
@@ -327,7 +327,7 @@ export class WalletConnect extends EventEmitter {
         case 'signTypedData':
           try {
             const typedData = JSON.parse(params[1]);
-            signed = await KeyMan.signTypedData_v4(password, App.currentAddressIndex, typedData);
+            signed = await WalletKey.signTypedData_v4(password, App.currentAddressIndex, typedData);
           } catch (error) {
             this.connector.rejectRequest({ id: request.id, error: { message: 'Invalid Typed Data' } });
             return Application.encryptIpc({ success: false }, key);

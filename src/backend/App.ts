@@ -14,10 +14,10 @@ import { autorun, computed, makeObservable, observable, reaction, runInAction } 
 import { createECDH, createHash, randomBytes } from 'crypto';
 
 import DBMan from './DBMan';
-import KeyMan from './KeyMan';
 import Transaction from './models/Transaction';
 import TxMan from './TxMan';
 import WCMan from './WCMan';
+import WalletKey from './WalletKey';
 import i18n from '../i18n';
 import { sendTransaction } from '../common/Provider';
 import { utils } from 'ethers';
@@ -115,7 +115,7 @@ export class App {
 
       return App.encryptIpc(
         {
-          hasSecret: KeyMan.hasSecret,
+          hasSecret: WalletKey.hasSecret,
           touchIDSupported: this.touchIDSupported,
           appAuthenticated: this.addresses.length > 0,
           addresses: [...this.addresses],
@@ -156,7 +156,7 @@ export class App {
       const { key } = this.windows.get(winId);
       const [iv, cipherText] = encrypted;
       const { length } = App.decryptIpc(cipherText, iv, key);
-      return App.encryptIpc(KeyMan.genMnemonic(length), key);
+      return App.encryptIpc(WalletKey.genMnemonic(length), key);
     });
 
     ipcMain.handle(`${MessageKeys.saveTmpMnemonic}-secure`, (e, encrypted, winId) => {
@@ -164,21 +164,21 @@ export class App {
       const [iv, cipherText] = encrypted;
 
       const { mnemonic } = App.decryptIpc(cipherText, iv, key);
-      KeyMan.setTmpMnemonic(mnemonic);
+      WalletKey.setTmpMnemonic(mnemonic);
     });
 
     ipcMain.handle(`${MessageKeys.setupMnemonic}-secure`, async (e, encrypted, winId) => {
       const { key } = this.windows.get(winId);
-      if (KeyMan.hasSecret) return App.encryptIpc({ success: false }, key);
+      if (WalletKey.hasSecret) return App.encryptIpc({ success: false }, key);
 
       const [iv, cipherText] = encrypted;
       const { password: userPassword } = App.decryptIpc(cipherText, iv, key);
       await DBMan.init();
 
-      await KeyMan.savePassword(userPassword);
-      if (!(await KeyMan.saveMnemonic(userPassword))) return App.encryptIpc({ success: false }, key);
+      await WalletKey.savePassword(userPassword);
+      if (!(await WalletKey.saveMnemonic(userPassword))) return App.encryptIpc({ success: false }, key);
 
-      const addresses = await KeyMan.genAddresses(userPassword, 10);
+      const addresses = await WalletKey.genAddresses(userPassword, 10);
       runInAction(() => (this.addresses = addresses));
 
       if (this.touchIDSupported) this.encryptUserPassword(userPassword);
@@ -193,7 +193,7 @@ export class App {
       const [iv, cipherText] = encrypted;
 
       const { fullPath } = App.decryptIpc(cipherText, iv, key);
-      await KeyMan.setFullPath(fullPath);
+      await WalletKey.setFullPath(fullPath);
     });
 
     ipcMain.handle(`${MessageKeys.readMnemonic}-secure`, async (e, encrypted, winId) => {
@@ -208,7 +208,7 @@ export class App {
         return App.encryptIpc({}, key);
       }
 
-      const mnemonic = await KeyMan.readMnemonic(password);
+      const mnemonic = await WalletKey.readMnemonic(password);
       return App.encryptIpc({ mnemonic }, key);
     });
 
@@ -216,7 +216,7 @@ export class App {
       const { key } = this.windows.get(winId);
       const [iv, cipherText] = encrypted;
       const { password } = App.decryptIpc(cipherText, iv, key);
-      const verified = await KeyMan.verifyPassword(password);
+      const verified = await WalletKey.verifyPassword(password);
 
       return App.encryptIpc({ success: verified }, key);
     });
@@ -229,12 +229,12 @@ export class App {
       const oldPassword = this.#authKeys.get(authKey);
       this.#authKeys.delete(authKey);
 
-      const mnemonic = await KeyMan.readMnemonic(oldPassword);
+      const mnemonic = await WalletKey.readMnemonic(oldPassword);
       if (!mnemonic) return App.encryptIpc({ success: false }, key);
 
-      KeyMan.setTmpMnemonic(mnemonic);
-      await KeyMan.savePassword(newPassword);
-      if (!(await KeyMan.saveMnemonic(newPassword))) return App.encryptIpc({ success: false }, key);
+      WalletKey.setTmpMnemonic(mnemonic);
+      await WalletKey.savePassword(newPassword);
+      if (!(await WalletKey.saveMnemonic(newPassword))) return App.encryptIpc({ success: false }, key);
 
       await this.initLaunchKey();
 
@@ -252,12 +252,12 @@ export class App {
       const { password, count } = App.decryptIpc(cipherText, iv, key);
 
       try {
-        const verified = await KeyMan.verifyPassword(password);
+        const verified = await WalletKey.verifyPassword(password);
 
         let addrs: string[] = [];
 
         if (verified) {
-          addrs = await KeyMan.genAddresses(password, count);
+          addrs = await WalletKey.genAddresses(password, count);
 
           runInAction(() => this.addresses.push(...addrs));
 
@@ -296,7 +296,7 @@ export class App {
       const password = this.#authKeys.get(authKey);
       this.#authKeys.clear();
 
-      await KeyMan.reset(password, authKey === 'forgotpassword-reset' ? false : true);
+      await WalletKey.reset(password, authKey === 'forgotpassword-reset' ? false : true);
       await TxMan.clean();
       await WCMan.clean();
       await DBMan.clean();
@@ -319,7 +319,7 @@ export class App {
       const password = await this.extractPassword(params);
       if (!password) return App.encryptIpc({}, key);
 
-      const txHex = await KeyMan.signTx(password, this.currentAddressIndex, params);
+      const txHex = await WalletKey.signTx(password, this.currentAddressIndex, params);
 
       if (!txHex) {
         return App.encryptIpc({}, key);
