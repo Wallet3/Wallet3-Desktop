@@ -19,7 +19,7 @@ const Keys = {
   secretAccount: (kc_unique: string) => (prod ? `wallet3-account-${kc_unique}` : `wallet3-dev-account-${kc_unique}`),
 };
 
-class WalletKey {
+export class WalletKey {
   basePath = BasePath;
   basePathIndex = 0;
   hasSecret = false;
@@ -31,8 +31,8 @@ class WalletKey {
     return this.key?.id;
   }
 
-  async init(accountId = 1) {
-    [this.key] = await DBMan.accountRepo.find();
+  async init(key: Key) {
+    this.key = key;
 
     this.basePath = this.key?.basePath ?? BasePath;
     this.basePathIndex = this.key?.basePathIndex ?? 0;

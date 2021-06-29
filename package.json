@@ -61,9 +61,10 @@
     "@types/react-select": "^4.0.16",
     "@types/react-virtualized": "^9.21.11",
     "@types/ws": "^7.4.5",
-    "@typescript-eslint/eslint-plugin": "^4.28.0",
-    "@typescript-eslint/parser": "^4.28.0",
-    "babel-jest": "^27.0.5",
+    "@typescript-eslint/eslint-plugin": "^4.28.1",
+    "@typescript-eslint/parser": "^4.28.1",
+    "ajv-formats": "^2.1.0",
+    "babel-jest": "^27.0.6",
     "css-loader": "^5.2.6",
     "delay": "^5.0.0",
     "electron": "^13.1.4",
@@ -74,7 +75,7 @@
     "eslint": "^7.29.0",
     "eslint-plugin-import": "^2.23.4",
     "fork-ts-checker-webpack-plugin": "^6.2.12",
-    "jest": "^27.0.5",
+    "jest": "^27.0.6",
     "node-loader": "^2.0.0",
     "style-loader": "^3.0.0",
     "ts-loader": "^9.2.3",
@@ -91,6 +92,7 @@
     "animejs": "^3.2.1",
     "axios": "^0.21.1",
     "better-sqlite3": "^7.4.1",
+    "electron-store": "^8.0.0",
     "eth-sig-util": "^3.0.1",
     "ethers": "^5.3.1",
     "feather-icons": "^4.28.0",
@@ -122,6 +124,6 @@
     "storejs": "^1.1.0",
     "typeorm": "^0.2.34",
     "update-electron-app": "^2.0.1",
-    "ws": "^7.5.0"
+    "ws": "^7.5.1"
   }
 }

@@ -1,17 +1,13 @@
 import './backend/AppMenu';
 
 import { BrowserWindow, Menu, TouchBar, TouchBarButton, Tray, app, nativeImage, powerMonitor } from 'electron';
+import { DBMan, KeyMan, TxMan, WCMan } from './backend/mans';
 
 import App from './backend/App';
 import Coingecko from './api/Coingecko';
-import DBMan from './backend/mans/DBMan';
 import GasnowWs from './gas/Gasnow';
 import Messages from './common/Messages';
-import TxMan from './backend/mans/TxMan';
-import WCMan from './backend/mans/WCMan';
-import WalletKey from './backend/lib/WalletKey';
 import { autorun } from 'mobx';
-import delay from 'delay';
 import { globalShortcut } from 'electron';
 import i18n from './i18n';
 import updateapp from 'update-electron-app';
@@ -150,7 +146,7 @@ const createWindow = async (): Promise<void> => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
   await DBMan.init();
-  await Promise.all([WalletKey.init(), TxMan.init(), WCMan.init()]);
+  await Promise.all([KeyMan.init(), TxMan.init(), WCMan.init()]);
 
   await App.init();
   createWindow();
