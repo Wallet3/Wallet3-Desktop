@@ -165,10 +165,14 @@ export class AccountVM {
     nativeToken.decimals = 18;
     nativeToken.name = NetVM.currentNetwork.symbol;
     nativeToken.symbol = NetVM.currentNetwork.symbol;
+    nativeToken.show = true;
     nativeToken.wei = balance.toString();
     nativeToken.price = nativeCurrency?.price ?? (this.nativeToken?.price || 0);
 
-    runInAction(() => (this.nativeToken = nativeToken));
+    runInAction(() => {
+      this.nativeToken = nativeToken;
+      this.allTokens[0] = nativeToken;
+    });
 
     return nativeToken;
   }

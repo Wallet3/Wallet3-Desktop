@@ -83,7 +83,7 @@ export class WalletVM {
 
   async refresh() {
     await Promise.all([this.currentAccount?.refreshChainOverview(), this.currentAccount.refreshNativeToken(undefined)]);
-    setTimeout(() => this.refresh(), (NetVM.currentChainId === 1 ? 45 : 20) * 1000);
+    setTimeout(() => this.refresh(), (NetVM.currentChainId === 1 ? 45 : 10) * 1000);
   }
 
   pendingTxVM: PendingTxVM = null;
