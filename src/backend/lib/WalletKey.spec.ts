@@ -25,7 +25,7 @@ test('personal_sign', () => {
 test(
   'custom path',
   async () => {
-    WalletKey.setTmpMnemonic(
+    WalletKey.setTmpSecret(
       'become replace lecture bleak reform topple fringe menu original damage equip crime sorry alarm erase'
     );
 

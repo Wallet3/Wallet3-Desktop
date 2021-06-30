@@ -164,8 +164,8 @@ export class App {
       const { key } = this.windows.get(winId);
       const [iv, cipherText] = encrypted;
 
-      const { mnemonic } = App.decryptIpc(cipherText, iv, key);
-      return App.encryptIpc({ success: this.walletKey.setTmpMnemonic(mnemonic) }, key );
+      const { secret } = App.decryptIpc(cipherText, iv, key);
+      return App.encryptIpc({ success: this.walletKey.setTmpSecret(secret) }, key );
     });
 
     ipcMain.handle(`${MessageKeys.setupMnemonic}-secure`, async (e, encrypted, winId) => {
@@ -177,7 +177,7 @@ export class App {
       await DBMan.init();
 
       await this.walletKey.savePassword(userPassword);
-      if (!(await this.walletKey.saveMnemonic(userPassword))) return App.encryptIpc({ success: false }, key);
+      if (!(await this.walletKey.saveSecret(userPassword))) return App.encryptIpc({ success: false }, key);
 
       const addresses = await this.walletKey.genAddresses(userPassword, 10);
       runInAction(() => (this.addresses = addresses));
@@ -209,7 +209,7 @@ export class App {
         return App.encryptIpc({}, key);
       }
 
-      const mnemonic = await this.walletKey.readMnemonic(password);
+      const mnemonic = await this.walletKey.readSecret(password);
       return App.encryptIpc({ mnemonic }, key);
     });
 
@@ -230,12 +230,12 @@ export class App {
       const oldPassword = this.#authKeys.get(authKey);
       this.#authKeys.delete(authKey);
 
-      const mnemonic = await this.walletKey.readMnemonic(oldPassword);
+      const mnemonic = await this.walletKey.readSecret(oldPassword);
       if (!mnemonic) return App.encryptIpc({ success: false }, key);
 
-      this.walletKey.setTmpMnemonic(mnemonic);
+      this.walletKey.setTmpSecret(mnemonic);
       await this.walletKey.savePassword(newPassword);
-      if (!(await this.walletKey.saveMnemonic(newPassword))) return App.encryptIpc({ success: false }, key);
+      if (!(await this.walletKey.saveSecret(newPassword))) return App.encryptIpc({ success: false }, key);
 
       await this.initLaunchKey();
 

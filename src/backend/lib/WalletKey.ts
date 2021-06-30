@@ -32,16 +32,9 @@ export class WalletKey {
   }
 
   private get tmpSecretType() {
-    if (ethers.utils.isValidMnemonic(this.tmpSecret)) return AccountType.mnemonic;
+    if (!this.tmpSecret) return undefined;
 
-    if ((this.tmpSecret?.toLowerCase().startsWith('0x') && this.tmpSecret?.length === 66) || this.tmpSecret?.length === 64)
-      return AccountType.privkey;
-
-    // try {
-    //   if (JSON.parse(this.tmpSecret)) return AccountType.keystore;
-    // } catch (error) {}
-
-    return undefined;
+    return this.checkSecretType(this.tmpSecret);
   }
 
   async init(key: Key) {
@@ -100,12 +93,12 @@ export class WalletKey {
     return { mnemonic: this.tmpSecret, address: wallet.address };
   }
 
-  setTmpMnemonic(mnemonic: string) {
+  setTmpSecret(mnemonic: string) {
     this.tmpSecret = mnemonic;
     return this.tmpSecretType !== undefined;
   }
 
-  async saveMnemonic(userPassword: string) {
+  async saveSecret(userPassword: string) {
     if (!this.tmpSecret) return false;
     if (this.tmpSecretType === undefined) return false;
 
@@ -116,11 +109,11 @@ export class WalletKey {
     this.key.basePathIndex = this.basePathIndex;
     this.key.type = this.tmpSecretType;
 
-    const [mnIv, encryptedMnemonic] = Cipher.encrypt(this.tmpSecret, this.getCorePassword(userPassword));
+    const [mnIv, encryptedSecret] = Cipher.encrypt(this.tmpSecret, this.getCorePassword(userPassword));
     this.key.mnIv = mnIv;
 
     await this.key.save();
-    await keytar.setPassword(Keys.secret, Keys.secretAccount(this.key.kc_unique), encryptedMnemonic);
+    await keytar.setPassword(Keys.secret, Keys.secretAccount(this.key.kc_unique), encryptedSecret);
 
     this.tmpSecret = undefined;
     this.hasSecret = true;
@@ -128,14 +121,14 @@ export class WalletKey {
     return true;
   }
 
-  async readMnemonic(userPassword: string) {
+  async readSecret(userPassword: string) {
     if (!(await this.verifyPassword(userPassword))) return undefined;
 
     try {
       const iv = this.key.mnIv;
-      const enMnemonic = await keytar.getPassword(Keys.secret, Keys.secretAccount(this.key.kc_unique));
+      const enSecret = await keytar.getPassword(Keys.secret, Keys.secretAccount(this.key.kc_unique));
 
-      return Cipher.decrypt(Buffer.from(iv, 'hex'), enMnemonic, this.getCorePassword(userPassword));
+      return Cipher.decrypt(Buffer.from(iv, 'hex'), enSecret, this.getCorePassword(userPassword));
     } catch (error) {
       console.error(error.message);
       return undefined;
@@ -174,17 +167,24 @@ export class WalletKey {
   }
 
   async genAddresses(userPassword: string, count: number) {
-    const mnemonic = await this.readMnemonic(userPassword);
-    if (!mnemonic) return undefined;
+    const secret = await this.readSecret(userPassword);
+    if (!secret) return undefined;
 
-    const hd = ethers.utils.HDNode.fromMnemonic(mnemonic);
-    const addresses = [hd.derivePath(`${this.basePath}/${this.basePathIndex}`).address];
+    switch (this.checkSecretType(secret)) {
+      case AccountType.mnemonic:
+        const hd = ethers.utils.HDNode.fromMnemonic(secret);
+        const addresses = [hd.derivePath(`${this.basePath}/${this.basePathIndex}`).address];
 
-    for (let i = 1; i < count; i++) {
-      addresses.push(hd.derivePath(`${this.basePath}/${this.basePathIndex + i}`).address);
+        for (let i = 1; i < count; i++) {
+          addresses.push(hd.derivePath(`${this.basePath}/${this.basePathIndex + i}`).address);
+        }
+
+        return addresses;
+
+      case AccountType.privkey:
+        const signer = new ethers.Wallet(secret);
+        return [signer.address];
     }
-
-    return addresses;
   }
 
   async reset(password: string, viaPassword = true) {
@@ -201,12 +201,30 @@ export class WalletKey {
   }
 
   private async getPrivateKey(userPassword: string, accountIndex = 0) {
-    const mnemonic = await this.readMnemonic(userPassword);
-    if (!mnemonic) return undefined;
+    const secret = await this.readSecret(userPassword);
+    if (!secret) return undefined;
 
-    const root = ethers.utils.HDNode.fromMnemonic(mnemonic);
-    const account = root.derivePath(`${this.basePath}/${this.basePathIndex + accountIndex}`);
-    return account.privateKey;
+    switch (this.checkSecretType(secret)) {
+      case AccountType.mnemonic:
+        const root = ethers.utils.HDNode.fromMnemonic(secret);
+        const account = root.derivePath(`${this.basePath}/${this.basePathIndex + accountIndex}`);
+        return account.privateKey;
+
+      case AccountType.privkey:
+        return secret;
+    }
+  }
+
+  private checkSecretType(secret: string) {
+    if (ethers.utils.isValidMnemonic(secret)) return AccountType.mnemonic;
+
+    if ((secret.toLowerCase().startsWith('0x') && secret.length === 66) || secret.length === 64) return AccountType.privkey;
+
+    // try {
+    //   if (JSON.parse(this.tmpSecret)) return AccountType.keystore;
+    // } catch (error) {}
+
+    return undefined;
   }
 
   private getCorePassword(userPassword: string) {

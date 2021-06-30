@@ -35,8 +35,8 @@ export class MnemonicVM {
     return undefined;
   }
 
-  async saveTmpSecret(mnemonic: string) {
-    const { success } = await ipc.invokeSecure(MessageKeys.saveTmpSecret, { mnemonic });
+  async saveTmpSecret(secret: string) {
+    const { success } = await ipc.invokeSecure(MessageKeys.saveTmpSecret, { secret });
     return success;
   }
 
