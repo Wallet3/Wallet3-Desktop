@@ -6,7 +6,6 @@ import * as keytar from 'keytar';
 
 import Key, { AccountType } from '../models/Key';
 
-import DBMan from '../mans/DBMan';
 import { TxParams } from '../../common/Messages';
 
 const BasePath = `m/44\'/60\'/0\'/0`;

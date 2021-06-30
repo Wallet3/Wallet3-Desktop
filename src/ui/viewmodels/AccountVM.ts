@@ -6,12 +6,13 @@ import NetVM, { Networks } from './NetworksVM';
 import { makeAutoObservable, runInAction } from 'mobx';
 
 import { AddTokenVM } from './account/AddTokenVM';
+import { ERC20Token } from '../../common/ERC20Token';
 import { NFT } from './models/NFT';
 import POAP from '../../nft/POAP';
 import Rarible from '../../nft/Rarible';
 import { TransferVM } from './account/TransferVM';
 import WalletVM from './WalletVM';
-import delay from 'delay';
+import { hexZeroPad } from 'ethers/lib/utils';
 import store from 'storejs';
 
 const Keys = {
@@ -41,6 +42,7 @@ export class AccountVM {
   nativeToken: UserToken = null;
 
   private _name = '';
+  private tokenWatcher = new Map<string, ERC20Token>();
 
   get netWorth() {
     if (this.chains.length === 0) return undefined;
@@ -148,6 +150,29 @@ export class AccountVM {
     runInAction(() => (this.chains = chains));
   };
 
+  async refreshNativeToken(nativeCurrency: Debank.ITokenBalance) {
+    const provider = NetVM.currentProvider;
+    const rpc = provider.connection.url;
+    const network = NetVM.currentChainId;
+    const balancePromise = NetVM.currentProvider.getBalance(this.address);
+
+    balancePromise.catch(() => NetVM.reportFailedRpc(network, rpc));
+
+    const balance = await balancePromise;
+    const nativeToken = new UserToken();
+    nativeToken.id = NetVM.currentNetwork.symbol.toLowerCase();
+    nativeToken.amount = Number.parseFloat(utils.formatEther(balance));
+    nativeToken.decimals = 18;
+    nativeToken.name = NetVM.currentNetwork.symbol;
+    nativeToken.symbol = NetVM.currentNetwork.symbol;
+    nativeToken.wei = balance.toString();
+    nativeToken.price = nativeCurrency?.price ?? (this.nativeToken?.price || 0);
+
+    runInAction(() => (this.nativeToken = nativeToken));
+
+    return nativeToken;
+  }
+
   refreshChainTokens = async () => {
     const nativeSymbols = Networks.map((n) => n?.symbol.toLowerCase());
     const userConfigs = this.loadTokenConfigs();
@@ -184,33 +209,59 @@ export class AccountVM {
       new UserToken().init(t, { order: i + 1, show: false })
     );
 
-    assets.push(...defaultTokens.filter((dt) => !assets.find((ut) => dt.id.toLowerCase() === ut.id.toLowerCase())));
+    assets.push(...defaultTokens.filter((dt) => !assets.find((a) => a.id.toLowerCase() === dt.id.toLowerCase())));
 
-    assets = assets.sort((a, b) => a.order - b.order);
+    let allTokens: UserToken[] = [];
+    assets.forEach((t) => {
+      if (allTokens.find((at) => at.id.toLowerCase() === t.id.toLowerCase())) return;
+      allTokens.push(t);
+    });
+
+    allTokens = allTokens.sort((a, b) => a.order - b.order);
 
     const nativeCurrency = tokens.find((t) => nativeSymbols.includes(t.id));
+    const nativeToken = await this.refreshNativeToken(nativeCurrency);
 
-    const rpc = NetVM.currentProvider.connection.url;
-    const network = NetVM.currentChainId;
-    const balancePromise = NetVM.currentProvider.getBalance(this.address);
-    balancePromise.catch(() => NetVM.reportFailedRpc(network, rpc));
-
-    const balance = await balancePromise;
-    const nativeToken = new UserToken();
-    nativeToken.id = NetVM.currentNetwork.symbol.toLowerCase();
-    nativeToken.amount = Number.parseFloat(utils.formatEther(balance));
-    nativeToken.decimals = 18;
-    nativeToken.name = NetVM.currentNetwork.symbol;
-    nativeToken.symbol = NetVM.currentNetwork.symbol;
-    nativeToken.wei = balance.toString();
-    nativeToken.price = nativeCurrency?.price ?? 0;
-    assets.unshift(nativeToken);
+    allTokens.unshift(nativeToken);
 
     runInAction(() => {
-      this.nativeToken = nativeToken;
-      this.allTokens = assets;
+      this.allTokens = allTokens;
+      this.watchTokens();
     });
   };
+
+  watchTokens() {
+    const provider = NetVM.currentProvider;
+
+    console.log('watch tokens', this.allTokens.length);
+    for (let t of this.allTokens.slice(1)) {
+      if (this.tokenWatcher.has(t.id.toLowerCase())) continue;
+
+      const erc20 = new ERC20Token(t.id, provider);
+      this.tokenWatcher.set(t.id.toLowerCase(), erc20);
+
+      const refreshBalance = () =>
+        erc20
+          .balanceOf(this.address)
+          .then((balance) => runInAction(() => (t.amount = Number.parseFloat(utils.formatUnits(balance, t.decimals)))));
+
+      provider.on(
+        {
+          address: t.id,
+          topics: [
+            utils.id('Transfer(address,address,uint256)'),
+            [hexZeroPad(this.address, 32)],
+            [hexZeroPad(this.address, 32)],
+          ],
+        },
+        () => refreshBalance()
+      );
+
+      if (t.amount > 0) continue;
+
+      refreshBalance();
+    }
+  }
 
   loadTokenConfigs = () => {
     try {
