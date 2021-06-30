@@ -40,7 +40,7 @@
   "Address": "アドレス",
   "Next": "次へ",
   "Continue": "続ける",
-  "Import Mnemonic": "インポート ニーモニック",
+  "Import Secret": "インポート ニーモニック、プライベートキー",
   "Import_Mn_Tip": "ニーモニック・フレーズをスペースで区切って入力してください。",
   "Derivation Path": "派生パス",
   "Derivation_Tip": "これが何かわからない場合は無視してください",

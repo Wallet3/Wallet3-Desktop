@@ -4,6 +4,7 @@ import { action, makeAutoObservable, runInAction } from 'mobx';
 import App from './Application';
 import WalletVM from './WalletVM';
 import ipc from '../bridges/IPC';
+import { utils } from 'ethers';
 
 export class MnemonicVM {
   phrases: string[] = new Array(12).fill('');
@@ -22,14 +23,27 @@ export class MnemonicVM {
     });
   }
 
-  async saveTmpMnemonic(mnemonic: string) {
-    await ipc.invokeSecure(MessageKeys.saveTmpMnemonic, { mnemonic });
+  checkSecret(secret: string) {
+    if (utils.isValidMnemonic(secret)) return true;
+
+    if ((secret.toLowerCase().startsWith('0x') && secret.length === 66) || secret.length === 64) return true;
+
+    // try {
+    //   if (JSON.parse(secret)) true;
+    // } catch (error) {}
+
+    return undefined;
+  }
+
+  async saveTmpSecret(mnemonic: string) {
+    const { success } = await ipc.invokeSecure(MessageKeys.saveTmpSecret, { mnemonic });
+    return success;
   }
 
   async setupMnemonic(passcode: string) {
     const password = App.hashPassword(passcode);
     const { success, addresses } = await ipc.invokeSecure<SetupMnemonic>(MessageKeys.setupMnemonic, { password });
-    
+
     if (success) {
       App.appAuthenticated = true;
       WalletVM.initAccounts({ addresses });

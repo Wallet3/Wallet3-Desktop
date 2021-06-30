@@ -24,11 +24,24 @@ export class WalletKey {
   basePathIndex = 0;
   hasSecret = false;
 
-  private tmpMnemonic?: string;
+  private tmpSecret?: string;
   private key: Key;
 
   get id() {
     return this.key?.id;
+  }
+
+  private get tmpSecretType() {
+    if (ethers.utils.isValidMnemonic(this.tmpSecret)) return AccountType.mnemonic;
+
+    if ((this.tmpSecret?.toLowerCase().startsWith('0x') && this.tmpSecret?.length === 66) || this.tmpSecret?.length === 64)
+      return AccountType.privkey;
+
+    // try {
+    //   if (JSON.parse(this.tmpSecret)) return AccountType.keystore;
+    // } catch (error) {}
+
+    return undefined;
   }
 
   async init(key: Key) {
@@ -81,34 +94,35 @@ export class WalletKey {
 
   genMnemonic(length = 12) {
     const entropy = crypto.randomBytes(length === 12 ? 16 : 32);
-    this.tmpMnemonic = ethers.utils.entropyToMnemonic(entropy);
+    this.tmpSecret = ethers.utils.entropyToMnemonic(entropy);
 
-    const wallet = ethers.Wallet.fromMnemonic(this.tmpMnemonic);
-    return { mnemonic: this.tmpMnemonic, address: wallet.address };
+    const wallet = ethers.Wallet.fromMnemonic(this.tmpSecret);
+    return { mnemonic: this.tmpSecret, address: wallet.address };
   }
 
   setTmpMnemonic(mnemonic: string) {
-    if (!ethers.utils.isValidMnemonic(mnemonic)) return;
-    this.tmpMnemonic = mnemonic;
+    this.tmpSecret = mnemonic;
+    return this.tmpSecretType !== undefined;
   }
 
   async saveMnemonic(userPassword: string) {
-    if (!this.tmpMnemonic) return false;
-    if (!ethers.utils.isValidMnemonic(this.tmpMnemonic)) return false;
+    if (!this.tmpSecret) return false;
+    if (this.tmpSecretType === undefined) return false;
+
     if (!(await this.verifyPassword(userPassword))) return false;
 
     this.key.kc_unique = this.key.kc_unique ?? crypto.randomBytes(4).toString('hex');
-    this.key.type = AccountType.mnemonic;
     this.key.basePath = this.basePath;
     this.key.basePathIndex = this.basePathIndex;
+    this.key.type = this.tmpSecretType;
 
-    const [mnIv, encryptedMnemonic] = Cipher.encrypt(this.tmpMnemonic, this.getCorePassword(userPassword));
+    const [mnIv, encryptedMnemonic] = Cipher.encrypt(this.tmpSecret, this.getCorePassword(userPassword));
     this.key.mnIv = mnIv;
 
     await this.key.save();
     await keytar.setPassword(Keys.secret, Keys.secretAccount(this.key.kc_unique), encryptedMnemonic);
 
-    this.tmpMnemonic = undefined;
+    this.tmpSecret = undefined;
     this.hasSecret = true;
 
     return true;

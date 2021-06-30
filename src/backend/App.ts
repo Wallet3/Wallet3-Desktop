@@ -160,12 +160,12 @@ export class App {
       return App.encryptIpc(this.walletKey.genMnemonic(length), key);
     });
 
-    ipcMain.handle(`${MessageKeys.saveTmpMnemonic}-secure`, (e, encrypted, winId) => {
+    ipcMain.handle(`${MessageKeys.saveTmpSecret}-secure`, (e, encrypted, winId) => {
       const { key } = this.windows.get(winId);
       const [iv, cipherText] = encrypted;
 
       const { mnemonic } = App.decryptIpc(cipherText, iv, key);
-      this.walletKey.setTmpMnemonic(mnemonic);
+      return App.encryptIpc({ success: this.walletKey.setTmpMnemonic(mnemonic) }, key );
     });
 
     ipcMain.handle(`${MessageKeys.setupMnemonic}-secure`, async (e, encrypted, winId) => {

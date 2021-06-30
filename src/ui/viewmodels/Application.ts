@@ -26,6 +26,7 @@ export class Application {
     makeObservable(this, { authMethod: observable, isMac: computed, platform: observable, switchAuthMethod: action });
 
     ipc.on(MessageKeys.idleExpired, (e, { idleExpired }: { idleExpired: boolean }) => {
+      if (!this.appAuthenticated) return;
       if (idleExpired) this.history.push('/authentication');
     });
 

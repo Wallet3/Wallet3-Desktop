@@ -2,7 +2,7 @@ export default {
   exchangeDHKey: 'msg-exchange-dh-key',
   getInitStatus: 'msg-get-init-status',
   genMnemonic: 'msg-gen-mnemonic',
-  saveTmpMnemonic: 'msg-save-tmp-mnemonic',
+  saveTmpSecret: 'msg-save-tmp-secret',
   setDerivationPath: 'msg-set-derivation-path',
   setupMnemonic: 'msg-setup-mnemonic',
   readMnemonic: 'msg-read-mnemonic',
