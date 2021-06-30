@@ -232,8 +232,8 @@ export class AccountVM {
 
   watchTokens() {
     const provider = NetVM.currentProvider;
+    const transferEvent = utils.id('Transfer(address,address,uint256)');
 
-    console.log('watch tokens', this.allTokens.length);
     for (let t of this.allTokens.slice(1)) {
       if (this.tokenWatcher.has(t.id.toLowerCase())) continue;
 
@@ -241,23 +241,22 @@ export class AccountVM {
       this.tokenWatcher.set(t.id.toLowerCase(), erc20);
 
       const refreshBalance = () =>
-        erc20
-          .balanceOf(this.address)
-          .then((balance) => runInAction(() => (t.amount = Number.parseFloat(utils.formatUnits(balance, t.decimals)))));
+        erc20.balanceOf(this.address).then((balance) => {
+          const token = this.allTokens.find((t) => t.id.toLowerCase() === erc20.address.toLowerCase());
+          if (!token) return;
+          runInAction(() => (token.amount = Number.parseFloat(utils.formatUnits(balance, t.decimals))));
+        });
 
       provider.on(
         {
           address: t.id,
           topics: [
-            utils.id('Transfer(address,address,uint256)'),
-            [hexZeroPad(this.address, 32)],
-            [hexZeroPad(this.address, 32)],
+            [transferEvent, null, hexZeroPad(this.address, 32)],
+            [transferEvent, hexZeroPad(this.address, 32), null],
           ],
         },
         () => refreshBalance()
       );
-
-      if (t.amount > 0) continue;
 
       refreshBalance();
     }
