@@ -15,7 +15,7 @@ module.exports = {
     schemes: [ 'ethereum', 'wallet3' ]
   },
   //npmRebuild: 'false',
-  afterSign: "sign/appSign.js",
+  afterSign: "./sign/appSign.js",
   mac: {
     icon: 'assets/AppIcon.icns',
     // background: 'assets/DMGBG.png',
