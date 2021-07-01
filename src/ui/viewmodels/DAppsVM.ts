@@ -62,6 +62,7 @@ const polygon = {
 const xdai = {
   dexs: [
     { name: 'Honeyswap', url: 'https://honeyswap.org' },
+    { name: 'Curve', url: 'https://xdai.curve.fi' },
     { name: 'Bao', url: 'https://alpha.baoswap.xyz' },
   ],
 

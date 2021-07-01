@@ -31,6 +31,8 @@ interface INetworkLabel {
   chainId: number;
   expand?: boolean;
   noLabel?: boolean;
+  active?: boolean;
+  color?: string;
 }
 
 export default observer((props: INetworkLabel) => {
@@ -38,7 +40,8 @@ export default observer((props: INetworkLabel) => {
 
   return (
     <div className={`network-label ${props.expand ? 'expand' : ''}`}>
-      <img src={svg} alt={label} /> {props.noLabel ? undefined : <span>{label}</span>}
+      <img src={svg} alt={label} />{' '}
+      {props.noLabel ? undefined : <span style={{ color: props.active ? props.color : undefined }}>{label}</span>}
     </div>
   );
 });

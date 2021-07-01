@@ -26,7 +26,7 @@ export default observer(
       testnets.map((item) => {
         return (
           <MenuItem key={item.chainId} styles={MenuItemStyles} onClick={(_) => onNetworkSelected(item.chainId)}>
-            <NetworkLabel expand chainId={item.chainId} />
+            <NetworkLabel expand chainId={item.chainId} active={currentChainId === item.chainId} color={item.color} />
           </MenuItem>
         );
       });
@@ -53,7 +53,7 @@ export default observer(
         {publicNetworks.map((item) => {
           return (
             <MenuItem key={item.chainId} styles={MenuItemStyles} onClick={(_) => onNetworkSelected(item.chainId)}>
-              <NetworkLabel expand chainId={item.chainId} />
+              <NetworkLabel expand chainId={item.chainId} active={currentChainId === item.chainId} color={item.color} />
             </MenuItem>
           );
         })}

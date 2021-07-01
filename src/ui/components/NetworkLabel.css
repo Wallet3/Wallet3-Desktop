@@ -3,6 +3,16 @@
   align-items: center !important;
   font-size: 12px;
   line-height: 12.5px;
+  position: relative;
+}
+
+.network-label > .activeIndicator {
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 2px;
+  background-color: var(--theme-color);
 }
 
 .network-label > img {
