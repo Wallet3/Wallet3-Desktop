@@ -13,6 +13,7 @@ const SVGs = new Map([
   [4, [NetworkIcons('Rinkeby'), 'Rinkeby']],
   [5, [NetworkIcons('Goerli'), 'Goerli']],
   [42, [NetworkIcons('Kovan'), 'Kovan']],
+  [10, [NetworkIcons('Optimism'), 'Optimism']],
 
   [137, [NetworkIcons('Polygon'), 'Polygon']],
   [100, [NetworkIcons('xDAI'), 'xDAI']],

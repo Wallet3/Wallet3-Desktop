@@ -76,6 +76,14 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: PolygonPopularTokens,
   },
   {
+    symbol: 'ETH',
+    network: 'Optimism',
+    chainId: 10,
+    color: '#FF0420',
+    order: 3,
+    defaultTokens: [],
+  },
+  {
     symbol: 'xDAI',
     network: 'xDAI',
     chainId: 100,
