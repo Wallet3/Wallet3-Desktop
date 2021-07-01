@@ -240,7 +240,11 @@ export class AccountVM {
     const provider = NetVM.currentProvider;
 
     for (let t of this.allTokens.slice(1)) {
-      if (this.tokenWatcher.has(t.id.toLowerCase())) continue;
+      if (this.tokenWatcher.has(t.id.toLowerCase())) {
+        const erc20 = this.tokenWatcher.get(t.id.toLowerCase());
+        t.amount = Number.parseFloat(utils.formatUnits(erc20.balance, t.decimals));
+        continue;
+      }
 
       const erc20 = new ERC20Token(t.id, provider);
       this.tokenWatcher.set(t.id.toLowerCase(), erc20);
