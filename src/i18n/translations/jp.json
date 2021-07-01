@@ -18,7 +18,7 @@
   "Accounts": "アカウント",
   "Display Currency": "表示通貨",
   "Languages": "言語",
-  "Backup Mnemonic": "バックアップ ニーモニック",
+  "Backup Secret": "バックアップ ウォレット",
   "Change Passcode": "パスコードの変更",
   "Reset": "リセット",
   "Transfer": "転送",
