@@ -145,9 +145,10 @@ const createWindow = async (): Promise<void> => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
   await DBMan.init();
-  await Promise.all([KeyMan.init(), TxMan.init(), WCMan.init()]);
+  await Promise.all([KeyMan.init(), TxMan.init()]);
 
   await App.init();
+  await WCMan.init();
   createWindow();
 
   GasnowWs.start(true);

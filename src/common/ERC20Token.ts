@@ -26,4 +26,12 @@ export class ERC20Token {
   symbol(): Promise<string> {
     return this.erc20.symbol();
   }
+
+  get filters() {
+    return this.erc20.filters;
+  }
+
+  on(filter: string | ethers.EventFilter, listener: ethers.providers.Listener) {
+    this.erc20.on(filter, listener);
+  }
 }

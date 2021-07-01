@@ -34,7 +34,6 @@ export class App {
   mainWindow?: BrowserWindow;
   touchBarButtons?: { walletConnect: TouchBarButton; gas: TouchBarButton; price?: TouchBarButton };
 
-  keyId = 0;
   currentAddressIndex = 0;
   addresses: string[] = [];
   chainId = 1;
@@ -502,7 +501,7 @@ export class App {
         preload: POPUP_WINDOW_PRELOAD_WEBPACK_ENTRY,
         contextIsolation: true,
         nodeIntegration: false,
-        webSecurity: true,
+        webSecurity: false,
       },
     });
 

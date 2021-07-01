@@ -236,7 +236,6 @@ export class AccountVM {
 
   watchTokens() {
     const provider = NetVM.currentProvider;
-    const transferEvent = utils.id('Transfer(address,address,uint256)');
 
     for (let t of this.allTokens.slice(1)) {
       if (this.tokenWatcher.has(t.id.toLowerCase())) continue;
@@ -251,16 +250,10 @@ export class AccountVM {
           runInAction(() => (token.amount = Number.parseFloat(utils.formatUnits(balance, t.decimals))));
         });
 
-      provider.on(
-        {
-          address: t.id,
-          topics: [
-            [transferEvent, null, hexZeroPad(this.address, 32)],
-            [transferEvent, hexZeroPad(this.address, 32), null],
-          ],
-        },
-        () => refreshBalance()
-      );
+      const filterTo = erc20.filters.Transfer(null, this.address);
+      const filterFrom = erc20.filters.Transfer(this.address, null);
+      erc20.on(filterTo, () => refreshBalance());
+      erc20.on(filterFrom, () => refreshBalance());
 
       refreshBalance();
     }

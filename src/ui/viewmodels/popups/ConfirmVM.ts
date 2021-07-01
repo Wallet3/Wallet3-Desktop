@@ -51,10 +51,7 @@ export class ConfirmVM {
     makeAutoObservable(this);
 
     this._provider = getProviderByChainId(params.chainId);
-    this._provider
-      .getBalance(params.from)
-      .then((v) => runInAction(() => (this.nativeBalance = v)))
-      .catch(() => markRpcFailed(params.chainId, this._provider.connection.url));
+    this.refreshBalance(params.from, params.chainId);
 
     if (Methods.has(params.data?.substring(0, 10))) {
       const [method, icon] = Methods.get(params.data.substring(0, 10));
@@ -212,6 +209,17 @@ export class ConfirmVM {
     const nonce = Number.parseInt(value) || -1;
     this._nonce = nonce;
     this.args.nonce = nonce;
+  }
+
+  private refreshBalance(address: string, chainId: number) {
+    this._provider
+      .getBalance(address)
+      .then((v) => runInAction(() => (this.nativeBalance = v)))
+      .catch(() => {
+        markRpcFailed(chainId, this._provider.connection.url);
+        this._provider = getProviderByChainId(chainId);
+        this.refreshBalance(address, chainId);
+      });
   }
 
   private async initTransferToken(params: ConfirmSendTx, needMore = true) {

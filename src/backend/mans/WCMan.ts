@@ -37,7 +37,8 @@ class WCMan {
   }
 
   async init() {
-    const sessions = await DBMan.wcsessionRepo.find();
+    if (!Application.walletKey) return;
+    const sessions = await DBMan.wcsessionRepo.find({ where: { keyId: Application.walletKey.id } });
     this.recoverSessions(sessions);
   }
 
@@ -73,7 +74,7 @@ class WCMan {
         wcSession.userChainId = wc.userChainId;
         wcSession.lastUsedTimestamp = Date.now();
         wcSession.session = wc.session;
-        wcSession.keyId = Application.keyId;
+        wcSession.keyId = Application.walletKey.id || 0;
 
         wc.wcSession = wcSession;
         DBMan.wcsessionRepo.save(wcSession);
