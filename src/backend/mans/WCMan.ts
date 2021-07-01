@@ -1,10 +1,10 @@
-import Application, { App } from './App';
+import Application, { App } from '../App';
 import { computed, makeObservable, observable, runInAction } from 'mobx';
 
 import DBMan from './DBMan';
-import Messages from '../common/Messages';
-import WCSession from './models/WCSession';
-import { WalletConnect } from './WalletConnect';
+import Messages from '../../common/Messages';
+import WCSession from '../models/WCSession';
+import { WalletConnect } from '../lib/WalletConnect';
 import { ipcMain } from 'electron';
 
 class WCMan {
@@ -37,7 +37,8 @@ class WCMan {
   }
 
   async init() {
-    const sessions = await DBMan.wcsessionRepo.find();
+    if (!Application.walletKey) return;
+    const sessions = await DBMan.wcsessionRepo.find({ where: { keyId: Application.walletKey.id } });
     this.recoverSessions(sessions);
   }
 
@@ -73,7 +74,7 @@ class WCMan {
         wcSession.userChainId = wc.userChainId;
         wcSession.lastUsedTimestamp = Date.now();
         wcSession.session = wc.session;
-        wcSession.keyId = Application.keyId;
+        wcSession.keyId = Application.walletKey.id || 0;
 
         wc.wcSession = wcSession;
         DBMan.wcsessionRepo.save(wcSession);
@@ -141,7 +142,11 @@ class WCMan {
   }
 
   async clean() {
-    this.connects.forEach((c) => c?.wcSession?.remove());
+    this.connects.forEach((c) => {
+      c?.disconnect();
+      c?.wcSession?.remove();
+    });
+    
     await this.dispose();
   }
 

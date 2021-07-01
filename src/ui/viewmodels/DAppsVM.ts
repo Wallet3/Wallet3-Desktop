@@ -53,7 +53,10 @@ const polygon = {
     { name: 'SupremeX', url: 'https://matic.sxc.fi' },
   ],
 
-  others: [{ name: 'Pooltogether', url: 'https://pooltogether.com' }],
+  others: [
+    { name: 'Polygon Bridge', url: 'https://wallet.matic.network/bridge/' },
+    { name: 'Pooltogether', url: 'https://pooltogether.com' },
+  ],
 };
 
 const xdai = {
@@ -66,6 +69,8 @@ const xdai = {
     { name: 'Honeycomb', url: 'https://1hive.io' },
     { name: 'Agave', url: 'https://agave.finance' },
   ],
+
+  others: [{ name: 'xDai Bridge', url: 'https://bridge.xdaichain.com' }],
 };
 
 const fantom = {
@@ -90,11 +95,17 @@ const bsc = {
     { name: 'Cream', url: 'https://app.cream.finance' },
   ],
 
-  others: [{ name: 'Dfi.money', url: 'https://dfi.money' }],
+  others: [
+    { name: 'Binance Bridge', url: 'https://www.binance.org/bridge' },
+    { name: 'Dfi.money', url: 'https://dfi.money' },
+  ],
 };
 
 const heco = {
-  dexs: [{ name: 'mdex', url: 'https://ht.mdex.com/#/swap' }],
+  dexs: [
+    { name: 'mdex', url: 'https://ht.mdex.com/#/swap' },
+    { name: 'coco', url: 'https://cocoswap.com' },
+  ],
 };
 
 export default {

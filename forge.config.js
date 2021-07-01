@@ -16,10 +16,10 @@ module.exports = {
       'entitlements-inherit': 'sign/entitlements.plist',
       'signature-flags': 'library',
     },
-    osxNotarize: {
-      appleId,
-      appleIdPassword,
-    },
+    // osxNotarize: {
+    //   appleId,
+    //   appleIdPassword,
+    // },
   },
   makers: [
     {

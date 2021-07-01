@@ -1,0 +1,13 @@
+div.copy {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  cursor: pointer;
+}
+
+div.copy img {
+  width: 11px !important;
+  height: 11px !important;
+  margin: 0 3px !important;
+  padding: 0 !important;
+}

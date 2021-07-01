@@ -116,7 +116,7 @@ export default observer(({ walletVM, app, currencyVM, langsVM }: IConstructor) =
 
       <div className="setting-item click" onClick={(_) => goToBackupMnemonic()}>
         <Feather icon="package" size={iconSize} />
-        <span>{t('Backup Mnemonic')}</span>
+        <span>{t('Backup Wallet')}</span>
         <Feather icon="chevron-right" size={15} />
       </div>
 

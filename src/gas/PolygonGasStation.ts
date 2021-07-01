@@ -37,9 +37,9 @@ class PolygonGasStation {
         };
 
         runInAction(() => {
-          this.rapid = fastest * GasnowWs.gwei_1;
-          this.fast = fast * GasnowWs.gwei_1;
-          this.standard = standard * GasnowWs.gwei_1;
+          this.rapid = Math.min(Math.max(fastest, 1) * GasnowWs.gwei_1, 1000 * GasnowWs.gwei_1);
+          this.fast = Math.min(Math.max(fast, 1) * GasnowWs.gwei_1, 200 * GasnowWs.gwei_1);
+          this.standard = Math.min(Math.max(standard, 1) * GasnowWs.gwei_1, 100 * GasnowWs.gwei_1);
         });
       });
     } catch (error) {}

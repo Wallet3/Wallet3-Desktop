@@ -16,13 +16,13 @@ export default observer(({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) 
   const { authKey } = params as { authKey: string };
 
   useEffect(() => {
-    mnVM.readMnemonic(authKey);
+    mnVM.readSecret(authKey);
     return () => mnVM.clean();
   }, []);
 
   return (
     <div className="page backup-mnemonic">
-      <NavBar title={t('Backup Mnemonic')} onBackClick={() => app.history.goBack()} />
+      <NavBar title={t('Backup Wallet')} onBackClick={() => app.history.goBack()} />
 
       <div className="content">
         <div>
@@ -33,7 +33,13 @@ export default observer(({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) 
           </ul>
         </div>
 
-        <Mnemonic phrases={mnVM.phrases} />
+        {mnVM.privkey ? (
+          <pre className="privkey">
+            <span>{mnVM.privkey}</span>
+          </pre>
+        ) : (
+          <Mnemonic phrases={mnVM.phrases} />
+        )}
       </div>
     </div>
   );

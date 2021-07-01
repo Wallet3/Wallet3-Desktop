@@ -1,6 +1,6 @@
 import * as ethers from 'ethers';
 
-import KeyMan from './KeyMan';
+import WalletKey from './WalletKey';
 
 const mnemonic = 'afford candy jewel raven version roast unfair female diary render buffalo buddy comic mimic control';
 
@@ -25,15 +25,15 @@ test('personal_sign', () => {
 test(
   'custom path',
   async () => {
-    KeyMan.setTmpMnemonic(
+    WalletKey.setTmpSecret(
       'become replace lecture bleak reform topple fringe menu original damage equip crime sorry alarm erase'
     );
 
-    KeyMan.setFullPath(`m/44'/60'/5'/2/0`);
-    expect(KeyMan.basePath).toBe(`m/44'/60'/5'/2`);
-    expect(KeyMan.basePathIndex).toBe(0);
+    WalletKey.setFullPath(`m/44'/60'/5'/2/0`);
+    expect(WalletKey.basePath).toBe(`m/44'/60'/5'/2`);
+    expect(WalletKey.basePathIndex).toBe(0);
 
-    const addresses = await KeyMan.genAddresses('111222', 5);
+    const addresses = await WalletKey.genAddresses('111222', 5);
 
     const expected = [
       '0x887845B5598558265a53C32a7920E010359E7C58',

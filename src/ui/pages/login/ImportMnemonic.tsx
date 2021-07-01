@@ -1,5 +1,6 @@
 import './ImportMnemonic.css';
 
+import * as Anime from '../../misc/Anime';
 import * as ethers from 'ethers';
 
 import React, { useState } from 'react';
@@ -18,7 +19,7 @@ export default observer(({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) 
   return (
     <div className="page import">
       <div className="form">
-        <NavBar title={t('Import Mnemonic')} onBackClick={() => app.history.goBack()} />
+        <NavBar title={t('Import Secret')} onBackClick={() => app.history.goBack()} />
 
         <textarea
           className="mnemonic"
@@ -29,7 +30,7 @@ export default observer(({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) 
           placeholder={t('Import_Mn_Tip')}
           onChange={(e) => {
             setMnemonic(e.target.value.trim());
-            setIsValidMnemonic(ethers.utils.isValidMnemonic(e.target.value.trim()));
+            setIsValidMnemonic(mnVM.checkSecret(e.target.value.trim()));
           }}
         />
 
@@ -49,9 +50,12 @@ export default observer(({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) 
 
       <button
         disabled={!isValidMnemonic}
-        onClick={(_) => {
+        onClick={async (_) => {
           if (!isValidMnemonic) return;
-          mnVM.saveTmpMnemonic(mnemonic);
+          if (!(await mnVM.saveTmpSecret(mnemonic))) {
+            Anime.vibrate('textarea.mnemonic');
+            return;
+          }
           app.history.push('/setupPassword');
         }}
       >

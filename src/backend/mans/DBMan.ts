@@ -3,9 +3,9 @@ import * as path from 'path';
 
 import { Connection, Repository, createConnection } from 'typeorm';
 
-import Key from './models/Key';
-import Transaction from './models/Transaction';
-import WCSession from './models/WCSession';
+import Key from '../models/Key';
+import Transaction from '../models/Transaction';
+import WCSession from '../models/WCSession';
 import { app } from 'electron';
 
 const prod = process.env.NODE_ENV === 'production';

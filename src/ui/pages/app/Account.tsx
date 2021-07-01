@@ -1,6 +1,6 @@
 import './Account.css';
 
-import { Logo, NavBar } from '../../components';
+import { Copy, Logo, NavBar } from '../../components';
 import React, { useState } from 'react';
 
 import { Application } from '../../viewmodels/Application';
@@ -36,20 +36,7 @@ export default ({ app, walletVM, networksVM }: { app: Application; walletVM: Wal
           <QRCode value={address} size={150} bgColor="transparent" />
           <div className="addr">
             <span onClick={(_) => Shell.open(convertToAccountUrl(networksVM.currentChainId, address))}>{address}</span>
-
-            {showCheck ? (
-              <img src={CheckIcon} alt="Copied" />
-            ) : (
-              <span
-                onClick={(_) => {
-                  Clipboard.writeText(address);
-                  setShowCheck(true);
-                  setTimeout(() => setShowCheck(false), 3000);
-                }}
-              >
-                <img src={CopyIcon} alt="copy" />
-              </span>
-            )}
+            <Copy content={address} />
           </div>
         </div>
       </div>

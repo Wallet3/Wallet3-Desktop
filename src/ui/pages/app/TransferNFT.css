@@ -52,6 +52,10 @@
   margin-bottom: 8px;
 }
 
+.page.nft > .content > .transfer {
+  display: none;
+}
+
 .page.nft > .content > .transfer > h4 {
   margin-bottom: 8px;
   opacity: 0.75;

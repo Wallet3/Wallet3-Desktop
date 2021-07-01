@@ -1,6 +1,8 @@
 import './History.css';
 import 'react-virtualized/styles.css';
 
+import { BigNumber, utils } from 'ethers';
+
 import { Application } from '../../viewmodels/Application';
 import { List } from 'react-virtualized';
 import { NavBar } from '../../components';
@@ -14,7 +16,6 @@ import { observer } from 'mobx-react-lite';
 import { parseMethod } from '../../../common/TxParser';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { utils } from 'ethers';
 
 export default observer(({ app, walletVM }: { app: Application; walletVM: WalletVM }) => {
   const { t } = useTranslation();
@@ -39,7 +40,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
     const status = failed ? 'failed' : confirmed ? 'confirmed' : 'pending';
     const timestamp = new Date(tx.timestamp);
     const networkIcon = NetworkIcons(network.network);
-    let value = utils.formatEther(tx.value);
+    let value = utils.formatEther(Number.parseInt(tx.value) === 0 ? 0 : tx.value);
     let tokenSymbol = network.symbol;
 
     if (method.startsWith('Transfer')) {

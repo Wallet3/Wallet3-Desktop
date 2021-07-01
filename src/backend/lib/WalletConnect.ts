@@ -1,16 +1,16 @@
-import App, { App as Application } from './App';
-import { AuthParams, ConfirmSendTx, RequestSignMessage, SendTxParams, WcMessages } from '../common/Messages';
+import App, { App as Application } from '../App';
+import { AuthParams, ConfirmSendTx, RequestSignMessage, SendTxParams, WcMessages } from '../../common/Messages';
 import { BigNumber, ethers, utils } from 'ethers';
-import Gasnow, { GasnowWs } from '../gas/Gasnow';
+import Gasnow, { GasnowWs } from '../../gas/Gasnow';
 import { IReactionDisposer, reaction } from 'mobx';
-import { call, getTransactionCount } from '../common/Provider';
+import { call, getTransactionCount } from '../../common/Provider';
 
-import ERC20ABI from '../abis/ERC20.json';
+import ERC20ABI from '../../abis/ERC20.json';
 import EventEmitter from 'events';
-import KeyMan from './KeyMan';
-import WCSession from './models/WCSession';
+import { KeyMan } from '../mans';
+import WCSession from '../models/WCSession';
 import WalletConnector from '@walletconnect/client';
-import { findTokenByAddress } from '../ui/misc/Tokens';
+import { findTokenByAddress } from '../../ui/misc/Tokens';
 import { ipcMain } from 'electron';
 
 export class WalletConnect extends EventEmitter {
@@ -24,6 +24,10 @@ export class WalletConnect extends EventEmitter {
 
   get userChainId() {
     return this._userChainId;
+  }
+
+  get walletKey() {
+    return KeyMan.current;
   }
 
   private _userChainId = 0; // 0 - auto switch
@@ -55,7 +59,7 @@ export class WalletConnect extends EventEmitter {
       uri,
       clientMeta: {
         name: 'Wallet 3',
-        description: 'A Wallet for Bankless Era',
+        description: 'A Secure Wallet for Bankless Era',
         icons: [],
         url: 'https://wallet3.io',
       },
@@ -239,7 +243,7 @@ export class WalletConnect extends EventEmitter {
       const password = await App.extractPassword(params);
       if (!password) return Application.encryptIpc({}, key);
 
-      const txHex = await KeyMan.signTx(password, App.currentAddressIndex, params);
+      const txHex = await this.walletKey.signTx(password, App.currentAddressIndex, params);
       if (!txHex) {
         this.connector.rejectRequest({ id: request.id, error: { message: 'Invalid data' } });
         return;
@@ -315,7 +319,7 @@ export class WalletConnect extends EventEmitter {
       switch (type) {
         case 'personal_sign':
           const msg = params[0];
-          signed = await KeyMan.personalSignMessage(password, App.currentAddressIndex, msg);
+          signed = await this.walletKey.personalSignMessage(password, App.currentAddressIndex, msg);
 
           if (!signed) {
             this.connector.rejectRequest({ id: request.id, error: { message: 'Permission Denied' } });
@@ -327,7 +331,7 @@ export class WalletConnect extends EventEmitter {
         case 'signTypedData':
           try {
             const typedData = JSON.parse(params[1]);
-            signed = await KeyMan.signTypedData_v4(password, App.currentAddressIndex, typedData);
+            signed = await this.walletKey.signTypedData_v4(password, App.currentAddressIndex, typedData);
           } catch (error) {
             this.connector.rejectRequest({ id: request.id, error: { message: 'Invalid Typed Data' } });
             return Application.encryptIpc({ success: false }, key);
@@ -379,6 +383,9 @@ export class WalletConnect extends EventEmitter {
     this._chainIdObserver?.();
     this._currAddrObserver?.();
     this.removeAllListeners();
+    this.connector?.on('session_request', null);
+    this.connector?.on('call_request', null);
+    this.connector?.on('disconnect', null);
 
     this._chainIdObserver = undefined;
     this._currAddrObserver = undefined;

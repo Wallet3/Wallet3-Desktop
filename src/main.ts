@@ -1,17 +1,13 @@
 import './backend/AppMenu';
 
 import { BrowserWindow, Menu, TouchBar, TouchBarButton, Tray, app, nativeImage, powerMonitor } from 'electron';
+import { DBMan, KeyMan, TxMan, WCMan } from './backend/mans';
 
 import App from './backend/App';
 import Coingecko from './api/Coingecko';
-import DBMan from './backend/DBMan';
 import GasnowWs from './gas/Gasnow';
-import KeyMan from './backend/KeyMan';
 import Messages from './common/Messages';
-import TxMan from './backend/TxMan';
-import WCMan from './backend/WCMan';
 import { autorun } from 'mobx';
-import delay from 'delay';
 import { globalShortcut } from 'electron';
 import i18n from './i18n';
 import updateapp from 'update-electron-app';
@@ -112,7 +108,6 @@ const createWindow = async (): Promise<void> => {
     width: 360,
     minWidth: 360,
     minHeight: 540,
-    // frame: process.platform === 'win32' ? true : false, // https://github.com/electron/electron/issues/20754
     frame: false,
     titleBarStyle: isMac ? 'hiddenInset' : 'hidden',
     acceptFirstMouse: true,
@@ -120,7 +115,7 @@ const createWindow = async (): Promise<void> => {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       contextIsolation: true,
       nodeIntegration: false,
-      webSecurity: true,
+      webSecurity: false,
       enableRemoteModule: isMac ? false : true,
       devTools: !prod,
     },
@@ -150,9 +145,10 @@ const createWindow = async (): Promise<void> => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
   await DBMan.init();
-  await Promise.all([KeyMan.init(), TxMan.init(), WCMan.init()]);
+  await Promise.all([KeyMan.init(), TxMan.init()]);
 
   await App.init();
+  await WCMan.init();
   createWindow();
 
   GasnowWs.start(true);

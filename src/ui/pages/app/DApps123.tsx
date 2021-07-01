@@ -28,6 +28,8 @@ const LogoImage = ({ name }: { name: string }) => {
     src = require(`../../../assets/icons/3rd/logos/${name.toLowerCase()}.png`).default;
     return <img src={src} alt={name} />;
   } catch (error) {}
+
+  return <span></span>;
 };
 
 export default observer(({ app, networksVM, walletVM }: IConstructor) => {

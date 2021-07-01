@@ -12,9 +12,8 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json'],
-    // alias: {
-    //   [path.join(__dirname, 'node_modules/sqlite3/lib/sqlite3-binding.js')]: path.join(__dirname, 'bindings/sqlite3-binding.js'),
-    // },
+    alias: {
+      // [path.join(__dirname, 'node_modules/sqlite3/lib/sqlite3-binding.js')]: path.join(__dirname, 'bindings/sqlite3-binding.js'),
+    },
   },
-  //externals: ['better-sqlite3', 'keytar', 'secp256k1', 'keccak']
 };
