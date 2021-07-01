@@ -16,7 +16,7 @@ export default observer(({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) 
   const { authKey } = params as { authKey: string };
 
   useEffect(() => {
-    mnVM.readMnemonic(authKey);
+    mnVM.readSecret(authKey);
     return () => mnVM.clean();
   }, []);
 
@@ -33,7 +33,13 @@ export default observer(({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) 
           </ul>
         </div>
 
-        <Mnemonic phrases={mnVM.phrases} />
+        {mnVM.privkey ? (
+          <pre className="privkey">
+            <span>{mnVM.privkey}</span>
+          </pre>
+        ) : (
+          <Mnemonic phrases={mnVM.phrases} />
+        )}
       </div>
     </div>
   );

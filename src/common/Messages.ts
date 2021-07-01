@@ -5,7 +5,7 @@ export default {
   saveTmpSecret: 'msg-save-tmp-secret',
   setDerivationPath: 'msg-set-derivation-path',
   setupMnemonic: 'msg-setup-mnemonic',
-  readMnemonic: 'msg-read-mnemonic',
+  readSecret: 'msg-read-secret',
   verifyPassword: 'msg-verify-password',
   changePassword: 'msg-change-passcode',
   initVerifyPassword: 'msg-init-verify-password',

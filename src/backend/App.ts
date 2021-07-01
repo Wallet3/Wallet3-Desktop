@@ -196,7 +196,7 @@ export class App {
       await this.walletKey.setFullPath(fullPath);
     });
 
-    ipcMain.handle(`${MessageKeys.readMnemonic}-secure`, async (e, encrypted, winId) => {
+    ipcMain.handle(`${MessageKeys.readSecret}-secure`, async (e, encrypted, winId) => {
       const { key } = this.windows.get(winId);
       const [iv, cipherText] = encrypted;
 
@@ -208,8 +208,8 @@ export class App {
         return App.encryptIpc({}, key);
       }
 
-      const mnemonic = await this.walletKey.readSecret(password);
-      return App.encryptIpc({ mnemonic }, key);
+      const secret = await this.walletKey.readSecret(password);
+      return App.encryptIpc({ secret }, key);
     });
 
     ipcMain.handle(`${MessageKeys.verifyPassword}-secure`, async (e, encrypted, winId) => {

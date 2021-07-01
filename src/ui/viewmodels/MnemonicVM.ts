@@ -8,6 +8,7 @@ import { utils } from 'ethers';
 
 export class MnemonicVM {
   phrases: string[] = new Array(12).fill('');
+  privkey: string = '';
   address = '';
 
   constructor() {
@@ -52,12 +53,13 @@ export class MnemonicVM {
     return success;
   }
 
-  async readMnemonic(authKey: string) {
-    const { mnemonic } = await ipc.invokeSecure<{ mnemonic: string }>(`${MessageKeys.readMnemonic}`, { authKey });
-    if (!mnemonic) return;
+  async readSecret(authKey: string) {
+    const { secret } = await ipc.invokeSecure<{ secret: string }>(`${MessageKeys.readSecret}`, { authKey });
+    if (!secret) return;
 
     runInAction(() => {
-      this.phrases = mnemonic.split(/\s/);
+      if (utils.isValidMnemonic(secret)) this.phrases = secret.split(/\s/);
+      else this.privkey = secret;
     });
   }
 

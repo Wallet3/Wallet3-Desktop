@@ -1,6 +1,7 @@
 .page.backup-mnemonic {
   display: grid;
   grid-template-rows: auto 1fr;
+  overflow: hidden;
 }
 
 .page.backup-mnemonic h5 {
@@ -19,4 +20,28 @@
 
 .page.backup-mnemonic ul > li {
   margin-bottom: 8px;
+}
+
+.page.backup-mnemonic .content .privkey {
+  padding: 12px;
+  box-sizing: border-box;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+
+  -webkit-app-region: no-drag;
+}
+
+.page.backup-mnemonic .content .privkey span {
+  word-wrap: break-word;
+  text-overflow: ellipsis;
+  white-space: pre-line;
+  user-select: text;
+  display: inline-block;
+  max-width: calc(100vw - 48px);
+  filter: blur(5px);
+  transition: all 0.3s;
+}
+
+.page.backup-mnemonic .content .privkey:hover span {
+  filter: blur(0);
 }
