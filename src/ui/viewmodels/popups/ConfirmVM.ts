@@ -90,13 +90,15 @@ export class ConfirmVM {
     this._nonce = params.nonce || 0;
     this._value = params.value || 0;
     this._data = params.data;
+
+    console.log(this.args);
   }
 
   get receipient() {
     return this.args.receipient?.name;
   }
 
-  get verifiedName() {
+  get verifiedName(): string {
     try {
       return (
         KnownAddresses[this.approveToken?.spender] ||
@@ -109,7 +111,11 @@ export class ConfirmVM {
   }
 
   get receipientAddress() {
-    return this.args.receipient?.address || this.args.to;
+    return this.args.receipient?.address;
+  }
+
+  get to() {
+    return this.args.to;
   }
 
   get amount() {

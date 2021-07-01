@@ -23,6 +23,7 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
     receipientAddress,
     receipient,
     amount,
+    method,
     tokenSymbol,
     networkSymbol,
     gas,
@@ -32,6 +33,7 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
     totalValue,
     chainId,
     verifiedName,
+    to,
   } = implVM;
 
   const gasPriceRef = createRef<HTMLInputElement>();
@@ -58,12 +60,12 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
         <div className={`to`}>
           <span>{t('To')}:</span>
           <span
-            className={`${verifiedName ? 'verified' : ''}`}
-            title={receipientAddress}
+            className={`${verifiedName && method === 'Contract Interaction' ? 'verified' : ''}`}
+            title={receipientAddress || to}
             onClick={(_) => Shell.open(convertToAccountUrl(chainId, receipientAddress))}
           >
-            {verifiedName || receipient || formatAddress(receipientAddress, 8, 5)}
-            {verifiedName ? <Feather icon="award" size={12} /> : undefined}
+            {formatAddress(receipientAddress, 8, 5) || verifiedName || receipient || formatAddress(to, 8, 5)}
+            {verifiedName && method === 'Contract Interaction' ? <Feather icon="award" size={12} /> : undefined}
           </span>
         </div>
 
