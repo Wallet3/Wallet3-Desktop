@@ -60,7 +60,9 @@ export default observer(({ accountVM, app }: { accountVM?: AccountVM; app: Appli
                             <img src={CryptoIcons(t.symbol)} alt={t.symbol} />
                             <div className="desc">
                               <div>{t.symbol}</div>
-                              <div className="amount">{t.amount}</div>
+                              <div className="amount">
+                                {t.amount.toLocaleString(undefined, { maximumFractionDigits: 18 })}
+                              </div>
                             </div>
 
                             <Toggle
