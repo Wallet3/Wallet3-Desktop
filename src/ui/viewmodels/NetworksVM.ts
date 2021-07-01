@@ -76,7 +76,7 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: PolygonPopularTokens,
   },
   {
-    symbol: 'ETH',
+    symbol: 'OETH',
     network: 'Optimism',
     chainId: 10,
     color: '#FF0420',
