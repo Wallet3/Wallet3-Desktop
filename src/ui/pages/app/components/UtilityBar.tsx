@@ -119,7 +119,7 @@ export default observer(({ app, walletVM, networksVM }: Props) => {
         menuButton={() => (
           <MenuButton
             className="icon-button"
-            title={`${accountVM?.ens || accountVM?.address} (Account ${accountVM.accountIndex})` ?? 'Show Address'}
+            title={`${accountVM?.ens || accountVM?.address} (${accountVM?.name || `Account ${accountVM.accountIndex}`})`}
           >
             <Feather icon="user" size={16} strokeWidth={1} />
           </MenuButton>
