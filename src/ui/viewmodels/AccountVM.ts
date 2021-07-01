@@ -181,7 +181,9 @@ export class AccountVM {
     const nativeSymbols = Networks.map((n) => n?.symbol.toLowerCase());
     const userConfigs = this.loadTokenConfigs();
 
-    const tokens = await Debank.getTokenBalances(this.address, NetVM.currentNetwork.comm_id);
+    const tokens = NetVM.currentNetwork.test
+      ? []
+      : await Debank.getTokenBalances(this.address, NetVM.currentNetwork.comm_id);
 
     let assets = NetVM.currentNetwork.test
       ? []
