@@ -4,8 +4,6 @@ const host = 'https://openapi.debank.com';
 type chain = 'eth' | 'bsc' | 'xdai' | 'matic' | string;
 
 export async function getChainBalance(address: string, chain: chain) {
-  chain = chain.toLowerCase() === 'ht' ? 'heco' : chain;
-
   try {
     const resp = await axios.get(`${host}/v1/user/chain_balance?id=${address}&chain_id=${chain}`.toLowerCase());
     const data = resp.data as { usd_value: number };
@@ -16,8 +14,6 @@ export async function getChainBalance(address: string, chain: chain) {
 }
 
 export async function getTokenBalances(address: string, chain: chain, is_all = false) {
-  chain = chain.toLowerCase() === 'ht' ? 'heco' : chain;
-
   try {
     const resp = await axios.get(
       `${host}/v1/user/token_list?id=${address}&chain_id=${chain}&is_all=${is_all}`.toLowerCase()

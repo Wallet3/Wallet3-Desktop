@@ -15,6 +15,7 @@ import { makeAutoObservable } from 'mobx';
 import store from 'storejs';
 
 export interface INetwork {
+  comm_id?: string;
   symbol: string;
   network: string;
   chainId: number;
@@ -61,6 +62,7 @@ export class NetworksVM {
 export const PublicNetworks: INetwork[] = [
   {
     symbol: 'ETH',
+    comm_id: 'eth',
     network: 'Ethereum',
     chainId: 1,
     color: '#6186ff',
@@ -69,6 +71,7 @@ export const PublicNetworks: INetwork[] = [
   },
   {
     symbol: 'MATIC',
+    comm_id: 'matic',
     network: 'Polygon',
     chainId: 137,
     color: '#8247E5',
@@ -77,6 +80,7 @@ export const PublicNetworks: INetwork[] = [
   },
   {
     symbol: 'OETH',
+    comm_id: 'optimism',
     network: 'Optimism',
     chainId: 10,
     color: '#FF0420',
@@ -85,6 +89,7 @@ export const PublicNetworks: INetwork[] = [
   },
   {
     symbol: 'xDAI',
+    comm_id: 'xdai',
     network: 'xDAI',
     chainId: 100,
     color: '#48A9A6',
@@ -93,6 +98,7 @@ export const PublicNetworks: INetwork[] = [
   },
   {
     symbol: 'FTM',
+    comm_id: 'ftm',
     chainId: 250,
     network: 'Fantom',
     color: '#1969FF',
@@ -101,6 +107,7 @@ export const PublicNetworks: INetwork[] = [
   },
   {
     symbol: 'HT',
+    comm_id: 'heco',
     chainId: 128,
     network: 'HECO',
     order: 6,
@@ -109,6 +116,7 @@ export const PublicNetworks: INetwork[] = [
   },
   {
     symbol: 'OKT',
+    comm_id: 'okt',
     chainId: 66,
     network: 'OKEx',
     order: 7,
@@ -117,6 +125,7 @@ export const PublicNetworks: INetwork[] = [
   },
   {
     symbol: 'BSC',
+    comm_id: 'bsc',
     network: 'BSC',
     chainId: 56,
     color: '#f3ba2f',
