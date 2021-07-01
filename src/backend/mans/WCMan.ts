@@ -142,7 +142,11 @@ class WCMan {
   }
 
   async clean() {
-    this.connects.forEach((c) => c?.wcSession?.remove());
+    this.connects.forEach((c) => {
+      c?.disconnect();
+      c?.wcSession?.remove();
+    });
+    
     await this.dispose();
   }
 
