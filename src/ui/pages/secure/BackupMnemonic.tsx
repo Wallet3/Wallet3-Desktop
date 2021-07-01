@@ -22,7 +22,7 @@ export default observer(({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) 
 
   return (
     <div className="page backup-mnemonic">
-      <NavBar title={t('Backup Secret')} onBackClick={() => app.history.goBack()} />
+      <NavBar title={t('Backup Wallet')} onBackClick={() => app.history.goBack()} />
 
       <div className="content">
         <div>
