@@ -6,7 +6,7 @@ export function formatNum(value: number, symbol = '$') {
 }
 
 export function formatAddress(value: string, headLength = 10, tailLength = 8) {
-  return value?.startsWith('0x')
+  return value?.length > headLength + tailLength
     ? `${value.substring(0, headLength)}......${value.substring(value.length - tailLength)}`
     : value;
 }
