@@ -24,7 +24,7 @@ interface Props {
 }
 
 const MenuItemStyle = {
-  padding: '8px 12px',
+  padding: '0px',
   fontSize: '12px',
   display: 'flex',
   alignItems: 'center',
@@ -50,20 +50,20 @@ export default observer(({ app, walletVM, networksVM }: Props) => {
         >
           {pendingTxs.slice(0, 10).map((item) => {
             return (
-              <MenuItem
-                key={item.hash}
-                styles={{ padding: '8px 12px' }}
-                onClick={(_) => {
-                  walletVM.selectPendingTx(item);
-                  app.history.push(`/tx?hash=${item.hash}`);
-                }}
-              >
-                <PendingTx
-                  tx={item}
-                  rapid={GasStation.getGasPrice(item.chainId, 'rapid')}
-                  fast={GasStation.getGasPrice(item.chainId, 'fast')}
-                  standard={GasStation.getGasPrice(item.chainId, 'standard')}
-                />
+              <MenuItem key={item.hash} styles={{ padding: 0 }}>
+                <button
+                  onClick={(_) => {
+                    walletVM.selectPendingTx(item);
+                    app.history.push(`/tx?hash=${item.hash}`);
+                  }}
+                >
+                  <PendingTx
+                    tx={item}
+                    rapid={GasStation.getGasPrice(item.chainId, 'rapid')}
+                    fast={GasStation.getGasPrice(item.chainId, 'fast')}
+                    standard={GasStation.getGasPrice(item.chainId, 'standard')}
+                  />
+                </button>
               </MenuItem>
             );
           })}
@@ -84,23 +84,25 @@ export default observer(({ app, walletVM, networksVM }: Props) => {
         >
           {connectedDApps.slice(0, 6).map((s) => {
             return (
-              <MenuItem
-                key={s.key}
-                styles={{ padding: '8px 12px' }}
-                onClick={(_) => {
-                  walletVM.selectDAppSession(s);
-                  app.history.push(`/connectedapp`);
-                }}
-              >
-                <ConnectedDAppLabel {...s} />
+              <MenuItem key={s.key} styles={{ padding: '0' }}>
+                <button
+                  onClick={(_) => {
+                    walletVM.selectDAppSession(s);
+                    app.history.push(`/connectedapp`);
+                  }}
+                >
+                  <ConnectedDAppLabel {...s} />
+                </button>
               </MenuItem>
             );
           })}
 
           {appCount > 6 ? <MenuDivider /> : undefined}
           {appCount > 6 ? (
-            <MenuItem styles={MenuItemStyle} onClick={(_) => app.history.push('/connectedapps')}>
-              <span>{`${t('See All')} (${appCount})`}</span>
+            <MenuItem styles={MenuItemStyle}>
+              <button onClick={(_) => app.history.push('/connectedapps')}>
+                <span>{`${t('See All')} (${appCount})`}</span>
+              </button>
             </MenuItem>
           ) : undefined}
         </Menu>
@@ -126,17 +128,21 @@ export default observer(({ app, walletVM, networksVM }: Props) => {
           </MenuButton>
         )}
       >
-        <MenuItem styles={MenuItemStyle} onClick={(_) => app.history.push('/account')}>
-          <div className="profile-item">
-            <Feather icon="share-2" size={13} />
-            <span>{t('Profile')}</span>
-          </div>
+        <MenuItem styles={MenuItemStyle}>
+          <button onClick={(_) => app.history.push('/account')}>
+            <div className="profile-item">
+              <Feather icon="share-2" size={13} />
+              <span>{t('Profile')}</span>
+            </div>
+          </button>
         </MenuItem>
-        <MenuItem styles={MenuItemStyle} onClick={(_) => app.history.push('/history')}>
-          <div className="profile-item">
-            <Feather icon="database" size={13} />
-            <span>{t('History')}</span>
-          </div>
+        <MenuItem styles={MenuItemStyle}>
+          <button onClick={(_) => app.history.push('/history')}>
+            <div className="profile-item">
+              <Feather icon="database" size={13} />
+              <span>{t('History')}</span>
+            </div>
+          </button>
         </MenuItem>
       </Menu>
     </div>

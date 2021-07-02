@@ -42,7 +42,7 @@ export class Application {
     runInAction(() => (this.platform = platform));
 
     const appDiv = document.getElementById('root');
-    appDiv.classList.add('win32');
+    appDiv.classList.add(platform);
 
     Coingecko.start(30);
 
