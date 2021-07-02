@@ -84,8 +84,10 @@ export default observer(({ walletVM, app, currencyVM, langsVM }: IConstructor) =
         >
           {currencyVM.supportedCurrencies.map((c) => {
             return (
-              <MenuItem key={c.flag} styles={{ padding: '8px 12px' }} onClick={() => currencyVM.setCurrency(c)}>
-                <DisplayCurrency flag={c.flag} label={c.currency} mini />
+              <MenuItem key={c.flag} styles={{ padding: 0 }}>
+                <button onClick={() => currencyVM.setCurrency(c)}>
+                  <DisplayCurrency flag={c.flag} label={c.currency} mini />
+                </button>
               </MenuItem>
             );
           })}
@@ -106,8 +108,10 @@ export default observer(({ walletVM, app, currencyVM, langsVM }: IConstructor) =
         >
           {langsVM.supportedLangs.map((lang) => {
             return (
-              <MenuItem key={lang.value} styles={{ padding: '8px 12px' }} onClick={(_) => langsVM.setLang(lang)}>
-                <DisplayCurrency flag={lang.flag} label={lang.name} mini />
+              <MenuItem key={lang.value} styles={{ padding: 0 }}>
+                <button onClick={(_) => langsVM.setLang(lang)}>
+                  <DisplayCurrency flag={lang.flag} label={lang.name} mini />
+                </button>
               </MenuItem>
             );
           })}

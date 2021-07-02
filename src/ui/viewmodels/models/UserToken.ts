@@ -1,4 +1,4 @@
-import { IToken } from '../../misc/Tokens';
+import { IToken } from '../../../misc/Tokens';
 import { makeAutoObservable } from 'mobx';
 
 export interface IUserToken {

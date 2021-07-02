@@ -38,6 +38,7 @@
   display: flex;
   align-items: center;
   line-height: 12.5px;
+  font-size: 12px;
 }
 
 .utility-bar .profile-item svg {

@@ -1,10 +1,10 @@
 import Messages, { TxParams } from '../../common/Messages';
-import NetVM, { Networks } from './NetworksVM';
 import { makeAutoObservable, reaction, runInAction, when } from 'mobx';
 
 import { AccountVM } from './AccountVM';
 import { DAppVM } from './wallet/DAppVM';
 import { HistoryTxsVM } from './wallet/HistoryTxsVM';
+import NetVM from './NetworksVM';
 import { PendingTxVM } from './wallet/PendingTxVM';
 import ipc from '../bridges/IPC';
 import store from 'storejs';

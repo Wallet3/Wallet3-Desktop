@@ -3,12 +3,12 @@ import './NetworkMenu.css';
 
 import { Menu, MenuButton, MenuDivider, MenuItem, MenuPosition, SubMenu } from '@szhsin/react-menu';
 
-import { INetwork } from '../viewmodels/NetworksVM';
+import { INetwork } from '../../misc/Networks';
 import NetworkLabel from './NetworkLabel';
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 
-const MenuItemStyles = { padding: '8px 12px' };
+const MenuItemStyles = { padding: 0 };
 
 interface Props {
   showAutoSwitch?: boolean;
@@ -25,8 +25,10 @@ export default observer(
     const Testnets = () =>
       testnets.map((item) => {
         return (
-          <MenuItem key={item.chainId} styles={MenuItemStyles} onClick={(_) => onNetworkSelected(item.chainId)}>
-            <NetworkLabel expand chainId={item.chainId} />
+          <MenuItem key={item.chainId} styles={MenuItemStyles}>
+            <button onClick={(_) => onNetworkSelected(item.chainId)}>
+              <NetworkLabel expand chainId={item.chainId} active={currentChainId === item.chainId} color={item.color} />
+            </button>
           </MenuItem>
         );
       });
@@ -44,16 +46,20 @@ export default observer(
         position={position || 'auto'}
       >
         {showAutoSwitch ? (
-          <MenuItem styles={MenuItemStyles} onClick={(_) => onNetworkSelected(0)}>
-            <NetworkLabel chainId={0} expand />
+          <MenuItem styles={MenuItemStyles}>
+            <button onClick={(_) => onNetworkSelected(0)}>
+              <NetworkLabel chainId={0} expand />
+            </button>
           </MenuItem>
         ) : undefined}
         {showAutoSwitch ? <MenuDivider /> : undefined}
 
         {publicNetworks.map((item) => {
           return (
-            <MenuItem key={item.chainId} styles={MenuItemStyles} onClick={(_) => onNetworkSelected(item.chainId)}>
-              <NetworkLabel expand chainId={item.chainId} />
+            <MenuItem key={item.chainId} styles={MenuItemStyles}>
+              <button onClick={(_) => onNetworkSelected(item.chainId)}>
+                <NetworkLabel expand chainId={item.chainId} active={currentChainId === item.chainId} color={item.color} />
+              </button>
             </MenuItem>
           );
         })}

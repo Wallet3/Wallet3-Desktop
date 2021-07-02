@@ -1,7 +1,7 @@
 import './TxDetails.css';
 
 import { NetworkIcons } from '../../../misc/Icons';
-import { Networks } from '../../../viewmodels/NetworksVM';
+import { Networks } from '../../../../misc/Networks';
 import React from 'react';
 import { convertTxToUrl } from '../../../../misc/Url';
 import { formatAddress } from '../../../misc/Formatter';

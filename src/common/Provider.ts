@@ -3,7 +3,7 @@ import * as ethers from 'ethers';
 
 import axios from 'axios';
 
-const cache = new Map<number, ethers.providers.JsonRpcProvider>();
+const cache = new Map<number, ethers.providers.JsonRpcProvider | ethers.providers.WebSocketProvider>();
 const failedRPCs = new Set<string>();
 
 export function getProviderByChainId(chainId: number) {
@@ -16,8 +16,12 @@ export function getProviderByChainId(chainId: number) {
     throw new Error(`Unsupported chain:${chainId}`);
   }
 
-  const [rpc] = list.filter((rpc) => !failedRPCs.has(rpc));
-  const provider = new ethers.providers.JsonRpcProvider(rpc || list[0], chainId);
+  const url = list.filter((rpc) => !failedRPCs.has(rpc))[0] || list[0];
+
+  const provider = url.startsWith('http')
+    ? new ethers.providers.JsonRpcProvider(url, chainId)
+    : new ethers.providers.WebSocketProvider(url, chainId);
+    
   cache.set(chainId, provider);
   return provider;
 }
