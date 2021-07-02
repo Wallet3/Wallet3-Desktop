@@ -10,7 +10,7 @@ html {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Microsoft Yahei', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   margin: 0;
   -webkit-app-region: drag;
   -webkit-font-smoothing: antialiased;
@@ -155,4 +155,47 @@ button.menu-button {
 button.menu-button:hover {
   color: var(--theme-color);
   background-color: var(--border-color);
+}
+
+#root.win32 ::-webkit-scrollbar {
+  width: 8px;
+  background-color: rgba(0, 0, 0, 0);
+  border-radius: 100px;
+  transition: all 0.3s;
+  position: absolute !important;
+  -webkit-app-region: no-drag;
+}
+
+#root.win32 ::-webkit-scrollbar:start {
+  opacity: 1;
+}
+
+#root.win32 ::-webkit-scrollbar:hover {
+  background-color: rgba(0, 0, 0, 0.09);
+}
+
+#root.win32 ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 100px;
+  -webkit-app-region: no-drag;
+  opacity: 0;
+  width: 8px;
+  transition: all 0.3s;
+}
+
+#root.win32 ::-webkit-scrollbar-thumb:active {
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 100px;
+}
+
+#root.win32 ::-webkit-scrollbar-thumb:vertical {
+  min-height: 10px;
+}
+
+#root.win32 ::-webkit-scrollbar-thumb:horizontal {
+  min-width: 10px;
+}
+
+#root.win32 ::-webkit-scrollbar-button {
+  display: none;
 }

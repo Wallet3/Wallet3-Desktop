@@ -41,6 +41,9 @@ export class Application {
     this.appAuthenticated = appAuthenticated;
     runInAction(() => (this.platform = platform));
 
+    const appDiv = document.getElementById('root');
+    appDiv.classList.add('win32');
+
     Coingecko.start(30);
 
     if (addresses?.length > 0) {

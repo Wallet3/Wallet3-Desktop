@@ -48,7 +48,7 @@ export default observer((args: Props) => {
 
   return (
     <Router history={app.history}>
-      <div id="app" className={app.platform}>
+      <div id="app">
         {app.isMac ? undefined : (
           <TitleBar
             onClose={() => window.close()}
