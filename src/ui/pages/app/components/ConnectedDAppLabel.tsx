@@ -12,7 +12,7 @@ export default (props: IWcSession) => {
   const { t } = useTranslation();
 
   return (
-    <div className="connectedapp">
+    <div className="connectedapp-label">
       <div className="dapp-logo">
         <Image className="appicon" src={props.peerMeta.icons[0] || ''} />
         {network?.chainId === 1 ? undefined : (
