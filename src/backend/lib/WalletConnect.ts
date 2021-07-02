@@ -10,7 +10,7 @@ import EventEmitter from 'events';
 import { KeyMan } from '../mans';
 import WCSession from '../models/WCSession';
 import WalletConnector from '@walletconnect/client';
-import { findTokenByAddress } from '../../ui/misc/Tokens';
+import { findTokenByAddress } from '../../misc/Tokens';
 import { ipcMain } from 'electron';
 
 export class WalletConnect extends EventEmitter {

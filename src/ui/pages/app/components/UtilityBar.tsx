@@ -2,12 +2,13 @@ import './UtilityBar.css';
 
 import { Image, NetworkMenu } from '../../../components';
 import { Menu, MenuButton, MenuDivider, MenuItem } from '@szhsin/react-menu';
-import { NetworksVM, PublicNetworks, Testnets } from '../../../viewmodels/NetworksVM';
+import { PublicNetworks, Testnets } from '../../../../misc/Networks';
 
 import { Application } from '../../../viewmodels/Application';
 import ConnectedDAppLabel from './ConnectedDAppLabel';
 import Feather from 'feather-icons-react';
 import GasStation from '../../../../gas';
+import { NetworksVM } from '../../../viewmodels/NetworksVM';
 import PendingTx from './PendingTxLabel';
 import PendingTxIndicator from './PendingTxIndicator';
 import React from 'react';

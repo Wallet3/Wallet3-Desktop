@@ -3,7 +3,7 @@ import './ConnectedDAppLabel.css';
 import { AppsIcon, NetworkIcons } from '../../../misc/Icons';
 
 import Image from '../../../components/Image';
-import { Networks } from '../../../viewmodels/NetworksVM';
+import { Networks } from '../../../../misc/Networks';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 

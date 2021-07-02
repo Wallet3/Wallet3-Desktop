@@ -3,7 +3,7 @@ import './NetworkMenu.css';
 
 import { Menu, MenuButton, MenuDivider, MenuItem, MenuPosition, SubMenu } from '@szhsin/react-menu';
 
-import { INetwork } from '../viewmodels/NetworksVM';
+import { INetwork } from '../../misc/Networks';
 import NetworkLabel from './NetworkLabel';
 import React from 'react';
 import { observer } from 'mobx-react-lite';

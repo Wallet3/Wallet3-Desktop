@@ -2,7 +2,7 @@ import * as Cipher from '../common/Cipher';
 import * as keytar from 'keytar';
 
 import { BrowserWindow, Notification, TouchBar, TouchBarButton, ipcMain, systemPreferences } from 'electron';
-import { DBMan, KeyMan, TxMan, WCMan } from './mans';
+import { DBMan, KeyMan, TxMan, TxNotificaion, WCMan } from './mans';
 import MessageKeys, {
   AuthenticationResult,
   ConfirmSendTx,
@@ -14,6 +14,7 @@ import MessageKeys, {
 import { autorun, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
 import { createECDH, createHash, randomBytes } from 'crypto';
 
+import { Networks } from '../misc/Networks';
 import Transaction from './models/Transaction';
 import i18n from '../i18n';
 import { sendTransaction } from '../common/Provider';
@@ -41,6 +42,10 @@ export class App {
 
   #userPassword?: string; // keep encrypted password in memory for TouchID users
   #authKeys = new Map<string, string>(); // authId => key
+
+  get currentNetwork() {
+    return Networks.find((n) => n.chainId === this.chainId);
+  }
 
   get currentAddress() {
     return this.addresses[this.currentAddressIndex];
@@ -164,7 +169,7 @@ export class App {
       const [iv, cipherText] = encrypted;
 
       const { secret } = App.decryptIpc(cipherText, iv, key);
-      return App.encryptIpc({ success: this.walletKey.setTmpSecret(secret) }, key );
+      return App.encryptIpc({ success: this.walletKey.setTmpSecret(secret) }, key);
     });
 
     ipcMain.handle(`${MessageKeys.setupMnemonic}-secure`, async (e, encrypted, winId) => {
@@ -180,6 +185,12 @@ export class App {
 
       const addresses = await this.walletKey.genAddresses(userPassword, 10);
       runInAction(() => (this.addresses = addresses));
+
+      TxNotificaion.watch(
+        this.currentNetwork.defaultTokens.map((t) => t.address),
+        addresses,
+        this.chainId
+      );
 
       if (this.touchIDSupported) this.encryptUserPassword(userPassword);
 
@@ -260,6 +271,12 @@ export class App {
           addrs = await this.walletKey.genAddresses(password, count);
 
           runInAction(() => this.addresses.push(...addrs));
+
+          TxNotificaion.watch(
+            this.currentNetwork.defaultTokens.map((t) => t.address),
+            addrs,
+            this.chainId
+          );
 
           if (this.touchIDSupported) this.encryptUserPassword(password);
         }

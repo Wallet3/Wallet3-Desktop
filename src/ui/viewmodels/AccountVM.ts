@@ -2,17 +2,17 @@ import * as Debank from '../../api/Debank';
 
 import { BigNumber, utils } from 'ethers';
 import { IUserToken, UserToken } from './models/UserToken';
-import NetVM, { Networks } from './NetworksVM';
 import { makeAutoObservable, runInAction } from 'mobx';
 
 import { AddTokenVM } from './account/AddTokenVM';
 import { ERC20Token } from '../../common/ERC20Token';
 import { NFT } from './models/NFT';
+import NetVM from './NetworksVM';
+import { Networks } from '../../misc/Networks';
 import POAP from '../../nft/POAP';
 import Rarible from '../../nft/Rarible';
 import { TransferVM } from './account/TransferVM';
 import WalletVM from './WalletVM';
-import { hexZeroPad } from 'ethers/lib/utils';
 import store from 'storejs';
 
 const Keys = {

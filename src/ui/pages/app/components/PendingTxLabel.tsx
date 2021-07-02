@@ -2,7 +2,7 @@ import './PendingTxLabel.css';
 
 import BarLoader from 'react-spinners/BarLoader';
 import Feather from 'feather-icons-react';
-import { Networks } from '../../../viewmodels/NetworksVM';
+import { Networks } from '../../../../misc/Networks';
 import React from 'react';
 import { TxParams } from '../../../../common/Messages';
 import { observer } from 'mobx-react-lite';
