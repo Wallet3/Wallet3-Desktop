@@ -1,29 +1,33 @@
+import { BigNumber, utils } from 'ethers';
+
 import { ERC20Token } from '../../common/ERC20Token';
+import { IToken } from '../../misc/Tokens';
 import { getProviderByChainId } from '../../common/Provider';
-import { hexZeroPad } from 'ethers/lib/utils';
-import { utils } from 'ethers';
 
 class TxNotification {
   private tokens = new Map<string, ERC20Token>();
 
-  watch(erc20s: string[], addrs: string[], chainId: number) {
-    const provider = getProviderByChainId(chainId);
-    const tokens = erc20s.map((addr) => new ERC20Token(addr, provider));
+  async watch(erc20s: IToken[], addrs: string[], chainId: number) {
+    if (addrs.length === 0) return;
 
-    for (let token of tokens) {
+    const provider = getProviderByChainId(chainId);
+    const tokens = erc20s.map((t) => new ERC20Token(t.address, provider));
+    console.log(await provider.ready);
+
+    for (let i = 0; i < tokens.length; i++) {
+      const token = tokens[i];
       if (this.tokens.has(token.address)) continue;
 
       this.tokens.set(token.address, token);
+      console.log(`watch ${erc20s[i].symbol}`, addrs[0]);
 
-      provider.on(
-        {
-          address: token.address,
-          topics: [utils.id('Transfer(address,address,uint256)'), null, addrs.map((addr) => hexZeroPad(addr, 32))],
-        },
-        (log, event) => {
-          console.log(log);
-        }
-      );
+      const filter = token.filters.Transfer(null, addrs[0]);
+      //   token.on(filter, (from: string, to: string, value: BigNumber) => {
+      //     console.log(erc20s[i].symbol, from, to, value);
+      //   });
+      token.on('Transfer', (a, b, c, e) => {
+        console.log(a, b, c, e);
+      });
     }
   }
 }

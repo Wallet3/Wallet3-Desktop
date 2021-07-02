@@ -186,11 +186,7 @@ export class App {
       const addresses = await this.walletKey.genAddresses(userPassword, 10);
       runInAction(() => (this.addresses = addresses));
 
-      TxNotificaion.watch(
-        this.currentNetwork.defaultTokens.map((t) => t.address),
-        addresses,
-        this.chainId
-      );
+      // TxNotificaion.watch(this.currentNetwork.defaultTokens, addresses, this.chainId);
 
       if (this.touchIDSupported) this.encryptUserPassword(userPassword);
 
@@ -272,11 +268,7 @@ export class App {
 
           runInAction(() => this.addresses.push(...addrs));
 
-          TxNotificaion.watch(
-            this.currentNetwork.defaultTokens.map((t) => t.address),
-            addrs,
-            this.chainId
-          );
+          // TxNotificaion.watch(this.currentNetwork.defaultTokens, addrs, this.chainId);
 
           if (this.touchIDSupported) this.encryptUserPassword(password);
         }
@@ -326,7 +318,12 @@ export class App {
       return App.encryptIpc({ success: true }, key);
     });
 
-    ipcMain.handle(`${MessageKeys.changeChainId}`, async (e, id) => runInAction(() => (this.chainId = id)));
+    ipcMain.handle(`${MessageKeys.changeChainId}`, async (e, id) =>
+      runInAction(() => {
+        this.chainId = id;
+        // TxNotificaion.watch(this.currentNetwork.defaultTokens, this.addresses, id);
+      })
+    );
 
     ipcMain.handle(`${MessageKeys.sendTx}-secure`, async (e, encrypted, winId) => {
       const { key } = this.windows.get(winId);
