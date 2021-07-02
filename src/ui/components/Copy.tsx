@@ -5,9 +5,15 @@ import React, { useState } from 'react';
 import CheckIcon from '../../assets/icons/app/check.svg';
 import Clipboard from '../bridges/Clipboard';
 import CopyIcon from '../../assets/icons/app/copy.svg';
+import { useEffect } from 'react';
 
 export default ({ content }: { content: string }) => {
   const [showCheck, setShowCheck] = useState(false);
+  const [timer, setTimer] = useState<NodeJS.Timer>(null);
+
+  useEffect(() => {
+    return clearTimeout(timer);
+  }, []);
 
   return (
     <div className="copy">
@@ -20,7 +26,7 @@ export default ({ content }: { content: string }) => {
           onClick={(_) => {
             Clipboard.writeText(content);
             setShowCheck(true);
-            setTimeout(() => setShowCheck(false), 3000);
+            setTimer(setTimeout(() => setShowCheck(false), 3000));
           }}
         />
       )}

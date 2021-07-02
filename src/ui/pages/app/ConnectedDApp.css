@@ -3,10 +3,6 @@
   grid-template-rows: auto 1fr auto;
 }
 
-.page.dapp > .form {
-  overflow: hidden;
-}
-
 .page.dapp > .form > div {
   display: flex;
   justify-content: space-between;
@@ -16,6 +12,10 @@
   font-size: 14px;
   line-height: 15px;
   align-items: center;
+}
+
+.page.dapp > .form > .app-item {
+  overflow: hidden;
 }
 
 .page.dapp > .form > div:first-child {
