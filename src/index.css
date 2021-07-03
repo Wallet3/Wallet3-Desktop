@@ -178,7 +178,7 @@ button.icon-button:active {
 
 button.menu-button {
   font-weight: 500;
-  cursor: pointer;
+  cursor: pointer !important;
   border: none;
   border-radius: 5px;
 }

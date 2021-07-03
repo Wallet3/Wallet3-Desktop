@@ -1,0 +1,15 @@
+.connectedapps-indicator {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+}
+
+.connectedapps-indicator > span.count {
+  font-weight: 500;
+  margin-right: 5px;
+}
+
+.connectedapps-indicator > svg {
+  margin: 0;
+  margin-right: 1px;
+}

@@ -10,8 +10,12 @@ class POAP {
   readonly contract = new ethers.Contract(ContractAddr, POAPAbi, getProviderByChainId(1));
 
   async balanceOf(address: string) {
-    const amount: BigNumber = await this.contract.balanceOf(address);
-    return amount.toNumber();
+    try {
+      const amount: BigNumber = await this.contract.balanceOf(address);
+      return amount.toNumber();
+    } catch (error) {
+      return 0;
+    }
   }
 
   async getTokenDetails(address: string, count: number) {

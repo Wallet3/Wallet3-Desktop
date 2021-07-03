@@ -15,6 +15,7 @@ export class Application {
 
   appAuthenticated = false;
   touchIDSupported = false;
+  connectingApp = false;
 
   authMethod: AuthMethod = 'fingerprint';
   platform: NodeJS.Platform = 'darwin';
@@ -23,7 +24,14 @@ export class Application {
   }
 
   constructor() {
-    makeObservable(this, { authMethod: observable, isMac: computed, platform: observable, switchAuthMethod: action });
+    makeObservable(this, {
+      authMethod: observable,
+      isMac: computed,
+      platform: observable,
+      switchAuthMethod: action,
+      connectingApp: observable,
+      connectWallet: action,
+    });
 
     ipc.on(MessageKeys.idleExpired, (e, { idleExpired }: { idleExpired: boolean }) => {
       if (!this.appAuthenticated) return;
@@ -113,8 +121,11 @@ export class Application {
     return ipc.invoke(MessageKeys.scanQR);
   }
 
-  connectWallet(uri: string) {
-    return ipc.invokeSecure<BooleanResult>(MessageKeys.connectWallet, { uri, modal: true });
+  async connectWallet(uri: string) {
+    this.connectingApp = true;
+    const { success } = await ipc.invokeSecure<BooleanResult>(MessageKeys.connectWallet, { uri, modal: true });
+    runInAction(() => (this.connectingApp = false));
+    return success;
   }
 
   async ask(msg: { title: string; icon: string; message: string }) {

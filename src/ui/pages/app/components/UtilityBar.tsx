@@ -5,6 +5,7 @@ import { Menu, MenuButton, MenuDivider, MenuItem } from '@szhsin/react-menu';
 import { PublicNetworks, Testnets } from '../../../../misc/Networks';
 
 import { Application } from '../../../viewmodels/Application';
+import ConnectedAppsIndicator from './ConnectedAppsIndicator';
 import ConnectedDAppLabel from './ConnectedDAppLabel';
 import Feather from 'feather-icons-react';
 import GasStation from '../../../../gas';
@@ -37,6 +38,10 @@ export default observer(({ app, walletVM, networksVM }: Props) => {
 
   return (
     <div className="utility-bar">
+      <button className="menu-button walletconnect">
+        <WalletConnectIndicator connecting={app.connectingApp} />
+      </button>
+
       {pendingTxCount > 0 ? (
         <Menu
           menuButton={() => (
@@ -78,7 +83,7 @@ export default observer(({ app, walletVM, networksVM }: Props) => {
           position="anchor"
           menuButton={() => (
             <MenuButton className="menu-button">
-              <WalletConnectIndicator count={appCount} />
+              <ConnectedAppsIndicator count={appCount} />
             </MenuButton>
           )}
         >
