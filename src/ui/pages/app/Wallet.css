@@ -18,6 +18,7 @@
 
 .page.main > .net-worth {
   height: 79px;
+  pointer-events: none;
 }
 
 .page.main > .net-worth > .value {

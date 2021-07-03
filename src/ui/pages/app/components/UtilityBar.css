@@ -34,6 +34,10 @@
   padding: 0 6px !important;
 }
 
+.utility-bar > button.walletconnect {
+  margin-right: 1px;
+}
+
 .utility-bar .profile-item {
   display: flex;
   align-items: center;

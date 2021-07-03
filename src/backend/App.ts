@@ -132,10 +132,9 @@ export class App {
       );
     });
 
-    ipcMain.handle(MessageKeys.scanQR, () => {
+    ipcMain.handle(MessageKeys.scanQR, async () => {
       if (this.addresses.length === 0) return false;
-      this.createPopupWindow('scanQR', {}, { modal: true, parent: this.mainWindow });
-      return true;
+      await this.createPopupWindow('scanQR', {}, { modal: true, parent: this.mainWindow });
     });
 
     ipcMain.handle(MessageKeys.clearHistory, () => {

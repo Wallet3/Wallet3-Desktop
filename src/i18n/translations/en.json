@@ -121,5 +121,8 @@
   "Failed": "Failed",
   "Profile": "Profile",
   "History": "History",
-  "Stauts": "Stauts"
+  "Stauts": "Stauts",
+  "Manually Connect DApp": "Manually Connect DApp",
+  "DApp Connecting": "DApp Connecting",
+  "Use WalletConnect": "Please copy WallectConnect uri first, then switch to Wallet 3. The dapp will get connected automatically."
 }

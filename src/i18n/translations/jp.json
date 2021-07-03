@@ -122,5 +122,8 @@
   "Failed": "失敗",
   "Profile": "プロフィール",
   "History": "取引履歴",
-  "Status": "ステータス"
+  "Status": "ステータス",
+  "Manually Connect DApp": "DAppを手動で接続する",
+  "DApp Connecting": "DApp 接続中",
+  "Use WalletConnect": "まず WallectConnect Uri をコピーしてから、Wallet 3 に切り替えてください。Wallet 3 は自動的に DApp を接続します。"
 }
