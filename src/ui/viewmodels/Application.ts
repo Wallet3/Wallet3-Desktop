@@ -119,6 +119,8 @@ export class Application {
   }
 
   async scanQR() {
+    if (this.connectingApp) return;
+    
     if (await this.connectWallet()) return;
     return ipc.invoke(MessageKeys.scanQR);
   }
