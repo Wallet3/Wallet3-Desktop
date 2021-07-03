@@ -122,5 +122,6 @@
   "Failed": "失敗",
   "Profile": "賬戶",
   "History": "交易歷史",
-  "Stauts": "狀態"
+  "Stauts": "狀態",
+  "Connect DApp Manually": "手動連接 DApp"
 }

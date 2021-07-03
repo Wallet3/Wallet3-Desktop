@@ -122,5 +122,6 @@
   "Failed": "失敗",
   "Profile": "プロフィール",
   "History": "取引履歴",
-  "Status": "ステータス"
+  "Status": "ステータス",
+  "Connect DApp Manually": "DAppを手動で接続する"
 }

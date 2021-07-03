@@ -122,5 +122,6 @@
   "Failed": "失败",
   "Profile": "账户",
   "History": "交易历史",
-  "Stauts": "状态"
+  "Stauts": "状态",
+  "Connect DApp Manually": "手动连接 DApp"
 }

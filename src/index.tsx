@@ -35,9 +35,5 @@ render();
 
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'hidden') return;
-  const text = clipboard.readText();
-
-  if (text.startsWith('wc:') && text.includes('bridge=')) {
-    App.connectWallet(text);
-  }
+  App.connectWallet();
 });

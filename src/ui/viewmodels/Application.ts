@@ -3,6 +3,7 @@ import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 
 import Coingecko from '../../api/Coingecko';
 import WalletVM from './WalletVM';
+import clipboard from '../bridges/Clipboard';
 import { createMemoryHistory } from 'history';
 import crypto from '../bridges/Crypto';
 import ipc from '../bridges/IPC';
@@ -117,11 +118,16 @@ export class Application {
     return ipc.invoke(MessageKeys.clearHistory);
   }
 
-  scanQR() {
+  async scanQR() {
+    if (await this.connectWallet()) return;
     return ipc.invoke(MessageKeys.scanQR);
   }
 
-  async connectWallet(uri: string) {
+  async connectWallet() {
+    const uri = clipboard.readText();
+
+    if (!uri.startsWith('wc:') || !uri.includes('bridge=')) return;
+
     this.connectingApp = true;
     const { success } = await ipc.invokeSecure<BooleanResult>(MessageKeys.connectWallet, { uri, modal: true });
     runInAction(() => (this.connectingApp = false));
