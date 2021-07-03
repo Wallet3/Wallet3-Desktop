@@ -4,6 +4,7 @@
   font-size: 12px;
   line-height: 12.5px;
   position: relative;
+  pointer-events: none !important;
 }
 
 .network-label > .activeIndicator {
