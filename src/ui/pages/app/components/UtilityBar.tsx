@@ -38,7 +38,10 @@ export default observer(({ app, walletVM, networksVM }: Props) => {
 
   return (
     <div className="utility-bar">
-      <button className="menu-button walletconnect" title={t('Connect DApp Manually')}>
+      <button
+        className="menu-button walletconnect"
+        title={app.connectingApp ? t('DApp Connecting') : t('Connect DApp Manually')}
+      >
         <WalletConnectIndicator connecting={app.connectingApp} />
       </button>
 

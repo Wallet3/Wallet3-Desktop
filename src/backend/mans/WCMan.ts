@@ -43,6 +43,7 @@ class WCMan {
   }
 
   async connectAndWaitSession(uri: string, modal = false) {
+    if (!uri.startsWith('wc:') || !uri.includes('bridge=')) return undefined;
     if (this.cache.has(uri)) return undefined;
 
     const wc = new WalletConnect(modal);
@@ -146,7 +147,7 @@ class WCMan {
       c?.disconnect();
       c?.wcSession?.remove();
     });
-    
+
     await this.dispose();
   }
 

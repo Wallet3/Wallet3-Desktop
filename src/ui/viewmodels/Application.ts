@@ -31,7 +31,6 @@ export class Application {
       platform: observable,
       switchAuthMethod: action,
       connectingApp: observable,
-      connectWallet: action,
     });
 
     ipc.on(MessageKeys.idleExpired, (e, { idleExpired }: { idleExpired: boolean }) => {
@@ -120,17 +119,18 @@ export class Application {
 
   async scanQR() {
     if (this.connectingApp) return;
-    
     if (await this.connectWallet()) return;
-    return ipc.invoke(MessageKeys.scanQR);
+
+    runInAction(() => (this.connectingApp = true));
+    await ipc.invoke(MessageKeys.scanQR);
+    runInAction(() => (this.connectingApp = false));
   }
 
   async connectWallet() {
     const uri = clipboard.readText();
-
     if (!uri.startsWith('wc:') || !uri.includes('bridge=')) return;
 
-    this.connectingApp = true;
+    runInAction(() => (this.connectingApp = true));
     const { success } = await ipc.invokeSecure<BooleanResult>(MessageKeys.connectWallet, { uri, modal: true });
     runInAction(() => (this.connectingApp = false));
     return success;

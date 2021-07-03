@@ -123,5 +123,6 @@
   "Profile": "账户",
   "History": "交易历史",
   "Stauts": "状态",
-  "Connect DApp Manually": "手动连接 DApp"
+  "Connect DApp Manually": "手动连接 DApp",
+  "DApp Connecting": "正在连接 DApp"
 }
