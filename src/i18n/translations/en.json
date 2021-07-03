@@ -122,6 +122,7 @@
   "Profile": "Profile",
   "History": "History",
   "Stauts": "Stauts",
-  "Connect DApp Manually": "Connect DApp Manually",
-  "DApp Connecting": "DApp Connecting"
+  "Manually Connect DApp": "Manually Connect DApp",
+  "DApp Connecting": "DApp Connecting",
+  "Use WalletConnect": "Please copy WallectConnect uri first, then switch to Wallet 3. The dapp will get connected automatically."
 }
