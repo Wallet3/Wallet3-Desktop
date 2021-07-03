@@ -4,9 +4,6 @@ import { Copy, Logo, NavBar } from '../../components';
 import React, { useState } from 'react';
 
 import { Application } from '../../viewmodels/Application';
-import CheckIcon from '../../../assets/icons/app/check.svg';
-import Clipboard from '../../bridges/Clipboard';
-import CopyIcon from '../../../assets/icons/app/copy.svg';
 import { NetworksVM } from '../../viewmodels/NetworksVM';
 import QRCode from 'qrcode.react';
 import Shell from '../../bridges/Shell';
@@ -15,7 +12,6 @@ import { convertToAccountUrl } from '../../../misc/Url';
 import { useTranslation } from 'react-i18next';
 
 export default ({ app, walletVM, networksVM }: { app: Application; walletVM: WalletVM; networksVM: NetworksVM }) => {
-  const [showCheck, setShowCheck] = useState(false);
   const { t } = useTranslation();
 
   const { currentAccount } = walletVM;
