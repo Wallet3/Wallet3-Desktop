@@ -48,6 +48,22 @@ body {
   color: var(--font-color);
 }
 
+.rc-menu {
+  /* background-color: transparent !important;
+  backdrop-filter: blur(20px); */
+  -webkit-app-region: no-drag !important;
+  z-index: 99999999;
+}
+
+.rc-menu__item--hover {
+  /* background-color: #00000010 !important; */
+  -webkit-app-region: no-drag;
+}
+
+.rc-menu__divider {
+  backdrop-filter: blur(5px);
+}
+
 textarea,
 input,
 span {

@@ -1,34 +1,36 @@
-.connectedapp {
+.connectedapp-label {
   display: grid;
   grid-template-columns: 22px 1fr;
+  column-gap: 4px;
   align-items: flex-start;
   font-size: 13px;
   width: 100%;
 }
 
-.connectedapp > .dapp-logo {
+.connectedapp-label > .dapp-logo {
   position: relative;
 }
 
-.connectedapp > .dapp-logo > img.appicon {
+.connectedapp-label > .dapp-logo > img.appicon {
   width: 15px;
   height: 15px;
+  margin-top: -1px;
 }
 
-.connectedapp > .dapp-logo > img.network {
+.connectedapp-label > .dapp-logo > img.network {
   position: absolute;
-  right: 3px;
+  right: 1px;
   top: -2px;
   width: 7px;
   height: 7px;
 }
 
-.connectedapp > .info .basic {
+.connectedapp-label > .info .basic {
   display: flex;
   justify-content: space-between;
 }
 
-.connectedapp > .info .basic span {
+.connectedapp-label > .info .basic span {
   max-width: 45vw;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -36,7 +38,7 @@
   line-height: 14px;
 }
 
-.connectedapp > .info > .extra {
+.connectedapp-label > .info > .extra {
   display: flex;
   margin-top: 2px;
   justify-content: space-between;

@@ -34,13 +34,14 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
               showAutoSwitch
               publicNetworks={PublicNetworks}
               testnets={Testnets}
+              position="anchor"
             />
           </div>
         </div>
 
         <h3>{t('App Info')}</h3>
 
-        <div>
+        <div className="app-item">
           <span>DApp:</span>
           <span title={dAppVM.appName}>
             <Image src={dAppVM.appIcon} />
@@ -48,19 +49,19 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
           </span>
         </div>
 
-        <div>
+        <div className="app-item">
           <span>{t('Description')}:</span>
           <span title={dAppVM.appDesc}>{dAppVM.appDesc}</span>
         </div>
 
-        <div>
+        <div className="app-item">
           <span>Url:</span>
           <span className="url" onClick={(_) => shell.open(dAppVM.appUrl)} title={dAppVM.appUrl}>
             {dAppVM.appUrl}
           </span>
         </div>
 
-        <div>
+        <div className="app-item">
           <span>{t('Last used')}:</span>
           <span>{new Date(dAppVM.lastUsedTimestamp).toLocaleString()}</span>
         </div>

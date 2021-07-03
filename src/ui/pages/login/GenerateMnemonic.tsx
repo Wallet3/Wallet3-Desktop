@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import Mnemonic from '../../components/Mnemonic';
 import { MnemonicVM } from '../../viewmodels/MnemonicVM';
 import { NavBar } from '../../components';
+import { formatAddress } from '../../misc/Formatter';
 import { observer } from 'mobx-react-lite';
 import shell from '../../bridges/Shell';
 import { useTranslation } from 'react-i18next';
@@ -41,7 +42,7 @@ export default observer(({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) 
           <div className="addr" onClick={(_) => shell.open(`https://etherscan.io/address/${mnVM.address}`)}>
             <span>{t('Address')}: </span>
             <span className="addr-value" title={mnVM.address}>
-              {mnVM.address}
+              {formatAddress(mnVM.address, 12, 7)}
             </span>
           </div>
 
