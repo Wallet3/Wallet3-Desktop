@@ -37,6 +37,8 @@
 .page.about > .content > .data-providers {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
+  align-content: flex-start;
   margin-top: 16px;
   padding-left: 1px;
 }
