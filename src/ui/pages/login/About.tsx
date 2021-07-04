@@ -7,6 +7,9 @@ import { NavBar } from '../../components';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
+const gasnow = require('../../../assets/icons/3rd/gasnow.png').default;
+const coingecko = require('../../../assets/icons/3rd/coingecko.png').default;
+
 export default ({ app }: { app: Application }) => {
   const { t } = useTranslation();
 
@@ -36,6 +39,8 @@ export default ({ app }: { app: Application }) => {
         <h3>{t('Data Providers')}</h3>
         <div className="data-providers">
           <img src={DeBank} alt="DeBank" />
+          <img src={gasnow} alt="Gasnow" />
+          <img src={coingecko} alt="Coingecko" />
         </div>
 
         <h3>Copyright</h3>

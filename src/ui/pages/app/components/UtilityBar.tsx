@@ -40,11 +40,13 @@ export default observer(({ app, walletVM, networksVM }: Props) => {
     <div className="utility-bar">
       <button
         className="menu-button walletconnect"
-        title={app.connectingApp ? t('DApp Connecting') : t('Manually Connect DApp')}
-        onClick={(_) =>
+        title={app.connectingApp ? t('DApp Connecting') : t('Manually Connect DApps')}
+        onClick={async (_) =>
           app.connectingApp
             ? undefined
-            : app.ask({ title: t('Manually Connect DApp'), icon: 'activity', message: t('Use WalletConnect') })
+            : (await app.connectWallet())
+            ? undefined
+            : app.ask({ title: t('Manually Connect DApps'), icon: 'activity', message: t('Use WalletConnect') })
         }
       >
         <WalletConnectIndicator connecting={app.connectingApp} />

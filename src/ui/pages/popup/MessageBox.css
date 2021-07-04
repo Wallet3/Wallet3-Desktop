@@ -6,7 +6,9 @@
 .page.messagebox > .content {
   padding: 10px 0;
   box-sizing: border-box;
-  font-size: 14px;
+  font-size: 13.5px;
+  line-height: 19px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Microsoft Yahei', 'Segoe UI', Arial, sans-serif;
   color: var(--font-color-title);
 }
 

@@ -66,7 +66,7 @@
   "Reset_Tip2": "Please keep your mnemonic safe.",
   "Authentication": "Authentication",
   "Approve": "Approve",
-  "Approve_Tip": "By granting this transaction, the spender can spend your funds without your knowledge. Please be careful to check the funds limit below.",
+  "Approve_Tip": "By granting this permission, the spender can spend your funds without your knowledge. Please be careful to check the funds limit below.",
   "Spender": "Spender",
   "Funds Limit": "Funds Limit",
   "Contract Interaction": "Contract Interaction",
@@ -122,7 +122,7 @@
   "Profile": "Profile",
   "History": "History",
   "Stauts": "Stauts",
-  "Manually Connect DApp": "Manually Connect DApp",
+  "Manually Connect DApps": "Manually Connect DApps",
   "DApp Connecting": "DApp Connecting",
   "Use WalletConnect": "Please copy WallectConnect uri first, then switch to Wallet 3. The dapp will get connected automatically."
 }
