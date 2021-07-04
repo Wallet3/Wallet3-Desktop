@@ -109,12 +109,12 @@ export class WindowApi {
   static readonly API_KEY = 'wallet3_window';
 
   maximize = () => {
-    const currenWindow = require('@electron/remote').getCurrentWindow() as BrowserWindow;
+    const currentWindow = require('@electron/remote').getCurrentWindow() as BrowserWindow;
 
-    if (currenWindow.isMaximized()) {
-      currenWindow.unmaximize();
+    if (currentWindow.isMaximized()) {
+      currentWindow.unmaximize();
     } else {
-      currenWindow.maximize();
+      currentWindow.maximize();
     }
   };
 
