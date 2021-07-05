@@ -16,8 +16,35 @@
 
 .page.settings > .accounts > .actions {
   font-size: 12px;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+}
+
+.page.settings > .accounts > .actions > .menu-button {
+  padding: 4px 5px;
+  padding-left: 7px;
+  font-size: 12px;
+  line-height: 12px;
+  margin-top: -5px;
+}
+
+.page.settings > .accounts > .actions .rc-menu__item button > div {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 13px 1fr;
+  column-gap: 8px;
+  font-size: 12px;
+  line-height: 12px;
+}
+
+.page.settings > .accounts > .actions .rc-menu__item button > div svg {
+  width: 13px;
+  height: 13px;
+}
+
+.page.settings > .accounts > .actions .rc-menu__item button > div span {
+  text-align: start;
 }
 
 .page.settings > .accounts > .actions > .gen-account {

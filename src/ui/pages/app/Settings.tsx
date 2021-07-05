@@ -21,6 +21,11 @@ interface IConstructor {
   langsVM: LangsVM;
 }
 
+const MenuItemStyle = {
+  padding: 0,
+  fontSize: 12,
+};
+
 export default observer(({ walletVM, app, currencyVM, langsVM }: IConstructor) => {
   const { t } = useTranslation();
 
@@ -61,6 +66,34 @@ export default observer(({ walletVM, app, currencyVM, langsVM }: IConstructor) =
       <div className="drop-menu accounts">
         <div className="actions">
           <span className="title">{t('Accounts')}</span>
+
+          <span></span>
+
+          <Menu
+            styles={{ minWidth: '3rem' }}
+            menuButton={() => (
+              <MenuButton className="menu-button">
+                <span>Wallet 1</span>
+              </MenuButton>
+            )}
+          >
+            <MenuItem styles={MenuItemStyle}>
+              <button onClick={(_) => app.history.push('/account')}>
+                <div>
+                  <Feather icon="plus-square" size={13} />
+                  <span>{t('New')}</span>
+                </div>
+              </button>
+            </MenuItem>
+            <MenuItem styles={MenuItemStyle}>
+              <button onClick={(_) => app.history.push('/history')}>
+                <div>
+                  <Feather icon="chevrons-down" size={13} />
+                  <span>{t('Import')}</span>
+                </div>
+              </button>
+            </MenuItem>
+          </Menu>
         </div>
         <Select
           options={accounts}
@@ -84,7 +117,7 @@ export default observer(({ walletVM, app, currencyVM, langsVM }: IConstructor) =
         >
           {currencyVM.supportedCurrencies.map((c) => {
             return (
-              <MenuItem key={c.flag} styles={{ padding: 0 }}>
+              <MenuItem key={c.flag} styles={MenuItemStyle}>
                 <button onClick={() => currencyVM.setCurrency(c)}>
                   <DisplayCurrency flag={c.flag} label={c.currency} mini />
                 </button>
@@ -108,7 +141,7 @@ export default observer(({ walletVM, app, currencyVM, langsVM }: IConstructor) =
         >
           {langsVM.supportedLangs.map((lang) => {
             return (
-              <MenuItem key={lang.value} styles={{ padding: 0 }}>
+              <MenuItem key={lang.value} styles={MenuItemStyle}>
                 <button onClick={(_) => langsVM.setLang(lang)}>
                   <DisplayCurrency flag={lang.flag} label={lang.name} mini />
                 </button>

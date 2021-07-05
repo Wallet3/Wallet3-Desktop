@@ -92,7 +92,7 @@
     "axios": "^0.21.1",
     "better-sqlite3": "^7.4.1",
     "eth-sig-util": "^3.0.1",
-    "ethers": "^5.3.1",
+    "ethers": "^5.4.1",
     "feather-icons": "^4.28.0",
     "feather-icons-react": "^0.4.3",
     "i18next": "^20.3.2",
@@ -121,6 +121,6 @@
     "storejs": "^1.1.0",
     "typeorm": "^0.2.34",
     "update-electron-app": "^2.0.1",
-    "ws": "^7.5.1"
+    "ws": "^7.5.2"
   }
 }
