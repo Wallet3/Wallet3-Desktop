@@ -187,6 +187,12 @@ app.on('ready', async () => {
   globalShortcut.register('CommandOrControl+Option+3', () => createWindow());
   globalShortcut.register('CommandOrControl+Alt+3', () => createWindow());
 
+  protocol.registerHttpProtocol('wallet3', async (request, cb) => {
+    const uri = request.url.substring(7);
+    if (!uri.startsWith('wc:') || !uri.includes('bridge=')) return;
+    await WCMan.connectAndWaitSession(uri);
+  });
+
   updateapp({ notifyUser: true });
 });
 
@@ -237,5 +243,3 @@ if (!app.requestSingleInstanceLock()) {
     App.mainWindow?.focus();
   });
 }
-
-protocol.registerHttpProtocol('wallet3', (request, cb) => {});
