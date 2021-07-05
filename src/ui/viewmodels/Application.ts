@@ -1,4 +1,10 @@
-import MessageKeys, { AuthenticationResult, BooleanResult, InitStatus, InitVerifyPassword } from '../../common/Messages';
+import MessageKeys, {
+  AuthenticationResult,
+  BooleanResult,
+  IKey,
+  InitStatus,
+  InitVerifyPassword,
+} from '../../common/Messages';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
 import Coingecko from '../../api/Coingecko';
@@ -17,6 +23,7 @@ export class Application {
   appAuthenticated = false;
   touchIDSupported = false;
   connectingApp = false;
+  keys: IKey[] = [];
 
   authMethod: AuthMethod = 'fingerprint';
   platform: NodeJS.Platform = 'darwin';
@@ -31,6 +38,7 @@ export class Application {
       platform: observable,
       switchAuthMethod: action,
       connectingApp: observable,
+      keys: observable,
     });
 
     ipc.on(MessageKeys.idleExpired, (e, { idleExpired }: { idleExpired: boolean }) => {
@@ -42,9 +50,11 @@ export class Application {
   }
 
   async init(jump = true) {
-    const { hasSecret, touchIDSupported, appAuthenticated, addresses, pendingTxs, connectedDApps, platform } =
+    const { hasSecret, touchIDSupported, appAuthenticated, addresses, pendingTxs, connectedDApps, platform, keys } =
       await ipc.invokeSecure<InitStatus>(MessageKeys.getInitStatus);
 
+    console.log(keys);
+    this.keys = keys;
     this.touchIDSupported = touchIDSupported;
     this.appAuthenticated = appAuthenticated;
     runInAction(() => (this.platform = platform));

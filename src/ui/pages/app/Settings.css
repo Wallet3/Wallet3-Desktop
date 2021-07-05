@@ -38,6 +38,10 @@
   line-height: 12px;
 }
 
+.page.settings > .accounts > .actions .rc-menu__item button > div.active {
+  color: var(--theme-color);
+}
+
 .page.settings > .accounts > .actions .rc-menu__item button > div svg {
   width: 13px;
   height: 13px;

@@ -131,7 +131,7 @@ export class App {
           connectedDApps: WCMan.connectedSessions,
           pendingTxs: [...TxMan.pendingTxs],
           platform: process.platform,
-          keys: [...KeyMan.keys],
+          keys: KeyMan.keyNames,
         } as InitStatus,
         key
       );

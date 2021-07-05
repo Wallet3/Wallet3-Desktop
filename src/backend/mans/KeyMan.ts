@@ -8,6 +8,12 @@ class KeyMan {
   tmp = new WalletKey();
   keys: WalletKey[] = [];
 
+  get keyNames() {
+    return this.keys.map((k) => {
+      return { name: k.name, id: k.id };
+    });
+  }
+
   constructor() {
     makeAutoObservable(this);
   }

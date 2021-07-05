@@ -77,6 +77,19 @@ export default observer(({ walletVM, app, currencyVM, langsVM }: IConstructor) =
               </MenuButton>
             )}
           >
+            {app.keys.map((k) => {
+              return (
+                <MenuItem styles={MenuItemStyle} key={k.id}>
+                  <button>
+                    <div className={`${walletVM.id === k.id ? 'active' : ''}`}>
+                      <Feather icon="credit-card" size={13} />
+                      <span>{k.name}</span>
+                    </div>
+                  </button>
+                </MenuItem>
+              );
+            })}
+            <MenuDivider />
             <MenuItem styles={MenuItemStyle}>
               <button onClick={(_) => app.history.push('/account')}>
                 <div>

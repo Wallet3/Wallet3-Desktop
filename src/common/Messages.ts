@@ -53,7 +53,7 @@ export interface InitStatus {
   addresses?: string[];
   pendingTxs: TxParams[];
   connectedDApps: IWcSession[];
-  keys: { name: string; id: number }[];
+  keys: IKey[];
 
   platform: NodeJS.Platform;
 }
@@ -130,3 +130,8 @@ export interface RequestSignMessage {
 }
 
 export type PopupWindowTypes = 'connectDapp' | 'sign' | 'sendTx' | 'scanQR' | 'auth' | 'msgbox';
+
+export interface IKey {
+  name: string;
+  id: number;
+}
