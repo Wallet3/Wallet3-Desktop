@@ -21,6 +21,7 @@ class KeyMan {
 
   switch(id: number) {
     this.current = this.keys.find((k) => k.id === id) || this.keys[0];
+    Store.set('keyId', id);
   }
 
   finishTmp() {
