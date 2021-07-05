@@ -36,6 +36,10 @@ export class WalletKey {
     return this.checkSecretType(this.tmpSecret);
   }
 
+  get name() {
+    return this.key?.name || `Wallet ${this.key?.id ?? 'Temp'}`;
+  }
+
   async init(key: Key) {
     this.key = key;
 
@@ -48,6 +52,8 @@ export class WalletKey {
           ? true
           : false
         : false;
+
+    return this;
   }
 
   async setFullPath(fullPath: string) {

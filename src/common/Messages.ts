@@ -53,6 +53,7 @@ export interface InitStatus {
   addresses?: string[];
   pendingTxs: TxParams[];
   connectedDApps: IWcSession[];
+  keys: { name: string; id: number }[];
 
   platform: NodeJS.Platform;
 }

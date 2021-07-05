@@ -59,6 +59,10 @@ export class App {
     return KeyMan.current;
   }
 
+  get tmpKey() {
+    return KeyMan.tmp;
+  }
+
   async decryptUserPassword() {
     const secret = await keytar.getPassword(Keys.appLaunchKey, Keys.appAccount(this.machineId));
     const [iv, key] = secret.split(':');
@@ -127,6 +131,7 @@ export class App {
           connectedDApps: WCMan.connectedSessions,
           pendingTxs: [...TxMan.pendingTxs],
           platform: process.platform,
+          keys: [...KeyMan.keys],
         } as InitStatus,
         key
       );
@@ -160,7 +165,7 @@ export class App {
       const { key } = this.windows.get(winId);
       const [iv, cipherText] = encrypted;
       const { length } = App.decryptIpc(cipherText, iv, key);
-      return App.encryptIpc(this.walletKey.genMnemonic(length), key);
+      return App.encryptIpc(this.tmpKey.genMnemonic(length), key);
     });
 
     ipcMain.handle(`${MessageKeys.saveTmpSecret}-secure`, (e, encrypted, winId) => {
@@ -168,21 +173,21 @@ export class App {
       const [iv, cipherText] = encrypted;
 
       const { secret } = App.decryptIpc(cipherText, iv, key);
-      return App.encryptIpc({ success: this.walletKey.setTmpSecret(secret) }, key);
+      return App.encryptIpc({ success: this.tmpKey.setTmpSecret(secret) }, key);
     });
 
     ipcMain.handle(`${MessageKeys.setupMnemonic}-secure`, async (e, encrypted, winId) => {
       const { key } = this.windows.get(winId);
-      if (this.walletKey.hasSecret) return App.encryptIpc({ success: false }, key);
+      if (this.tmpKey.hasSecret) return App.encryptIpc({ success: false }, key);
 
       const [iv, cipherText] = encrypted;
       const { password: userPassword } = App.decryptIpc(cipherText, iv, key);
       await DBMan.init();
 
-      await this.walletKey.savePassword(userPassword);
-      if (!(await this.walletKey.saveSecret(userPassword))) return App.encryptIpc({ success: false }, key);
+      await this.tmpKey.savePassword(userPassword);
+      if (!(await this.tmpKey.saveSecret(userPassword))) return App.encryptIpc({ success: false }, key);
 
-      const addresses = await this.walletKey.genAddresses(userPassword, 10);
+      const addresses = await this.tmpKey.genAddresses(userPassword, 10);
       runInAction(() => (this.addresses = addresses));
 
       // TxNotificaion.watch(this.currentNetwork.defaultTokens, addresses, this.chainId);
@@ -190,6 +195,7 @@ export class App {
       if (this.touchIDSupported) this.encryptUserPassword(userPassword);
 
       TxMan.init();
+      KeyMan.finishTmp();
 
       return App.encryptIpc({ addresses, success: true }, key);
     });
@@ -199,7 +205,7 @@ export class App {
       const [iv, cipherText] = encrypted;
 
       const { fullPath } = App.decryptIpc(cipherText, iv, key);
-      await this.walletKey.setFullPath(fullPath);
+      await this.tmpKey.setFullPath(fullPath);
     });
 
     ipcMain.handle(`${MessageKeys.readSecret}-secure`, async (e, encrypted, winId) => {
@@ -305,9 +311,9 @@ export class App {
       this.#authKeys.clear();
 
       await this.walletKey.reset(password, authKey === 'forgotpassword-reset' ? false : true);
-      await TxMan.clean();
-      await WCMan.clean();
-      await DBMan.clean();
+
+      await Promise.all([TxMan.clean(), WCMan.clean(), DBMan.clean()]);
+      KeyMan.clean();
 
       runInAction(() => {
         this.currentAddressIndex = 0;
