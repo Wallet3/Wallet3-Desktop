@@ -26,6 +26,8 @@ export class WalletKey {
   private tmpSecret?: string;
   private key: Key;
 
+  addresses: string[] = [];
+
   get id() {
     return this.key?.id;
   }
@@ -184,12 +186,15 @@ export class WalletKey {
           addresses.push(hd.derivePath(`${this.basePath}/${this.basePathIndex + i}`).address);
         }
 
-        return addresses;
+        this.addresses = addresses;
+        break;
 
       case AccountType.privkey:
         const signer = new ethers.Wallet(secret);
-        return [signer.address];
+        this.addresses = [signer.address];
     }
+
+    return this.addresses;
   }
 
   async reset(password: string, viaPassword = true) {

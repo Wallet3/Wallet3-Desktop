@@ -2,14 +2,13 @@ import './UserNFTs.css';
 
 import { Image, NavBar } from '../../components';
 
-import { AccountVM } from '../../viewmodels/AccountVM';
 import { Application } from '../../viewmodels/Application';
 import { Link } from 'react-router-dom';
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 
-export default observer(({ app, accountVM }: { app: Application; accountVM: AccountVM }) => {
-  const { nfts } = accountVM;
+export default observer(({ app }: { app: Application }) => {
+  const { nfts } = app.currentWallet.currentAccount;
 
   return (
     <div className="page nfts">

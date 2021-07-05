@@ -11,10 +11,10 @@ import { WalletVM } from '../../viewmodels/WalletVM';
 import { convertToAccountUrl } from '../../../misc/Url';
 import { useTranslation } from 'react-i18next';
 
-export default ({ app, walletVM, networksVM }: { app: Application; walletVM: WalletVM; networksVM: NetworksVM }) => {
+export default ({ app, networksVM }: { app: Application; networksVM: NetworksVM }) => {
   const { t } = useTranslation();
 
-  const { currentAccount } = walletVM;
+  const { currentAccount } = app.currentWallet;
   const address = currentAccount.address;
 
   return (

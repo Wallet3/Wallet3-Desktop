@@ -7,14 +7,13 @@ import { Application } from '../../viewmodels/Application';
 import Feather from 'feather-icons-react';
 import Image from '../../components/Image';
 import React from 'react';
-import { WalletVM } from '../../viewmodels/WalletVM';
 import { observer } from 'mobx-react-lite';
 import shell from '../../bridges/Shell';
 import { useTranslation } from 'react-i18next';
 
-export default observer(({ app, walletVM }: { app: Application; walletVM: WalletVM }) => {
+export default observer(({ app }: { app: Application }) => {
   const { t } = useTranslation();
-  const { dAppVM } = walletVM;
+  const { dAppVM } = app.currentWallet;
 
   return (
     <div className="page dapp">

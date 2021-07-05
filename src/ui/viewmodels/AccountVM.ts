@@ -5,6 +5,7 @@ import { IUserToken, UserToken } from './models/UserToken';
 import { makeAutoObservable, runInAction } from 'mobx';
 
 import { AddTokenVM } from './account/AddTokenVM';
+import App from './Application';
 import { ERC20Token } from '../../common/ERC20Token';
 import { NFT } from './models/NFT';
 import NetVM from './NetworksVM';
@@ -12,7 +13,6 @@ import { Networks } from '../../misc/Networks';
 import POAP from '../../nft/POAP';
 import Rarible from '../../nft/Rarible';
 import { TransferVM } from './account/TransferVM';
-import WalletVM from './WalletVM';
 import store from 'storejs';
 
 const Keys = {
@@ -88,14 +88,14 @@ export class AccountVM {
 
   set name(value) {
     this._name = value;
-    store.set(Keys.accountName(WalletVM.id, this.accountIndex), value);
+    store.set(Keys.accountName(App.currentWallet.id, this.accountIndex), value);
   }
 
   constructor(args: IArgs) {
     makeAutoObservable(this);
     this.address = args.address;
     this.accountIndex = args.accountIndex;
-    this._name = store.get(Keys.accountName(WalletVM.id, this.accountIndex)) || `Account ${args.accountIndex}`;
+    this._name = store.get(Keys.accountName(App.currentWallet.id, this.accountIndex)) || `Account ${args.accountIndex}`;
 
     NetVM.currentProvider
       .lookupAddress(this.address)
@@ -308,7 +308,7 @@ export class AccountVM {
           nft.description = item.description;
           nft.name = item.name;
           nft.image_url = item.image?.url.BIG;
-          nft.contractType = 'rariable';
+          nft.contractType = 'Rarible';
           return nft.image_url ? nft : undefined;
         })
         .filter((i) => i);

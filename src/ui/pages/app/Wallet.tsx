@@ -5,7 +5,6 @@ import React, { useEffect } from 'react';
 import AnimatedNumber from 'react-animated-number';
 import { Application } from '../../viewmodels/Application';
 import { CryptoIcons } from '../../misc/Icons';
-import { CurrencyVM } from '../../viewmodels/settings/CurrencyVM';
 import Feather from 'feather-icons-react';
 import GasStation from '../../../gas';
 import HSBar from 'react-horizontal-stacked-bar-chart';
@@ -15,7 +14,6 @@ import { NetworksVM } from '../../viewmodels/NetworksVM';
 import Skeleton from 'react-loading-skeleton';
 import { UserToken } from '../../../ui/viewmodels/models/UserToken';
 import UtilityBar from './components/UtilityBar';
-import { WalletVM } from '../../viewmodels/WalletVM';
 import { formatNum } from '../../misc/Formatter';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
@@ -23,13 +21,12 @@ import { useTranslation } from 'react-i18next';
 interface IConstructor {
   app: Application;
   networksVM: NetworksVM;
-  walletVM: WalletVM;
-  currencyVM: CurrencyVM;
 }
 
-export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor) => {
+export default observer(({ networksVM, app }: IConstructor) => {
   const { t } = useTranslation();
-  const { currentAccount: accountVM, pendingTxCount } = walletVM;
+  const { currentAccount: accountVM, pendingTxCount } = app.currentWallet;
+  const { currencyVM } = app;
 
   const maxRows = 6;
   const rows = accountVM.chainTokens.length / 2;
@@ -56,7 +53,7 @@ export default observer(({ networksVM, app, walletVM, currencyVM }: IConstructor
 
   return (
     <div className="page main">
-      <UtilityBar app={app} networksVM={networksVM} walletVM={walletVM} />
+      <UtilityBar app={app} networksVM={networksVM} walletVM={app.currentWallet} />
 
       <div className="net-worth">
         <h3 className="title">{t('Net Worth')}</h3>

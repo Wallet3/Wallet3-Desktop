@@ -8,10 +8,14 @@ class KeyMan {
   tmp = new WalletKey();
   keys: WalletKey[] = [];
 
-  get keyNames() {
+  get overviewKeys() {
     return this.keys.map((k) => {
-      return { name: k.name, id: k.id };
+      return { name: k.name, id: k.id, addresses: k.addresses };
     });
+  }
+
+  get currentId() {
+    return this.current.id;
   }
 
   constructor() {
@@ -23,6 +27,8 @@ class KeyMan {
     const id = Store.get('keyId') || 1;
 
     this.switch(id);
+
+    console.log('wallet:', this.currentId, 'keys', this.keys.length);
   }
 
   switch(id: number) {
@@ -34,12 +40,15 @@ class KeyMan {
     this.current = this.tmp;
     this.keys.push(this.current);
     this.tmp = new WalletKey();
+
+    Store.set('keyId', this.currentId);
   }
 
   clean() {
     this.keys = [];
     this.current = undefined;
     this.init();
+    Store.set('keyId', 1);
   }
 }
 

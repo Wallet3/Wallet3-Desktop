@@ -10,16 +10,15 @@ import { NetworkIcons } from '../../../ui/misc/Icons';
 import { Networks } from '../../../misc/Networks';
 import React from 'react';
 import Tokens from '../../../misc/Tokens';
-import { WalletVM } from '../../viewmodels/WalletVM';
 import { formatAddress } from '../../misc/Formatter';
 import { observer } from 'mobx-react-lite';
 import { parseMethod } from '../../../common/TxParser';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export default observer(({ app, walletVM }: { app: Application; walletVM: WalletVM }) => {
+export default observer(({ app }: { app: Application }) => {
   const { t } = useTranslation();
-  const { historyTxsVM: vm, currentAccount } = walletVM;
+  const { historyTxsVM: vm, currentAccount } = app.currentWallet;
   const userTokens = currentAccount.loadTokenConfigs();
 
   useEffect(() => {

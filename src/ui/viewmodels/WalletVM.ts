@@ -1,4 +1,4 @@
-import Messages, { TxParams } from '../../common/Messages';
+import Messages, { IKey, TxParams } from '../../common/Messages';
 import { makeAutoObservable, reaction, runInAction, when } from 'mobx';
 
 import { AccountVM } from './AccountVM';
@@ -18,7 +18,8 @@ export class WalletVM {
   currentAccount: AccountVM = null;
   allPendingTxs: TxParams[] = [];
   connectedDApps: IWcSession[] = [];
-  id = 1;
+
+  private key: IKey;
 
   get accountIndex() {
     return this.accounts.indexOf(this.currentAccount);
@@ -36,8 +37,19 @@ export class WalletVM {
     return this.connectedDApps.length;
   }
 
-  constructor() {
+  get name() {
+    return this.key.name;
+  }
+
+  get id() {
+    return this.key.id;
+  }
+
+  constructor(key: IKey) {
     makeAutoObservable(this);
+
+    this.key = key;
+    this.initAccounts({ addresses: key.addresses });
 
     reaction(
       () => NetVM.currentChainId,
@@ -58,20 +70,21 @@ export class WalletVM {
     pendingTxs,
     connectedDApps,
   }: {
-    addresses: string[];
+    addresses?: string[];
     pendingTxs?: TxParams[];
     connectedDApps?: IWcSession[];
   }) {
+    if (addresses && (!this.accounts || this.accounts.length === 0)) {
+      this.accounts = addresses.map((address, i) => new AccountVM({ address, accountIndex: i + 1 }));
+      const lastUsedAccount = store.get(Keys.lastUsedAccount(this.id)) || addresses[0];
+      this.currentAccount = this.accounts.find((a) => a.address === lastUsedAccount) || this.accounts[0];
+      this.currentAccount?.refresh();
+      ipc.invokeSecure(Messages.changeAccountIndex, { index: this.accountIndex });
+      setTimeout(() => this.refresh(), 45 * 1000);
+    }
+
     this.connectedDApps = connectedDApps?.sort((a, b) => b.lastUsedTimestamp - a.lastUsedTimestamp) ?? this.connectedDApps;
     this.allPendingTxs = pendingTxs ?? this.allPendingTxs;
-    this.accounts = addresses.map((address, i) => new AccountVM({ address, accountIndex: i + 1 }));
-
-    const lastUsedAccount = store.get(Keys.lastUsedAccount(this.id)) || addresses[0];
-    this.currentAccount = this.accounts.find((a) => a.address === lastUsedAccount) || this.accounts[0];
-    this.currentAccount?.refresh();
-
-    ipc.invokeSecure(Messages.changeAccountIndex, { index: this.accountIndex });
-    setTimeout(() => this.refresh(), 45 * 1000);
   }
 
   selectAccount(account: AccountVM) {
@@ -109,5 +122,3 @@ export class WalletVM {
     this._historyTxsVM?.selectTx(undefined);
   }
 }
-
-export default new WalletVM();

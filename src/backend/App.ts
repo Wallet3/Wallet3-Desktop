@@ -124,14 +124,13 @@ export class App {
 
       return App.encryptIpc(
         {
-          hasSecret: this.walletKey.hasSecret,
           touchIDSupported: this.touchIDSupported,
           appAuthenticated: this.addresses.length > 0,
-          addresses: [...this.addresses],
           connectedDApps: WCMan.connectedSessions,
           pendingTxs: [...TxMan.pendingTxs],
           platform: process.platform,
-          keys: KeyMan.keyNames,
+          keys: KeyMan.overviewKeys,
+          currentKeyId: KeyMan.currentId,
         } as InitStatus,
         key
       );
@@ -264,21 +263,15 @@ export class App {
       const { password, count } = App.decryptIpc(cipherText, iv, key);
 
       try {
-        const verified = await this.walletKey.verifyPassword(password);
+        const addresses = (await this.walletKey.genAddresses(password, count)) || [];
+        const verified = addresses.length > 0;
 
-        let addrs: string[] = [];
+        runInAction(() => this.addresses.push(...addresses));
+        if (verified && this.touchIDSupported) this.encryptUserPassword(password);
 
-        if (verified) {
-          addrs = await this.walletKey.genAddresses(password, count);
+        // TxNotificaion.watch(this.currentNetwork.defaultTokens, addrs, this.chainId);
 
-          runInAction(() => this.addresses.push(...addrs));
-
-          // TxNotificaion.watch(this.currentNetwork.defaultTokens, addrs, this.chainId);
-
-          if (this.touchIDSupported) this.encryptUserPassword(password);
-        }
-
-        return App.encryptIpc({ verified, addresses: verified ? addrs : [] }, key);
+        return App.encryptIpc({ verified, addresses }, key);
       } catch (error) {
         return App.encryptIpc({ verified: false, addresses: [] }, key);
       }

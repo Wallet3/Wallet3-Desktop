@@ -2,7 +2,6 @@ import MessageKeys, { BooleanResult, GenMnemonic, SetupMnemonic } from '../../co
 import { action, makeAutoObservable, runInAction } from 'mobx';
 
 import App from './Application';
-import WalletVM from './WalletVM';
 import ipc from '../bridges/IPC';
 import { utils } from 'ethers';
 
@@ -47,7 +46,7 @@ export class MnemonicVM {
 
     if (success) {
       App.appAuthenticated = true;
-      WalletVM.initAccounts({ addresses });
+      App.currentWallet.initAccounts({ addresses });
     }
 
     return success;

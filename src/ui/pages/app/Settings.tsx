@@ -16,8 +16,6 @@ import { useTranslation } from 'react-i18next';
 
 interface IConstructor {
   app: Application;
-  walletVM: WalletVM;
-  currencyVM: CurrencyVM;
   langsVM: LangsVM;
 }
 
@@ -26,10 +24,11 @@ const MenuItemStyle = {
   fontSize: 12,
 };
 
-export default observer(({ walletVM, app, currencyVM, langsVM }: IConstructor) => {
+export default observer(({ app, langsVM }: IConstructor) => {
   const { t } = useTranslation();
+  const { currentWallet, currencyVM } = app;
 
-  const accounts = walletVM.accounts.map((a, i) => {
+  const accounts = currentWallet.accounts.map((a, i) => {
     const addr = `${a.address.substring(0, 7)}...${a.address.substring(a.address.length - 4)}`;
     const balance = a.nativeToken ? `(${a.nativeToken.amount.toFixed(2)} ${a.nativeToken.symbol})` : '';
     const name = a.name || (a.ens ? a.ens.substring(0, a.ens.indexOf('.eth')).substring(0, 12) : `Account ${i + 1}`);
@@ -77,11 +76,11 @@ export default observer(({ walletVM, app, currencyVM, langsVM }: IConstructor) =
               </MenuButton>
             )}
           >
-            {app.keys.map((k) => {
+            {app.wallets.map((k) => {
               return (
                 <MenuItem styles={MenuItemStyle} key={k.id}>
                   <button>
-                    <div className={`${walletVM.id === k.id ? 'active' : ''}`}>
+                    <div className={`${currentWallet.id === k.id ? 'active' : ''}`}>
                       <Feather icon="credit-card" size={13} />
                       <span>{k.name}</span>
                     </div>
@@ -91,7 +90,7 @@ export default observer(({ walletVM, app, currencyVM, langsVM }: IConstructor) =
             })}
             <MenuDivider />
             <MenuItem styles={MenuItemStyle}>
-              <button onClick={(_) => app.history.push('/account')}>
+              <button onClick={(_) => app.history.push('/generate?')}>
                 <div>
                   <Feather icon="plus-square" size={13} />
                   <span>{t('New')}</span>
@@ -99,7 +98,7 @@ export default observer(({ walletVM, app, currencyVM, langsVM }: IConstructor) =
               </button>
             </MenuItem>
             <MenuItem styles={MenuItemStyle}>
-              <button onClick={(_) => app.history.push('/history')}>
+              <button onClick={(_) => app.history.push('/import')}>
                 <div>
                   <Feather icon="chevrons-down" size={13} />
                   <span>{t('Import')}</span>
@@ -112,8 +111,8 @@ export default observer(({ walletVM, app, currencyVM, langsVM }: IConstructor) =
           options={accounts}
           isClearable={false}
           isSearchable={false}
-          defaultValue={accounts.find((a) => a.value.address === walletVM.currentAccount.address)}
-          onChange={(v) => walletVM.selectAccount(v.value)}
+          defaultValue={accounts.find((a) => a.value.address === currentWallet.currentAccount.address)}
+          onChange={(v) => currentWallet.selectAccount(v.value)}
         />
       </div>
 

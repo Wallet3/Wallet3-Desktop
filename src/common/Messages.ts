@@ -47,13 +47,12 @@ export const WcMessages = {
 };
 
 export interface InitStatus {
-  hasSecret: boolean;
   touchIDSupported: boolean;
   appAuthenticated: boolean;
-  addresses?: string[];
   pendingTxs: TxParams[];
   connectedDApps: IWcSession[];
   keys: IKey[];
+  currentKeyId: number;
 
   platform: NodeJS.Platform;
 }
@@ -134,4 +133,5 @@ export type PopupWindowTypes = 'connectDapp' | 'sign' | 'sendTx' | 'scanQR' | 'a
 export interface IKey {
   name: string;
   id: number;
+  addresses: string[];
 }

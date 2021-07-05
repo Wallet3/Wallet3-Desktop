@@ -8,7 +8,8 @@ import MessageKeys, {
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
 import Coingecko from '../../api/Coingecko';
-import WalletVM from './WalletVM';
+import CurrencyVM from './settings/CurrencyVM';
+import { WalletVM } from './WalletVM';
 import clipboard from '../bridges/Clipboard';
 import { createMemoryHistory } from 'history';
 import crypto from '../bridges/Crypto';
@@ -23,12 +24,22 @@ export class Application {
   appAuthenticated = false;
   touchIDSupported = false;
   connectingApp = false;
-  keys: IKey[] = [];
+
+  wallets: WalletVM[] = [];
+  currentWalletId = 1;
+
+  get currentWallet() {
+    return this.wallets.find((w) => w.id === this.currentWalletId);
+  }
 
   authMethod: AuthMethod = 'fingerprint';
   platform: NodeJS.Platform = 'darwin';
   get isMac() {
     return this.platform === 'darwin';
+  }
+
+  get currencyVM() {
+    return CurrencyVM;
   }
 
   constructor() {
@@ -38,7 +49,7 @@ export class Application {
       platform: observable,
       switchAuthMethod: action,
       connectingApp: observable,
-      keys: observable,
+      wallets: observable,
     });
 
     ipc.on(MessageKeys.idleExpired, (e, { idleExpired }: { idleExpired: boolean }) => {
@@ -50,11 +61,11 @@ export class Application {
   }
 
   async init(jump = true) {
-    const { hasSecret, touchIDSupported, appAuthenticated, addresses, pendingTxs, connectedDApps, platform, keys } =
+    const { touchIDSupported, appAuthenticated, pendingTxs, connectedDApps, platform, keys, currentKeyId } =
       await ipc.invokeSecure<InitStatus>(MessageKeys.getInitStatus);
 
-    console.log(keys);
-    this.keys = keys;
+    this.wallets = keys.map((k) => new WalletVM(k));
+    this.currentWalletId = currentKeyId;
     this.touchIDSupported = touchIDSupported;
     this.appAuthenticated = appAuthenticated;
     runInAction(() => (this.platform = platform));
@@ -64,13 +75,11 @@ export class Application {
 
     Coingecko.start(30);
 
-    if (addresses?.length > 0) {
-      WalletVM.initAccounts({ addresses, pendingTxs, connectedDApps });
-    }
+    this.wallets.find((w) => w.id === currentKeyId)?.initAccounts({ pendingTxs, connectedDApps });
 
     if (!jump) return;
 
-    if (!hasSecret) {
+    if (keys.length === 0) {
       this.history.push('/welcome');
     } else {
       this.history.push('/authentication');
@@ -85,7 +94,7 @@ export class Application {
     });
 
     if (verified) {
-      WalletVM.initAccounts({ addresses });
+      this.currentWallet.initAccounts({ addresses });
       this.appAuthenticated = true;
     }
 
