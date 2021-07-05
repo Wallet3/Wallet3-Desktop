@@ -12,12 +12,15 @@ import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 
 export default observer(({ app }: { app: Application }) => {
-  const { touchIDSupported, appAuthenticated, authMethod } = app;
+  const { touchIDSupported, authMethod } = app;
+  const { authenticated } = app.currentWallet || {};
   const { t } = useTranslation();
   const [validated, setValidated] = useState(false);
   const [failedCount, setFailedCount] = useState(0);
-  const [appInited] = useState(app.appAuthenticated);
+  const [appInited] = useState(authenticated);
 
+  console.log(authenticated)
+  
   const goApp = () => {
     setValidated(true);
     setTimeout(() => app.history.push('/app'), 1250);
@@ -35,7 +38,7 @@ export default observer(({ app }: { app: Application }) => {
   const authViaPassword = async (passcode: string) => {
     if (passcode.length < 6) return;
 
-    const verified = appAuthenticated ? await app.verifyPassword(passcode) : await app.authInitialization(passcode);
+    const verified = authenticated ? await app.verifyPassword(passcode) : await app.authInitialization(passcode);
 
     if (verified) {
       goApp();
@@ -62,7 +65,7 @@ export default observer(({ app }: { app: Application }) => {
   useEffect(() => {
     app.clearHistory();
 
-    if (touchIDSupported && appAuthenticated)
+    if (touchIDSupported && authenticated)
       document.onkeydown = (ev) => {
         if (!(ev.code === 'Enter' || ev.code === 'Space')) return;
         if (authMethod === 'fingerprint') authViaTouchID();
@@ -73,8 +76,8 @@ export default observer(({ app }: { app: Application }) => {
 
   return (
     <div className="page authentication ">
-      <div className={`container ${!appAuthenticated || !touchIDSupported ? 'non-touchid' : ''}`}>
-        {validated ? undefined : touchIDSupported && appAuthenticated && authMethod === 'fingerprint' ? (
+      <div className={`container ${!authenticated || !touchIDSupported ? 'non-touchid' : ''}`}>
+        {validated ? undefined : touchIDSupported && authenticated && authMethod === 'fingerprint' ? (
           <TouchIDView onAuth={authViaTouchID} />
         ) : (
           <PasscodeView onAuth={authViaPassword} />
@@ -83,7 +86,7 @@ export default observer(({ app }: { app: Application }) => {
         {validated ? <Validation /> : undefined}
       </div>
 
-      {failedCount >= 5 && !appAuthenticated ? (
+      {failedCount >= 5 && !authenticated ? (
         <div className="reset-bar">
           <span onClick={resetApp}>{t('Forgot Passcode? Reset Wallet')}</span>
         </div>

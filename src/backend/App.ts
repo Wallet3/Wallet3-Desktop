@@ -2,7 +2,7 @@ import * as Cipher from '../common/Cipher';
 import * as keytar from 'keytar';
 
 import { BrowserWindow, Notification, TouchBar, TouchBarButton, ipcMain, systemPreferences } from 'electron';
-import { DBMan, KeyMan, TxMan, TxNotificaion, WCMan } from './mans';
+import { DBMan, KeyMan, TxMan, TxNotificaion } from './mans';
 import MessageKeys, {
   AuthenticationResult,
   ConfirmSendTx,
@@ -35,9 +35,9 @@ export class App {
   mainWindow?: BrowserWindow;
   touchBarButtons?: { walletConnect: TouchBarButton; gas: TouchBarButton; price?: TouchBarButton };
 
-  currentAddressIndex = 0;
-  addresses: string[] = [];
   chainId = 1;
+  // currentAddressIndex = 0;
+  // addresses: string[] = [];
   machineId = 'default';
 
   #userPassword?: string; // keep encrypted password in memory for TouchID users
@@ -47,12 +47,12 @@ export class App {
     return Networks.find((n) => n.chainId === this.chainId);
   }
 
-  get currentAddress() {
-    return this.addresses[this.currentAddressIndex];
-  }
+  // get currentAddress() {
+  //   return this.addresses[this.currentAddressIndex];
+  // }
 
   get ready() {
-    return this.addresses.length > 0;
+    return KeyMan.keys.some((k) => k.addresses.length > 0);
   }
 
   get walletKey() {
@@ -91,18 +91,18 @@ export class App {
       () => this.mainWindow?.webContents.send(MessageKeys.pendingTxsChanged, [...TxMan.pendingTxs])
     );
 
-    reaction(
-      () => WCMan.connectedSessions,
-      () => this.mainWindow?.webContents.send(MessageKeys.wcConnectsChanged, WCMan.connectedSessions)
-    );
+    // reaction(
+    //   () => WCMan.connectedSessions,
+    //   () => this.mainWindow?.webContents.send(MessageKeys.wcConnectsChanged, WCMan.connectedSessions)
+    // );
   }
 
   constructor() {
     makeObservable(this, {
-      addresses: observable,
+      // addresses: observable,
+      // currentAddressIndex: observable,
       chainId: observable,
-      currentAddressIndex: observable,
-      currentAddress: computed,
+      // currentAddress: computed,
     });
 
     ipcMain.handle(MessageKeys.exchangeDHKey, (e, dh) => {
@@ -125,8 +125,7 @@ export class App {
       return App.encryptIpc(
         {
           touchIDSupported: this.touchIDSupported,
-          appAuthenticated: this.addresses.length > 0,
-          connectedDApps: WCMan.connectedSessions,
+          // appAuthenticated: this.addresses.length > 0,
           pendingTxs: [...TxMan.pendingTxs],
           platform: process.platform,
           keys: KeyMan.overviewKeys,
@@ -137,7 +136,7 @@ export class App {
     });
 
     ipcMain.handle(MessageKeys.scanQR, async () => {
-      if (this.addresses.length === 0) return false;
+      if (!this.ready) return false;
       await this.createPopupWindow('scanQR', {}, { modal: true, parent: this.mainWindow });
     });
 
@@ -187,7 +186,7 @@ export class App {
       if (!(await this.tmpKey.saveSecret(userPassword))) return App.encryptIpc({ success: false }, key);
 
       const addresses = await this.tmpKey.genAddresses(userPassword, 10);
-      runInAction(() => (this.addresses = addresses));
+      // runInAction(() => (this.addresses = addresses));
 
       // TxNotificaion.watch(this.currentNetwork.defaultTokens, addresses, this.chainId);
 
@@ -266,7 +265,7 @@ export class App {
         const addresses = (await this.walletKey.genAddresses(password, count)) || [];
         const verified = addresses.length > 0;
 
-        runInAction(() => this.addresses.push(...addresses));
+        // runInAction(() => this.addresses.push(...addresses));
         if (verified && this.touchIDSupported) this.encryptUserPassword(password);
 
         // TxNotificaion.watch(this.currentNetwork.defaultTokens, addrs, this.chainId);
@@ -282,7 +281,8 @@ export class App {
       const [iv, cipherText] = encrypted;
 
       const { index } = App.decryptIpc(cipherText, iv, key);
-      runInAction(() => (this.currentAddressIndex = index));
+      this.walletKey.changeAddressIndex(index);
+
       return App.encryptIpc({ success: true }, key);
     });
 
@@ -305,13 +305,13 @@ export class App {
 
       await this.walletKey.reset(password, authKey === 'forgotpassword-reset' ? false : true);
 
-      await Promise.all([TxMan.clean(), WCMan.clean(), DBMan.clean()]);
+      await Promise.all([TxMan.clean(), DBMan.clean()]);
       KeyMan.clean();
 
-      runInAction(() => {
-        this.currentAddressIndex = 0;
-        this.addresses = [];
-      });
+      // runInAction(() => {
+      //   this.currentAddressIndex = 0;
+      //   this.addresses = [];
+      // });
 
       return App.encryptIpc({ success: true }, key);
     });
@@ -331,7 +331,7 @@ export class App {
       const password = await this.extractPassword(params);
       if (!password) return App.encryptIpc({}, key);
 
-      const txHex = await this.walletKey.signTx(password, this.currentAddressIndex, params);
+      const txHex = await this.walletKey.signTx(password, params);
 
       if (!txHex) {
         return App.encryptIpc({}, key);
@@ -352,7 +352,7 @@ export class App {
     });
 
     ipcMain.handle(MessageKeys.getHistoryTxs, async () => {
-      const txs = await TxMan.getHistoryTxs(this.currentAddress);
+      const txs = await TxMan.getHistoryTxs(this.walletKey.currentAddress);
       return [...txs];
     });
 
@@ -372,7 +372,7 @@ export class App {
   extractPassword = async (params: SendTxParams) => {
     if (!this.ready) return '';
 
-    if (params.from.toLowerCase() !== this.currentAddress.toLowerCase()) {
+    if (params.from.toLowerCase() !== this.walletKey.currentAddress.toLowerCase()) {
       return '';
     }
 
@@ -439,7 +439,7 @@ export class App {
       const { uri, modal } = App.decryptIpc(cipherText, iv, key);
       if (!uri) return App.encryptIpc({ success: false }, key);
 
-      const success = (await WCMan.connectAndWaitSession(uri, modal)) ? true : false;
+      const success = (await KeyMan.currentWCMan.connectAndWaitSession(uri, modal)) ? true : false;
       return App.encryptIpc({ success }, key);
     });
 

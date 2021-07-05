@@ -7,17 +7,18 @@ import WCSession from '../models/WCSession';
 import { WalletConnect } from '../lib/WalletConnect';
 import { ipcMain } from 'electron';
 
-class WCMan {
+export class WCMan {
   private cache = new Set<string>();
 
-  connects: WalletConnect[] = [];
+  connections: WalletConnect[] = [];
+  keyId = 1;
 
   get connectedSessions() {
-    return this.connects.map((c) => c.session);
+    return this.connections.map((c) => c.session);
   }
 
   constructor() {
-    makeObservable(this, { connects: observable, connectedSessions: computed });
+    makeObservable(this, { connections: observable, connectedSessions: computed });
 
     ipcMain.handle(`${Messages.disconnectDApp}-secure`, (e, encrypted, winId) => {
       const { key } = Application.windows.get(winId);
@@ -36,10 +37,14 @@ class WCMan {
     });
   }
 
-  async init() {
-    if (!Application.walletKey) return;
-    const sessions = await DBMan.wcsessionRepo.find({ where: { keyId: Application.walletKey.id } });
+  async init(keyId: number) {
+    this.keyId = keyId;
+    const sessions = await DBMan.wcsessionRepo.find({ where: { keyId } });
     this.recoverSessions(sessions);
+  }
+
+  async reinit() {
+    this.init(this.keyId);
   }
 
   async connectAndWaitSession(uri: string, modal = false) {
@@ -81,7 +86,7 @@ class WCMan {
         DBMan.wcsessionRepo.save(wcSession);
 
         this.handleWCEvents(wc);
-        runInAction(() => this.connects.push(wc));
+        runInAction(() => this.connections.push(wc));
       });
     });
   }
@@ -92,7 +97,7 @@ class WCMan {
     const wcs = this.connectSessions(sessions);
     wcs.filter((i) => i).map((wc, i) => (wc.wcSession = wcSessions[i]));
 
-    runInAction(() => this.connects.push(...wcs));
+    runInAction(() => this.connections.push(...wcs));
   }
 
   private connectSessions(sessions: IWcSession[]) {
@@ -112,7 +117,7 @@ class WCMan {
     wc.once('disconnect', () => {
       wc.dispose();
       wc.wcSession?.remove({});
-      runInAction(() => this.connects.splice(this.connects.indexOf(wc), 1));
+      runInAction(() => this.connections.splice(this.connections.indexOf(wc), 1));
     });
 
     wc.on('sessionUpdated', () => {
@@ -125,17 +130,17 @@ class WCMan {
   }
 
   disconnect(key: string) {
-    const target = this.connects.find((c) => c.session.key === key);
+    const target = this.connections.find((c) => c.session.key === key);
     if (!target) return;
 
     target.disconnect();
     target.dispose();
     target.wcSession.remove();
-    runInAction(() => this.connects.splice(this.connects.indexOf(target), 1));
+    runInAction(() => this.connections.splice(this.connections.indexOf(target), 1));
   }
 
   switchNetwork(sessionKey: string, toChainId: number) {
-    const target = this.connects.find((c) => c.session.key === sessionKey);
+    const target = this.connections.find((c) => c.session.key === sessionKey);
     if (!target) return false;
 
     target.switchNetwork(toChainId);
@@ -143,7 +148,7 @@ class WCMan {
   }
 
   async clean() {
-    this.connects.forEach((c) => {
+    this.connections.forEach((c) => {
       c?.disconnect();
       c?.wcSession?.remove();
     });
@@ -152,16 +157,17 @@ class WCMan {
   }
 
   dispose() {
-    this.connects.forEach((c) => c?.dispose());
+    // ipcMain.removeAllListeners(`${Messages.disconnectDApp}-secure`);
+    // ipcMain.removeAllListeners(`${Messages.switchDAppNetwork}-secure`);
+
+    this.connections.forEach((c) => c?.dispose());
     this.cache.clear();
 
     return new Promise<void>((resolve) =>
       runInAction(() => {
-        this.connects = [];
+        this.connections = [];
         resolve();
       })
     );
   }
 }
-
-export default new WCMan();

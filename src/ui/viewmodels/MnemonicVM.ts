@@ -45,7 +45,6 @@ export class MnemonicVM {
     const { success, addresses } = await ipc.invokeSecure<SetupMnemonic>(MessageKeys.setupMnemonic, { password });
 
     if (success) {
-      App.appAuthenticated = true;
       App.currentWallet.initAccounts({ addresses });
     }
 

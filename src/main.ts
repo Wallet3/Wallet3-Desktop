@@ -1,7 +1,7 @@
 import './backend/AppMenu';
 
 import { BrowserWindow, Menu, TouchBar, TouchBarButton, Tray, app, nativeImage, powerMonitor, protocol } from 'electron';
-import { DBMan, KeyMan, TxMan, WCMan } from './backend/mans';
+import { DBMan, KeyMan, TxMan } from './backend/mans';
 
 import App from './backend/App';
 import Coingecko from './api/Coingecko';
@@ -127,7 +127,7 @@ const createWindow = async (): Promise<void> => {
 
   mainWindow.once('ready-to-show', () => {
     mainWindow.webContents.send(Messages.pendingTxsChanged, [...TxMan.pendingTxs]);
-    mainWindow.webContents.send(Messages.wcConnectsChanged, WCMan.connectedSessions);
+    // mainWindow.webContents.send(Messages.wcConnectsChanged, WCMan.connectedSessions);
   });
 
   mainWindow.once('closed', () => {
@@ -148,7 +148,6 @@ app.on('ready', async () => {
   await Promise.all([KeyMan.init(), TxMan.init()]);
 
   await App.init();
-  await WCMan.init();
   createWindow();
 
   GasnowWs.start(true);
@@ -190,7 +189,7 @@ app.on('ready', async () => {
   protocol.registerHttpProtocol('wallet3', async (request, cb) => {
     const uri = request.url.substring(7);
     if (!uri.startsWith('wc:') || !uri.includes('bridge=')) return;
-    await WCMan.connectAndWaitSession(uri);
+    await KeyMan.currentWCMan.connectAndWaitSession(uri);
   });
 
   updateapp({ notifyUser: true });
@@ -225,9 +224,9 @@ app.on('web-contents-created', (event, contents) => {
 
 powerMonitor.on('resume', () => {
   setTimeout(async () => {
-    await WCMan.dispose();
-    WCMan.init();
     GasnowWs.restart(true);
+    await KeyMan.currentWCMan.dispose();
+    await KeyMan.currentWCMan.reinit();
   }, 5000);
 });
 

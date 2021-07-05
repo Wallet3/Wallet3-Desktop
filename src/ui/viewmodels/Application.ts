@@ -21,7 +21,7 @@ type AuthMethod = 'fingerprint' | 'keyboard';
 export class Application {
   readonly history = createMemoryHistory();
 
-  appAuthenticated = false;
+  // appAuthenticated = false;
   touchIDSupported = false;
   connectingApp = false;
 
@@ -53,7 +53,7 @@ export class Application {
     });
 
     ipc.on(MessageKeys.idleExpired, (e, { idleExpired }: { idleExpired: boolean }) => {
-      if (!this.appAuthenticated) return;
+      if (!this.currentWallet?.authenticated) return;
       if (idleExpired) this.history.push('/authentication');
     });
 
@@ -61,13 +61,15 @@ export class Application {
   }
 
   async init(jump = true) {
-    const { touchIDSupported, appAuthenticated, pendingTxs, connectedDApps, platform, keys, currentKeyId } =
-      await ipc.invokeSecure<InitStatus>(MessageKeys.getInitStatus);
+    const { touchIDSupported, pendingTxs, platform, keys, currentKeyId } = await ipc.invokeSecure<InitStatus>(
+      MessageKeys.getInitStatus
+    );
 
-    this.wallets = keys.map((k) => new WalletVM(k));
+    console.log(keys);
+    this.wallets = keys.map((k) => new WalletVM(k).initAccounts(k));
     this.currentWalletId = currentKeyId;
     this.touchIDSupported = touchIDSupported;
-    this.appAuthenticated = appAuthenticated;
+
     runInAction(() => (this.platform = platform));
 
     const appDiv = document.getElementById('root');
@@ -75,7 +77,7 @@ export class Application {
 
     Coingecko.start(30);
 
-    this.wallets.find((w) => w.id === currentKeyId)?.initAccounts({ pendingTxs, connectedDApps });
+    this.wallets.find((w) => w.id === currentKeyId)?.initAccounts({ pendingTxs });
 
     if (!jump) return;
 
@@ -95,7 +97,6 @@ export class Application {
 
     if (verified) {
       this.currentWallet.initAccounts({ addresses });
-      this.appAuthenticated = true;
     }
 
     return verified;

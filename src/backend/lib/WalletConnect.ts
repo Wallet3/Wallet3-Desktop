@@ -26,7 +26,7 @@ export class WalletConnect extends EventEmitter {
     return this._userChainId;
   }
 
-  get walletKey() {
+  get wallet() {
     return KeyMan.current;
   }
 
@@ -49,7 +49,7 @@ export class WalletConnect extends EventEmitter {
     );
 
     this._currAddrObserver = reaction(
-      () => App.currentAddressIndex,
+      () => this.wallet.addresses,
       () => this.updateSession()
     );
   }
@@ -107,7 +107,7 @@ export class WalletConnect extends EventEmitter {
 
   private updateSession() {
     if (!App.ready) return;
-    this.connector?.updateSession({ chainId: this.appChainId, accounts: [App.currentAddress] });
+    this.connector?.updateSession({ chainId: this.appChainId, accounts: [this.wallet.currentAddress] });
   }
 
   private handleSessionRequest = async (error: Error, request: WCSessionRequestRequest) => {
@@ -135,7 +135,7 @@ export class WalletConnect extends EventEmitter {
     ipcMain.handleOnce(WcMessages.approveWcSession(this.peerId), (e, c) => {
       clearHandlers();
       this._userChainId = c?.userChainId || 0;
-      this.connector.approveSession({ accounts: [App.currentAddress], chainId: this.appChainId });
+      this.connector.approveSession({ accounts: [this.wallet.currentAddress], chainId: this.appChainId });
 
       this.emit('sessionApproved', this.connector.session);
     });
@@ -165,7 +165,7 @@ export class WalletConnect extends EventEmitter {
     console.log(request.params);
 
     const checkAccount = (from: string) => {
-      if (from?.toLowerCase() === App.currentAddress.toLowerCase()) return true;
+      if (from?.toLowerCase() === this.wallet.currentAddress.toLowerCase()) return true;
       this.connector.rejectRequest({ id: request.id, error: { message: 'Update session' } });
       this.updateSession();
       return false;
@@ -206,12 +206,12 @@ export class WalletConnect extends EventEmitter {
       const found = findTokenByAddress(param.to);
       const erc20 = new ethers.utils.Interface(ERC20ABI);
       const call_symbol = erc20.encodeFunctionData('symbol');
-      const call_decmals = erc20.encodeFunctionData('decimals');
-      const call_balance = erc20.encodeFunctionData('balanceOf', [App.currentAddress]);
+      const call_decimals = erc20.encodeFunctionData('decimals');
+      const call_balance = erc20.encodeFunctionData('balanceOf', [this.wallet.currentAddress]);
 
       const [symbolData, decimalsData, balanceOfData] = await Promise.all([
         call<string>(requestedChainId || this.appChainId, { to: param.to, data: call_symbol }),
-        call<string>(requestedChainId || this.appChainId, { to: param.to, data: call_decmals }),
+        call<string>(requestedChainId || this.appChainId, { to: param.to, data: call_decimals }),
         call<string>(requestedChainId || this.appChainId, { to: param.to, data: call_balance }),
       ]);
 
@@ -243,7 +243,7 @@ export class WalletConnect extends EventEmitter {
       const password = await App.extractPassword(params);
       if (!password) return Application.encryptIpc({}, key);
 
-      const txHex = await this.walletKey.signTx(password, App.currentAddressIndex, params);
+      const txHex = await this.wallet.signTx(password, params);
       if (!txHex) {
         this.connector.rejectRequest({ id: request.id, error: { message: 'Invalid data' } });
         return;
@@ -264,10 +264,10 @@ export class WalletConnect extends EventEmitter {
       this.connector.rejectRequest({ id: request.id, error: { message: 'User rejected' } });
     });
 
-    const receipient: { address: string; name: string } = App.addresses.find((addr) => addr === utils.getAddress(param.to))
+    const receipient: { address: string; name: string } = this.wallet.addresses.find((addr) => addr === utils.getAddress(param.to))
       ? {
           address: param.to,
-          name: `Account ${App.addresses.indexOf(utils.getAddress(param.to)) + 1}`,
+          name: `Account ${this.wallet.addresses.indexOf(utils.getAddress(param.to)) + 1}`,
         }
       : undefined;
 
@@ -277,14 +277,14 @@ export class WalletConnect extends EventEmitter {
 
     App.createPopupWindow('sendTx', {
       chainId,
-      from: App.currentAddress,
-      accountIndex: App.currentAddressIndex,
+      from: this.wallet.currentAddress,
+      accountIndex: this.wallet.currentAddressIndex,
       to: param.to,
       data: param.data || '0x',
       gas: Number.parseInt(param.gas) || 21000,
       gasPrice: Number.parseInt(param.gasPrice) || defaultGasPrice,
       nonce:
-        Number.parseInt(param.nonce) || (await getTransactionCount(requestedChainId ?? this.appChainId, App.currentAddress)),
+        Number.parseInt(param.nonce) || (await getTransactionCount(requestedChainId ?? this.appChainId, this.wallet.currentAddress)),
       value: param.value || 0,
 
       receipient,
@@ -319,7 +319,7 @@ export class WalletConnect extends EventEmitter {
       switch (type) {
         case 'personal_sign':
           const msg = params[0];
-          signed = await this.walletKey.personalSignMessage(password, App.currentAddressIndex, msg);
+          signed = await this.wallet.personalSignMessage(password, this.wallet.currentAddressIndex, msg);
 
           if (!signed) {
             this.connector.rejectRequest({ id: request.id, error: { message: 'Permission Denied' } });
@@ -331,7 +331,7 @@ export class WalletConnect extends EventEmitter {
         case 'signTypedData':
           try {
             const typedData = JSON.parse(params[1]);
-            signed = await this.walletKey.signTypedData_v4(password, App.currentAddressIndex, typedData);
+            signed = await this.wallet.signTypedData_v4(password, this.wallet.currentAddressIndex, typedData);
           } catch (error) {
             this.connector.rejectRequest({ id: request.id, error: { message: 'Invalid Typed Data' } });
             return Application.encryptIpc({ success: false }, key);

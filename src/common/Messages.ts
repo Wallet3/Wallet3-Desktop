@@ -48,9 +48,8 @@ export const WcMessages = {
 
 export interface InitStatus {
   touchIDSupported: boolean;
-  appAuthenticated: boolean;
+  // appAuthenticated: boolean;
   pendingTxs: TxParams[];
-  connectedDApps: IWcSession[];
   keys: IKey[];
   currentKeyId: number;
 
@@ -134,4 +133,6 @@ export interface IKey {
   name: string;
   id: number;
   addresses: string[];
+  authenticated: boolean;
+  connectedDApps: IWcSession[];
 }

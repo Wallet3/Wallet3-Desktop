@@ -41,15 +41,17 @@ export class WalletVM {
     return this.key.name;
   }
 
+  get authenticated() {
+    return this.key.authenticated;
+  }
+
   get id() {
     return this.key.id;
   }
 
   constructor(key: IKey) {
-    makeAutoObservable(this);
-
     this.key = key;
-    this.initAccounts({ addresses: key.addresses });
+    makeAutoObservable(this);
 
     reaction(
       () => NetVM.currentChainId,
@@ -74,17 +76,21 @@ export class WalletVM {
     pendingTxs?: TxParams[];
     connectedDApps?: IWcSession[];
   }) {
-    if (addresses && (!this.accounts || this.accounts.length === 0)) {
+    if (addresses?.length > 0 && (!this.accounts || this.accounts.length === 0)) {
       this.accounts = addresses.map((address, i) => new AccountVM({ address, accountIndex: i + 1 }));
       const lastUsedAccount = store.get(Keys.lastUsedAccount(this.id)) || addresses[0];
       this.currentAccount = this.accounts.find((a) => a.address === lastUsedAccount) || this.accounts[0];
       this.currentAccount?.refresh();
+      this.key.authenticated = true;
+
       ipc.invokeSecure(Messages.changeAccountIndex, { index: this.accountIndex });
       setTimeout(() => this.refresh(), 45 * 1000);
     }
 
     this.connectedDApps = connectedDApps?.sort((a, b) => b.lastUsedTimestamp - a.lastUsedTimestamp) ?? this.connectedDApps;
     this.allPendingTxs = pendingTxs ?? this.allPendingTxs;
+
+    return this;
   }
 
   selectAccount(account: AccountVM) {

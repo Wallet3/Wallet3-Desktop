@@ -5,6 +5,7 @@ import * as ethers from 'ethers';
 import * as keytar from 'keytar';
 
 import Key, { AccountType } from '../models/Key';
+import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
 import { TxParams } from '../../common/Messages';
 
@@ -27,9 +28,22 @@ export class WalletKey {
   private key: Key;
 
   addresses: string[] = [];
+  currentAddressIndex = 0;
+
+  get authenticated() {
+    return this.addresses.length > 0;
+  }
+
+  get currentAddress() {
+    return this.addresses[this.currentAddressIndex];
+  }
 
   get id() {
     return this.key?.id;
+  }
+
+  get name() {
+    return this.key?.name || `Wallet ${this.key?.id ?? 'Temp'}`;
   }
 
   private get tmpSecretType() {
@@ -38,8 +52,17 @@ export class WalletKey {
     return this.checkSecretType(this.tmpSecret);
   }
 
-  get name() {
-    return this.key?.name || `Wallet ${this.key?.id ?? 'Temp'}`;
+  constructor() {
+    makeObservable(this, {
+      addresses: observable,
+      currentAddressIndex: observable,
+      currentAddress: computed,
+      changeAddressIndex: action,
+    });
+  }
+
+  changeAddressIndex(index: number) {
+    this.currentAddressIndex = index;
   }
 
   async init(key: Key) {
@@ -142,8 +165,8 @@ export class WalletKey {
     }
   }
 
-  async signTx(userPassword: string, accountIndex = 0, txParams: TxParams) {
-    const privKey = await this.getPrivateKey(userPassword, accountIndex);
+  async signTx(userPassword: string, txParams: TxParams) {
+    const privKey = await this.getPrivateKey(userPassword, this.currentAddressIndex);
     if (!privKey) return '';
 
     const signer = new ethers.Wallet(privKey);
@@ -177,24 +200,27 @@ export class WalletKey {
     const secret = await this.readSecret(userPassword);
     if (!secret) return undefined;
 
+    let addresses: string[] = [];
+
     switch (this.checkSecretType(secret)) {
       case AccountType.mnemonic:
         const hd = ethers.utils.HDNode.fromMnemonic(secret);
-        const addresses = [hd.derivePath(`${this.basePath}/${this.basePathIndex}`).address];
+        addresses = [hd.derivePath(`${this.basePath}/${this.basePathIndex}`).address];
 
         for (let i = 1; i < count; i++) {
           addresses.push(hd.derivePath(`${this.basePath}/${this.basePathIndex + i}`).address);
         }
 
-        this.addresses = addresses;
         break;
 
       case AccountType.privkey:
         const signer = new ethers.Wallet(secret);
-        this.addresses = [signer.address];
+        addresses = [signer.address];
+        break;
     }
 
-    return this.addresses;
+    runInAction(() => (this.addresses = addresses));
+    return addresses;
   }
 
   async reset(password: string, viaPassword = true) {
@@ -229,10 +255,6 @@ export class WalletKey {
     if (ethers.utils.isValidMnemonic(secret)) return AccountType.mnemonic;
 
     if ((secret.toLowerCase().startsWith('0x') && secret.length === 66) || secret.length === 64) return AccountType.privkey;
-
-    // try {
-    //   if (JSON.parse(this.tmpSecret)) return AccountType.keystore;
-    // } catch (error) {}
 
     return undefined;
   }
