@@ -1,6 +1,6 @@
 import './backend/AppMenu';
 
-import { BrowserWindow, Menu, TouchBar, TouchBarButton, Tray, app, nativeImage, powerMonitor } from 'electron';
+import { BrowserWindow, Menu, TouchBar, TouchBarButton, Tray, app, nativeImage, powerMonitor, protocol } from 'electron';
 import { DBMan, KeyMan, TxMan, WCMan } from './backend/mans';
 
 import App from './backend/App';
@@ -41,8 +41,8 @@ const createTouchBar = (mainWindow: BrowserWindow) => {
     gas: TouchBarButton;
     price?: TouchBarButton;
   }) => {
-    const touchbar = new TouchBar({ items: [walletConnect, price, gas, new TouchBar.TouchBarSpacer({ size: 'flexible' })] });
-    mainWindow.setTouchBar(touchbar);
+    const touchBar = new TouchBar({ items: [walletConnect, price, gas, new TouchBar.TouchBarSpacer({ size: 'flexible' })] });
+    mainWindow.setTouchBar(touchBar);
   };
 
   if (App.touchBarButtons) {
@@ -237,3 +237,5 @@ if (!app.requestSingleInstanceLock()) {
     App.mainWindow?.focus();
   });
 }
+
+protocol.registerHttpProtocol('wallet3', (request, cb) => {});

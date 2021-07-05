@@ -101,6 +101,7 @@ export default observer(({ app, walletVM, networksVM }: Props) => {
             return (
               <MenuItem key={s.key} styles={{ padding: '0' }}>
                 <button
+                  style={{ padding: '10px' }}
                   onClick={(_) => {
                     walletVM.selectDAppSession(s);
                     app.history.push(`/connectedapp`);

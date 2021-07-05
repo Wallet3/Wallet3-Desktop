@@ -118,7 +118,6 @@ export class Application {
   }
 
   async scanQR() {
-    if (this.connectingApp) return;
     if (await this.connectWallet()) return;
 
     runInAction(() => (this.connectingApp = true));
@@ -127,8 +126,10 @@ export class Application {
   }
 
   async connectWallet() {
+    if (this.connectingApp) return true;
+
     const uri = clipboard.readText();
-    if (!uri.startsWith('wc:') || !uri.includes('bridge=')) return;
+    if (!uri.startsWith('wc:') || !uri.includes('bridge=')) return false;
 
     runInAction(() => (this.connectingApp = true));
     const { success } = await ipc.invokeSecure<BooleanResult>(MessageKeys.connectWallet, { uri, modal: true });
