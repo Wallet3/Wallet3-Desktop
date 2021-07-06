@@ -64,6 +64,7 @@ export interface InitStatus {
 export interface InitVerifyPassword {
   verified: boolean;
   addresses: string[];
+  keyId: number;
 }
 
 export interface GenMnemonic {

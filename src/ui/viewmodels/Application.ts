@@ -15,6 +15,7 @@ import { WalletVM } from './WalletVM';
 import clipboard from '../bridges/Clipboard';
 import { createMemoryHistory } from 'history';
 import crypto from '../bridges/Crypto';
+import delay from 'delay';
 import ipc from '../bridges/IPC';
 import store from 'storejs';
 
@@ -27,10 +28,10 @@ export class Application {
   connectingApp = false;
 
   wallets: WalletVM[] = [];
-  currentWalletId = 1;
+  currentWallet: WalletVM = undefined;
 
-  get currentWallet() {
-    return this.wallets.find((w) => w.id === this.currentWalletId);
+  get currentWalletId() {
+    return this.currentWallet?.id;
   }
 
   authMethod: AuthMethod = 'fingerprint';
@@ -52,6 +53,9 @@ export class Application {
       switchAuthMethod: action,
       connectingApp: observable,
       wallets: observable,
+      currentWalletId: computed,
+      currentWallet: observable,
+      switchWallet: action,
     });
 
     ipc.on(MessageKeys.idleExpired, (e, { idleExpired }: { idleExpired: boolean }) => {
@@ -72,7 +76,7 @@ export class Application {
     ipc.on(MessageKeys.currentKeyChanged, (e, obj) => {
       const { keys, keyId } = JSON.parse(obj) as KeysChanged;
       updateWallets(keys);
-      runInAction(() => (this.currentWalletId = keyId));
+      runInAction(() => this.switchWallet(keyId));
       console.log('current key id changed', keyId);
     });
 
@@ -84,8 +88,10 @@ export class Application {
       MessageKeys.getInitStatus
     );
 
+    console.log(keys);
+
     this.wallets = keys.map((k) => new WalletVM(k).initAccounts(k));
-    this.currentWalletId = currentKeyId;
+    this.switchWallet(currentKeyId);
     this.touchIDSupported = touchIDSupported;
 
     ipc.on(MessageKeys.pendingTxsChanged, (e, pendingTxs: TxParams[]) => {
@@ -94,8 +100,8 @@ export class Application {
 
     runInAction(() => (this.platform = platform));
 
-    const appDiv = document.getElementById('root');
-    appDiv.classList.add(platform);
+    const rootDiv = document.getElementById('root');
+    rootDiv.classList.add(platform);
 
     Coingecko.start(30);
 
@@ -110,23 +116,41 @@ export class Application {
     }
   }
 
-  async switchWallet(keyId: number) {
-    if (!this.wallets.find((w) => w.id === keyId)) return;
+  async switchWallet(toId: number) {
+    if (this.currentWalletId === toId && this.currentWallet) return;
 
-    keyId = (await ipc.invokeSecure<{ keyId: number }>(MessageKeys.switchKey, { keyId })).keyId;
-    this.currentWalletId = keyId;
+    const { keyId } = await ipc.invokeSecure<{ keyId: number }>(MessageKeys.switchKey, { keyId: toId });
+
+    console.log('switch wallet: ', keyId, toId);
+    const targetWallet = this.wallets.find((w) => w.id === keyId);
+    if (!targetWallet) return;
+
+    runInAction(() => (this.currentWallet = targetWallet));
+
+    if (!targetWallet.authenticated) {
+      this.history.push('/authentication');
+    }
   }
 
   authInitialization = async (passcode: string) => {
     const password = this.hashPassword(passcode);
-    const { addresses, verified } = await ipc.invokeSecure<InitVerifyPassword>(MessageKeys.initVerifyPassword, {
+    const { addresses, verified, keyId } = await ipc.invokeSecure<InitVerifyPassword>(MessageKeys.initVerifyPassword, {
       password,
       count: 10,
     });
 
-    if (verified) {
-      this.currentWallet.initAccounts({ addresses });
+    if (!verified) return false;
+
+    while (this.wallets.length === 0) {
+      await delay(500);
     }
+
+    while (!this.wallets.find((w) => w.id === keyId)) {
+      await delay(500);
+    }
+
+    this.wallets.find((w) => w.id === keyId).initAccounts({ addresses });
+    console.log('app auth init accounts', verified, this.currentWallet);
 
     return verified;
   };

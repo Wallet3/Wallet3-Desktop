@@ -42,7 +42,7 @@ export class WalletVM {
   }
 
   get authenticated() {
-    return this.key.authenticated;
+    return this.accounts.length > 0;
   }
 
   get id() {
@@ -77,8 +77,7 @@ export class WalletVM {
       const lastUsedAccount = store.get(Keys.lastUsedAccount(this.id)) || addresses[0];
       this.currentAccount = this.accounts.find((a) => a.address === lastUsedAccount) || this.accounts[0];
       this.currentAccount?.refresh();
-      this.key.authenticated = true;
-
+      
       ipc.invokeSecure(Messages.changeAccountIndex, { index: this.accountIndex });
       setTimeout(() => this.refresh(), 45 * 1000);
     }

@@ -7,6 +7,7 @@ import MessageKeys, {
   AuthenticationResult,
   ConfirmSendTx,
   InitStatus,
+  InitVerifyPassword,
   PopupWindowTypes,
   SendTxParams,
   TxParams,
@@ -158,7 +159,7 @@ export class App {
       const [iv, cipherText] = encrypted;
 
       let { keyId } = App.decryptIpc(cipherText, iv, key);
-      keyId = KeyMan.switch(keyId);
+      keyId = await KeyMan.switch(keyId);
 
       return App.encryptIpc({ keyId }, key);
     });
@@ -228,11 +229,13 @@ export class App {
         const addresses = (await this.walletKey.genAddresses(password, count)) || [];
         const verified = addresses.length > 0;
 
+        console.log(this.walletKey.id, 'init verify', password, verified, addresses);
+
         if (verified && this.touchIDSupported) await this.walletKey.encryptUserPassword(password);
 
         // TxNotificaion.watch(this.currentNetwork.defaultTokens, addrs, this.chainId);
 
-        return App.encryptIpc({ verified, addresses }, key);
+        return App.encryptIpc({ verified, addresses, keyId: this.walletKey.id }, key);
       } catch (error) {
         return App.encryptIpc({ verified: false, addresses: [] }, key);
       }

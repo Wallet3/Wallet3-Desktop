@@ -145,7 +145,14 @@ export class WalletKey {
   async verifyPassword(userPassword: string) {
     try {
       const user = Cipher.sha256(this.getCorePassword(userPassword)).toString('hex');
-      return user === (await keytar.getPassword(Keys.password, Keys.masterAccount('default')));
+      const db = await keytar.getPassword(
+        Keys.password,
+        Keys.masterAccount(this.id === 1 ? 'default' : `acc_${this.key.kc_unique}`)
+      );
+
+      console.log(this.id, 'userinput', user, 'keychain', db);
+
+      return user === db;
     } catch (error) {
       console.error(error.message);
       return false;
@@ -157,11 +164,23 @@ export class WalletKey {
     this.key = this.key ?? new Key();
     this.key.saltIv = saltIv;
     this.key.salt = salt;
+    this.key.kc_unique = this.key.kc_unique ?? crypto.randomBytes(4).toString('hex');
 
     await this.key.save();
 
     const pwHash = Cipher.sha256(this.getCorePassword(userPassword)).toString('hex');
-    await keytar.setPassword(Keys.password, Keys.masterAccount('default'), pwHash);
+    console.log(this.id, 'save keychain', pwHash);
+    await keytar.setPassword(
+      Keys.password,
+      Keys.masterAccount(this.id === 1 ? 'default' : `acc_${this.key.kc_unique}`),
+      pwHash
+    );
+
+    console.log(
+      this.id,
+      'read keychain',
+      await keytar.getPassword(Keys.password, Keys.masterAccount(this.id === 1 ? 'default' : `acc_${this.key.kc_unique}`))
+    );
   }
 
   genMnemonic(length = 12) {
@@ -183,7 +202,6 @@ export class WalletKey {
 
     if (!(await this.verifyPassword(userPassword))) return false;
 
-    this.key.kc_unique = this.key.kc_unique ?? crypto.randomBytes(4).toString('hex');
     this.key.basePath = this.basePath;
     this.key.basePathIndex = this.basePathIndex;
     this.key.type = this.tmpSecretType;
@@ -313,6 +331,7 @@ export class WalletKey {
 
   private getCorePassword(userPassword: string) {
     const salt = Cipher.decrypt(Buffer.from(this.key.saltIv, 'hex'), this.key.salt, userPassword);
+    console.log('salt', salt);
     return `${salt}-${userPassword}`;
   }
 }

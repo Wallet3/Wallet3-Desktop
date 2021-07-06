@@ -73,7 +73,10 @@ class KeyMan {
   }
 
   async switch(id: number) {
+    // if ()
     this.current = this.keys.find((k) => k.id === id) || this.keys[0];
+
+    console.log(this.current['key']);
 
     let { wcman, disposer } = this.connections.get(this.currentId) || {};
     if (!wcman) {
@@ -111,8 +114,10 @@ class KeyMan {
   async clean(password: string, forgotPassword = false) {
     await Promise.all(this.keys.map((k) => k.reset(password, forgotPassword)));
 
-    this.keys = [];
-    this.current = undefined;
+    runInAction(() => {
+      this.keys = [];
+      this.current = undefined;
+    });
 
     this.connections.forEach((tuple) => {
       tuple.disposer();
