@@ -153,6 +153,16 @@ export class App {
       return App.encryptIpc({ addresses, success: true }, key);
     });
 
+    ipcMain.handle(`${MessageKeys.switchKey}-secure`, async (e, encrypted, winId) => {
+      const { key } = this.windows.get(winId);
+      const [iv, cipherText] = encrypted;
+
+      let { keyId } = App.decryptIpc(cipherText, iv, key);
+      keyId = KeyMan.switch(keyId);
+
+      return App.encryptIpc({ keyId }, key);
+    });
+
     ipcMain.handle(`${MessageKeys.setDerivationPath}-secure`, async (e, encrypted, winId) => {
       const { key } = this.windows.get(winId);
       const [iv, cipherText] = encrypted;

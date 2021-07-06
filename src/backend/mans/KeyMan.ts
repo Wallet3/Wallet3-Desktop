@@ -96,6 +96,8 @@ class KeyMan {
     Store.set('keyId', this.currentId);
 
     console.log('switch:', id);
+
+    return this.currentId;
   }
 
   finishTmp() {

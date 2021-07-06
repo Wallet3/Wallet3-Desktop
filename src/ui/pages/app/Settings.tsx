@@ -3,14 +3,11 @@ import './Settings.css';
 import { Menu, MenuButton, MenuDivider, MenuItem } from '@szhsin/react-menu';
 
 import { Application } from '../../viewmodels/Application';
-import { CurrencyVM } from '../../viewmodels/settings/CurrencyVM';
 import DisplayCurrency from './components/DisplayCurrency';
 import Feather from 'feather-icons-react';
 import { LangsVM } from '../../viewmodels/settings/LangsVM';
-import { NetworksVM } from '../../viewmodels/NetworksVM';
 import React from 'react';
 import Select from 'react-select';
-import { WalletVM } from '../../viewmodels/WalletVM';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 
@@ -79,7 +76,7 @@ export default observer(({ app, langsVM }: IConstructor) => {
             {app.wallets.map((k) => {
               return (
                 <MenuItem styles={MenuItemStyle} key={k.id}>
-                  <button>
+                  <button onClick={(_) => app.switchWallet(k.id)}>
                     <div className={`${currentWallet.id === k.id ? 'active' : ''}`}>
                       <Feather icon="credit-card" size={13} />
                       <span>{k.name}</span>

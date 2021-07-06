@@ -61,8 +61,6 @@ export default observer(({ app }: { app: Application }) => {
   };
 
   useEffect(() => {
-    app.clearHistory();
-
     if (touchIDSupported && authenticated)
       document.onkeydown = (ev) => {
         if (!(ev.code === 'Enter' || ev.code === 'Space')) return;

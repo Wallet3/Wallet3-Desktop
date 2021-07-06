@@ -36,8 +36,11 @@ export default {
 
   pendingTxsChanged: 'msg-pendingtxs-changed',
   wcConnectsChanged: (keyId: number) => `msg-${keyId}-wcconnects-changed`,
+
   keysChanged: 'msg-keys-changed',
+  switchKey: 'msg-switch-key',
   currentKeyChanged: 'msg-current-key-changed',
+
   idleExpired: 'msg-app-idle-expired',
 };
 

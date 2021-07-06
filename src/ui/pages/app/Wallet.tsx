@@ -46,7 +46,6 @@ export default observer(({ networksVM, app }: IConstructor) => {
   }
 
   useEffect(() => {
-    app.clearHistory();
     if (pendingTxCount === 0) return;
     GasStation.refresh();
   }, []);

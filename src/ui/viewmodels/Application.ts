@@ -110,6 +110,13 @@ export class Application {
     }
   }
 
+  async switchWallet(keyId: number) {
+    if (!this.wallets.find((w) => w.id === keyId)) return;
+
+    keyId = (await ipc.invokeSecure<{ keyId: number }>(MessageKeys.switchKey, { keyId })).keyId;
+    this.currentWalletId = keyId;
+  }
+
   authInitialization = async (passcode: string) => {
     const password = this.hashPassword(passcode);
     const { addresses, verified } = await ipc.invokeSecure<InitVerifyPassword>(MessageKeys.initVerifyPassword, {
@@ -153,10 +160,6 @@ export class Application {
     const { success } = await ipc.invokeSecure<BooleanResult>(MessageKeys.resetSystem, { authKey });
     if (success) store.clear();
     return success;
-  }
-
-  clearHistory() {
-    return ipc.invoke(MessageKeys.clearHistory);
   }
 
   async scanQR() {

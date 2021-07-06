@@ -150,13 +150,13 @@ export class WCMan {
       c?.wcSession?.remove();
     });
 
+    ipcMain.removeAllListeners(`${Messages.disconnectDApp(this.keyId)}-secure`);
+    ipcMain.removeAllListeners(`${Messages.switchDAppNetwork(this.keyId)}-secure`);
+
     await this.dispose();
   }
 
   dispose() {
-    ipcMain.removeAllListeners(`${Messages.disconnectDApp(this.keyId)}-secure`);
-    ipcMain.removeAllListeners(`${Messages.switchDAppNetwork(this.keyId)}-secure`);
-
     this.connections.forEach((c) => c?.dispose());
     this.cache.clear();
 
