@@ -110,7 +110,7 @@ export class WalletVM {
   dAppVM: DAppVM = null;
 
   selectDAppSession(session: IWcSession) {
-    this.dAppVM = new DAppVM(session);
+    this.dAppVM = new DAppVM(session, this.key.id);
   }
 
   private _historyTxsVM: HistoryTxsVM = null;

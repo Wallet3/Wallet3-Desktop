@@ -43,7 +43,7 @@ export default observer(({ app }: { app: Application }) => {
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    DAppVM.disconnect(item.key);
+                    DAppVM.disconnect(item.key, currentWallet.id);
                   }}
                 >
                   <Feather icon="trash-2" size={16} strokeWidth={1.5} />

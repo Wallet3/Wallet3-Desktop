@@ -46,7 +46,7 @@ export class App {
   }
 
   get tmpKey() {
-    return KeyMan.tmp;
+    return KeyMan.tmpKey;
   }
 
   async init() {
@@ -142,7 +142,6 @@ export class App {
       if (!(await this.tmpKey.saveSecret(userPassword))) return App.encryptIpc({ success: false }, key);
 
       const addresses = await this.tmpKey.genAddresses(userPassword, 10);
-      // runInAction(() => (this.addresses = addresses));
 
       // TxNotificaion.watch(this.currentNetwork.defaultTokens, addresses, this.chainId);
 
@@ -255,10 +254,8 @@ export class App {
 
       const password = this.walletKey.getAuthKeyPassword(authKey);
 
-      await this.walletKey.reset(password, authKey === 'forgotpassword-reset' ? false : true);
-
-      await Promise.all([TxMan.clean(), DBMan.clean()]);
-      KeyMan.clean();
+      await Promise.all([TxMan.clean(), KeyMan.clean(password, authKey === 'forgotpassword-reset')]);
+      await DBMan.clean();
 
       return App.encryptIpc({ success: true }, key);
     });

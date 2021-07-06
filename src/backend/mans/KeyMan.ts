@@ -11,7 +11,7 @@ class KeyMan {
   keys: WalletKey[] = [];
 
   current: WalletKey = null;
-  tmp = new WalletKey();
+  tmpKey = new WalletKey();
 
   connections = new Map<number, { wcman: WCMan; disposer: IReactionDisposer }>();
 
@@ -62,6 +62,8 @@ class KeyMan {
     const keys = await Promise.all((await DBMan.accountRepo.find()).map((k) => new WalletKey().init(k)));
     const id = Store.get('keyId') || 1;
 
+    if (keys.length === 0) return;
+
     runInAction(() => {
       this.keys = keys;
       this.switch(id);
@@ -73,35 +75,40 @@ class KeyMan {
   async switch(id: number) {
     this.current = this.keys.find((k) => k.id === id) || this.keys[0];
 
-    let { wcman, disposer } = this.connections.get(id) || {};
+    let { wcman, disposer } = this.connections.get(this.currentId) || {};
     if (!wcman) {
-      wcman = new WCMan();
-      await wcman.init(id);
+      wcman = new WCMan(this.currentId);
+      await wcman.init();
 
       disposer = reaction(
         () => wcman.connectedSessions,
         () =>
           wcman.keyId === this.currentId
-            ? App.mainWindow?.webContents.send(Messages.wcConnectsChanged(id), wcman.connectedSessions)
+            ? App.mainWindow?.webContents.send(Messages.wcConnectsChanged(this.currentId), wcman.connectedSessions)
             : undefined
       );
 
-      this.connections.set(id, { wcman, disposer });
+      this.connections.set(this.currentId, { wcman, disposer });
     }
 
-    App.mainWindow?.webContents.send(Messages.wcConnectsChanged(id), wcman.connectedSessions);
+    App.mainWindow?.webContents.send(Messages.wcConnectsChanged(this.currentId), wcman.connectedSessions);
 
-    Store.set('keyId', id);
+    Store.set('keyId', this.currentId);
+
+    console.log('switch:', id);
   }
 
   finishTmp() {
-    this.keys.push(this.tmp);
-    this.switch(this.tmp.id);
+    console.log('finish tmpkey', this.tmpKey.id);
+    this.keys.push(this.tmpKey);
+    this.switch(this.tmpKey.id);
 
-    this.tmp = new WalletKey();
+    this.tmpKey = new WalletKey();
   }
 
-  clean() {
+  async clean(password: string, forgotPassword = false) {
+    await Promise.all(this.keys.map((k) => k.reset(password, forgotPassword)));
+
     this.keys = [];
     this.current = undefined;
 

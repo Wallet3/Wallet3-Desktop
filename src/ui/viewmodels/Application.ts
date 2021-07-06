@@ -66,7 +66,7 @@ export class Application {
 
     ipc.on(MessageKeys.keysChanged, (e, keys: string) => {
       updateWallets(JSON.parse(keys) as IKey[]);
-      console.log('keys changed');
+      console.log('keys changed', keys);
     });
 
     ipc.on(MessageKeys.currentKeyChanged, (e, obj) => {

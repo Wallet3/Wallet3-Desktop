@@ -17,10 +17,12 @@ export class WCMan {
     return this.connections.map((c) => c.session);
   }
 
-  constructor() {
+  constructor(keyId: number) {
+    this.keyId = keyId;
+
     makeObservable(this, { connections: observable, connectedSessions: computed });
 
-    ipcMain.handle(`${Messages.disconnectDApp}-secure`, (e, encrypted, winId) => {
+    ipcMain.handle(`${Messages.disconnectDApp(keyId)}-secure`, (e, encrypted, winId) => {
       const { key } = Application.windows.get(winId);
       const [iv, cipherText] = encrypted;
 
@@ -28,7 +30,7 @@ export class WCMan {
       this.disconnect(sessionKey);
     });
 
-    ipcMain.handle(`${Messages.switchDAppNetwork}-secure`, (e, encrypted, winId) => {
+    ipcMain.handle(`${Messages.switchDAppNetwork(keyId)}-secure`, (e, encrypted, winId) => {
       const { key } = Application.windows.get(winId);
       const [iv, cipherText] = encrypted;
 
@@ -37,14 +39,9 @@ export class WCMan {
     });
   }
 
-  async init(keyId: number) {
-    this.keyId = keyId;
-    const sessions = await DBMan.wcsessionRepo.find({ where: { keyId } });
+  async init() {
+    const sessions = await DBMan.wcsessionRepo.find({ where: { keyId: this.keyId } });
     this.recoverSessions(sessions);
-  }
-
-  async reinit() {
-    this.init(this.keyId);
   }
 
   async connectAndWaitSession(uri: string, modal = false) {
@@ -157,8 +154,8 @@ export class WCMan {
   }
 
   dispose() {
-    // ipcMain.removeAllListeners(`${Messages.disconnectDApp}-secure`);
-    // ipcMain.removeAllListeners(`${Messages.switchDAppNetwork}-secure`);
+    ipcMain.removeAllListeners(`${Messages.disconnectDApp(this.keyId)}-secure`);
+    ipcMain.removeAllListeners(`${Messages.switchDAppNetwork(this.keyId)}-secure`);
 
     this.connections.forEach((c) => c?.dispose());
     this.cache.clear();

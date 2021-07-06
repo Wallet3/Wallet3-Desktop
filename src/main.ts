@@ -226,7 +226,7 @@ powerMonitor.on('resume', () => {
   setTimeout(async () => {
     GasnowWs.restart(true);
     await KeyMan.currentWCMan.dispose();
-    await KeyMan.currentWCMan.reinit();
+    await KeyMan.currentWCMan.init();
   }, 5000);
 });
 

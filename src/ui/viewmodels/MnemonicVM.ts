@@ -50,8 +50,9 @@ export class MnemonicVM {
       await delay(500);
     }
 
-    console.log('setup mn', success);
-    if (success) {
+    console.log('setup mn', success)
+    if (success && App.currentWallet.accounts.length === 0) {
+      console.log('init accounts', success);
       App.currentWallet.initAccounts({ addresses });
     }
 
