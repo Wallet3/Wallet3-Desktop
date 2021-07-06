@@ -27,6 +27,8 @@ export default observer(({ app, langsVM }: IConstructor) => {
   const { currentWallet, currencyVM } = app;
 
   const accountToModel = (a: AccountVM, i: number) => {
+    if (!a) return null;
+
     const addr = `${a.address.substring(0, 7)}...${a.address.substring(a.address.length - 4)}`;
     const balance = a.nativeToken ? `(${a.nativeToken.amount.toFixed(2)} ${a.nativeToken.symbol})` : '';
     const name = a.name || (a.ens ? a.ens.substring(0, a.ens.indexOf('.eth')).substring(0, 12) : `Account ${i + 1}`);
@@ -57,6 +59,18 @@ export default observer(({ app, langsVM }: IConstructor) => {
     if (!success) return;
 
     app.history.push(`/reset/${authKey}`);
+  };
+
+  const AccountsMenu = () => {
+    return (
+      <Select
+        options={accounts}
+        isClearable={false}
+        isSearchable={false}
+        defaultValue={accountToModel(currentWallet.currentAccount, currentWallet.accountIndex)}
+        onChange={(v) => currentWallet.selectAccount(v.value)}
+      />
+    );
   };
 
   const iconSize = 15;
@@ -108,14 +122,7 @@ export default observer(({ app, langsVM }: IConstructor) => {
           </Menu>
         </div>
 
-        <Select
-          options={accounts}
-          isClearable={false}
-          isSearchable={false}
-          defaultValue={accountToModel(currentWallet.currentAccount, currentWallet.accountIndex)}
-          // defaultValue={accounts.find((a) => a.value.address === currentWallet.currentAccount.address)}
-          onChange={(v) => currentWallet.selectAccount(v.value)}
-        />
+        <AccountsMenu />
       </div>
 
       <div className="setting-item">
