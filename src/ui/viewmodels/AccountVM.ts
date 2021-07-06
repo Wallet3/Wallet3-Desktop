@@ -5,7 +5,6 @@ import { IUserToken, UserToken } from './models/UserToken';
 import { makeAutoObservable, runInAction } from 'mobx';
 
 import { AddTokenVM } from './account/AddTokenVM';
-import App from './Application';
 import { ERC20Token } from '../../common/ERC20Token';
 import { NFT } from './models/NFT';
 import NetVM from './NetworksVM';
@@ -23,6 +22,7 @@ const Keys = {
 interface IArgs {
   address: string;
   accountIndex: number;
+  walletId: number;
 }
 
 interface ChainOverview {
@@ -40,6 +40,7 @@ export class AccountVM {
   nfts: NFT[] = null;
   chains: Debank.IChainBalance[] = [];
   nativeToken: UserToken = null;
+  walletId = 1;
 
   private _name = '';
   private tokenWatcher = new Map<string, ERC20Token>();
@@ -88,14 +89,15 @@ export class AccountVM {
 
   set name(value) {
     this._name = value;
-    store.set(Keys.accountName(App.currentWallet.id, this.accountIndex), value);
+    store.set(Keys.accountName(this.walletId, this.accountIndex), value);
   }
 
   constructor(args: IArgs) {
     makeAutoObservable(this);
+    this.walletId = args.walletId;
     this.address = args.address;
     this.accountIndex = args.accountIndex;
-    this._name = store.get(Keys.accountName(App.currentWallet.id, this.accountIndex)) || `Account ${args.accountIndex}`;
+    this._name = store.get(Keys.accountName(args.walletId, this.accountIndex)) || `Account ${args.accountIndex}`;
 
     NetVM.currentProvider
       .lookupAddress(this.address)

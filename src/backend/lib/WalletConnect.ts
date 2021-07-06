@@ -49,7 +49,7 @@ export class WalletConnect extends EventEmitter {
     );
 
     this._currAddrObserver = reaction(
-      () => this.wallet.addresses,
+      () => this.wallet.currentAddressIndex,
       () => this.updateSession()
     );
   }
@@ -264,7 +264,9 @@ export class WalletConnect extends EventEmitter {
       this.connector.rejectRequest({ id: request.id, error: { message: 'User rejected' } });
     });
 
-    const receipient: { address: string; name: string } = this.wallet.addresses.find((addr) => addr === utils.getAddress(param.to))
+    const receipient: { address: string; name: string } = this.wallet.addresses.find(
+      (addr) => addr === utils.getAddress(param.to)
+    )
       ? {
           address: param.to,
           name: `Account ${this.wallet.addresses.indexOf(utils.getAddress(param.to)) + 1}`,
@@ -284,7 +286,8 @@ export class WalletConnect extends EventEmitter {
       gas: Number.parseInt(param.gas) || 21000,
       gasPrice: Number.parseInt(param.gasPrice) || defaultGasPrice,
       nonce:
-        Number.parseInt(param.nonce) || (await getTransactionCount(requestedChainId ?? this.appChainId, this.wallet.currentAddress)),
+        Number.parseInt(param.nonce) ||
+        (await getTransactionCount(requestedChainId ?? this.appChainId, this.wallet.currentAddress)),
       value: param.value || 0,
 
       receipient,

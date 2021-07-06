@@ -62,6 +62,7 @@ export class WalletKey {
   }
 
   changeAddressIndex(index: number) {
+    console.log('change addr index', index)
     this.currentAddressIndex = index;
   }
 

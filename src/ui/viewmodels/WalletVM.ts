@@ -77,7 +77,7 @@ export class WalletVM {
     connectedDApps?: IWcSession[];
   }) {
     if (addresses?.length > 0 && (!this.accounts || this.accounts.length === 0)) {
-      this.accounts = addresses.map((address, i) => new AccountVM({ address, accountIndex: i + 1 }));
+      this.accounts = addresses.map((address, i) => new AccountVM({ address, accountIndex: i + 1, walletId: this.id }));
       const lastUsedAccount = store.get(Keys.lastUsedAccount(this.id)) || addresses[0];
       this.currentAccount = this.accounts.find((a) => a.address === lastUsedAccount) || this.accounts[0];
       this.currentAccount?.refresh();
