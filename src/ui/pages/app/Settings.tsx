@@ -72,7 +72,7 @@ export default observer(({ app, langsVM }: IConstructor) => {
             styles={{ minWidth: '3rem' }}
             menuButton={() => (
               <MenuButton className="menu-button">
-                <span>Wallet 1</span>
+                <span>{currentWallet?.name}</span>
               </MenuButton>
             )}
           >

@@ -4,6 +4,8 @@ import MessageKeys, {
   IKey,
   InitStatus,
   InitVerifyPassword,
+  KeysChanged,
+  TxParams,
 } from '../../common/Messages';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
@@ -21,7 +23,6 @@ type AuthMethod = 'fingerprint' | 'keyboard';
 export class Application {
   readonly history = createMemoryHistory();
 
-  // appAuthenticated = false;
   touchIDSupported = false;
   connectingApp = false;
 
@@ -34,6 +35,7 @@ export class Application {
 
   authMethod: AuthMethod = 'fingerprint';
   platform: NodeJS.Platform = 'darwin';
+
   get isMac() {
     return this.platform === 'darwin';
   }
@@ -57,6 +59,23 @@ export class Application {
       if (idleExpired) this.history.push('/authentication');
     });
 
+    const updateWallets = (keys: IKey[]) => {
+      const newKeys = keys.filter((k) => !this.wallets.find((w) => w.id === k.id));
+      runInAction(() => this.wallets.push(...newKeys.map((k) => new WalletVM(k).initAccounts(k))));
+    };
+
+    ipc.on(MessageKeys.keysChanged, (e, keys: string) => {
+      updateWallets(JSON.parse(keys) as IKey[]);
+      console.log('keys changed');
+    });
+
+    ipc.on(MessageKeys.currentKeyChanged, (e, obj) => {
+      const { keys, keyId } = JSON.parse(obj) as KeysChanged;
+      updateWallets(keys);
+      runInAction(() => (this.currentWalletId = keyId));
+      console.log('current key id changed', keyId);
+    });
+
     this.authMethod = store.get('authMethod') || 'fingerprint';
   }
 
@@ -65,10 +84,13 @@ export class Application {
       MessageKeys.getInitStatus
     );
 
-    console.log(keys);
     this.wallets = keys.map((k) => new WalletVM(k).initAccounts(k));
     this.currentWalletId = currentKeyId;
     this.touchIDSupported = touchIDSupported;
+
+    ipc.on(MessageKeys.pendingTxsChanged, (e, pendingTxs: TxParams[]) => {
+      runInAction(() => this.wallets.forEach((w) => w.initAccounts({ pendingTxs })));
+    });
 
     runInAction(() => (this.platform = platform));
 

@@ -19,8 +19,6 @@ export default observer(({ app }: { app: Application }) => {
   const [failedCount, setFailedCount] = useState(0);
   const [appInited] = useState(authenticated);
 
-  console.log(authenticated)
-  
   const goApp = () => {
     setValidated(true);
     setTimeout(() => app.history.push('/app'), 1250);

@@ -35,7 +35,9 @@ export default {
   signMsg: 'msg-sign-msg',
 
   pendingTxsChanged: 'msg-pendingtxs-changed',
-  wcConnectsChanged: 'msg-wcconnects-changed',
+  wcConnectsChanged: (keyId: number) => `msg-${keyId}-wcconnects-changed`,
+  keysChanged: 'msg-keys-changed',
+  currentKeyChanged: 'msg-current-key-changed',
   idleExpired: 'msg-app-idle-expired',
 };
 
@@ -135,4 +137,9 @@ export interface IKey {
   addresses: string[];
   authenticated: boolean;
   connectedDApps: IWcSession[];
+}
+
+export interface KeysChanged {
+  keyId: number;
+  keys: IKey[];
 }

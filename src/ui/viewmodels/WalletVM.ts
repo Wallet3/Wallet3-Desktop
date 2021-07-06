@@ -58,11 +58,7 @@ export class WalletVM {
       () => this.currentAccount?.refresh()
     );
 
-    ipc.on(Messages.pendingTxsChanged, (e, content: TxParams[]) => {
-      runInAction(() => (this.allPendingTxs = content));
-    });
-
-    ipc.on(Messages.wcConnectsChanged, (e, content: IWcSession[]) =>
+    ipc.on(Messages.wcConnectsChanged(key.id), (e, content: IWcSession[]) =>
       runInAction(() => (this.connectedDApps = content.sort((a, b) => b.lastUsedTimestamp - a.lastUsedTimestamp)))
     );
   }
@@ -88,7 +84,7 @@ export class WalletVM {
     }
 
     this.connectedDApps = connectedDApps?.sort((a, b) => b.lastUsedTimestamp - a.lastUsedTimestamp) ?? this.connectedDApps;
-    this.allPendingTxs = pendingTxs ?? this.allPendingTxs;
+    this.allPendingTxs = pendingTxs?.filter((t) => this.accounts.some((acc) => acc.address === t.from)) ?? this.allPendingTxs;
 
     return this;
   }
