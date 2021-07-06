@@ -28,7 +28,7 @@ export class Application {
   connectingApp = false;
 
   wallets: WalletVM[] = [];
-  currentWallet: WalletVM = undefined;
+  currentWallet: WalletVM = null;
 
   get currentWalletId() {
     return this.currentWallet?.id;

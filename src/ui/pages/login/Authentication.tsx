@@ -22,7 +22,6 @@ export default observer(({ app }: { app: Application }) => {
   const goApp = () => {
     setValidated(true);
     setTimeout(() => app.history.push('/app'), 1250);
-    console.log('go app')
   };
 
   const authViaTouchID = async () => {
@@ -39,7 +38,6 @@ export default observer(({ app }: { app: Application }) => {
 
     const verified = authenticated ? await app.verifyPassword(passcode) : await app.authInitialization(passcode);
 
-    console.log('auth via password', verified)
     if (verified) {
       goApp();
     } else {
@@ -63,14 +61,15 @@ export default observer(({ app }: { app: Application }) => {
   };
 
   useEffect(() => {
-    if (touchIDSupported && authenticated)
+    if (touchIDSupported && authenticated) {
       document.onkeydown = (ev) => {
         if (!(ev.code === 'Enter' || ev.code === 'Space')) return;
         if (authMethod === 'fingerprint') authViaTouchID();
       };
+    }
 
     return () => (document.onkeydown = undefined);
-  }, [authMethod]);
+  }, [app.currentWallet]);
 
   return (
     <div className="page authentication ">

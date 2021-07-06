@@ -2,6 +2,7 @@ import './Settings.css';
 
 import { Menu, MenuButton, MenuDivider, MenuItem } from '@szhsin/react-menu';
 
+import { AccountVM } from '../../viewmodels/AccountVM';
 import { Application } from '../../viewmodels/Application';
 import DisplayCurrency from './components/DisplayCurrency';
 import Feather from 'feather-icons-react';
@@ -25,7 +26,7 @@ export default observer(({ app, langsVM }: IConstructor) => {
   const { t } = useTranslation();
   const { currentWallet, currencyVM } = app;
 
-  const accounts = currentWallet.accounts.map((a, i) => {
+  const accountToModel = (a: AccountVM, i: number) => {
     const addr = `${a.address.substring(0, 7)}...${a.address.substring(a.address.length - 4)}`;
     const balance = a.nativeToken ? `(${a.nativeToken.amount.toFixed(2)} ${a.nativeToken.symbol})` : '';
     const name = a.name || (a.ens ? a.ens.substring(0, a.ens.indexOf('.eth')).substring(0, 12) : `Account ${i + 1}`);
@@ -33,7 +34,9 @@ export default observer(({ app, langsVM }: IConstructor) => {
       label: `${name} | ${addr} ${balance}`,
       value: a,
     };
-  });
+  };
+
+  const accounts = currentWallet.accounts.map(accountToModel);
 
   const goToBackupMnemonic = async () => {
     const { success, authKey } = await app.auth();
@@ -104,11 +107,13 @@ export default observer(({ app, langsVM }: IConstructor) => {
             </MenuItem>
           </Menu>
         </div>
+
         <Select
           options={accounts}
           isClearable={false}
           isSearchable={false}
-          defaultValue={accounts.find((a) => a.value.address === currentWallet.currentAccount.address)}
+          defaultValue={accountToModel(currentWallet.currentAccount, currentWallet.accountIndex)}
+          // defaultValue={accounts.find((a) => a.value.address === currentWallet.currentAccount.address)}
           onChange={(v) => currentWallet.selectAccount(v.value)}
         />
       </div>
