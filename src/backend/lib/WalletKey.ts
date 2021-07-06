@@ -121,8 +121,11 @@ export class WalletKey {
     return password;
   }
 
-  async addAuthKeyPassword(authKey: string, password: string, viaTouchID = false) {
+  async generateAuthKey(password: string, viaTouchID = false) {
+    const authKey = crypto.randomBytes(8).toString('hex');
     this.#authKeys.set(authKey, password || (viaTouchID ? await this.decryptUserPassword() : ''));
+
+    return authKey;
   }
 
   /////////////////////
