@@ -11,8 +11,8 @@ import MessageKeys, {
   SendTxParams,
   TxParams,
 } from '../common/Messages';
-import { autorun, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
 import { createECDH, createHash, randomBytes } from 'crypto';
+import { makeObservable, observable, reaction, runInAction } from 'mobx';
 
 import { Networks } from '../misc/Networks';
 import Transaction from './models/Transaction';
@@ -23,11 +23,6 @@ import { utils } from 'ethers';
 declare const POPUP_WINDOW_WEBPACK_ENTRY: string;
 declare const POPUP_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
-const Keys = {
-  appLaunchKey: 'wallet3-applaunchkey',
-  appAccount: (id: string) => `wallet3-core-${id}`,
-};
-
 export class App {
   touchIDSupported = process.platform === 'darwin' && systemPreferences.canPromptTouchID();
 
@@ -36,20 +31,11 @@ export class App {
   touchBarButtons?: { walletConnect: TouchBarButton; gas: TouchBarButton; price?: TouchBarButton };
 
   chainId = 1;
-  // currentAddressIndex = 0;
-  // addresses: string[] = [];
   machineId = 'default';
-
-  #userPassword?: string; // keep encrypted password in memory for TouchID users
-  #authKeys = new Map<string, string>(); // authId => key
 
   get currentNetwork() {
     return Networks.find((n) => n.chainId === this.chainId);
   }
-
-  // get currentAddress() {
-  //   return this.addresses[this.currentAddressIndex];
-  // }
 
   get ready() {
     return KeyMan.keys.some((k) => k.addresses.length > 0);
@@ -63,47 +49,15 @@ export class App {
     return KeyMan.tmp;
   }
 
-  async decryptUserPassword() {
-    const secret = await keytar.getPassword(Keys.appLaunchKey, Keys.appAccount(this.machineId));
-    const [iv, key] = secret.split(':');
-    return Cipher.decrypt(Buffer.from(iv, 'hex'), this.#userPassword, Buffer.from(key, 'hex'));
-  }
-
-  async encryptUserPassword(password: string) {
-    const secret = await keytar.getPassword(Keys.appLaunchKey, Keys.appAccount(this.machineId));
-    const [iv, key] = secret.split(':');
-    const [_, enPw] = Cipher.encrypt(password, Buffer.from(key, 'hex'), Buffer.from(iv, 'hex'));
-    this.#userPassword = enPw;
-  }
-
-  async initLaunchKey() {
-    const launchIv = Cipher.generateIv().toString('hex');
-    const launchKey = Cipher.generateIv(32).toString('hex');
-
-    await keytar.setPassword(Keys.appLaunchKey, Keys.appAccount(this.machineId), `${launchIv}:${launchKey}`);
-  }
-
   async init() {
-    await this.initLaunchKey();
-
     reaction(
       () => TxMan.pendingTxs.length,
       () => this.mainWindow?.webContents.send(MessageKeys.pendingTxsChanged, [...TxMan.pendingTxs])
     );
-
-    // reaction(
-    //   () => WCMan.connectedSessions,
-    //   () => this.mainWindow?.webContents.send(MessageKeys.wcConnectsChanged, WCMan.connectedSessions)
-    // );
   }
 
   constructor() {
-    makeObservable(this, {
-      // addresses: observable,
-      // currentAddressIndex: observable,
-      chainId: observable,
-      // currentAddress: computed,
-    });
+    makeObservable(this, { chainId: observable });
 
     ipcMain.handle(MessageKeys.exchangeDHKey, (e, dh) => {
       const { rendererEcdhKey, windowId } = dh;
@@ -125,7 +79,6 @@ export class App {
       return App.encryptIpc(
         {
           touchIDSupported: this.touchIDSupported,
-          // appAuthenticated: this.addresses.length > 0,
           pendingTxs: [...TxMan.pendingTxs],
           platform: process.platform,
           keys: KeyMan.overviewKeys,
@@ -190,7 +143,7 @@ export class App {
 
       // TxNotificaion.watch(this.currentNetwork.defaultTokens, addresses, this.chainId);
 
-      if (this.touchIDSupported) this.encryptUserPassword(userPassword);
+      if (this.touchIDSupported) this.tmpKey.encryptUserPassword(userPassword);
 
       TxMan.init();
       KeyMan.finishTmp();
@@ -211,8 +164,7 @@ export class App {
       const [iv, cipherText] = encrypted;
 
       const { authKey } = App.decryptIpc(cipherText, iv, key);
-      const password = this.#authKeys.get(authKey);
-      this.#authKeys.delete(authKey);
+      const password = this.walletKey.getAuthKeyPassword(authKey);
 
       if (!password) {
         return App.encryptIpc({}, key);
@@ -236,8 +188,7 @@ export class App {
       const [iv, cipherText] = encrypted;
 
       const { authKey, newPassword } = App.decryptIpc(cipherText, iv, key);
-      const oldPassword = this.#authKeys.get(authKey);
-      this.#authKeys.delete(authKey);
+      const oldPassword = this.walletKey.getAuthKeyPassword(authKey);
 
       const mnemonic = await this.walletKey.readSecret(oldPassword);
       if (!mnemonic) return App.encryptIpc({ success: false }, key);
@@ -246,10 +197,10 @@ export class App {
       await this.walletKey.savePassword(newPassword);
       if (!(await this.walletKey.saveSecret(newPassword))) return App.encryptIpc({ success: false }, key);
 
-      await this.initLaunchKey();
+      await this.walletKey.initLaunchKey();
 
       if (this.touchIDSupported) {
-        this.encryptUserPassword(newPassword);
+        await this.walletKey.encryptUserPassword(newPassword);
       }
 
       return App.encryptIpc({ success: true }, key);
@@ -265,8 +216,7 @@ export class App {
         const addresses = (await this.walletKey.genAddresses(password, count)) || [];
         const verified = addresses.length > 0;
 
-        // runInAction(() => this.addresses.push(...addresses));
-        if (verified && this.touchIDSupported) this.encryptUserPassword(password);
+        if (verified && this.touchIDSupported) await this.walletKey.encryptUserPassword(password);
 
         // TxNotificaion.watch(this.currentNetwork.defaultTokens, addrs, this.chainId);
 
@@ -296,22 +246,16 @@ export class App {
 
       const { authKey } = App.decryptIpc(cipherText, iv, key);
 
-      if (!this.#authKeys.has(authKey) && authKey !== 'forgotpassword-reset') {
+      if (!this.walletKey.hasAuthKey(authKey) && authKey !== 'forgotpassword-reset') {
         return App.encryptIpc({ success: false }, key);
       }
 
-      const password = this.#authKeys.get(authKey);
-      this.#authKeys.clear();
+      const password = this.walletKey.getAuthKeyPassword(authKey);
 
       await this.walletKey.reset(password, authKey === 'forgotpassword-reset' ? false : true);
 
       await Promise.all([TxMan.clean(), DBMan.clean()]);
       KeyMan.clean();
-
-      // runInAction(() => {
-      //   this.currentAddressIndex = 0;
-      //   this.addresses = [];
-      // });
 
       return App.encryptIpc({ success: true }, key);
     });
@@ -376,7 +320,7 @@ export class App {
       return '';
     }
 
-    const password = params.viaTouchID ? await this.decryptUserPassword() : params.password;
+    const password = params.viaTouchID ? await this.walletKey.decryptUserPassword() : params.password;
     return password;
   };
 
@@ -457,7 +401,7 @@ export class App {
           const { success, password } = App.decryptIpc(cipherText, iv, key) as { success: boolean; password?: string };
           const authKey = success ? randomBytes(8).toString('hex') : '';
           if (authKey) {
-            this.#authKeys.set(authKey, password || (this.touchIDSupported ? await this.decryptUserPassword() : ''));
+            await this.walletKey.addAuthKeyPassword(authKey, password, this.touchIDSupported);
           }
 
           resolve({ success, authKey });

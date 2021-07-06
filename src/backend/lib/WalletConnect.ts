@@ -310,7 +310,7 @@ export class WalletConnect extends EventEmitter {
 
       let { password, viaTouchID }: AuthParams = Application.decryptIpc(cipherText, iv, key);
 
-      password = password ?? (viaTouchID ? await App.decryptUserPassword() : undefined);
+      password = password ?? (viaTouchID ? await this.wallet.decryptUserPassword() : undefined);
 
       if (!password) {
         this.connector.rejectRequest({ id: request.id, error: { message: 'Permission Denied' } });

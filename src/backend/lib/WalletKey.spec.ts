@@ -1,8 +1,9 @@
 import * as ethers from 'ethers';
 
-import WalletKey from './WalletKey';
+import { WalletKey } from './WalletKey';
 
 const mnemonic = 'afford candy jewel raven version roast unfair female diary render buffalo buddy comic mimic control';
+const wk = new WalletKey();
 
 test('derive path', () => {
   const hd = ethers.utils.HDNode.fromMnemonic(mnemonic);
@@ -25,15 +26,15 @@ test('personal_sign', () => {
 test(
   'custom path',
   async () => {
-    WalletKey.setTmpSecret(
+    wk.setTmpSecret(
       'become replace lecture bleak reform topple fringe menu original damage equip crime sorry alarm erase'
     );
 
-    WalletKey.setFullPath(`m/44'/60'/5'/2/0`);
-    expect(WalletKey.basePath).toBe(`m/44'/60'/5'/2`);
-    expect(WalletKey.basePathIndex).toBe(0);
+    wk.setFullPath(`m/44'/60'/5'/2/0`);
+    expect(wk.basePath).toBe(`m/44'/60'/5'/2`);
+    expect(wk.basePathIndex).toBe(0);
 
-    const addresses = await WalletKey.genAddresses('111222', 5);
+    const addresses = await wk.genAddresses('111222', 5);
 
     const expected = [
       '0x887845B5598558265a53C32a7920E010359E7C58',

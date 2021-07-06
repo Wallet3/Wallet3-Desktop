@@ -17,6 +17,9 @@ const Keys = {
   secret: 'wallet3-secret',
   masterAccount: (machine_id: string) => (prod ? `wallet3-master-${machine_id}` : `wallet3-dev-master-${machine_id}`),
   secretAccount: (kc_unique: string) => (prod ? `wallet3-account-${kc_unique}` : `wallet3-dev-account-${kc_unique}`),
+
+  appLaunchKey: 'wallet3-applaunchkey',
+  appAccount: (id: string | number) => `wallet3-core-${id}`,
 };
 
 export class WalletKey {
@@ -29,6 +32,9 @@ export class WalletKey {
 
   addresses: string[] = [];
   currentAddressIndex = 0;
+
+  #userPassword?: string; // keep encrypted password in memory for TouchID users
+  #authKeys = new Map<string, string>(); // authId => key
 
   get authenticated() {
     return this.addresses.length > 0;
@@ -61,9 +67,23 @@ export class WalletKey {
     });
   }
 
+  ///////////////////////////
+
   changeAddressIndex(index: number) {
-    console.log('change addr index', index)
     this.currentAddressIndex = index;
+  }
+
+  async decryptUserPassword() {
+    const secret = await keytar.getPassword(Keys.appLaunchKey, Keys.appAccount(this.key.kc_unique));
+    const [iv, key] = secret.split(':');
+    return Cipher.decrypt(Buffer.from(iv, 'hex'), this.#userPassword, Buffer.from(key, 'hex'));
+  }
+
+  async encryptUserPassword(password: string) {
+    const secret = await keytar.getPassword(Keys.appLaunchKey, Keys.appAccount(this.key.kc_unique));
+    const [iv, key] = secret.split(':');
+    const [_, enPw] = Cipher.encrypt(password, Buffer.from(key, 'hex'), Buffer.from(iv, 'hex'));
+    this.#userPassword = enPw;
   }
 
   async init(key: Key) {
@@ -79,8 +99,33 @@ export class WalletKey {
           : false
         : false;
 
+    await this.initLaunchKey();
     return this;
   }
+
+  async initLaunchKey() {
+    const launchIv = Cipher.generateIv().toString('hex');
+    const launchKey = Cipher.generateIv(32).toString('hex');
+
+    await keytar.setPassword(Keys.appLaunchKey, Keys.appAccount(this.key.kc_unique), `${launchIv}:${launchKey}`);
+  }
+
+  hasAuthKey(authKey: string) {
+    return this.#authKeys.has(authKey);
+  }
+
+  getAuthKeyPassword(authKey: string) {
+    const password = this.#authKeys.get(authKey);
+    this.#authKeys.delete(authKey);
+
+    return password;
+  }
+
+  async addAuthKeyPassword(authKey: string, password: string, viaTouchID = false) {
+    this.#authKeys.set(authKey, password || (viaTouchID ? await this.decryptUserPassword() : ''));
+  }
+
+  /////////////////////
 
   async setFullPath(fullPath: string) {
     const lastSlash = fullPath.lastIndexOf('/');
@@ -143,6 +188,7 @@ export class WalletKey {
     const [mnIv, encryptedSecret] = Cipher.encrypt(this.tmpSecret, this.getCorePassword(userPassword));
     this.key.mnIv = mnIv;
 
+    await this.initLaunchKey();
     await this.key.save();
     await keytar.setPassword(Keys.secret, Keys.secretAccount(this.key.kc_unique), encryptedSecret);
 
@@ -230,8 +276,10 @@ export class WalletKey {
     this.hasSecret = false;
     this.basePath = BasePath;
     this.basePathIndex = 0;
+    this.#authKeys.clear();
 
     await keytar.deletePassword(Keys.secret, Keys.secretAccount(this.key.kc_unique));
+    await keytar.deletePassword(Keys.appLaunchKey, Keys.appAccount(this.key.kc_unique));
     await this.key?.remove();
 
     this.key = undefined;
@@ -265,5 +313,3 @@ export class WalletKey {
     return `${salt}-${userPassword}`;
   }
 }
-
-export default new WalletKey();
