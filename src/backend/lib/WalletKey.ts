@@ -150,8 +150,6 @@ export class WalletKey {
         Keys.masterAccount(this.id === 1 ? 'default' : `acc_${this.key.kc_unique}`)
       );
 
-      console.log(this.id, 'userinput', user, 'keychain', db);
-
       return user === db;
     } catch (error) {
       console.error(error.message);
@@ -169,17 +167,11 @@ export class WalletKey {
     await this.key.save();
 
     const pwHash = Cipher.sha256(this.getCorePassword(userPassword)).toString('hex');
-    console.log(this.id, 'save keychain', pwHash);
+
     await keytar.setPassword(
       Keys.password,
       Keys.masterAccount(this.id === 1 ? 'default' : `acc_${this.key.kc_unique}`),
       pwHash
-    );
-
-    console.log(
-      this.id,
-      'read keychain',
-      await keytar.getPassword(Keys.password, Keys.masterAccount(this.id === 1 ? 'default' : `acc_${this.key.kc_unique}`))
     );
   }
 
@@ -331,7 +323,6 @@ export class WalletKey {
 
   private getCorePassword(userPassword: string) {
     const salt = Cipher.decrypt(Buffer.from(this.key.saltIv, 'hex'), this.key.salt, userPassword);
-    console.log('salt', salt);
     return `${salt}-${userPassword}`;
   }
 }

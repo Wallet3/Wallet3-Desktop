@@ -30,7 +30,7 @@ class KeyMan {
   }
 
   get currentId() {
-    return this.current?.id ?? 0;
+    return this.current?.id ?? -1;
   }
 
   get currentWCMan() {
@@ -73,7 +73,8 @@ class KeyMan {
   }
 
   async switch(id: number) {
-    // if ()
+    if (this.currentId === id) return this.currentId;
+
     this.current = this.keys.find((k) => k.id === id) || this.keys[0];
 
     console.log(this.current['key']);

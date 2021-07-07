@@ -121,11 +121,11 @@ export class Application {
 
     const { keyId } = await ipc.invokeSecure<{ keyId: number }>(MessageKeys.switchKey, { keyId: toId });
 
-    console.log('switch wallet: ', keyId, toId);
     const targetWallet = this.wallets.find((w) => w.id === keyId);
     if (!targetWallet) return;
 
     runInAction(() => (this.currentWallet = targetWallet));
+    console.log(targetWallet, targetWallet.currentAccount, 'expected:', toId, 'switched', keyId);
 
     if (!targetWallet.authenticated) {
       this.history.push('/authentication');

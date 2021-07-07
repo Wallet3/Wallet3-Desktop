@@ -161,6 +161,8 @@ export class App {
       let { keyId } = App.decryptIpc(cipherText, iv, key);
       keyId = await KeyMan.switch(keyId);
 
+      console.log('new key id', keyId);
+
       return App.encryptIpc({ keyId }, key);
     });
 
@@ -245,8 +247,11 @@ export class App {
       const { key } = this.windows.get(winId);
       const [iv, cipherText] = encrypted;
 
-      const { index } = App.decryptIpc(cipherText, iv, key);
-      this.walletKey.changeAddressIndex(index);
+      const { index, keyId } = App.decryptIpc(cipherText, iv, key);
+
+      KeyMan.keys.find((k) => k.id === keyId)?.changeAddressIndex(index);
+
+      console.log(this.walletKey.id, keyId, 'change account index:', index, this.walletKey.currentAddress);
 
       return App.encryptIpc({ success: true }, key);
     });

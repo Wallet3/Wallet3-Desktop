@@ -75,10 +75,8 @@ export class WalletVM {
     if (addresses?.length > 0 && (!this.accounts || this.accounts.length === 0)) {
       this.accounts = addresses.map((address, i) => new AccountVM({ address, accountIndex: i + 1, walletId: this.id }));
       const lastUsedAccount = store.get(Keys.lastUsedAccount(this.id)) || addresses[0];
-      this.currentAccount = this.accounts.find((a) => a.address === lastUsedAccount) || this.accounts[0];
-      this.currentAccount?.refresh();
-      
-      ipc.invokeSecure(Messages.changeAccountIndex, { index: this.accountIndex });
+      this.selectAccount(this.accounts.find((a) => a.address === lastUsedAccount) || this.accounts[0]);
+
       setTimeout(() => this.refresh(), 45 * 1000);
     }
 
@@ -89,9 +87,11 @@ export class WalletVM {
   }
 
   selectAccount(account: AccountVM) {
+    if (this.currentAccount === account) return;
+
     this.currentAccount = account;
     this.currentAccount.refresh();
-    ipc.invokeSecure(Messages.changeAccountIndex, { index: this.accountIndex });
+    ipc.invokeSecure(Messages.changeAccountIndex, { index: this.accountIndex, keyId: this.id });
     store.set(Keys.lastUsedAccount(this.id), account.address);
   }
 
