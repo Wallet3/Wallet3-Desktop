@@ -1,21 +1,28 @@
 import './Account.css';
 
-import { Copy, Logo, NavBar } from '../../components';
+import { Copy, NavBar } from '../../components';
 import React, { useState } from 'react';
 
 import { Application } from '../../viewmodels/Application';
 import { NetworksVM } from '../../viewmodels/NetworksVM';
 import QRCode from 'qrcode.react';
 import Shell from '../../bridges/Shell';
-import { WalletVM } from '../../viewmodels/WalletVM';
 import { convertToAccountUrl } from '../../../misc/Url';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export default ({ app, networksVM }: { app: Application; networksVM: NetworksVM }) => {
   const { t } = useTranslation();
+  const { currentAccount, name } = app.currentWallet;
 
-  const { currentAccount } = app.currentWallet;
+  const [walletName, setWalletName] = useState('');
+  const [timer, setTimer] = useState(null);
   const address = currentAccount.address;
+
+  useEffect(() => {
+    clearTimeout(timer);
+    setTimer(setTimeout(() => app.currentWallet.changeName(walletName), 1000));
+  }, [walletName]);
 
   return (
     <div className="page account">
@@ -38,7 +45,7 @@ export default ({ app, networksVM }: { app: Application; networksVM: NetworksVM 
       </div>
 
       <div className="footer">
-        <Logo width={64} fill={'#00000020'} />
+        <input type="text" maxLength={10} defaultValue={walletName || name} onChange={(e) => setWalletName(e.target.value)} />
       </div>
     </div>
   );

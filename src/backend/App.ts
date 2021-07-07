@@ -265,6 +265,14 @@ export class App {
       return App.encryptIpc({ success: await KeyMan.delete(keyId) }, key);
     });
 
+    ipcMain.handle(`${MessageKeys.changeKeyName}-secure`, async (e, encrypted, winId) => {
+      const { key } = this.windows.get(winId);
+      const [iv, cipherText] = encrypted;
+
+      const { keyId, name } = App.decryptIpc(cipherText, iv, key);
+      KeyMan.changeName(keyId, name);
+    });
+
     ipcMain.handle(`${MessageKeys.resetSystem}-secure`, async (e, encrypted, winId) => {
       const { key } = this.windows.get(winId);
       const [iv, cipherText] = encrypted;

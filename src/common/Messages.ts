@@ -41,6 +41,7 @@ export default {
   switchKey: 'msg-switch-key',
   currentKeyChanged: 'msg-current-key-changed',
   deleteKey: 'msg-delete-key',
+  changeKeyName: 'msg-change-key-name',
 
   idleExpired: 'msg-app-idle-expired',
 };

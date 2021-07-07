@@ -55,8 +55,8 @@ export class WalletVM {
   }
 
   constructor(key: IKey) {
-    this.key = key;
     makeAutoObservable(this);
+    this.key = key;
 
     reaction(
       () => NetVM.currentChainId,
@@ -89,6 +89,11 @@ export class WalletVM {
     this.allPendingTxs = pendingTxs?.filter((t) => this.accounts.some((acc) => acc.address === t.from)) ?? this.allPendingTxs;
 
     return this;
+  }
+
+  changeName(name: string) {
+    ipc.invokeSecure(Messages.changeKeyName, { keyId: this.id, name });
+    this.key.name = name;
   }
 
   selectAccount(account: AccountVM) {
@@ -127,5 +132,6 @@ export class WalletVM {
     this.pendingTxVM = null;
     this._historyTxsVM?.selectTx(undefined);
     this.accounts.forEach((a) => a?.clean());
+    store.remove(Keys.lastUsedAccount(this.id));
   }
 }

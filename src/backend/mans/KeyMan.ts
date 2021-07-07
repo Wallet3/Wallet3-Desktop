@@ -126,6 +126,13 @@ class KeyMan {
     return true;
   }
 
+  async changeName(keyId: number, name: string) {
+    const key = this.keys.find((k) => k.id === keyId);
+    if (!key) return;
+
+    await key.changeName(name);
+  }
+
   finishTmp() {
     console.log('finish tmpkey', this.tmpKey.id);
     this.keys.push(this.tmpKey);

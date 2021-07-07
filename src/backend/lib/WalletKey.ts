@@ -133,6 +133,11 @@ export class WalletKey {
     return authKey;
   }
 
+  async changeName(name: string) {
+    this.key.name = name;
+    await this.key.save();
+  }
+
   /////////////////////
 
   async setFullPath(fullPath: string) {
