@@ -5,24 +5,29 @@ import DBMan from './DBMan';
 import Messages from '../../common/Messages';
 import WCSession from '../models/WCSession';
 import { WalletConnect } from '../lib/WalletConnect';
+import { WalletKey } from '../lib/WalletKey';
 import { ipcMain } from 'electron';
 
 export class WCMan {
   private cache = new Set<string>();
+  private key: WalletKey;
 
   connections: WalletConnect[] = [];
-  keyId = 1;
+
+  get keyId() {
+    return this.key.id;
+  }
 
   get connectedSessions() {
     return this.connections.map((c) => c.session);
   }
 
-  constructor(keyId: number) {
-    this.keyId = keyId;
+  constructor(key: WalletKey) {
+    this.key = key;
 
     makeObservable(this, { connections: observable, connectedSessions: computed });
 
-    ipcMain.handle(`${Messages.disconnectDApp(keyId)}-secure`, (e, encrypted, winId) => {
+    ipcMain.handle(`${Messages.disconnectDApp(this.keyId)}-secure`, (e, encrypted, winId) => {
       const { key } = Application.windows.get(winId);
       const [iv, cipherText] = encrypted;
 
@@ -30,7 +35,7 @@ export class WCMan {
       this.disconnect(sessionKey);
     });
 
-    ipcMain.handle(`${Messages.switchDAppNetwork(keyId)}-secure`, (e, encrypted, winId) => {
+    ipcMain.handle(`${Messages.switchDAppNetwork(this.keyId)}-secure`, (e, encrypted, winId) => {
       const { key } = Application.windows.get(winId);
       const [iv, cipherText] = encrypted;
 
@@ -48,7 +53,7 @@ export class WCMan {
     if (!uri.startsWith('wc:') || !uri.includes('bridge=')) return undefined;
     if (this.cache.has(uri)) return undefined;
 
-    const wc = new WalletConnect(modal);
+    const wc = new WalletConnect({ modal, key: this.key });
 
     try {
       wc.connect(uri);
@@ -102,7 +107,7 @@ export class WCMan {
       if (this.cache.has(session.key)) return undefined;
       this.cache.add(session.key);
 
-      const wc = new WalletConnect();
+      const wc = new WalletConnect({ key: this.key });
       wc.connectViaSession(session);
       this.handleWCEvents(wc);
 

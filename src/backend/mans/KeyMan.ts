@@ -81,7 +81,7 @@ class KeyMan {
 
     let { wcman, disposer } = this.connections.get(this.currentId) || {};
     if (!wcman) {
-      wcman = new WCMan(this.currentId);
+      wcman = new WCMan(this.current);
       await wcman.init();
 
       disposer = reaction(

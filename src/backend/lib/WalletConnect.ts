@@ -10,6 +10,7 @@ import EventEmitter from 'events';
 import { KeyMan } from '../mans';
 import WCSession from '../models/WCSession';
 import WalletConnector from '@walletconnect/client';
+import { WalletKey } from './WalletKey';
 import { findTokenByAddress } from '../../misc/Tokens';
 import { ipcMain } from 'electron';
 
@@ -17,6 +18,8 @@ export class WalletConnect extends EventEmitter {
   connector: WalletConnector;
   peerId: string;
   appMeta: WCClientMeta;
+
+  private key: WalletKey;
 
   get appChainId() {
     return this._userChainId || App.chainId;
@@ -27,7 +30,7 @@ export class WalletConnect extends EventEmitter {
   }
 
   get wallet() {
-    return KeyMan.current;
+    return this.key;
   }
 
   private _userChainId = 0; // 0 - auto switch
@@ -36,9 +39,10 @@ export class WalletConnect extends EventEmitter {
   private _currAddrObserver: IReactionDisposer;
   private _wcSession: WCSession;
 
-  constructor(modal = false) {
+  constructor({ modal, key }: { modal?: boolean; key: WalletKey }) {
     super();
     this._modal = modal;
+    this.key = key;
 
     this._chainIdObserver = reaction(
       () => App.chainId,
@@ -49,7 +53,7 @@ export class WalletConnect extends EventEmitter {
     );
 
     this._currAddrObserver = reaction(
-      () => KeyMan.current?.currentAddress,
+      () => this.wallet.currentAddress,
       () => this.updateSession()
     );
   }
@@ -107,6 +111,8 @@ export class WalletConnect extends EventEmitter {
 
   private updateSession() {
     if (!App.ready) return;
+
+    console.log(this.wallet.id, 'update session', this.wallet.currentAddress)
     try {
       this.connector?.updateSession({ chainId: this.appChainId, accounts: [this.wallet.currentAddress] });
     } catch (error) {
