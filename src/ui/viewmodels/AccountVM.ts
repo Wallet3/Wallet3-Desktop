@@ -15,7 +15,8 @@ import { TransferVM } from './account/TransferVM';
 import store from 'storejs';
 
 const Keys = {
-  userTokens: (chainId: number, accountIndex: number) => `userTokens-${chainId}-${accountIndex}`,
+  userTokens: (walletId: number, chainId: number, accountIndex: number) =>
+    `userTokens-w${walletId}-c${chainId}-a${accountIndex}`,
   accountName: (walletId: number, accountIndex: number) => `w_${walletId}-accountName-${accountIndex}`,
 };
 
@@ -131,7 +132,7 @@ export class AccountVM {
 
   save() {
     store.set(
-      Keys.userTokens(NetVM.currentChainId, this.accountIndex),
+      Keys.userTokens(this.walletId, NetVM.currentChainId, this.accountIndex),
       JSON.stringify(this.allTokens.slice(1).map((t) => t.toObject()))
     );
   }
@@ -183,9 +184,7 @@ export class AccountVM {
     const nativeSymbols = Networks.map((n) => n?.symbol.toLowerCase());
     const userConfigs = this.loadTokenConfigs();
 
-    const tokens = NetVM.currentNetwork.test
-      ? []
-      : await Debank.getTokenBalances(this.address, NetVM.currentNetwork.comm_id);
+    const tokens = NetVM.currentNetwork.test ? [] : await Debank.getTokenBalances(this.address, NetVM.currentNetwork.comm_id);
 
     let assets = NetVM.currentNetwork.test
       ? []
@@ -269,7 +268,7 @@ export class AccountVM {
 
   loadTokenConfigs = () => {
     try {
-      const json = store.get(Keys.userTokens(NetVM.currentChainId, this.accountIndex)) || '[]';
+      const json = store.get(Keys.userTokens(this.walletId, NetVM.currentChainId, this.accountIndex)) || '[]';
       const tokens = JSON.parse(json) as IUserToken[];
       return tokens.map((t) => new UserToken(t));
     } catch (error) {
@@ -330,4 +329,9 @@ export class AccountVM {
       this.nfts.push(...nfts);
     });
   };
+
+  clean() {
+    store.remove(Keys.accountName(this.walletId, this.accountIndex));
+    store.remove(Keys.userTokens(this.walletId, NetVM.currentChainId, this.accountIndex));
+  }
 }

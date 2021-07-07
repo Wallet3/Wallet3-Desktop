@@ -159,6 +159,8 @@ export class Application {
     if (!success) return;
 
     const index = this.wallets.indexOf(w);
+    w.clean();
+
     runInAction(() => {
       this.wallets.splice(index, 1);
       if (needSwitch) this.switchWallet(this.wallets[0].id);

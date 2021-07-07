@@ -126,5 +126,6 @@ export class WalletVM {
   clean() {
     this.pendingTxVM = null;
     this._historyTxsVM?.selectTx(undefined);
+    this.accounts.forEach((a) => a?.clean());
   }
 }
