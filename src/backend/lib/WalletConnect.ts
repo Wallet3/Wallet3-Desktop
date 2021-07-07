@@ -112,7 +112,7 @@ export class WalletConnect extends EventEmitter {
   private updateSession() {
     if (!App.ready) return;
 
-    console.log(this.wallet.id, 'update session', this.wallet.currentAddress)
+    console.log(this.wallet.id, 'update session', this.wallet.currentAddress);
     try {
       this.connector?.updateSession({ chainId: this.appChainId, accounts: [this.wallet.currentAddress] });
     } catch (error) {
@@ -126,7 +126,7 @@ export class WalletConnect extends EventEmitter {
       return;
     }
 
-    if (!App.ready) {
+    if (!this.key.authenticated) {
       this.connector.rejectSession({ message: 'Not ready' });
       return;
     }
@@ -169,7 +169,7 @@ export class WalletConnect extends EventEmitter {
       return;
     }
 
-    if (!App.ready) return;
+    if (!this.key.authenticated) return;
 
     console.log(request.method);
     console.log(request.id);

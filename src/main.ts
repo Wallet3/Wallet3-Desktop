@@ -225,8 +225,11 @@ app.on('web-contents-created', (event, contents) => {
 powerMonitor.on('resume', () => {
   setTimeout(async () => {
     GasnowWs.restart(true);
-    await KeyMan.currentWCMan.dispose();
-    await KeyMan.currentWCMan.init();
+    KeyMan.keys.forEach((k) => {
+      const { wcman } = KeyMan.connections.get(k.id) || {};
+      wcman?.dispose();
+      wcman?.init();
+    });
   }, 5000);
 });
 
