@@ -125,5 +125,10 @@
   "Status": "狀態",
   "Manually Connect DApps": "手動連接 DApp",
   "DApp Connecting": "正在連接 DApp",
-  "Use WalletConnect": "首先請復製 WalletConnect 鏈接，再切換到 Wallet 3。 Wallet 3 將會自動嘗試連接 DApp。"
+  "Use WalletConnect": "首先請復製 WalletConnect 鏈接，再切換到 Wallet 3。 Wallet 3 將會自動嘗試連接 DApp。",
+  "New": "創建錢包",
+  "Import": "導入錢包",
+  "Delete": "刪除此錢包",
+  "Delete Wallet": "刪除錢包",
+  "Delete Wallet Message": "{{name}} 將會被永久刪除，確定嗎？"
 }

@@ -1,5 +1,4 @@
 import * as Cipher from '../common/Cipher';
-import * as keytar from 'keytar';
 
 import { BrowserWindow, Notification, TouchBar, TouchBarButton, ipcMain, systemPreferences } from 'electron';
 import { DBMan, KeyMan, TxMan, TxNotificaion } from './mans';
@@ -160,8 +159,6 @@ export class App {
 
       let { keyId } = App.decryptIpc(cipherText, iv, key);
       keyId = await KeyMan.switch(keyId);
-
-      console.log('new key id', keyId);
 
       return App.encryptIpc({ keyId }, key);
     });
