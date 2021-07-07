@@ -50,7 +50,7 @@ export class WalletKey {
   }
 
   get name() {
-    return this.key?.name || `Wallet ${this.key?.id ?? 'Temp'}`;
+    return this.key?.name || `${this.type === AccountType.privkey ? 'Key' : 'Wallet'} ${this.key?.id ?? 'Temp'}`;
   }
 
   get type() {

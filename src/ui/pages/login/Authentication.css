@@ -15,7 +15,7 @@
   width: 96px;
   padding: 6px 8px;
   padding-bottom: 4px;
-  font-size: 15px;
+  font-size: 14px;
   display: flex;
   align-items: center;
   line-height: 15px;
@@ -31,6 +31,7 @@
   column-gap: 8px;
   font-size: 12px;
   line-height: 12px;
+  text-align: start;
 }
 
 .page.authentication .wallets .rc-menu__item button > div.active {
