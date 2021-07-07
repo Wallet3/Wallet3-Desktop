@@ -195,7 +195,7 @@ export class AccountVM {
             const token = new UserToken();
             token.id = t.id;
             token.name = t.name;
-            token.symbol = t.display_symbol || t.symbol;
+            token.symbol = t.symbol || t.display_symbol;
             token.amount = t.amount;
             token.decimals = t.decimals;
             token.price = t.price;
