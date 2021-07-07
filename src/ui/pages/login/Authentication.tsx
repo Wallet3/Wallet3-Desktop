@@ -88,12 +88,10 @@ export default observer(({ app }: { app: Application }) => {
           <PasscodeView onAuth={authViaPassword} />
         )}
 
-        {!validated && !wallets.some((w) => w.authenticated) && wallets.length > 1 ? (
+        {!validated && (!authenticated || authMethod === 'keyboard') ? (
           <div className="wallets">
             <Menu
               styles={{ minWidth: '108px' }}
-              arrow
-              direction="bottom"
               overflow="auto"
               menuButton={() => (
                 <MenuButton className="menu-button">
@@ -102,20 +100,18 @@ export default observer(({ app }: { app: Application }) => {
                 </MenuButton>
               )}
             >
-              {wallets
-                .filter((w) => !w.authenticated)
-                .map((k) => {
-                  return (
-                    <MenuItem styles={MenuItemStyle} key={k.id}>
-                      <button onClick={(_) => app.switchWallet(k.id)}>
-                        <div className={`${currentWallet?.id === k.id ? 'active' : ''}`}>
-                          <Feather icon={'credit-card'} size={13} />
-                          <span>{k.name}</span>
-                        </div>
-                      </button>
-                    </MenuItem>
-                  );
-                })}
+              {wallets.map((k) => {
+                return (
+                  <MenuItem styles={MenuItemStyle} key={k.id}>
+                    <button onClick={(_) => app.switchWallet(k.id)}>
+                      <div className={`${currentWallet?.id === k.id ? 'active' : ''}`}>
+                        <Feather icon={'credit-card'} size={13} />
+                        <span>{k.name}</span>
+                      </div>
+                    </button>
+                  </MenuItem>
+                );
+              })}
             </Menu>
           </div>
         ) : undefined}

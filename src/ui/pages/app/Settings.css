@@ -24,6 +24,7 @@
 .page.settings > .accounts > .actions > .menu-button {
   padding: 4px 5px;
   padding-left: 7px;
+  padding-bottom: 3px;
   font-size: 12px;
   line-height: 12px;
   margin-top: -5px;

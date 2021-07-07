@@ -15,7 +15,7 @@ export default ({ app, networksVM }: { app: Application; networksVM: NetworksVM 
   const { t } = useTranslation();
   const { currentAccount, name } = app.currentWallet;
 
-  const [walletName, setWalletName] = useState('');
+  const [walletName, setWalletName] = useState(name);
   const [timer, setTimer] = useState(null);
   const address = currentAccount.address;
 
