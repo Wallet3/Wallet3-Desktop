@@ -87,6 +87,7 @@ export default observer(({ app, langsVM }: IConstructor) => {
             styles={{ minWidth: '3rem' }}
             menuButton={() => (
               <MenuButton className="menu-button">
+                <Feather icon={'credit-card'} size={13} />
                 <span>{currentWallet?.name}</span>
               </MenuButton>
             )}

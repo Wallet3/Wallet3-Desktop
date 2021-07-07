@@ -12,16 +12,23 @@
 }
 
 .page.authentication .wallets > button {
-  width: 96px;
+  width: 108px;
   padding: 6px 8px;
   padding-bottom: 4px;
   font-size: 14px;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto auto;
   align-items: center;
   line-height: 15px;
   color: var(--font-color-title);
   justify-content: center;
   column-gap: 6px;
+}
+
+.page.authentication .wallets > button span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .page.authentication .wallets .rc-menu__item button > div {

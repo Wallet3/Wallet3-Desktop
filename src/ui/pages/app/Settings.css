@@ -27,6 +27,10 @@
   font-size: 12px;
   line-height: 12px;
   margin-top: -5px;
+  display: flex;
+  align-items: center;
+  column-gap: 5px;
+  max-width: 50vw;
 }
 
 .page.settings > .accounts > .actions .rc-menu__item button > div {

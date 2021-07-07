@@ -91,7 +91,9 @@ export default observer(({ app }: { app: Application }) => {
         {!validated && !wallets.some((w) => w.authenticated) && wallets.length > 1 ? (
           <div className="wallets">
             <Menu
-              styles={{ minWidth: '96px' }}
+              styles={{ minWidth: '108px' }}
+              arrow
+              direction="bottom"
               overflow="auto"
               menuButton={() => (
                 <MenuButton className="menu-button">
