@@ -45,7 +45,7 @@ export default ({ app, networksVM }: { app: Application; networksVM: NetworksVM 
       </div>
 
       <div className="footer">
-        <input type="text" maxLength={10} defaultValue={walletName || name} onChange={(e) => setWalletName(e.target.value)} />
+        <input type="text" maxLength={18} defaultValue={walletName || name} onChange={(e) => setWalletName(e.target.value)} />
       </div>
     </div>
   );
