@@ -105,6 +105,27 @@ class KeyMan {
     return this.currentId;
   }
 
+  async delete(keyId: number) {
+    const key = this.keys.find((k) => k.id === keyId);
+    if (!key) return false;
+
+    const needSwitch = keyId === this.currentId;
+    const index = this.keys.findIndex((k) => k.id === keyId);
+    this.keys.splice(index, 1);
+
+    if (needSwitch) this.switch(this.keys[0].id);
+
+    const { disposer, wcman } = this.connections.get(keyId) || {};
+    this.connections.delete(keyId);
+
+    try {
+      disposer?.();
+      await Promise.all([wcman?.clean(), key.delete()]);
+    } catch (error) {}
+
+    return true;
+  }
+
   finishTmp() {
     console.log('finish tmpkey', this.tmpKey.id);
     this.keys.push(this.tmpKey);

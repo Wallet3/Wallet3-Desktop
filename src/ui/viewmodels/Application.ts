@@ -16,6 +16,7 @@ import clipboard from '../bridges/Clipboard';
 import { createMemoryHistory } from 'history';
 import crypto from '../bridges/Crypto';
 import delay from 'delay';
+import i18n from '../../i18n';
 import ipc from '../bridges/IPC';
 import store from 'storejs';
 
@@ -138,6 +139,30 @@ export class Application {
     if (!targetWallet.authenticated) {
       this.history.push('/authentication');
     }
+  }
+
+  async deleteWallet(keyId: number) {
+    const w = this.wallets.find((w) => w.id === keyId);
+    if (!w) return;
+
+    const permitted = await this.ask({
+      title: i18n.t('Delete Wallet'),
+      icon: 'trash',
+      message: i18n.t('Delete Wallet Message', { name: w.name }),
+    });
+
+    if (!permitted) return;
+
+    const needSwitch = keyId === this.currentWalletId;
+
+    const { success } = await ipc.invokeSecure(MessageKeys.deleteKey, { keyId });
+    if (!success) return;
+
+    const index = this.wallets.indexOf(w);
+    runInAction(() => {
+      this.wallets.splice(index, 1);
+      if (needSwitch) this.switchWallet(this.wallets[0].id);
+    });
   }
 
   authInitialization = async (passcode: string) => {

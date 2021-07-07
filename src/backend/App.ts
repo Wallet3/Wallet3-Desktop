@@ -264,12 +264,8 @@ export class App {
       const { key } = this.windows.get(winId);
       const [iv, cipherText] = encrypted;
 
-      const { authKey } = App.decryptIpc(cipherText, iv, key);
-      if (!this.walletKey.hasAuthKey(authKey)) {
-        return App.encryptIpc({ success: false }, key);
-      }
-
-
+      const { keyId } = App.decryptIpc(cipherText, iv, key);
+      return App.encryptIpc({ success: await KeyMan.delete(keyId) }, key);
     });
 
     ipcMain.handle(`${MessageKeys.resetSystem}-secure`, async (e, encrypted, winId) => {

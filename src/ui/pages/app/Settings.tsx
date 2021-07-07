@@ -25,7 +25,7 @@ const MenuItemStyle = {
 
 export default observer(({ app, langsVM }: IConstructor) => {
   const { t } = useTranslation();
-  const { currentWallet, currencyVM } = app;
+  const { currentWallet, currencyVM, wallets } = app;
 
   const accountToModel = (a: AccountVM, i: number) => {
     if (!a) return null;
@@ -91,7 +91,7 @@ export default observer(({ app, langsVM }: IConstructor) => {
               </MenuButton>
             )}
           >
-            {app.wallets.map((k) => {
+            {wallets.map((k) => {
               return (
                 <MenuItem styles={MenuItemStyle} key={k.id}>
                   <button onClick={(_) => app.switchWallet(k.id)}>
@@ -103,7 +103,9 @@ export default observer(({ app, langsVM }: IConstructor) => {
                 </MenuItem>
               );
             })}
+
             <MenuDivider />
+
             <MenuItem styles={MenuItemStyle}>
               <button onClick={(_) => app.history.push('/generate?')}>
                 <div>
@@ -120,6 +122,19 @@ export default observer(({ app, langsVM }: IConstructor) => {
                 </div>
               </button>
             </MenuItem>
+
+            {wallets.length > 1 ? <MenuDivider /> : undefined}
+
+            {wallets.length > 1 ? (
+              <MenuItem styles={MenuItemStyle}>
+                <button onClick={(_) => app.deleteWallet(currentWallet.id)}>
+                  <div>
+                    <Feather icon="trash" size={13} />
+                    <span>{t('Delete')}</span>
+                  </div>
+                </button>
+              </MenuItem>
+            ) : undefined}
           </Menu>
         </div>
 

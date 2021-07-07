@@ -122,7 +122,7 @@
   "Failed": "失败",
   "Profile": "账户",
   "History": "交易历史",
-  "Stauts": "状态",
+  "Status": "状态",
   "Manually Connect DApps": "手动连接 DApp",
   "DApp Connecting": "正在连接 DApp",
   "Use WalletConnect": "首先请复制 WalletConnect 链接，再切换到 Wallet 3。 Wallet 3 将会自动尝试连接 DApp。"
