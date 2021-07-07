@@ -4,9 +4,10 @@ import * as ethSignUtil from 'eth-sig-util';
 import * as ethers from 'ethers';
 import * as keytar from 'keytar';
 
-import Key, { AccountType } from '../models/Key';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
+import { AccountType } from '../models/Types';
+import Key from '../models/Key';
 import { TxParams } from '../../common/Messages';
 
 const BasePath = `m/44\'/60\'/0\'/0`;
@@ -50,6 +51,10 @@ export class WalletKey {
 
   get name() {
     return this.key?.name || `Wallet ${this.key?.id ?? 'Temp'}`;
+  }
+
+  get type() {
+    return this.key?.type;
   }
 
   private get tmpSecretType() {

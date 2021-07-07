@@ -2,17 +2,25 @@ import './Authentication.css';
 
 import * as Anime from '../../misc/Anime';
 
+import { Menu, MenuButton, MenuDivider, MenuItem } from '@szhsin/react-menu';
 import { PasscodeView, TouchIDView, Validation } from '../../components';
 import React, { useEffect, useState } from 'react';
 
+import { AccountType } from '../../../backend/models/Types';
 import { Application } from '../../viewmodels/Application';
+import Feather from 'feather-icons-react';
 import fingerprint from '../../../assets/icons/app/fingerprint.svg';
 import keyboardIcon from '../../../assets/icons/app/keyboard.svg';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 
+const MenuItemStyle = {
+  padding: 0,
+  fontSize: 12,
+};
+
 export default observer(({ app }: { app: Application }) => {
-  const { touchIDSupported, authMethod } = app;
+  const { touchIDSupported, authMethod, currentWallet, wallets } = app;
   const { authenticated } = app.currentWallet || {};
   const { t } = useTranslation();
   const [validated, setValidated] = useState(false);
@@ -79,6 +87,36 @@ export default observer(({ app }: { app: Application }) => {
         ) : (
           <PasscodeView onAuth={authViaPassword} />
         )}
+
+        {!validated && !wallets.some((w) => w.authenticated) ? (
+          <div className="wallets">
+            <Menu
+              styles={{ minWidth: '96px' }}
+              overflow="auto"
+              menuButton={() => (
+                <MenuButton className="menu-button">
+                  <Feather icon={currentWallet?.type === AccountType.mnemonic ? 'credit-card' : 'key'} size={15} />
+                  <span>{currentWallet?.name}</span>
+                </MenuButton>
+              )}
+            >
+              {wallets
+                .filter((w) => !w.authenticated)
+                .map((k) => {
+                  return (
+                    <MenuItem styles={MenuItemStyle} key={k.id}>
+                      <button onClick={(_) => app.switchWallet(k.id)}>
+                        <div className={`${currentWallet?.id === k.id ? 'active' : ''}`}>
+                          <Feather icon={k.type === AccountType.mnemonic ? 'credit-card' : 'key'} size={13} />
+                          <span>{k.name}</span>
+                        </div>
+                      </button>
+                    </MenuItem>
+                  );
+                })}
+            </Menu>
+          </div>
+        ) : undefined}
 
         {validated ? <Validation /> : undefined}
       </div>

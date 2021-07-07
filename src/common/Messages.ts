@@ -142,6 +142,7 @@ export interface IKey {
   addresses: string[];
   authenticated: boolean;
   connectedDApps: IWcSession[];
+  type: number;
 }
 
 export interface KeysChanged {

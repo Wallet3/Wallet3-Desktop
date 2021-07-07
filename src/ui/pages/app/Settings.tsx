@@ -2,6 +2,7 @@ import './Settings.css';
 
 import { Menu, MenuButton, MenuDivider, MenuItem } from '@szhsin/react-menu';
 
+import { AccountType } from '../../../backend/models/Types';
 import { AccountVM } from '../../viewmodels/AccountVM';
 import { Application } from '../../viewmodels/Application';
 import DisplayCurrency from './components/DisplayCurrency';
@@ -95,7 +96,7 @@ export default observer(({ app, langsVM }: IConstructor) => {
                 <MenuItem styles={MenuItemStyle} key={k.id}>
                   <button onClick={(_) => app.switchWallet(k.id)}>
                     <div className={`${currentWallet.id === k.id ? 'active' : ''}`}>
-                      <Feather icon="credit-card" size={13} />
+                      <Feather icon={k.type === AccountType.mnemonic ? 'credit-card' : 'key'} size={13} />
                       <span>{k.name}</span>
                     </div>
                   </button>

@@ -25,6 +25,7 @@ class KeyMan {
         addresses: k.addresses,
         authenticated: k.authenticated,
         connectedDApps: wcman?.connectedSessions ?? [],
+        type: k.type,
       };
     });
   }

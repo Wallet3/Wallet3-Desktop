@@ -4,6 +4,39 @@
   align-items: center;
 }
 
+.page.authentication .wallets {
+  display: flex;
+  justify-content: center;
+  font-size: 12px;
+  margin-top: 16px;
+}
+
+.page.authentication .wallets > button {
+  width: 96px;
+  padding: 6px 8px;
+  padding-bottom: 4px;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  line-height: 15px;
+  color: var(--font-color-title);
+  justify-content: center;
+  column-gap: 6px;
+}
+
+.page.authentication .wallets .rc-menu__item button > div {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 13px 1fr;
+  column-gap: 8px;
+  font-size: 12px;
+  line-height: 12px;
+}
+
+.page.authentication .wallets .rc-menu__item button > div.active {
+  color: var(--theme-color);
+}
+
 .page.authentication .non-touchid {
   margin-top: -3vh;
   margin-right: 2px;

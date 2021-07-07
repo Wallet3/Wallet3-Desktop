@@ -32,9 +32,3 @@ export default class Key extends BaseEntity {
   @Column({ default: 0 })
   basePathIndex: number;
 }
-
-export enum AccountType {
-  mnemonic = 0,
-  privkey = 1,
-  keystore = 2,
-}

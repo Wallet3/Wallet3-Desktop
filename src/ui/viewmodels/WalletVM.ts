@@ -1,6 +1,7 @@
 import Messages, { IKey, TxParams } from '../../common/Messages';
-import { makeAutoObservable, reaction, runInAction, when } from 'mobx';
+import { makeAutoObservable, reaction, runInAction } from 'mobx';
 
+import { AccountType } from '../../backend/models/Types';
 import { AccountVM } from './AccountVM';
 import { DAppVM } from './wallet/DAppVM';
 import { HistoryTxsVM } from './wallet/HistoryTxsVM';
@@ -47,6 +48,10 @@ export class WalletVM {
 
   get id() {
     return this.key.id;
+  }
+
+  get type(): AccountType {
+    return this.key.type;
   }
 
   constructor(key: IKey) {
