@@ -485,7 +485,7 @@ export class App {
         preload: POPUP_WINDOW_PRELOAD_WEBPACK_ENTRY,
         contextIsolation: true,
         nodeIntegration: false,
-        webSecurity: false,
+        webSecurity: true,
       },
     });
 

@@ -65,7 +65,10 @@ export class Application {
 
     const updateWallets = (keys: IKey[]) => {
       if (keys.length === 0) {
-        runInAction(() => (this.wallets = []));
+        runInAction(() => {
+          this.wallets = [];
+          this.currentWallet = null;
+        });
         return;
       }
 

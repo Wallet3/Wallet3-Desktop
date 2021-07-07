@@ -115,7 +115,7 @@ const createWindow = async (): Promise<void> => {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       contextIsolation: true,
       nodeIntegration: false,
-      webSecurity: false,
+      webSecurity: true,
       enableRemoteModule: isMac ? false : true,
       devTools: !prod,
     },
