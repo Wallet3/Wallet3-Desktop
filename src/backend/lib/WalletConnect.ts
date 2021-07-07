@@ -110,7 +110,7 @@ export class WalletConnect extends EventEmitter {
   }
 
   private updateSession() {
-    if (!App.ready) return;
+    if (!this.key.authenticated) return;
 
     console.log(this.wallet.id, 'update session', this.wallet.currentAddress);
     try {
