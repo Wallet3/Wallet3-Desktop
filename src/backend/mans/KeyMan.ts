@@ -112,8 +112,8 @@ class KeyMan {
     this.tmpKey = new WalletKey();
   }
 
-  async clean(password: string, forgotPassword = false) {
-    await Promise.all(this.keys.map((k) => k.reset(password, forgotPassword)));
+  async clean() {
+    await Promise.all(this.keys.map((k) => k.delete()));
 
     runInAction(() => {
       this.keys = [];
@@ -121,7 +121,8 @@ class KeyMan {
     });
 
     this.connections.forEach((tuple) => {
-      tuple.disposer();
+      tuple.disposer?.();
+      tuple.wcman?.clean();
     });
 
     Store.set('keyId', 1);

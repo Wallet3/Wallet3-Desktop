@@ -283,9 +283,7 @@ export class WalletKey {
     return addresses;
   }
 
-  async reset(password: string, forgotPassword = false) {
-    if (!forgotPassword && !(await this.verifyPassword(password))) return false;
-
+  async delete() {
     this.hasSecret = false;
     this.basePath = BasePath;
     this.basePathIndex = 0;

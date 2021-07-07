@@ -64,6 +64,11 @@ export class Application {
     });
 
     const updateWallets = (keys: IKey[]) => {
+      if (keys.length === 0) {
+        runInAction(() => (this.wallets = []));
+        return;
+      }
+
       const newKeys = keys.filter((k) => !this.wallets.find((w) => w.id === k.id));
       runInAction(() => this.wallets.push(...newKeys.map((k) => new WalletVM(k).initAccounts(k))));
     };

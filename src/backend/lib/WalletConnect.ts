@@ -49,7 +49,7 @@ export class WalletConnect extends EventEmitter {
     );
 
     this._currAddrObserver = reaction(
-      () => KeyMan.current.currentAddress,
+      () => KeyMan.current?.currentAddress,
       () => this.updateSession()
     );
   }

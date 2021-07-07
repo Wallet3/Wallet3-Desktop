@@ -260,6 +260,18 @@ export class App {
       this.windows.delete(winId);
     });
 
+    ipcMain.handle(`${MessageKeys.deleteKey}-secure`, async (e, encrypted, winId) => {
+      const { key } = this.windows.get(winId);
+      const [iv, cipherText] = encrypted;
+
+      const { authKey } = App.decryptIpc(cipherText, iv, key);
+      if (!this.walletKey.hasAuthKey(authKey)) {
+        return App.encryptIpc({ success: false }, key);
+      }
+
+
+    });
+
     ipcMain.handle(`${MessageKeys.resetSystem}-secure`, async (e, encrypted, winId) => {
       const { key } = this.windows.get(winId);
       const [iv, cipherText] = encrypted;
@@ -270,9 +282,7 @@ export class App {
         return App.encryptIpc({ success: false }, key);
       }
 
-      const password = this.walletKey.getAuthKeyPassword(authKey);
-
-      await Promise.all([TxMan.clean(), KeyMan.clean(password, authKey === 'forgotpassword-reset')]);
+      await Promise.all([TxMan.clean(), KeyMan.clean()]);
       await DBMan.clean();
 
       return App.encryptIpc({ success: true }, key);
