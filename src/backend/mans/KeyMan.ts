@@ -133,6 +133,28 @@ class KeyMan {
     await key.changeName(name);
   }
 
+  async changePassword(keyId: number, authKey: string, newPassword: string, touchIDSupported = false) {
+    const walletKey = this.keys.find((k) => k.id === keyId);
+    if (!walletKey) return false;
+
+    const oldPassword = walletKey.getAuthKeyPassword(authKey);
+
+    const secret = await walletKey.readSecret(oldPassword);
+    if (walletKey.checkSecretType(secret) === undefined) return false;
+
+    walletKey.setTmpSecret(secret);
+    await walletKey.savePassword(newPassword);
+    if (!(await walletKey.saveSecret(newPassword))) return false;
+
+    await walletKey.initLaunchKey();
+
+    if (touchIDSupported) {
+      await walletKey.encryptUserPassword(newPassword);
+    }
+
+    return true;
+  }
+
   finishTmp() {
     console.log('finish tmpkey', this.tmpKey.id);
     this.keys.push(this.tmpKey);

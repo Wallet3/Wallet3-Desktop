@@ -72,10 +72,12 @@ export class MnemonicVM {
 
   async changePasscode(authKey: string, passcode: string) {
     const { success } = await ipc.invokeSecure<BooleanResult>(`${MessageKeys.changePassword}`, {
+      keyId: App.currentWalletId,
       authKey,
       newPassword: App.hashPassword(passcode),
     });
 
+    console.log('change passcode', success)
     return success;
   }
 

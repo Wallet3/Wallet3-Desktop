@@ -199,23 +199,10 @@ export class App {
       const { key } = this.windows.get(winId);
       const [iv, cipherText] = encrypted;
 
-      const { authKey, newPassword } = App.decryptIpc(cipherText, iv, key);
-      const oldPassword = this.walletKey.getAuthKeyPassword(authKey);
+      const { authKey, newPassword, keyId } = App.decryptIpc(cipherText, iv, key);
+      const success = await KeyMan.changePassword(keyId, authKey, newPassword, this.touchIDSupported);
 
-      const mnemonic = await this.walletKey.readSecret(oldPassword);
-      if (!mnemonic) return App.encryptIpc({ success: false }, key);
-
-      this.walletKey.setTmpSecret(mnemonic);
-      await this.walletKey.savePassword(newPassword);
-      if (!(await this.walletKey.saveSecret(newPassword))) return App.encryptIpc({ success: false }, key);
-
-      await this.walletKey.initLaunchKey();
-
-      if (this.touchIDSupported) {
-        await this.walletKey.encryptUserPassword(newPassword);
-      }
-
-      return App.encryptIpc({ success: true }, key);
+      return App.encryptIpc({ success }, key);
     });
 
     ipcMain.handle(`${MessageKeys.initVerifyPassword}-secure`, async (e, encrypted, winId) => {

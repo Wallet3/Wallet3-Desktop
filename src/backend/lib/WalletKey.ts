@@ -321,7 +321,7 @@ export class WalletKey {
     }
   }
 
-  private checkSecretType(secret: string) {
+  checkSecretType(secret: string) {
     if (ethers.utils.isValidMnemonic(secret)) return AccountType.mnemonic;
 
     if ((secret.toLowerCase().startsWith('0x') && secret.length === 66) || secret.length === 64) return AccountType.privkey;
