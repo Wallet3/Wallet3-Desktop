@@ -7,7 +7,6 @@ import { call, getTransactionCount } from '../../common/Provider';
 
 import ERC20ABI from '../../abis/ERC20.json';
 import EventEmitter from 'events';
-import { KeyMan } from '../mans';
 import WCSession from '../models/WCSession';
 import WalletConnector from '@walletconnect/client';
 import { WalletKey } from './WalletKey';
@@ -127,7 +126,7 @@ export class WalletConnect extends EventEmitter {
     }
 
     if (!this.key.authenticated) {
-      this.connector.rejectSession({ message: 'Not ready' });
+      this.connector.rejectSession({ message: 'This account has not been authorized' });
       return;
     }
 
@@ -169,7 +168,10 @@ export class WalletConnect extends EventEmitter {
       return;
     }
 
-    if (!this.key.authenticated) return;
+    if (!this.key.authenticated) {
+      this.connector.rejectRequest({ id: request.id, error: { message: 'This account has not been authorized' } });
+      return;
+    }
 
     console.log(request.method);
     console.log(request.id);

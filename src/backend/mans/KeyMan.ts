@@ -65,6 +65,18 @@ class KeyMan {
 
     if (keys.length === 0) return;
 
+    keys.map(async (key) => {
+      const wcman = new WCMan(key);
+      await wcman.init();
+
+      const disposer = reaction(
+        () => wcman.connectedSessions,
+        () => App.mainWindow?.webContents.send(Messages.wcConnectsChanged(key.id), wcman.connectedSessions)
+      );
+
+      this.connections.set(key.id, { wcman, disposer });
+    });
+
     runInAction(() => {
       this.keys = keys;
       this.switch(id);
@@ -77,32 +89,30 @@ class KeyMan {
     if (this.currentId === id) return this.currentId;
 
     this.current = this.keys.find((k) => k.id === id) || this.keys[0];
+    id = this.current.id;
 
     console.log(this.current['key']);
 
-    let { wcman, disposer } = this.connections.get(this.currentId) || {};
+    let { wcman, disposer } = this.connections.get(id) || {};
     if (!wcman) {
       wcman = new WCMan(this.current);
       await wcman.init();
 
       disposer = reaction(
         () => wcman.connectedSessions,
-        () =>
-          wcman.keyId === this.currentId
-            ? App.mainWindow?.webContents.send(Messages.wcConnectsChanged(this.currentId), wcman.connectedSessions)
-            : undefined
+        () => App.mainWindow?.webContents.send(Messages.wcConnectsChanged(id), wcman.connectedSessions)
       );
 
-      this.connections.set(this.currentId, { wcman, disposer });
+      this.connections.set(id, { wcman, disposer });
     }
 
-    App.mainWindow?.webContents.send(Messages.wcConnectsChanged(this.currentId), wcman.connectedSessions);
+    App.mainWindow?.webContents.send(Messages.wcConnectsChanged(id), wcman.connectedSessions);
 
-    Store.set('keyId', this.currentId);
+    Store.set('keyId', id);
 
     console.log('switch:', id);
 
-    return this.currentId;
+    return id;
   }
 
   async delete(keyId: number) {
