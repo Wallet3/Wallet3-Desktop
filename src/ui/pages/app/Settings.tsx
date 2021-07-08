@@ -85,7 +85,8 @@ export default observer(({ app, langsVM }: IConstructor) => {
 
           <Menu
             styles={{ minWidth: '3rem' }}
-            overflow='auto'
+            overflow="auto"
+            position="anchor"
             menuButton={() => (
               <MenuButton className="menu-button">
                 <Feather icon={'credit-card'} size={13} />

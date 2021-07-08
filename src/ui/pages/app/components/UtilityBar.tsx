@@ -136,6 +136,8 @@ export default observer(({ app, networksVM }: Props) => {
       <Menu
         direction="bottom"
         styles={{ minWidth: '5.5rem' }}
+        overflow="auto"
+        position="anchor"
         menuButton={() => (
           <MenuButton
             onDoubleClick={(_) => Shell.open(convertToAccountUrl(networksVM.currentChainId, currentAccount?.address))}
