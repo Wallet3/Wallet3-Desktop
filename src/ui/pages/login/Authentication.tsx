@@ -43,8 +43,10 @@ export default observer(({ app }: { app: Application }) => {
   const authViaPassword = async (passcode: string) => {
     if (passcode.length < 6) return;
 
-    const verified = app.currentWallet.authenticated ? await app.verifyPassword(passcode) : await app.authInitialization(passcode);
-    console.log(authenticated, app.currentWallet?.id, verified);
+    // must be app.currentWallet.authenticated, fix closure bug
+    const verified = app.currentWallet.authenticated
+      ? await app.verifyPassword(passcode)
+      : await app.authInitialization(passcode);
 
     if (verified) {
       goApp();

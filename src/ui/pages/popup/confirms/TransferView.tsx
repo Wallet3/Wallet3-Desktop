@@ -62,7 +62,7 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
           <span
             className={`${verifiedName && method === 'Contract Interaction' ? 'verified' : ''}`}
             title={receipientAddress || to}
-            onClick={(_) => Shell.open(convertToAccountUrl(chainId, receipientAddress))}
+            onClick={(_) => Shell.open(convertToAccountUrl(chainId, receipientAddress || to))}
           >
             {formatAddress(receipientAddress, 8, 5) || verifiedName || receipient || formatAddress(to, 8, 5)}
             {verifiedName && method === 'Contract Interaction' ? <Feather icon="award" size={12} /> : undefined}
