@@ -94,7 +94,7 @@ export default observer(({ app }: { app: Application }) => {
               overflow="auto"
               menuButton={() => (
                 <MenuButton className="menu-button">
-                  <Feather icon={'credit-card'} size={15} />
+                  <Feather icon={currentWallet?.authenticated ? 'credit-card' : 'lock'} size={15} />
                   <span>{currentWallet?.name}</span>
                 </MenuButton>
               )}
@@ -104,7 +104,7 @@ export default observer(({ app }: { app: Application }) => {
                   <MenuItem styles={MenuItemStyle} key={k.id}>
                     <button onClick={(_) => app.switchWallet(k.id)}>
                       <div className={`${currentWallet?.id === k.id ? 'active' : ''}`}>
-                        <Feather icon={'credit-card'} size={13} />
+                        <Feather icon={k.authenticated ? 'credit-card' : 'lock'} size={13} />
                         <span>{k.name}</span>
                       </div>
                     </button>

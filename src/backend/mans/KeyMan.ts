@@ -23,7 +23,6 @@ class KeyMan {
         name: k.name,
         id: k.id,
         addresses: k.addresses,
-        authenticated: k.authenticated,
         connectedDApps: wcman?.connectedSessions ?? [],
         type: k.type,
       };
@@ -110,7 +109,7 @@ class KeyMan {
 
     Store.set('keyId', id);
 
-    console.log('switch:', id);
+    // console.log('switch:', id);
 
     return id;
   }

@@ -141,7 +141,6 @@ export interface IKey {
   name: string;
   id: number;
   addresses: string[];
-  authenticated: boolean;
   connectedDApps: IWcSession[];
   type: number;
 }
