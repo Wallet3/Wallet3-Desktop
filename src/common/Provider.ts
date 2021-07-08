@@ -29,7 +29,6 @@ export function getProviderByChainId(chainId: number) {
 export function markRpcFailed(network: number, rpc: string) {
   cache.delete(network);
   failedRPCs.add(rpc);
-  console.log('failed rpc', rpc);
 }
 
 export async function sendTransaction(chainId: number, txHex: string) {
