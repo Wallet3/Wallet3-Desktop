@@ -25,7 +25,6 @@ export default observer(({ app }: { app: Application }) => {
   const { t } = useTranslation();
   const [validated, setValidated] = useState(false);
   const [failedCount, setFailedCount] = useState(0);
-  const [appInited] = useState(authenticated);
 
   const goApp = () => {
     setValidated(true);
@@ -91,7 +90,7 @@ export default observer(({ app }: { app: Application }) => {
         {!validated && (!authenticated || authMethod === 'keyboard') ? (
           <div className="wallets">
             <Menu
-              styles={{ minWidth: '108px' }}
+              styles={{ minWidth: '100px' }}
               overflow="auto"
               menuButton={() => (
                 <MenuButton className="menu-button">
@@ -125,7 +124,7 @@ export default observer(({ app }: { app: Application }) => {
         </div>
       ) : undefined}
 
-      {appInited && touchIDSupported && !validated ? (
+      {authenticated && touchIDSupported && !validated ? (
         <div className="switch-auth-method">
           {app.authMethod === 'fingerprint' ? (
             <img src={keyboardIcon} alt="Keyboard" onClick={(_) => app.switchAuthMethod('keyboard')} />

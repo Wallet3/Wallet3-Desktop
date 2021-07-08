@@ -29,16 +29,16 @@ export default observer(({ networksVM, app }: IConstructor) => {
   const { currencyVM } = app;
 
   const maxRows = 6;
-  const rows = accountVM.chainTokens.length / 2;
+  const rows = accountVM?.chainTokens.length / 2 ?? 0;
   const rowTokens: UserToken[][] =
-    accountVM.chainTokens.length === 0
+    accountVM?.chainTokens.length === 0
       ? new Array(maxRows).fill([null, null])
       : new Array(maxRows).fill([undefined, undefined]);
 
   for (let i = 0; i < rows && i < maxRows; i++) {
     const row: UserToken[] = [];
     for (let j = 0; j < 2; j++) {
-      const token = accountVM.chainTokens[i * 2 + j];
+      const token = accountVM?.chainTokens[i * 2 + j];
       row.push(token);
     }
 

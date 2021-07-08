@@ -13,8 +13,10 @@ import { NetworksVM } from '../../../viewmodels/NetworksVM';
 import PendingTx from './PendingTxLabel';
 import PendingTxIndicator from './PendingTxIndicator';
 import React from 'react';
+import Shell from '../../../bridges/Shell';
 import WalletConnectIndicator from './WalletConnectIndicator';
 import { WalletVM } from '../../../viewmodels/WalletVM';
+import { convertToAccountUrl } from '../../../../misc/Url';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 
@@ -137,6 +139,7 @@ export default observer(({ app, walletVM, networksVM }: Props) => {
         styles={{ minWidth: '5.5rem' }}
         menuButton={() => (
           <MenuButton
+            onDoubleClick={(_) => Shell.open(convertToAccountUrl(networksVM.currentChainId, accountVM.address))}
             className="icon-button"
             title={`${accountVM?.ens || accountVM?.address} (${accountVM?.name || `Account ${accountVM.accountIndex}`})`}
           >
