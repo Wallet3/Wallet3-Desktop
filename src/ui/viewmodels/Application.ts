@@ -126,19 +126,21 @@ export class Application {
   }
 
   async switchWallet(toId: number) {
-    if (this.currentWalletId === toId && this.currentWallet) return;
+    if (this.currentWalletId === toId) return;
 
     const { keyId } = await ipc.invokeSecure<{ keyId: number }>(MessageKeys.switchKey, { keyId: toId });
 
     const targetWallet = this.wallets.find((w) => w.id === keyId);
     if (!targetWallet) return;
 
-    runInAction(() => (this.currentWallet = targetWallet));
     console.log(targetWallet, targetWallet.currentAccount, 'expected:', toId, 'switched', keyId);
 
-    if (!targetWallet.authenticated) {
+    runInAction(() => {
+      this.currentWallet = targetWallet;
+
+      if (targetWallet.authenticated) return;
       this.history.push('/authentication');
-    }
+    });
   }
 
   async deleteWallet(keyId: number) {
@@ -185,7 +187,7 @@ export class Application {
     }
 
     this.wallets.find((w) => w.id === keyId).initAccounts({ addresses });
-    console.log('app auth init accounts', verified, this.currentWallet);
+    console.log('app auth init accounts', keyId, verified, this.currentWallet);
 
     return verified;
   };
