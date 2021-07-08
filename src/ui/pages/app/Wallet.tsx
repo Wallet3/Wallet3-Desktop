@@ -25,20 +25,20 @@ interface IConstructor {
 
 export default observer(({ networksVM, app }: IConstructor) => {
   const { t } = useTranslation();
-  const { currentAccount: accountVM, pendingTxCount } = app.currentWallet;
+  const { currentAccount, pendingTxCount } = app.currentWallet;
   const { currencyVM } = app;
 
   const maxRows = 6;
-  const rows = accountVM?.chainTokens.length / 2 ?? 0;
+  const rows = currentAccount?.chainTokens.length / 2 ?? 0;
   const rowTokens: UserToken[][] =
-    accountVM?.chainTokens.length === 0
+    currentAccount?.chainTokens.length === 0
       ? new Array(maxRows).fill([null, null])
       : new Array(maxRows).fill([undefined, undefined]);
 
   for (let i = 0; i < rows && i < maxRows; i++) {
     const row: UserToken[] = [];
     for (let j = 0; j < 2; j++) {
-      const token = accountVM?.chainTokens[i * 2 + j];
+      const token = currentAccount?.chainTokens[i * 2 + j];
       row.push(token);
     }
 
@@ -52,17 +52,17 @@ export default observer(({ networksVM, app }: IConstructor) => {
 
   return (
     <div className="page main">
-      <UtilityBar app={app} networksVM={networksVM} walletVM={app.currentWallet} />
+      <UtilityBar app={app} networksVM={networksVM} />
 
       <div className="net-worth">
         <h3 className="title">{t('Net Worth')}</h3>
         <div className="value">
-          {accountVM.netWorth === undefined ? (
+          {!currentAccount || currentAccount?.netWorth === undefined ? (
             <Skeleton />
           ) : (
             <AnimatedNumber
               component="span"
-              value={accountVM.netWorth}
+              value={currentAccount?.netWorth}
               duration={300}
               formatValue={(n) => currencyVM.format(n)}
             />
@@ -70,8 +70,8 @@ export default observer(({ networksVM, app }: IConstructor) => {
         </div>
 
         <div className="asset-percent">
-          {accountVM?.chainsOverview.length > 0 ? (
-            <HSBar height={3} showTextWithValue={false} showTextDown outlineWidth={0} data={accountVM?.chainsOverview} />
+          {currentAccount?.chainsOverview.length > 0 ? (
+            <HSBar height={3} showTextWithValue={false} showTextDown outlineWidth={0} data={currentAccount?.chainsOverview} />
           ) : (
             <Skeleton />
           )}
@@ -83,7 +83,7 @@ export default observer(({ networksVM, app }: IConstructor) => {
           <Feather icon="camera" size={14} strokeWidth={2} />
           <span>{t('Connect')}</span>
         </button>
-        <Link className={`button ${accountVM && accountVM.nativeToken ? '' : 'disabled'}`} to="/send">
+        <Link className={`button ${currentAccount && currentAccount.nativeToken ? '' : 'disabled'}`} to="/send">
           <Feather icon="send" size={14} strokeWidth={2} />
           <span>{t('Send')}</span>
         </Link>
@@ -142,12 +142,12 @@ export default observer(({ networksVM, app }: IConstructor) => {
           </Link>
         </div>
 
-        <div className={`tokens ${accountVM.nfts?.length === 0 || !accountVM.nfts ? 'empty' : ''}`}>
-          {accountVM.nfts ? (
-            accountVM.nfts.length === 0 ? (
+        <div className={`tokens ${currentAccount?.nfts?.length === 0 || !currentAccount?.nfts ? 'empty' : ''}`}>
+          {currentAccount?.nfts ? (
+            currentAccount.nfts.length === 0 ? (
               t('No NFTs Here')
             ) : (
-              accountVM.nfts.slice(0, 12).map((nft) => {
+              currentAccount.nfts.slice(0, 12).map((nft) => {
                 return (
                   <Link to={`/transferNFT/${nft.contract}:${nft.tokenId}`} key={`${nft.contract}:${nft.tokenId}`}>
                     <div className="nft">

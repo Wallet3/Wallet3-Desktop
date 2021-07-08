@@ -15,14 +15,12 @@ import PendingTxIndicator from './PendingTxIndicator';
 import React from 'react';
 import Shell from '../../../bridges/Shell';
 import WalletConnectIndicator from './WalletConnectIndicator';
-import { WalletVM } from '../../../viewmodels/WalletVM';
 import { convertToAccountUrl } from '../../../../misc/Url';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 
 interface Props {
   app: Application;
-  walletVM: WalletVM;
   networksVM: NetworksVM;
 }
 
@@ -34,9 +32,10 @@ const MenuItemStyle = {
   lineHeight: '12px',
 };
 
-export default observer(({ app, walletVM, networksVM }: Props) => {
+export default observer(({ app, networksVM }: Props) => {
   const { t } = useTranslation();
-  const { currentAccount: accountVM, pendingTxCount, pendingTxs, connectedDApps, appCount } = walletVM;
+  const { wallets, currentWallet } = app;
+  const { currentAccount, pendingTxCount, pendingTxs, connectedDApps, appCount } = currentWallet;
 
   return (
     <div className="utility-bar">
@@ -70,7 +69,7 @@ export default observer(({ app, walletVM, networksVM }: Props) => {
               <MenuItem key={item.hash} styles={{ padding: 0 }}>
                 <button
                   onClick={(_) => {
-                    walletVM.selectPendingTx(item);
+                    currentWallet.selectPendingTx(item);
                     app.history.push(`/tx?hash=${item.hash}`);
                   }}
                 >
@@ -105,7 +104,7 @@ export default observer(({ app, walletVM, networksVM }: Props) => {
                 <button
                   style={{ padding: '10px' }}
                   onClick={(_) => {
-                    walletVM.selectDAppSession(s);
+                    currentWallet.selectDAppSession(s);
                     app.history.push(`/connectedapp`);
                   }}
                 >
@@ -139,9 +138,11 @@ export default observer(({ app, walletVM, networksVM }: Props) => {
         styles={{ minWidth: '5.5rem' }}
         menuButton={() => (
           <MenuButton
-            onDoubleClick={(_) => Shell.open(convertToAccountUrl(networksVM.currentChainId, accountVM.address))}
+            onDoubleClick={(_) => Shell.open(convertToAccountUrl(networksVM.currentChainId, currentAccount?.address))}
             className="icon-button"
-            title={`${accountVM?.ens || accountVM?.address} (${accountVM?.name || `Account ${accountVM.accountIndex}`})`}
+            title={`${currentAccount?.ens || currentAccount?.address} (${
+              currentAccount?.name || `Account ${currentAccount?.accountIndex}`
+            })`}
           >
             <Feather icon="user" size={16} strokeWidth={1} />
           </MenuButton>
@@ -163,6 +164,21 @@ export default observer(({ app, walletVM, networksVM }: Props) => {
             </div>
           </button>
         </MenuItem>
+
+        <MenuDivider />
+
+        {wallets.map((k) => {
+          return (
+            <MenuItem styles={MenuItemStyle} key={k.id}>
+              <button onClick={(_) => app.switchWallet(k.id)}>
+                <div className={`${currentWallet.id === k.id ? 'active' : ''} profile-item`}>
+                  <Feather icon={'credit-card'} size={13} />
+                  <span>{k.name}</span>
+                </div>
+              </button>
+            </MenuItem>
+          );
+        })}
       </Menu>
     </div>
   );

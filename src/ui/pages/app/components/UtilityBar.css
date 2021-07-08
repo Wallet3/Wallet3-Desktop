@@ -46,6 +46,10 @@
   font-size: 12px;
 }
 
+.utility-bar .profile-item.active {
+  color: var(--theme-color);
+}
+
 .utility-bar .profile-item svg {
   margin-right: 8px;
 }

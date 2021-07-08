@@ -38,7 +38,7 @@ export default observer(({ app, networksVM }: IConstructor) => {
 
   return (
     <div className="page dapps123">
-      <UtilityBar app={app} networksVM={networksVM} walletVM={app.currentWallet} />
+      <UtilityBar app={app} networksVM={networksVM} />
 
       <div className="list">
         {dapps ? (
@@ -51,12 +51,7 @@ export default observer(({ app, networksVM }: IConstructor) => {
                 <div className="projects">
                   {projects.map((project) => {
                     return (
-                      <div
-                        className="project"
-                        key={project.url}
-                        title={project.name}
-                        onClick={(_) => Shell.open(project.url)}
-                      >
+                      <div className="project" key={project.url} title={project.name} onClick={(_) => Shell.open(project.url)}>
                         <LogoImage name={project.name} />
                         <span>{project.name}</span>
                       </div>
