@@ -125,7 +125,7 @@
   "Status": "状态",
   "Manually Connect DApps": "手动连接 DApp",
   "DApp Connecting": "正在连接 DApp",
-  "Use WalletConnect": "首先请复制 WalletConnect 链接，再切换到 Wallet 3。 Wallet 3 将会自动尝试连接 DApp。",
+  "Use WalletConnect": "首先请复制 WalletConnect 链接（二维码下方），再切换到 Wallet 3。 Wallet 3 将会自动尝试连接 DApp。",
   "New": "创建钱包",
   "Import": "导入钱包",
   "Delete": "删除此钱包",

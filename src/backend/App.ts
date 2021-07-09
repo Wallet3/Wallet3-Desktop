@@ -141,7 +141,7 @@ export class App {
 
       const addresses = await this.tmpKey.genAddresses(userPassword, 10);
 
-      //TxNotification.watch(this.currentNetwork.defaultTokens, addresses, this.chainId);
+      // TxNotification.watch(this.currentNetwork.defaultTokens, addresses, this.chainId);
 
       if (this.touchIDSupported) this.tmpKey.encryptUserPassword(userPassword);
 

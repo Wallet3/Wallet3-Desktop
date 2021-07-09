@@ -1,4 +1,5 @@
 import { BigNumber, utils } from 'ethers';
+import { Notification, app, shell } from 'electron';
 
 import { ERC20Token } from '../../common/ERC20Token';
 import { IToken } from '../../misc/Tokens';
@@ -24,11 +25,13 @@ class TxNotification {
       const filterTo = token.filters.Transfer(null, addrs[0]);
       token.on(filterTo, (from: string, to: string, value: BigNumber) => {
         console.log(erc20s[i].symbol, from, to, value);
+
+        new Notification({ title: erc20s[i].symbol, body: `${from} ${to}` }).show();
       });
 
       const filterFrom = token.filters.Transfer(addrs[0], null);
-      token.on(filterFrom, (a, b, c, e) => {
-        console.log(erc20s[i], a, b, c, e);
+      token.on(filterFrom, (from: string, to: string, value: BigNumber) => {
+        new Notification({ title: erc20s[i].symbol, body: `${from} ${to}` }).show();
       });
     }
   }
