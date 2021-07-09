@@ -10,6 +10,7 @@ import Messages from './common/Messages';
 import { autorun } from 'mobx';
 import { globalShortcut } from 'electron';
 import i18n from './i18n';
+import { resolve } from 'path';
 import updateapp from 'update-electron-app';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
@@ -140,6 +141,16 @@ const createWindow = async (): Promise<void> => {
   if (isMac) app.dock.show();
 };
 
+const handleDeeplink = (deeplink: string) => {
+  const wcStartIndex = deeplink.indexOf('wc:');
+  if (deeplink.indexOf(`wc?uri=`) === -1 || wcStartIndex === -1) return;
+
+  console.log(deeplink);
+
+  const wcUri = deeplink.substring(wcStartIndex);
+  KeyMan.currentWCMan.connectAndWaitSession(wcUri);
+};
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -186,11 +197,14 @@ app.on('ready', async () => {
   globalShortcut.register('CommandOrControl+Option+3', () => createWindow());
   globalShortcut.register('CommandOrControl+Alt+3', () => createWindow());
 
-  protocol.registerHttpProtocol('wallet3', async (request, cb) => {
-    const uri = request.url.substring(7);
-    if (!uri.startsWith('wc:') || !uri.includes('bridge=')) return;
-    await KeyMan.currentWCMan.connectAndWaitSession(uri);
-  });
+  if (process.platform === 'win32') {
+    // Set the path of electron.exe and your app.
+    // These two additional parameters are only available on windows.
+    // Setting this is required to get this working in dev mode.
+    app.setAsDefaultProtocolClient('wallet3', process.execPath, [resolve(process.argv[1])]);
+  } else {
+    app.setAsDefaultProtocolClient('wallet3');
+  }
 
   updateapp({ notifyUser: true });
 });
@@ -240,8 +254,19 @@ powerMonitor.on('suspend', () => {
 if (!app.requestSingleInstanceLock()) {
   app.quit();
 } else {
-  app.on('second-instance', (event, commandLine, workingDirectory) => {
+  app.on('second-instance', (event, argv, workingDirectory) => {
+    if (process.platform !== 'darwin') {
+      // Find the arg that is our custom protocol url and store it
+      const deeplinkUrl = argv.find((arg) => arg.indexOf('wc?uri=wc:'));
+      handleDeeplink(deeplinkUrl);
+    }
+
     if (App.mainWindow?.isMinimized()) App.mainWindow?.restore();
     App.mainWindow?.focus();
   });
 }
+
+app.on('open-url', function (event, url) {
+  event.preventDefault();
+  handleDeeplink(url);
+});

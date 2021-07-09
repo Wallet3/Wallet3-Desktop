@@ -400,9 +400,6 @@ export class WalletConnect extends EventEmitter {
     this._chainIdObserver?.();
     this._currAddrObserver?.();
     this.removeAllListeners();
-    this.connector?.on('session_request', null);
-    this.connector?.on('call_request', null);
-    this.connector?.on('disconnect', null);
 
     this._chainIdObserver = undefined;
     this._currAddrObserver = undefined;

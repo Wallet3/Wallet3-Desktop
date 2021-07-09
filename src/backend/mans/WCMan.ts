@@ -52,6 +52,7 @@ export class WCMan {
   async connectAndWaitSession(uri: string, modal = false) {
     if (!uri.startsWith('wc:') || !uri.includes('bridge=')) return undefined;
     if (this.cache.has(uri)) return undefined;
+    if (!this.key.authenticated) return undefined;
 
     const wc = new WalletConnect({ modal, key: this.key });
 

@@ -20,6 +20,7 @@
     "storejs",
     "connectdapp",
     "appinfo",
+    "chainbow",
     "arrayify",
     "Rarible",
     "POAP",
@@ -68,7 +69,11 @@
     "viewmodels",
     "szhsin",
     "connectedapps",
-    "connectedapp"
+    "connectedapp",
+    "icns",
+    "DMGBG",
+    "nsis",
+    "deeplink"
   ],
   "flagWords": [],
   "ignorePaths": ["package.json", "package-lock.json", "yarn.lock", "tsconfig.json", "node_modules/**"]

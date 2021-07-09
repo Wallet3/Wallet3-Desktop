@@ -1,5 +1,5 @@
-const { appleId, appleIdPassword } = require( './sign/appSign' );
-const package = require( './package.json' );
+const { appleId, appleIdPassword } = require('./sign/appSign');
+const package = require('./package.json');
 
 module.exports = {
   packagerConfig: {
@@ -20,6 +20,13 @@ module.exports = {
     //   appleId,
     //   appleIdPassword,
     // },
+    protocols: [
+      {
+        name: 'Wallet 3',
+        protocol: 'wallet3',
+        schemes: ['wallet3', 'wc'],
+      },
+    ],
   },
   makers: [
     {
@@ -30,7 +37,7 @@ module.exports = {
         background: 'assets/DMGBG.png',
         backgroundColor: '#6186ff',
       },
-    }
+    },
   ],
   plugins: [
     [
