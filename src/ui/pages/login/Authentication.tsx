@@ -2,11 +2,10 @@ import './Authentication.css';
 
 import * as Anime from '../../misc/Anime';
 
-import { Menu, MenuButton, MenuDivider, MenuItem } from '@szhsin/react-menu';
+import { Menu, MenuButton, MenuItem } from '@szhsin/react-menu';
 import { PasscodeView, TouchIDView, Validation } from '../../components';
 import React, { useEffect, useState } from 'react';
 
-import { AccountType } from '../../../backend/models/Types';
 import { Application } from '../../viewmodels/Application';
 import Feather from 'feather-icons-react';
 import fingerprint from '../../../assets/icons/app/fingerprint.svg';
@@ -79,7 +78,7 @@ export default observer(({ app }: { app: Application }) => {
     }
 
     return () => (document.onkeydown = undefined);
-  }, [app.currentWallet]);
+  }, [app.currentWallet, app.authMethod]);
 
   return (
     <div className="page authentication ">
