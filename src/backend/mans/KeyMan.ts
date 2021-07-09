@@ -62,19 +62,23 @@ class KeyMan {
     const keys = await Promise.all((await DBMan.accountRepo.find()).map((k) => new WalletKey().init(k)));
     const id = Store.get('keyId') || 1;
 
+    console.log(keys.map((k) => k.id));
+
     if (keys.length === 0) return;
 
-    keys.map(async (key) => {
-      const wcman = new WCMan(key);
-      await wcman.init();
+    await Promise.all(
+      keys.map(async (key) => {
+        const wcman = new WCMan(key);
+        await wcman.init();
 
-      const disposer = reaction(
-        () => wcman.connectedSessions,
-        () => App.mainWindow?.webContents.send(Messages.wcConnectsChanged(key.id), wcman.connectedSessions)
-      );
+        const disposer = reaction(
+          () => wcman.connectedSessions,
+          () => App.mainWindow?.webContents.send(Messages.wcConnectsChanged(key.id), wcman.connectedSessions)
+        );
 
-      this.connections.set(key.id, { wcman, disposer });
-    });
+        this.connections.set(key.id, { wcman, disposer });
+      })
+    );
 
     runInAction(() => {
       this.keys = keys;

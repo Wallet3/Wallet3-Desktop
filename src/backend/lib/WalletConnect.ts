@@ -278,7 +278,7 @@ export class WalletConnect extends EventEmitter {
       this.connector.rejectRequest({ id: request.id, error: { message: 'User rejected' } });
     });
 
-    const receipient: { address: string; name: string } = this.wallet.addresses.find(
+    const recipient: { address: string; name: string } = this.wallet.addresses.find(
       (addr) => addr === utils.getAddress(param.to)
     )
       ? {
@@ -304,7 +304,7 @@ export class WalletConnect extends EventEmitter {
         (await getTransactionCount(requestedChainId ?? this.appChainId, this.wallet.currentAddress)),
       value: param.value || 0,
 
-      receipient,
+      recipient,
       transferToken,
       walletConnect: { peerId: this.peerId, reqid: request.id, app: this.appMeta },
     } as ConfirmSendTx);

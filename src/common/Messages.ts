@@ -120,7 +120,7 @@ export interface WCParams {
 }
 
 export interface ConfirmSendTx extends TxParams {
-  receipient?: {
+  recipient?: {
     address: string;
     name?: string;
   };

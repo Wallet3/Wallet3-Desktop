@@ -94,8 +94,8 @@ export class ConfirmVM {
     console.log(this.args);
   }
 
-  get receipient() {
-    return this.args.receipient?.name;
+  get recipient() {
+    return this.args.recipient?.name;
   }
 
   get verifiedName(): string {
@@ -110,8 +110,8 @@ export class ConfirmVM {
     }
   }
 
-  get receipientAddress() {
-    return this.args.receipient?.address;
+  get recipientAddress() {
+    return this.args.recipient?.address;
   }
 
   get to() {

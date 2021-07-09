@@ -265,7 +265,7 @@ export class TransferVM {
       data,
       chainId: NetworksVM.currentChainId,
 
-      receipient: {
+      recipient: {
         address: this.receiptAddress,
         name: this.isEns
           ? this.receipient
@@ -326,7 +326,7 @@ export class TransferVM {
       data,
       chainId: NetworksVM.currentChainId,
 
-      receipient: {
+      recipient: {
         address: this.receiptAddress,
         name: this.isEns
           ? this.receipient

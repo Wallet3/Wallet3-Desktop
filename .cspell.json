@@ -3,6 +3,7 @@
   "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/master/cspell.schema.json",
   "language": "en",
   "words": [
+    "ethersproject",
     "Bankless",
     "DeBank",
     "Passcode",
@@ -30,6 +31,7 @@
     "RPCs",
     "Numberish",
     "dexs",
+    "iface",
     "animejs",
     "Gasnow",
     "coingeco",
