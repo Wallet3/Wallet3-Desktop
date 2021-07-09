@@ -56,7 +56,7 @@ export default observer((vm: Props) => {
 
       <div>
         <span>{t('Value')}:</span>
-        <span>{`${utils.formatEther(vm.value)} ${chain.symbol}`}</span>
+        <span>{`${utils.formatEther(Number.parseFloat(vm.value) === 0 ? 0 : vm.value)} ${chain.symbol}`}</span>
       </div>
 
       <div>

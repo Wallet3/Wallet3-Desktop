@@ -39,7 +39,7 @@ export default observer(({ app }: { app: Application }) => {
     const status = failed ? 'failed' : confirmed ? 'confirmed' : 'pending';
     const timestamp = new Date(tx.timestamp);
     const networkIcon = NetworkIcons(network.network);
-    let value = utils.formatEther(Number.parseInt(tx.value) === 0 ? 0 : tx.value);
+    let value = utils.formatEther(Number.parseFloat(tx.value) === 0 ? 0 : tx.value);
     let tokenSymbol = network.symbol;
 
     if (method.startsWith('Transfer')) {

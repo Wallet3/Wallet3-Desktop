@@ -21,12 +21,14 @@ class TxNotification {
       this.tokens.set(token.address, token);
       console.log(`watch ${erc20s[i].symbol}`, addrs[0]);
 
-      const filter = token.filters.Transfer(null, addrs[0]);
-      //   token.on(filter, (from: string, to: string, value: BigNumber) => {
-      //     console.log(erc20s[i].symbol, from, to, value);
-      //   });
-      token.on('Transfer', (a, b, c, e) => {
-        console.log(a, b, c, e);
+      const filterTo = token.filters.Transfer(null, addrs[0]);
+      token.on(filterTo, (from: string, to: string, value: BigNumber) => {
+        console.log(erc20s[i].symbol, from, to, value);
+      });
+
+      const filterFrom = token.filters.Transfer(addrs[0], null);
+      token.on(filterFrom, (a, b, c, e) => {
+        console.log(erc20s[i], a, b, c, e);
       });
     }
   }

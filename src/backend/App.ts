@@ -1,7 +1,7 @@
 import * as Cipher from '../common/Cipher';
 
 import { BrowserWindow, Notification, TouchBar, TouchBarButton, ipcMain, systemPreferences } from 'electron';
-import { DBMan, KeyMan, TxMan, TxNotificaion } from './mans';
+import { DBMan, KeyMan, TxMan, TxNotification } from './mans';
 import MessageKeys, {
   AuthenticationResult,
   ConfirmSendTx,
@@ -141,7 +141,7 @@ export class App {
 
       const addresses = await this.tmpKey.genAddresses(userPassword, 10);
 
-      // TxNotificaion.watch(this.currentNetwork.defaultTokens, addresses, this.chainId);
+      //TxNotification.watch(this.currentNetwork.defaultTokens, addresses, this.chainId);
 
       if (this.touchIDSupported) this.tmpKey.encryptUserPassword(userPassword);
 
@@ -215,7 +215,7 @@ export class App {
 
         if (verified && this.touchIDSupported) await this.walletKey.encryptUserPassword(password);
 
-        // TxNotificaion.watch(this.currentNetwork.defaultTokens, addrs, this.chainId);
+        // TxNotification.watch(this.currentNetwork.defaultTokens, addresses, this.chainId);
 
         return App.encryptIpc({ verified, addresses, keyId: this.walletKey.id }, key);
       } catch (error) {
@@ -273,7 +273,7 @@ export class App {
     ipcMain.handle(`${MessageKeys.changeChainId}`, async (e, id) =>
       runInAction(() => {
         this.chainId = id;
-        // TxNotificaion.watch(this.currentNetwork.defaultTokens, this.addresses, id);
+        // TxNotification.watch(this.currentNetwork.defaultTokens, KeyMan.current.addresses, id);
       })
     );
 
