@@ -125,7 +125,7 @@
   "Manually Connect DApps": "Manually Connect DApps",
   "DApp Connecting": "DApp Connecting",
   "Use WalletConnect": "Please copy the WalletConnect uri (below the QRCode image) first, then switch to Wallet 3. The dapp will get connected automatically.",
-  "New": "New",
+  "Create": "Create",
   "Import": "Import",
   "Delete": "Delete",
   "Delete Wallet": "Delete Wallet",

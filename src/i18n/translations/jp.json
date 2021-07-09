@@ -126,7 +126,7 @@
   "Manually Connect DApps": "DAppを手動で接続する",
   "DApp Connecting": "DApp 接続中",
   "Use WalletConnect": "まず WalletConnect Uri をコピーしてから、Wallet 3 に切り替えてください。Wallet 3 は自動的に DApp を接続します。",
-  "New": "新規作成",
+  "Create": "新規作成",
   "Import": "インポート",
   "Delete": "削除",
   "Delete Wallet": "このウォレット削除",
