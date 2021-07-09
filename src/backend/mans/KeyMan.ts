@@ -49,7 +49,7 @@ class KeyMan {
       () => this.current,
       () => {
         if (!this.current) return;
-        console.log('keyman current id changed');
+
         App.mainWindow?.webContents.send(
           Messages.currentKeyChanged,
           JSON.stringify({ keys: this.overviewKeys, keyId: this.currentId })
@@ -61,8 +61,6 @@ class KeyMan {
   async init() {
     const keys = await Promise.all((await DBMan.accountRepo.find()).map((k) => new WalletKey().init(k)));
     const id = Store.get('keyId') || 1;
-
-    console.log(keys.map((k) => k.id));
 
     if (keys.length === 0) return;
 
@@ -94,8 +92,6 @@ class KeyMan {
     this.current = this.keys.find((k) => k.id === id) || this.keys[0];
     id = this.current.id;
 
-    console.log(this.current['key']);
-
     let { wcman, disposer } = this.connections.get(id) || {};
     if (!wcman) {
       wcman = new WCMan(this.current);
@@ -112,8 +108,6 @@ class KeyMan {
     App.mainWindow?.webContents.send(Messages.wcConnectsChanged(id), wcman.connectedSessions);
 
     Store.set('keyId', id);
-
-    // console.log('switch:', id);
 
     return id;
   }

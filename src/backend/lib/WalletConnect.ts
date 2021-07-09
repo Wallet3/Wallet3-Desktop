@@ -111,7 +111,6 @@ export class WalletConnect extends EventEmitter {
   private updateSession() {
     if (!this.key.authenticated) return;
 
-    console.log(this.wallet.id, 'update session', this.wallet.currentAddress);
     try {
       this.connector?.updateSession({ chainId: this.appChainId, accounts: [this.wallet.currentAddress] });
     } catch (error) {
@@ -144,7 +143,7 @@ export class WalletConnect extends EventEmitter {
     ipcMain.handleOnce(WcMessages.approveWcSession(this.peerId), (e, c) => {
       clearHandlers();
       this._userChainId = c?.userChainId || 0;
-      console.log('wc current addr', this.wallet.currentAddress);
+
       this.connector.approveSession({ accounts: [this.wallet.currentAddress], chainId: this.appChainId });
 
       this.emit('sessionApproved', this.connector.session);
@@ -173,12 +172,11 @@ export class WalletConnect extends EventEmitter {
       return;
     }
 
-    console.log(request.method);
-    console.log(request.id);
-    console.log(request.params);
+    // console.log(request.method);
+    // console.log(request.id);
+    // console.log(request.params);
 
     const checkAccount = (from: string) => {
-      console.log('check account', from, this.wallet.currentAddress, from === this.wallet.currentAddress);
       if (from?.toLowerCase() === this.wallet.currentAddress.toLowerCase()) return true;
       this.connector.rejectRequest({ id: request.id, error: { message: 'Update session' } });
       this.updateSession();

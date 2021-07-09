@@ -51,7 +51,6 @@ export class App {
   async init() {
     if (this.ready) return;
 
-    console.log('only once');
     reaction(
       () => TxMan.pendingTxs.length,
       () => this.mainWindow?.webContents.send(MessageKeys.pendingTxsChanged, [...TxMan.pendingTxs])

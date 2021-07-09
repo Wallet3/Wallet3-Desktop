@@ -46,13 +46,10 @@ export class MnemonicVM {
     const { success, addresses } = await ipc.invokeSecure<SetupMnemonic>(MessageKeys.setupMnemonic, { password });
 
     while (!App.currentWallet) {
-      console.log('waiting current wallet', App.currentWallet, App.wallets.length);
       await delay(500);
     }
 
-    console.log('setup mn', success)
     if (success && App.currentWallet.accounts.length === 0) {
-      console.log('init accounts', success);
       App.currentWallet.initAccounts({ addresses });
     }
 
@@ -77,7 +74,6 @@ export class MnemonicVM {
       newPassword: App.hashPassword(passcode),
     });
 
-    console.log('change passcode', success)
     return success;
   }
 

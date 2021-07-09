@@ -79,14 +79,12 @@ export class Application {
 
     ipc.on(MessageKeys.keysChanged, (e, keys: string) => {
       updateWallets(JSON.parse(keys) as IKey[]);
-      console.log('keys changed', keys);
     });
 
     ipc.on(MessageKeys.currentKeyChanged, (e, obj) => {
       const { keys, keyId } = JSON.parse(obj) as KeysChanged;
       updateWallets(keys);
       runInAction(() => this.switchWallet(keyId));
-      console.log('current key id changed', keyId);
     });
 
     this.authMethod = store.get('authMethod') || 'fingerprint';
@@ -96,8 +94,6 @@ export class Application {
     const { touchIDSupported, pendingTxs, platform, keys, currentKeyId } = await ipc.invokeSecure<InitStatus>(
       MessageKeys.getInitStatus
     );
-
-    console.log(keys);
 
     this.wallets = keys.map((k) => new WalletVM(k).initAccounts(k));
     this.switchWallet(currentKeyId);
@@ -187,7 +183,6 @@ export class Application {
     }
 
     this.wallets.find((w) => w.id === keyId).initAccounts({ addresses });
-    console.log('app auth init accounts', keyId, verified, this.currentWallet);
 
     return verified;
   };

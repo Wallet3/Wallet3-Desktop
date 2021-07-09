@@ -90,8 +90,6 @@ export class ConfirmVM {
     this._nonce = params.nonce || 0;
     this._value = params.value || 0;
     this._data = params.data;
-
-    console.log(this.args);
   }
 
   get recipient() {
@@ -145,9 +143,7 @@ export class ConfirmVM {
   }
 
   get tokenSymbol() {
-    return (
-      this.transferToken?.symbol || this.approveToken?.symbol || Networks.find((n) => n.chainId === this.chainId).symbol
-    );
+    return this.transferToken?.symbol || this.approveToken?.symbol || Networks.find((n) => n.chainId === this.chainId).symbol;
   }
 
   get networkSymbol() {
