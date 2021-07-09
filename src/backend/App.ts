@@ -448,9 +448,9 @@ export class App {
   createPopupWindow(
     type: PopupWindowTypes,
     payload: any,
-    windowArgs?: { modal?: boolean; parent?: BrowserWindow; height?: number }
+    windowArgs?: { modal?: boolean; parent?: BrowserWindow; height?: number; resizable?: boolean }
   ) {
-    let { modal, parent, height } = windowArgs || {};
+    let { modal, parent, height, resizable } = windowArgs || {};
 
     height = height ?? (modal ? 333 : 320);
     const popup = new BrowserWindow({
@@ -460,6 +460,7 @@ export class App {
       minHeight: height,
       modal,
       parent,
+      resizable: resizable ?? true,
       show: false,
       frame: false,
       alwaysOnTop: true,

@@ -24,7 +24,7 @@ module.exports = {
       {
         name: 'Wallet 3',
         protocol: 'wallet3',
-        schemes: ['wallet3', 'wc'],
+        schemes: ['wallet3', 'wc', 'ledgerlive'],
       },
     ],
   },

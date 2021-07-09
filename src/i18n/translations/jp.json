@@ -130,5 +130,7 @@
   "Import": "インポート",
   "Delete": "削除",
   "Delete Wallet": "このウォレット削除",
-  "Delete Wallet Message": "{{name}} を永久に削除する。継続しますか？"
+  "Delete Wallet Message": "{{name}} を永久に削除する。継続しますか？",
+  "Wallet not authorized": "ウォレットは認証されていません、まず認証してください。",
+  "WalletConnect uri expired": "このセッションは期限切れです。Webページを更新して再度お試しください."
 }

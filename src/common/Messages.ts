@@ -135,7 +135,7 @@ export interface RequestSignMessage {
   json?: boolean;
 }
 
-export type PopupWindowTypes = 'connectDapp' | 'sign' | 'sendTx' | 'scanQR' | 'auth' | 'msgbox';
+export type PopupWindowTypes = 'connectDapp' | 'sign' | 'sendTx' | 'scanQR' | 'auth' | 'msgbox' | 'dapp-connecting';
 
 export interface IKey {
   name: string;

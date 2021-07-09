@@ -10,6 +10,7 @@ import Messages from './common/Messages';
 import { autorun } from 'mobx';
 import { globalShortcut } from 'electron';
 import i18n from './i18n';
+import querystring from 'querystring';
 import { resolve } from 'path';
 import updateapp from 'update-electron-app';
 
@@ -141,14 +142,43 @@ const createWindow = async (): Promise<void> => {
   if (isMac) app.dock.show();
 };
 
-const handleDeeplink = (deeplink: string) => {
-  const wcStartIndex = deeplink.indexOf('wc:');
-  if (deeplink.indexOf(`wc?uri=`) === -1 || wcStartIndex === -1) return;
+const handleDeepLink = async (deeplink: string) => {
+  const query = querystring.decode(deeplink);
+  const [protocol] = Object.getOwnPropertyNames(query);
+  const uri = query[protocol] as string;
 
-  console.log(deeplink);
+  if (!uri.startsWith('wc:') || !uri.includes('bridge=')) return undefined;
 
-  const wcUri = deeplink.substring(wcStartIndex);
-  KeyMan.currentWCMan.connectAndWaitSession(wcUri);
+  if (!KeyMan.current) return;
+
+  if (!KeyMan.current.authenticated) {
+    App.createPopupWindow(
+      'msgbox',
+      {
+        title: i18n.t('Authentication'),
+        icon: 'alert-triangle',
+        message: i18n.t('Wallet not authorized'),
+      },
+      { height: 250 }
+    );
+    return;
+  }
+
+  const window = await App.createPopupWindow('dapp-connecting', {}, { height: 103, resizable: false });
+  const success = await KeyMan.currentWCMan.connectAndWaitSession(uri);
+  if (!success) {
+    App.createPopupWindow(
+      'msgbox',
+      {
+        title: 'WalletConnect',
+        icon: 'link-2',
+        message: i18n.t('WalletConnect uri expired'),
+      },
+      { height: 250 }
+    );
+  }
+
+  window.close();
 };
 
 // This method will be called when Electron has finished
@@ -197,13 +227,14 @@ app.on('ready', async () => {
   globalShortcut.register('CommandOrControl+Option+3', () => createWindow());
   globalShortcut.register('CommandOrControl+Alt+3', () => createWindow());
 
+  const schemes = ['wallet3', 'ledgerlive'];
   if (process.platform === 'win32') {
     // Set the path of electron.exe and your app.
     // These two additional parameters are only available on windows.
     // Setting this is required to get this working in dev mode.
-    app.setAsDefaultProtocolClient('wallet3', process.execPath, [resolve(process.argv[1])]);
+    schemes.forEach((s) => app.setAsDefaultProtocolClient(s, process.execPath, [resolve(process.argv[1])]));
   } else {
-    app.setAsDefaultProtocolClient('wallet3');
+    schemes.forEach((s) => app.setAsDefaultProtocolClient(s));
   }
 
   updateapp({ notifyUser: true });
@@ -258,7 +289,7 @@ if (!app.requestSingleInstanceLock()) {
     if (process.platform !== 'darwin') {
       // Find the arg that is our custom protocol url and store it
       const deeplinkUrl = argv.find((arg) => arg.indexOf('wc?uri=wc:'));
-      handleDeeplink(deeplinkUrl);
+      handleDeepLink(deeplinkUrl);
     }
 
     if (App.mainWindow?.isMinimized()) App.mainWindow?.restore();
@@ -268,5 +299,5 @@ if (!app.requestSingleInstanceLock()) {
 
 app.on('open-url', function (event, url) {
   event.preventDefault();
-  handleDeeplink(url);
+  handleDeepLink(url);
 });
