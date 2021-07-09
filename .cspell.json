@@ -73,7 +73,9 @@
     "icns",
     "DMGBG",
     "nsis",
-    "deeplink"
+    "deeplink",
+    "xdai",
+    "heco"
   ],
   "flagWords": [],
   "ignorePaths": ["package.json", "package-lock.json", "yarn.lock", "tsconfig.json", "node_modules/**"]
