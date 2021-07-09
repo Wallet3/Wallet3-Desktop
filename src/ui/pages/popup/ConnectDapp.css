@@ -46,9 +46,16 @@
 }
 
 .page.connectdapp > .content > div.networks {
-  display: flex;
-  justify-content: flex-end;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   margin-top: 2px;
+  line-height: 12.5px;
+  font-size: 12px;
+  align-items: center;
+}
+
+.page.connectdapp > .content > div.networks > .addr {
+  color: var(--font-color-title);
 }
 
 .page.connectdapp > .content > div.networks > button {
