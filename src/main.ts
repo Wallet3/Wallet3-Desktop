@@ -143,11 +143,13 @@ const createWindow = async (): Promise<void> => {
 };
 
 const handleDeepLink = async (deeplink: string) => {
+  if (!deeplink) return;
+
   const query = querystring.decode(deeplink);
   const [protocol] = Object.getOwnPropertyNames(query);
   const uri = query[protocol] as string;
 
-  if (!uri.startsWith('wc:') || !uri.includes('bridge=')) return undefined;
+  if (!uri?.startsWith('wc:') || !uri?.includes('bridge=')) return undefined;
 
   if (!KeyMan.current) return;
 
