@@ -87,14 +87,18 @@ export default observer(({ app }: { app: Application }) => {
     <div className="page history">
       <NavBar title={t('History')} onBackClick={() => app.history.goBack()} />
 
-      <div className="content">
-        <List
-          height={window.innerHeight - 12 - 48}
-          rowCount={vm?.txs.length ?? 0}
-          rowHeight={48}
-          width={window.innerWidth}
-          rowRenderer={rowRenderer}
-        />
+      <div className={`content ${vm?.txs.length === 0 ? 'empty' : ''}`}>
+        {vm?.txs.length === 0 ? (
+          <span>Nothing Here</span>
+        ) : (
+          <List
+            height={window.innerHeight - 12 - 48}
+            rowCount={vm?.txs.length ?? 0}
+            rowHeight={48}
+            width={window.innerWidth}
+            rowRenderer={rowRenderer}
+          />
+        )}
       </div>
     </div>
   );
