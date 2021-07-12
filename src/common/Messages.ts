@@ -19,8 +19,8 @@ export default {
   changeWalletIndex: 'msg-change-wallet-index',
   popupAuthentication: 'msg-popup-authentication',
   returnAuthenticationResult: (id: string) => `msg-return-authentication-${id}`,
-  disconnectDApp: 'msg-disconnect-dapp',
-  switchDAppNetwork: 'msg-switch-dapp-network',
+  disconnectDApp: (keyId: number) => `msg-disconnect-dapp-${keyId}`,
+  switchDAppNetwork: (keyId: number) => `msg-switch-dapp-network-${keyId}`,
   sendLocalNotification: 'msg-send-notification',
   popupMessageBox: 'msg-popup-msgbox',
   returnMsgBoxResult: (id: string) => `msg-return-msgbox-result-${id}`,
@@ -35,7 +35,14 @@ export default {
   signMsg: 'msg-sign-msg',
 
   pendingTxsChanged: 'msg-pendingtxs-changed',
-  wcConnectsChanged: 'msg-wcconnects-changed',
+  wcConnectsChanged: (keyId: number) => `msg-${keyId}-wcconnects-changed`,
+
+  keysChanged: 'msg-keys-changed',
+  switchKey: 'msg-switch-key',
+  currentKeyChanged: 'msg-current-key-changed',
+  deleteKey: 'msg-delete-key',
+  changeKeyName: 'msg-change-key-name',
+
   idleExpired: 'msg-app-idle-expired',
 };
 
@@ -47,12 +54,11 @@ export const WcMessages = {
 };
 
 export interface InitStatus {
-  hasSecret: boolean;
   touchIDSupported: boolean;
-  appAuthenticated: boolean;
-  addresses?: string[];
+  // appAuthenticated: boolean;
   pendingTxs: TxParams[];
-  connectedDApps: IWcSession[];
+  keys: IKey[];
+  currentKeyId: number;
 
   platform: NodeJS.Platform;
 }
@@ -60,6 +66,7 @@ export interface InitStatus {
 export interface InitVerifyPassword {
   verified: boolean;
   addresses: string[];
+  keyId: number;
 }
 
 export interface GenMnemonic {
@@ -113,7 +120,7 @@ export interface WCParams {
 }
 
 export interface ConfirmSendTx extends TxParams {
-  receipient?: {
+  recipient?: {
     address: string;
     name?: string;
   };
@@ -128,4 +135,17 @@ export interface RequestSignMessage {
   json?: boolean;
 }
 
-export type PopupWindowTypes = 'connectDapp' | 'sign' | 'sendTx' | 'scanQR' | 'auth' | 'msgbox';
+export type PopupWindowTypes = 'connectDapp' | 'sign' | 'sendTx' | 'scanQR' | 'auth' | 'msgbox' | 'dapp-connecting';
+
+export interface IKey {
+  name: string;
+  id: number;
+  addresses: string[];
+  connectedDApps: IWcSession[];
+  type: number;
+}
+
+export interface KeysChanged {
+  keyId: number;
+  keys: IKey[];
+}

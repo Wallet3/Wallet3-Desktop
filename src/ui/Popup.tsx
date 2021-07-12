@@ -1,4 +1,4 @@
-import { Auth, ConfirmTx, ConnectDapp, MessageBox, QRScanner } from './pages/popup';
+import { Auth, ConfirmTx, ConnectDapp, ConnectingDApp, MessageBox, QRScanner } from './pages/popup';
 import React, { useEffect } from 'react';
 import { Route, Router, Switch } from 'react-router-dom';
 
@@ -46,6 +46,10 @@ export default observer(({ app }: { app: ApplicationPopup }) => {
 
         <Route path="/msgbox">
           <MessageBox app={app} />
+        </Route>
+
+        <Route path="/connecting-dapp">
+          <ConnectingDApp />
         </Route>
 
         <Route path="*" component={Blank} />

@@ -17,72 +17,71 @@ import { observer } from 'mobx-react-lite';
 import { useRouteMatch } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-export default observer(
-  ({ app, accountVM, networksVM }: { app: Application; accountVM: AccountVM; networksVM: NetworksVM }) => {
-    const [transferVM, setVM] = useState<TransferVM>(null);
-    const [nft, setNFT] = useState<NFT>(null);
-    const [nftImageHeight, setNFTImageHeight] = useState(0);
-    const { nftId } = useRouteMatch().params as { nftId?: string };
-    const { t } = useTranslation();
+export default observer(({ app, networksVM }: { app: Application; networksVM: NetworksVM }) => {
+  const [transferVM, setVM] = useState<TransferVM>(null);
+  const [nft, setNFT] = useState<NFT>(null);
+  const [nftImageHeight, setNFTImageHeight] = useState(0);
+  const { nftId } = useRouteMatch().params as { nftId?: string };
+  const { t } = useTranslation();
+  const accountVM = app.currentWallet.currentAccount;
 
-    useEffect(() => {
-      const { transferVM } = accountVM;
-      const [contract, tokenId] = nftId.split(':');
+  useEffect(() => {
+    const { transferVM } = accountVM;
+    const [contract, tokenId] = nftId.split(':');
 
-      setVM(transferVM);
-      setNFT(accountVM.nfts.find((nft) => nft.contract === contract && nft.tokenId.eq(tokenId)));
+    setVM(transferVM);
+    setNFT(accountVM.nfts.find((nft) => nft.contract === contract && nft.tokenId.eq(tokenId)));
 
-      return () => transferVM.dispose();
-    }, []);
+    return () => transferVM.dispose();
+  }, []);
 
-    return (
-      <div className="page nft">
-        <NavBar title={'NFT'} onBackClick={app.history.goBack} />
+  return (
+    <div className="page nft">
+      <NavBar title={'NFT'} onBackClick={app.history.goBack} />
 
-        <div className="content">
-          <div className="nft">
-            <Image
-              src={nft?.image_url}
-              defaultType="nft"
-              onLoad={(e) => setNFTImageHeight((e.target as HTMLImageElement).clientHeight)}
-              style={{ top: -(nftImageHeight - 60) }}
-            />
+      <div className="content">
+        <div className="nft">
+          <Image
+            src={nft?.image_url}
+            defaultType="nft"
+            onLoad={(e) => setNFTImageHeight((e.target as HTMLImageElement).clientHeight)}
+            style={{ top: -(nftImageHeight - 60) }}
+          />
 
-            <div className="details">
-              <div className="name">
-                <span>{nft?.name}</span>
-              </div>
-
-              <div className="desc">
-                <span>{nft?.description}</span>
-              </div>
-
-              <div
-                style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', cursor: 'pointer' }}
-                onClick={(_) => Shell.open(convertToAccountUrl(networksVM.currentChainId, nft?.contract))}
-              >
-                Contract: {formatAddress(nft?.contract ?? '')}
-              </div>
-              <div onClick={(_) => clipboard.writeText(nft?.tokenId.toString())} title={nft?.tokenId.toString()}>
-                Token ID: {formatAddress(nft?.tokenId.toString(), 15, 10)}
-                <Copy content={nft?.tokenId.toString()} />
-              </div>
+          <div className="details">
+            <div className="name">
+              <span>{nft?.name}</span>
             </div>
-          </div>
 
-          <div className="transfer">
-            <h4>{t('Transfer')}</h4>
-            <div className="to">
-              <span>{t('To')}:</span>
-              <input type="text" spellCheck={false} onChange={(e) => transferVM.setReceipient(e.target.value)} />
-              <Feather icon="edit" size={15} strokeWidth={2} className="edit-icon" />
+            <div className="desc">
+              <span>{nft?.description}</span>
             </div>
-            <button disabled={!transferVM?.isNFTValid} onClick={(_) => transferVM?.sendNFT(nft)}>
-              {t('Send')}
-            </button>
+
+            <div
+              style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', cursor: 'pointer' }}
+              onClick={(_) => Shell.open(convertToAccountUrl(networksVM.currentChainId, nft?.contract))}
+            >
+              Contract: {formatAddress(nft?.contract ?? '')}
+            </div>
+            <div onClick={(_) => clipboard.writeText(nft?.tokenId.toString())} title={nft?.tokenId.toString()}>
+              Token ID: {formatAddress(nft?.tokenId.toString(), 15, 10)}
+              <Copy content={nft?.tokenId.toString()} />
+            </div>
           </div>
         </div>
+
+        <div className="transfer">
+          <h4>{t('Transfer')}</h4>
+          <div className="to">
+            <span>{t('To')}:</span>
+            <input type="text" spellCheck={false} onChange={(e) => transferVM.setReceipient(e.target.value)} />
+            <Feather icon="edit" size={15} strokeWidth={2} className="edit-icon" />
+          </div>
+          <button disabled={!transferVM?.isNFTValid} onClick={(_) => transferVM?.sendNFT(nft)}>
+            {t('Send')}
+          </button>
+        </div>
       </div>
-    );
-  }
-);
+    </div>
+  );
+});

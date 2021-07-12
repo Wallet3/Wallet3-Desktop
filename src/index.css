@@ -12,9 +12,12 @@ html {
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Microsoft Yahei', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   margin: 0;
-  -webkit-app-region: drag;
-  -webkit-font-smoothing: antialiased;
   color: var(--font-color);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root.darwin {
+  -webkit-app-region: drag;
 }
 
 * {
@@ -29,7 +32,8 @@ body {
 
 .menu-button,
 .rc-menu__item,
-.react-toggle {
+.react-toggle,
+img {
   -webkit-app-region: no-drag;
 }
 
@@ -65,8 +69,7 @@ body {
 }
 
 textarea,
-input,
-span {
+input {
   -webkit-app-region: no-drag;
 }
 
@@ -113,7 +116,6 @@ a.button {
   background: none;
   width: 100%;
   font-size: 16px;
-  /* line-height: 16px; */
   padding: 8px 16px;
   padding-bottom: 6px;
   font-family: 'Avenir Next', Arial, sans-serif;
@@ -152,6 +154,7 @@ a.button:active {
 
 button:disabled,
 a.button.disabled {
+  pointer-events: none;
   cursor: not-allowed;
   color: var(--border-color);
   background-color: transparent;

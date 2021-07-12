@@ -34,13 +34,11 @@ interface Props {
   app: Application;
   mnVM: MnemonicVM;
   networksVM: NetworksVM;
-  walletVM: WalletVM;
-  currencyVM: CurrencyVM;
   langsVM: LangsVM;
 }
 
 export default observer((args: Props) => {
-  const { app, walletVM } = args;
+  const { app } = args;
 
   useEffect(() => {
     mousetrap.bind(['command+l', 'ctrl+l', 'command+L', 'ctrl+L'], () => app.history.push('/authentication'));
@@ -83,16 +81,16 @@ export default observer((args: Props) => {
             <Transfer {...args} />
           </Route>
           <Route path="/transferNFT/:nftId" exact>
-            <TransferNFT {...args} accountVM={walletVM.currentAccount} />
+            <TransferNFT {...args} />
           </Route>
           <Route path="/account" exact>
             <Account {...args} />
           </Route>
           <Route path={`/userTokens`}>
-            <UserTokens {...args} accountVM={walletVM.currentAccount} />
+            <UserTokens {...args} />
           </Route>
           <Route path={`/userNFTs`}>
-            <UserNFTs {...args} accountVM={walletVM.currentAccount} />
+            <UserNFTs {...args} />
           </Route>
           <Route path={`/addToken`}>
             <AddToken {...args} />

@@ -21,7 +21,7 @@ export function getProviderByChainId(chainId: number) {
   const provider = url.startsWith('http')
     ? new ethers.providers.JsonRpcProvider(url, chainId)
     : new ethers.providers.WebSocketProvider(url, chainId);
-    
+
   cache.set(chainId, provider);
   return provider;
 }

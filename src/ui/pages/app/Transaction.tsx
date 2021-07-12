@@ -8,14 +8,14 @@ import { WalletVM } from '../../viewmodels/WalletVM';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export default ({ app, walletVM }: { app: Application; walletVM: WalletVM }) => {
-  const { pendingTxVM, historyTxsVM } = walletVM;
+export default ({ app }: { app: Application }) => {
+  const { pendingTxVM, historyTxsVM } = app.currentWallet;
   const { t } = useTranslation();
 
   let vm = pendingTxVM || historyTxsVM.selectedTx;
 
   useEffect(() => {
-    return () => walletVM.clean();
+    return () => app.currentWallet.clean();
   }, []);
 
   return (

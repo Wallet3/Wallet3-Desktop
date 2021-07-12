@@ -12,17 +12,18 @@ import { Networks } from '../../misc/Networks';
 import POAP from '../../nft/POAP';
 import Rarible from '../../nft/Rarible';
 import { TransferVM } from './account/TransferVM';
-import WalletVM from './WalletVM';
 import store from 'storejs';
 
 const Keys = {
-  userTokens: (chainId: number, accountIndex: number) => `userTokens-${chainId}-${accountIndex}`,
+  userTokens: (walletId: number, chainId: number, accountIndex: number) =>
+    `userTokens-w${walletId}-c${chainId}-a${accountIndex}`,
   accountName: (walletId: number, accountIndex: number) => `w_${walletId}-accountName-${accountIndex}`,
 };
 
 interface IArgs {
   address: string;
   accountIndex: number;
+  walletId: number;
 }
 
 interface ChainOverview {
@@ -40,6 +41,7 @@ export class AccountVM {
   nfts: NFT[] = null;
   chains: Debank.IChainBalance[] = [];
   nativeToken: UserToken = null;
+  walletId = 1;
 
   private _name = '';
   private tokenWatcher = new Map<string, ERC20Token>();
@@ -88,14 +90,15 @@ export class AccountVM {
 
   set name(value) {
     this._name = value;
-    store.set(Keys.accountName(WalletVM.id, this.accountIndex), value);
+    store.set(Keys.accountName(this.walletId, this.accountIndex), value);
   }
 
   constructor(args: IArgs) {
     makeAutoObservable(this);
+    this.walletId = args.walletId;
     this.address = args.address;
     this.accountIndex = args.accountIndex;
-    this._name = store.get(Keys.accountName(WalletVM.id, this.accountIndex)) || `Account ${args.accountIndex}`;
+    this._name = store.get(Keys.accountName(args.walletId, this.accountIndex)) || `Account ${args.accountIndex}`;
 
     NetVM.currentProvider
       .lookupAddress(this.address)
@@ -129,7 +132,7 @@ export class AccountVM {
 
   save() {
     store.set(
-      Keys.userTokens(NetVM.currentChainId, this.accountIndex),
+      Keys.userTokens(this.walletId, NetVM.currentChainId, this.accountIndex),
       JSON.stringify(this.allTokens.slice(1).map((t) => t.toObject()))
     );
   }
@@ -181,9 +184,7 @@ export class AccountVM {
     const nativeSymbols = Networks.map((n) => n?.symbol.toLowerCase());
     const userConfigs = this.loadTokenConfigs();
 
-    const tokens = NetVM.currentNetwork.test
-      ? []
-      : await Debank.getTokenBalances(this.address, NetVM.currentNetwork.comm_id);
+    const tokens = NetVM.currentNetwork.test ? [] : await Debank.getTokenBalances(this.address, NetVM.currentNetwork.comm_id);
 
     let assets = NetVM.currentNetwork.test
       ? []
@@ -194,7 +195,7 @@ export class AccountVM {
             const token = new UserToken();
             token.id = t.id;
             token.name = t.name;
-            token.symbol = t.display_symbol || t.symbol;
+            token.symbol = t.symbol || t.display_symbol;
             token.amount = t.amount;
             token.decimals = t.decimals;
             token.price = t.price;
@@ -267,7 +268,7 @@ export class AccountVM {
 
   loadTokenConfigs = () => {
     try {
-      const json = store.get(Keys.userTokens(NetVM.currentChainId, this.accountIndex)) || '[]';
+      const json = store.get(Keys.userTokens(this.walletId, NetVM.currentChainId, this.accountIndex)) || '[]';
       const tokens = JSON.parse(json) as IUserToken[];
       return tokens.map((t) => new UserToken(t));
     } catch (error) {
@@ -308,7 +309,7 @@ export class AccountVM {
           nft.description = item.description;
           nft.name = item.name;
           nft.image_url = item.image?.url.BIG;
-          nft.contractType = 'rariable';
+          nft.contractType = 'Rarible';
           return nft.image_url ? nft : undefined;
         })
         .filter((i) => i);
@@ -328,4 +329,9 @@ export class AccountVM {
       this.nfts.push(...nfts);
     });
   };
+
+  clean() {
+    store.remove(Keys.accountName(this.walletId, this.accountIndex));
+    store.remove(Keys.userTokens(this.walletId, NetVM.currentChainId, this.accountIndex));
+  }
 }

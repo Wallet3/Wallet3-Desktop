@@ -9,6 +9,19 @@
   margin: 0 -12px;
 }
 
+.page.history > .content.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12.5px;
+  color: var(--font-color-title);
+}
+
+.page.history > .content.empty > span {
+  margin-top: -10vh;
+  margin-right: -7vw;
+}
+
 .page.history .tx {
   display: grid;
   grid-template-columns: auto 1fr;

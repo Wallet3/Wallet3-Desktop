@@ -1,18 +1,15 @@
 module.exports = {
-  directories:{
+  directories: {
     app: '.',
   },
-  files:[
-    "./.webpack/**/*",
-    "./package.json",
-  ],
+  files: ['./.webpack/**/*', './package.json'],
   appId: 'jp.co.chainbow.wallet3',
   productName: 'Wallet 3',
   artifactName: '${name}-${os}-${arch}-${version}.${ext}',
   copyright: 'Copyright © 2021 ChainBow Co. Ltd.',
   protocols: {
-    name: 'ChainBow',
-    schemes: [ 'ethereum', 'wallet3' ]
+    name: 'Wallet 3',
+    schemes: ['wallet3', 'wc', 'ledgerlive'],
   },
   npmRebuild: 'false',
   // afterSign: "sign/appSign.js",
@@ -27,22 +24,22 @@ module.exports = {
       'zip',
       // 'mas'
     ],
-    publish: [ 'github' ],
+    publish: ['github'],
   },
   win: {
     target: 'nsis',
     icon: 'assets/AppIcon.ico',
-    publish: [ 'github' ]
+    publish: ['github'],
   },
   linux: {
     target: 'AppImage',
     icon: 'assets/AppIcon.png',
-    publish: [ 'github' ]
+    publish: ['github'],
   },
   nsis: {
     deleteAppDataOnUninstall: true,
-    createDesktopShortcut: 'always'
+    createDesktopShortcut: 'always',
     // include: 'nsis.nsh'
   },
-  publish: null
-}
+  publish: null,
+};

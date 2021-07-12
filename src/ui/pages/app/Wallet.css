@@ -18,7 +18,6 @@
 
 .page.main > .net-worth {
   height: 79px;
-  pointer-events: none;
 }
 
 .page.main > .net-worth > .value {
@@ -34,6 +33,7 @@
 .page.main > .net-worth > .asset-percent {
   font-size: 11px;
   padding-right: 1px;
+  pointer-events: none;
   color: var(--font-color-title);
 }
 

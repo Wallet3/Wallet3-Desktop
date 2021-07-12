@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 
 type AppData = {
-  walletId?: number;
+  keyId?: number;
 };
 
 function parseDataFile<T>(filePath: string, defaults: T) {
@@ -29,16 +29,16 @@ class Store {
     // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
     this.path = path.join(userDataPath, 'app.json');
 
-    this.data = parseDataFile<AppData>(this.path, { walletId: 1 });
+    this.data = parseDataFile<AppData>(this.path, { keyId: 1 });
   }
 
   // This will just return the property on the `data` object
-  get(key: string) {
+  get(key: 'keyId') {
     return this.data[key];
   }
 
   // ...and this will set it
-  set(key: string, val: any) {
+  set(key: 'keyId', val: any) {
     this.data[key] = val;
     // Wait, I thought using the node.js' synchronous APIs was bad form?
     // We're not writing a server so there's not nearly the same IO demand on the process

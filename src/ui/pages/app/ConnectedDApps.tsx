@@ -10,9 +10,10 @@ import { WalletVM } from '../../viewmodels/WalletVM';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 
-export default observer(({ app, walletVM }: { app: Application; walletVM: WalletVM }) => {
+export default observer(({ app }: { app: Application }) => {
   const { t } = useTranslation();
-  const { connectedDApps } = walletVM;
+  const { currentWallet } = app;
+  const { connectedDApps } = currentWallet;
 
   return (
     <div className="page dapps">
@@ -25,7 +26,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
               className="dapp"
               key={item.key}
               onClick={(_) => {
-                walletVM.selectDAppSession(item);
+                currentWallet.selectDAppSession(item);
                 app.history.push('/connectedapp');
               }}
             >
@@ -42,7 +43,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    DAppVM.disconnect(item.key);
+                    DAppVM.disconnect(item.key, currentWallet.id);
                   }}
                 >
                   <Feather icon="trash-2" size={16} strokeWidth={1.5} />

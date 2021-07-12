@@ -8,8 +8,8 @@ import { WalletVM } from '../../viewmodels/WalletVM';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 
-export default observer(({ app, walletVM }: { app: Application; walletVM: WalletVM }) => {
-  const { currentAccount } = walletVM;
+export default observer(({ app }: { app: Application }) => {
+  const { currentAccount } = app.currentWallet;
   const { addTokenVM } = currentAccount;
   const { t } = useTranslation();
 

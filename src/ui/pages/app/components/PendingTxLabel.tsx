@@ -1,7 +1,6 @@
 import './PendingTxLabel.css';
 
 import BarLoader from 'react-spinners/BarLoader';
-import Feather from 'feather-icons-react';
 import { Networks } from '../../../../misc/Networks';
 import React from 'react';
 import { TxParams } from '../../../../common/Messages';
@@ -9,8 +8,7 @@ import { observer } from 'mobx-react-lite';
 import { utils } from 'ethers';
 
 export default observer(({ tx, rapid, fast, standard }: { tx: TxParams; rapid: number; fast: number; standard: number }) => {
-  const level =
-    tx.gasPrice >= rapid ? 'rapid' : tx.gasPrice >= fast ? 'fast' : tx.gasPrice >= standard ? 'standard' : 'slow';
+  const level = tx.gasPrice >= rapid ? 'rapid' : tx.gasPrice >= fast ? 'fast' : tx.gasPrice >= standard ? 'standard' : 'slow';
 
   return (
     <div className="pendingtx-label">
@@ -25,7 +23,7 @@ export default observer(({ tx, rapid, fast, standard }: { tx: TxParams; rapid: n
       <div className="extra">
         <span>{new Date(tx.timestamp).toLocaleString()}</span>
         <span>
-          {`${utils.formatEther(tx.value).substring(0, 5)} ${
+          {`${utils.formatEther(tx.value === '0.0' ? 0 : tx.value).substring(0, 5)} ${
             Networks.find((n) => n.chainId === tx.chainId)?.symbol || 'ETH'
           }`}
         </span>

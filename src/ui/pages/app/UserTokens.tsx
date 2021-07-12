@@ -13,7 +13,8 @@ import { Toggle } from 'react-toggle-component';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 
-export default observer(({ accountVM, app }: { accountVM?: AccountVM; app: Application }) => {
+export default observer(({ app }: { app: Application }) => {
+  const accountVM = app.currentWallet.currentAccount;
   const { allTokens } = accountVM;
   const [_, setForceRefresh] = useState(-1);
   const { t } = useTranslation();

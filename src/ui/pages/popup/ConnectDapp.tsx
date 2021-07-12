@@ -2,16 +2,16 @@ import './ConnectDapp.css';
 import '@szhsin/react-menu/dist/index.css';
 
 import { Image, NetworkMenu, PopupTitle } from '../../components';
-import { Networks, PublicNetworks, Testnets } from '../../../misc/Networks';
+import { PublicNetworks, Testnets } from '../../../misc/Networks';
 
 import { ApplicationPopup } from '../../viewmodels/ApplicationPopup';
-import NetworkLabel from '../../components/NetworkLabel';
 import React from 'react';
+import { formatAddress } from '../../misc/Formatter';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 
 export default observer(({ app }: { app: ApplicationPopup }) => {
-  const { connectDappVM: vm } = app;
+  const { connectDappVM: vm, currentWallet } = app;
   const { t } = useTranslation();
 
   return (
@@ -20,6 +20,12 @@ export default observer(({ app }: { app: ApplicationPopup }) => {
 
       <div className="content">
         <div className="networks">
+          <div className="addr" title={currentWallet?.currentAccount?.address}>
+            {formatAddress(currentWallet?.currentAccount?.address, 7, 5)}
+          </div>
+
+          <span></span>
+
           <NetworkMenu
             currentChainId={vm.userChainId}
             publicNetworks={PublicNetworks}

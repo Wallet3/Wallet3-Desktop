@@ -1,7 +1,7 @@
 import './backend/AppMenu';
 
-import { BrowserWindow, Menu, TouchBar, TouchBarButton, Tray, app, nativeImage, powerMonitor } from 'electron';
-import { DBMan, KeyMan, TxMan, WCMan } from './backend/mans';
+import { BrowserWindow, Menu, TouchBar, TouchBarButton, Tray, app, nativeImage, powerMonitor, protocol } from 'electron';
+import { DBMan, KeyMan, TxMan } from './backend/mans';
 
 import App from './backend/App';
 import Coingecko from './api/Coingecko';
@@ -10,6 +10,8 @@ import Messages from './common/Messages';
 import { autorun } from 'mobx';
 import { globalShortcut } from 'electron';
 import i18n from './i18n';
+import querystring from 'querystring';
+import { resolve } from 'path';
 import updateapp from 'update-electron-app';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
@@ -41,8 +43,8 @@ const createTouchBar = (mainWindow: BrowserWindow) => {
     gas: TouchBarButton;
     price?: TouchBarButton;
   }) => {
-    const touchbar = new TouchBar({ items: [walletConnect, price, gas, new TouchBar.TouchBarSpacer({ size: 'flexible' })] });
-    mainWindow.setTouchBar(touchbar);
+    const touchBar = new TouchBar({ items: [walletConnect, price, gas, new TouchBar.TouchBarSpacer({ size: 'flexible' })] });
+    mainWindow.setTouchBar(touchBar);
   };
 
   if (App.touchBarButtons) {
@@ -115,7 +117,7 @@ const createWindow = async (): Promise<void> => {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       contextIsolation: true,
       nodeIntegration: false,
-      webSecurity: false,
+      webSecurity: true,
       enableRemoteModule: isMac ? false : true,
       devTools: !prod,
     },
@@ -127,7 +129,7 @@ const createWindow = async (): Promise<void> => {
 
   mainWindow.once('ready-to-show', () => {
     mainWindow.webContents.send(Messages.pendingTxsChanged, [...TxMan.pendingTxs]);
-    mainWindow.webContents.send(Messages.wcConnectsChanged, WCMan.connectedSessions);
+    // mainWindow.webContents.send(Messages.wcConnectsChanged, WCMan.connectedSessions);
   });
 
   mainWindow.once('closed', () => {
@@ -140,6 +142,47 @@ const createWindow = async (): Promise<void> => {
   if (isMac) app.dock.show();
 };
 
+const handleDeepLink = async (deeplink: string) => {
+  if (!deeplink) return;
+
+  const query = querystring.decode(deeplink);
+  const [protocol] = Object.getOwnPropertyNames(query);
+  const uri = query[protocol] as string;
+
+  if (!uri?.startsWith('wc:') || !uri?.includes('bridge=')) return undefined;
+
+  if (!KeyMan.current) return;
+
+  if (!KeyMan.current.authenticated) {
+    App.createPopupWindow(
+      'msgbox',
+      {
+        title: i18n.t('Authentication'),
+        icon: 'alert-triangle',
+        message: i18n.t('Wallet not authorized'),
+      },
+      { height: 250 }
+    );
+    return;
+  }
+
+  const window = await App.createPopupWindow('dapp-connecting', {}, { height: 103, resizable: false });
+  const success = await KeyMan.currentWCMan.connectAndWaitSession(uri);
+  if (!success) {
+    App.createPopupWindow(
+      'msgbox',
+      {
+        title: 'WalletConnect',
+        icon: 'link-2',
+        message: i18n.t('WalletConnect uri expired'),
+      },
+      { height: 250 }
+    );
+  }
+
+  window.close();
+};
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -148,7 +191,6 @@ app.on('ready', async () => {
   await Promise.all([KeyMan.init(), TxMan.init()]);
 
   await App.init();
-  await WCMan.init();
   createWindow();
 
   GasnowWs.start(true);
@@ -187,6 +229,16 @@ app.on('ready', async () => {
   globalShortcut.register('CommandOrControl+Option+3', () => createWindow());
   globalShortcut.register('CommandOrControl+Alt+3', () => createWindow());
 
+  const schemes = ['wallet3', 'ledgerlive'];
+  if (process.platform === 'win32') {
+    // Set the path of electron.exe and your app.
+    // These two additional parameters are only available on windows.
+    // Setting this is required to get this working in dev mode.
+    schemes.forEach((s) => app.setAsDefaultProtocolClient(s, process.execPath, [resolve(process.argv[1])]));
+  } else {
+    schemes.forEach((s) => app.setAsDefaultProtocolClient(s));
+  }
+
   updateapp({ notifyUser: true });
 });
 
@@ -219,9 +271,12 @@ app.on('web-contents-created', (event, contents) => {
 
 powerMonitor.on('resume', () => {
   setTimeout(async () => {
-    await WCMan.dispose();
-    WCMan.init();
     GasnowWs.restart(true);
+    KeyMan.keys.forEach(async (k) => {
+      const { wcman } = KeyMan.connections.get(k.id) || {};
+      await wcman?.dispose();
+      await wcman?.init();
+    });
   }, 5000);
 });
 
@@ -232,8 +287,19 @@ powerMonitor.on('suspend', () => {
 if (!app.requestSingleInstanceLock()) {
   app.quit();
 } else {
-  app.on('second-instance', (event, commandLine, workingDirectory) => {
+  app.on('second-instance', (event, argv, workingDirectory) => {
+    if (process.platform !== 'darwin') {
+      // Find the arg that is our custom protocol url and store it
+      const deeplinkUrl = argv.find((arg) => arg.indexOf('wc?uri=wc:'));
+      handleDeepLink(deeplinkUrl);
+    }
+
     if (App.mainWindow?.isMinimized()) App.mainWindow?.restore();
     App.mainWindow?.focus();
   });
 }
+
+app.on('open-url', function (event, url) {
+  event.preventDefault();
+  handleDeepLink(url);
+});

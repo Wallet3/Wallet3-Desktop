@@ -5,6 +5,7 @@ import Messages, { ConfirmSendTx } from '../../../common/Messages';
 import { parseEther, parseUnits } from 'ethers/lib/utils';
 
 import { AccountVM } from '../AccountVM';
+import App from '../Application';
 import ERC1155ABI from '../../../abis/ERC1155.json';
 import ERC20ABI from '../../../abis/ERC20.json';
 import ERC721ABI from '../../../abis/ERC721.json';
@@ -12,7 +13,6 @@ import GasStation from '../../../gas';
 import { NFT } from '../models/NFT';
 import NetworksVM from '../NetworksVM';
 import { UserToken } from '../models/UserToken';
-import WalletVM from '../WalletVM';
 import ipc from '../../bridges/IPC';
 import store from 'storejs';
 
@@ -265,11 +265,11 @@ export class TransferVM {
       data,
       chainId: NetworksVM.currentChainId,
 
-      receipient: {
+      recipient: {
         address: this.receiptAddress,
         name: this.isEns
           ? this.receipient
-          : WalletVM.accounts.find((ac) => ac.address === utils.getAddress(this.receiptAddress))?.name ?? '',
+          : App.currentWallet.accounts.find((ac) => ac.address === utils.getAddress(this.receiptAddress))?.name ?? '',
       },
 
       transferToken: this.isERC20
@@ -301,7 +301,7 @@ export class TransferVM {
           data = iface.encodeFunctionData('transferFrom', [this.self, this.receiptAddress, nft.tokenId]);
         }
         break;
-      case 'rariable':
+      case 'Rarible':
         try {
           const erc1155 = new ethers.Contract(nft.contract, ERC1155ABI, NetworksVM.currentProvider);
           const iface = new ethers.utils.Interface(ERC1155ABI);
@@ -326,11 +326,11 @@ export class TransferVM {
       data,
       chainId: NetworksVM.currentChainId,
 
-      receipient: {
+      recipient: {
         address: this.receiptAddress,
         name: this.isEns
           ? this.receipient
-          : WalletVM.accounts.find((ac) => ac.address === utils.getAddress(this.receiptAddress))?.name ?? '',
+          : App.currentWallet.accounts.find((ac) => ac.address === utils.getAddress(this.receiptAddress))?.name ?? '',
       },
 
       transferToken: undefined,

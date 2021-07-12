@@ -1,7 +1,6 @@
 import DBMan from './DBMan';
 import KeyMan from './KeyMan';
 import TxMan from './TxMan';
-import TxNotificaion from './TxNotificaion';
-import WCMan from './WCMan';
+import TxNotification from './TxNotification';
 
-export { DBMan, KeyMan, TxMan, WCMan, TxNotificaion };
+export { DBMan, KeyMan, TxMan, TxNotification };
