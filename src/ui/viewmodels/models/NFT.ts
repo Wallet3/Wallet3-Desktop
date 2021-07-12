@@ -9,5 +9,5 @@ export class NFT {
   image_url?: string;
 
   contract: string;
-  contractType: 'standard' | 'rariable';
+  contractType: 'standard' | 'Rarible';
 }

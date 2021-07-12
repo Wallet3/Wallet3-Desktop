@@ -109,8 +109,13 @@ const heco = {
   ],
 };
 
+const optimism = {
+  others: [{ name: 'Optimism Gateway', url: 'https://gateway.optimism.io' }],
+};
+
 export default {
   1: ethereum,
+  10: optimism,
   137: polygon,
   100: xdai,
   250: fantom,

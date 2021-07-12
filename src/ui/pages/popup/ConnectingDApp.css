@@ -1,0 +1,33 @@
+.page.dapp-connecting .content {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0 12px;
+}
+
+.page.dapp-connecting .content img {
+  width: 80px;
+  height: 80px;
+}
+
+.page.dapp-connecting .content .connecting {
+  display: flex;
+  justify-content: center;
+  animation: connecting;
+  animation-iteration-count: infinite;
+  animation-duration: 1.5s;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes connecting {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

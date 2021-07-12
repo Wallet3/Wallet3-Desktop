@@ -3,6 +3,7 @@
   justify-content: flex-end;
   column-gap: 2px;
   height: 26px;
+  -webkit-app-region: drag;
 }
 
 .utility-bar > button {
@@ -35,7 +36,7 @@
 }
 
 .utility-bar > button.walletconnect {
-  margin-right: 1px;
+  margin-right: 2px;
 }
 
 .utility-bar .profile-item {
@@ -43,6 +44,10 @@
   align-items: center;
   line-height: 12.5px;
   font-size: 12px;
+}
+
+.utility-bar .profile-item.active {
+  color: var(--theme-color);
 }
 
 .utility-bar .profile-item svg {

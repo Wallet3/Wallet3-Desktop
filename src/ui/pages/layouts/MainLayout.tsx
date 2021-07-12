@@ -17,9 +17,7 @@ import { useTranslation } from 'react-i18next';
 
 interface Props {
   networksVM: NetworksVM;
-  walletVM: WalletVM;
   app: Application;
-  currencyVM: CurrencyVM;
   langsVM: LangsVM;
 }
 

@@ -6,9 +6,11 @@ import ipc from '../../bridges/IPC';
 export class DAppVM {
   _session: IWcSession;
   userChainId: number = 0;
+  keyId = -1;
 
-  constructor(session: IWcSession) {
+  constructor(session: IWcSession, keyId: number) {
     makeAutoObservable(this);
+    this.keyId = keyId;
     this._session = session;
     this.userChainId = session.userChainId;
   }
@@ -33,18 +35,18 @@ export class DAppVM {
     return this._session.lastUsedTimestamp;
   }
 
-  disconnect() {
-    DAppVM.disconnect(this._session.key);
-  }
-
   async switchNetwork(id: number) {
-    await ipc.invokeSecure(Messages.switchDAppNetwork, { sessionKey: this._session.key, chainId: id });
+    await ipc.invokeSecure(Messages.switchDAppNetwork(this.keyId), { sessionKey: this._session.key, chainId: id });
     this._session.userChainId = id;
 
     runInAction(() => (this.userChainId = id));
   }
 
-  static disconnect(sessionKey: string) {
-    ipc.invokeSecure(Messages.disconnectDApp, { sessionKey });
+  disconnect() {
+    DAppVM.disconnect(this._session.key, this.keyId);
+  }
+
+  static disconnect(sessionKey: string, keyId: number) {
+    ipc.invokeSecure(Messages.disconnectDApp(keyId), { sessionKey });
   }
 }

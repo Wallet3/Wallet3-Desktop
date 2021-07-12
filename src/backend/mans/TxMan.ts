@@ -22,6 +22,8 @@ class TxMan {
   }
 
   async init() {
+    if (this._timer) return;
+    
     const pendingTxs = await this.findTxs({ where: { blockNumber: null } });
     runInAction(async () => this.pendingTxs.push(...pendingTxs));
 

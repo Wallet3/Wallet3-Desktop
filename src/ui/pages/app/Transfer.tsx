@@ -30,8 +30,9 @@ export const AddressSearchStyle = {
   placeholderColor: '#d0d0d0',
 };
 
-export default observer(({ app, walletVM }: { app: Application; walletVM: WalletVM }) => {
+export default observer(({ app }: { app: Application }) => {
   const { t } = useTranslation();
+  const { currentWallet } = app;
 
   const { tokenId } = useRouteMatch().params as { tokenId?: string };
 
@@ -41,7 +42,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
   const gasInput = useRef<HTMLInputElement>();
 
   useEffect(() => {
-    const { transferVM } = walletVM.currentAccount;
+    const { transferVM } = app.currentWallet.currentAccount;
 
     transferVM.selectToken(tokenId);
     setVM(transferVM);
@@ -99,7 +100,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
               </MenuButton>
             )}
           >
-            {walletVM.currentAccount?.allTokens.map((t) => {
+            {currentWallet.currentAccount?.allTokens.map((t) => {
               return (
                 <MenuItem
                   key={t.id}

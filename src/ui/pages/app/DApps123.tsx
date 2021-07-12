@@ -6,14 +6,12 @@ import { NetworksVM } from '../../viewmodels/NetworksVM';
 import React from 'react';
 import Shell from '../../bridges/Shell';
 import UtilityBar from './components/UtilityBar';
-import { WalletVM } from '../../viewmodels/WalletVM';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 
 interface IConstructor {
   app: Application;
   networksVM: NetworksVM;
-  walletVM: WalletVM;
 }
 
 const LogoImage = ({ name }: { name: string }) => {
@@ -32,7 +30,7 @@ const LogoImage = ({ name }: { name: string }) => {
   return <span></span>;
 };
 
-export default observer(({ app, networksVM, walletVM }: IConstructor) => {
+export default observer(({ app, networksVM }: IConstructor) => {
   const { t } = useTranslation();
   const { currentChainId } = networksVM;
   const dapps = DApps[currentChainId];
@@ -40,7 +38,7 @@ export default observer(({ app, networksVM, walletVM }: IConstructor) => {
 
   return (
     <div className="page dapps123">
-      <UtilityBar app={app} networksVM={networksVM} walletVM={walletVM} />
+      <UtilityBar app={app} networksVM={networksVM} />
 
       <div className="list">
         {dapps ? (
@@ -53,12 +51,7 @@ export default observer(({ app, networksVM, walletVM }: IConstructor) => {
                 <div className="projects">
                   {projects.map((project) => {
                     return (
-                      <div
-                        className="project"
-                        key={project.url}
-                        title={project.name}
-                        onClick={(_) => Shell.open(project.url)}
-                      >
+                      <div className="project" key={project.url} title={project.name} onClick={(_) => Shell.open(project.url)}>
                         <LogoImage name={project.name} />
                         <span>{project.name}</span>
                       </div>

@@ -16,9 +16,8 @@ export class ApplicationPopup extends Application {
 
   async init() {
     super.init(false);
-    console.log('authmethod', this.authMethod);
 
-    ipc.once(Messages.initWindowType, (e, { type, payload }: { type: PopupWindowTypes; payload }) => {
+    ipc.once(Messages.initWindowType, (e, { type, payload }: { type: PopupWindowTypes; payload: any }) => {
       this.type = type;
 
       switch (this.type) {
@@ -43,6 +42,9 @@ export class ApplicationPopup extends Application {
         case 'msgbox':
           this.msgboxVM = new MessageBoxVM(payload);
           this.history.push('/msgbox');
+          break;
+        case 'dapp-connecting':
+          this.history.push('/connecting-dapp');
           break;
       }
     });

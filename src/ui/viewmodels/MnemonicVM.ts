@@ -2,7 +2,7 @@ import MessageKeys, { BooleanResult, GenMnemonic, SetupMnemonic } from '../../co
 import { action, makeAutoObservable, runInAction } from 'mobx';
 
 import App from './Application';
-import WalletVM from './WalletVM';
+import delay from 'delay';
 import ipc from '../bridges/IPC';
 import { utils } from 'ethers';
 
@@ -10,6 +10,7 @@ export class MnemonicVM {
   phrases: string[] = new Array(12).fill('');
   privkey: string = '';
   address = '';
+  saving = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -29,10 +30,6 @@ export class MnemonicVM {
 
     if ((secret.toLowerCase().startsWith('0x') && secret.length === 66) || secret.length === 64) return true;
 
-    // try {
-    //   if (JSON.parse(secret)) true;
-    // } catch (error) {}
-
     return undefined;
   }
 
@@ -42,14 +39,21 @@ export class MnemonicVM {
   }
 
   async setupMnemonic(passcode: string) {
+    if (this.saving) return;
+    this.saving = true;
+
     const password = App.hashPassword(passcode);
     const { success, addresses } = await ipc.invokeSecure<SetupMnemonic>(MessageKeys.setupMnemonic, { password });
 
-    if (success) {
-      App.appAuthenticated = true;
-      WalletVM.initAccounts({ addresses });
+    while (!App.currentWallet) {
+      await delay(500);
     }
 
+    if (success && App.currentWallet.accounts.length === 0) {
+      App.currentWallet.initAccounts({ addresses });
+    }
+
+    this.saving = false;
     return success;
   }
 
@@ -65,6 +69,7 @@ export class MnemonicVM {
 
   async changePasscode(authKey: string, passcode: string) {
     const { success } = await ipc.invokeSecure<BooleanResult>(`${MessageKeys.changePassword}`, {
+      keyId: App.currentWalletId,
       authKey,
       newPassword: App.hashPassword(passcode),
     });

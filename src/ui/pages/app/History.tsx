@@ -10,16 +10,15 @@ import { NetworkIcons } from '../../../ui/misc/Icons';
 import { Networks } from '../../../misc/Networks';
 import React from 'react';
 import Tokens from '../../../misc/Tokens';
-import { WalletVM } from '../../viewmodels/WalletVM';
 import { formatAddress } from '../../misc/Formatter';
 import { observer } from 'mobx-react-lite';
 import { parseMethod } from '../../../common/TxParser';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export default observer(({ app, walletVM }: { app: Application; walletVM: WalletVM }) => {
+export default observer(({ app }: { app: Application }) => {
   const { t } = useTranslation();
-  const { historyTxsVM: vm, currentAccount } = walletVM;
+  const { historyTxsVM: vm, currentAccount } = app.currentWallet;
   const userTokens = currentAccount.loadTokenConfigs();
 
   useEffect(() => {
@@ -40,7 +39,7 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
     const status = failed ? 'failed' : confirmed ? 'confirmed' : 'pending';
     const timestamp = new Date(tx.timestamp);
     const networkIcon = NetworkIcons(network.network);
-    let value = utils.formatEther(Number.parseInt(tx.value) === 0 ? 0 : tx.value);
+    let value = utils.formatEther(Number.parseFloat(tx.value) === 0 ? 0 : tx.value);
     let tokenSymbol = network.symbol;
 
     if (method.startsWith('Transfer')) {
@@ -88,14 +87,18 @@ export default observer(({ app, walletVM }: { app: Application; walletVM: Wallet
     <div className="page history">
       <NavBar title={t('History')} onBackClick={() => app.history.goBack()} />
 
-      <div className="content">
-        <List
-          height={window.innerHeight - 12 - 48}
-          rowCount={vm?.txs.length ?? 0}
-          rowHeight={48}
-          width={window.innerWidth}
-          rowRenderer={rowRenderer}
-        />
+      <div className={`content ${vm?.txs.length === 0 ? 'empty' : ''}`}>
+        {vm?.txs.length === 0 ? (
+          <span>Nothing Here</span>
+        ) : (
+          <List
+            height={window.innerHeight - 12 - 48}
+            rowCount={vm?.txs.length ?? 0}
+            rowHeight={48}
+            width={window.innerWidth}
+            rowRenderer={rowRenderer}
+          />
+        )}
       </div>
     </div>
   );

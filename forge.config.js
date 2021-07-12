@@ -1,4 +1,5 @@
-const package = require( './package.json' );
+const { appleId, appleIdPassword } = require('./sign/appSign');
+const package = require('./package.json');
 
 module.exports = {
   packagerConfig: {
@@ -15,7 +16,29 @@ module.exports = {
       'entitlements-inherit': 'sign/entitlements.plist',
       'signature-flags': 'library',
     },
+    // osxNotarize: {
+    //   appleId,
+    //   appleIdPassword,
+    // },
+    protocols: [
+      {
+        name: 'Wallet 3',
+        protocol: 'wallet3',
+        schemes: ['wallet3', 'wc', 'ledgerlive'],
+      },
+    ],
   },
+  makers: [
+    {
+      name: '@electron-forge/maker-dmg',
+      config: {
+        name: `${package.name}-mac-${process.arch}-${package.version}`,
+        icon: 'assets/AppIcon.icns',
+        background: 'assets/DMGBG.png',
+        backgroundColor: '#6186ff',
+      },
+    },
+  ],
   plugins: [
     [
       '@electron-forge/plugin-webpack',

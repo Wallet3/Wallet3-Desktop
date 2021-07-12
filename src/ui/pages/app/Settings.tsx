@@ -2,29 +2,34 @@ import './Settings.css';
 
 import { Menu, MenuButton, MenuDivider, MenuItem } from '@szhsin/react-menu';
 
+import { AccountType } from '../../../backend/models/Types';
+import { AccountVM } from '../../viewmodels/AccountVM';
 import { Application } from '../../viewmodels/Application';
-import { CurrencyVM } from '../../viewmodels/settings/CurrencyVM';
 import DisplayCurrency from './components/DisplayCurrency';
 import Feather from 'feather-icons-react';
 import { LangsVM } from '../../viewmodels/settings/LangsVM';
-import { NetworksVM } from '../../viewmodels/NetworksVM';
 import React from 'react';
 import Select from 'react-select';
-import { WalletVM } from '../../viewmodels/WalletVM';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 
 interface IConstructor {
   app: Application;
-  walletVM: WalletVM;
-  currencyVM: CurrencyVM;
   langsVM: LangsVM;
 }
 
-export default observer(({ walletVM, app, currencyVM, langsVM }: IConstructor) => {
-  const { t } = useTranslation();
+const MenuItemStyle = {
+  padding: 0,
+  fontSize: 12,
+};
 
-  const accounts = walletVM.accounts.map((a, i) => {
+export default observer(({ app, langsVM }: IConstructor) => {
+  const { t } = useTranslation();
+  const { currentWallet, currencyVM, wallets } = app;
+
+  const accountToModel = (a: AccountVM, i: number) => {
+    if (!a) return null;
+
     const addr = `${a.address.substring(0, 7)}...${a.address.substring(a.address.length - 4)}`;
     const balance = a.nativeToken ? `(${a.nativeToken.amount.toFixed(2)} ${a.nativeToken.symbol})` : '';
     const name = a.name || (a.ens ? a.ens.substring(0, a.ens.indexOf('.eth')).substring(0, 12) : `Account ${i + 1}`);
@@ -32,7 +37,9 @@ export default observer(({ walletVM, app, currencyVM, langsVM }: IConstructor) =
       label: `${name} | ${addr} ${balance}`,
       value: a,
     };
-  });
+  };
+
+  const accounts = currentWallet.accounts.map(accountToModel);
 
   const goToBackupMnemonic = async () => {
     const { success, authKey } = await app.auth();
@@ -55,20 +62,86 @@ export default observer(({ walletVM, app, currencyVM, langsVM }: IConstructor) =
     app.history.push(`/reset/${authKey}`);
   };
 
+  const AccountsMenu = () => {
+    return (
+      <Select
+        options={accounts}
+        isClearable={false}
+        isSearchable={false}
+        defaultValue={accountToModel(currentWallet.currentAccount, currentWallet.accountIndex)}
+        onChange={(v) => currentWallet.selectAccount(v.value)}
+      />
+    );
+  };
+
   const iconSize = 15;
   return (
     <div className="page settings">
       <div className="drop-menu accounts">
         <div className="actions">
           <span className="title">{t('Accounts')}</span>
+
+          <span></span>
+
+          <Menu
+            styles={{ minWidth: '3rem' }}
+            overflow="auto"
+            position="anchor"
+            menuButton={() => (
+              <MenuButton className="menu-button">
+                <Feather icon={'credit-card'} size={13} />
+                <span>{currentWallet?.name}</span>
+              </MenuButton>
+            )}
+          >
+            {wallets.map((k) => {
+              return (
+                <MenuItem styles={MenuItemStyle} key={k.id}>
+                  <button onClick={(_) => app.switchWallet(k.id)}>
+                    <div className={`${currentWallet.id === k.id ? 'active' : ''}`}>
+                      <Feather icon={k.authenticated ? 'credit-card' : 'lock'} size={13} />
+                      <span>{k.name}</span>
+                    </div>
+                  </button>
+                </MenuItem>
+              );
+            })}
+
+            <MenuDivider />
+
+            <MenuItem styles={MenuItemStyle}>
+              <button onClick={(_) => app.history.push('/generate?')}>
+                <div>
+                  <Feather icon="plus-square" size={13} />
+                  <span>{t('Create')}</span>
+                </div>
+              </button>
+            </MenuItem>
+            <MenuItem styles={MenuItemStyle}>
+              <button onClick={(_) => app.history.push('/import')}>
+                <div>
+                  <Feather icon="chevrons-down" size={13} />
+                  <span>{t('Import')}</span>
+                </div>
+              </button>
+            </MenuItem>
+
+            {wallets.length > 1 ? <MenuDivider /> : undefined}
+
+            {wallets.length > 1 ? (
+              <MenuItem styles={MenuItemStyle}>
+                <button onClick={(_) => app.deleteWallet(currentWallet.id)}>
+                  <div>
+                    <Feather icon="trash" size={13} />
+                    <span>{t('Delete')}</span>
+                  </div>
+                </button>
+              </MenuItem>
+            ) : undefined}
+          </Menu>
         </div>
-        <Select
-          options={accounts}
-          isClearable={false}
-          isSearchable={false}
-          defaultValue={accounts.find((a) => a.value.address === walletVM.currentAccount.address)}
-          onChange={(v) => walletVM.selectAccount(v.value)}
-        />
+
+        <AccountsMenu />
       </div>
 
       <div className="setting-item">
@@ -84,7 +157,7 @@ export default observer(({ walletVM, app, currencyVM, langsVM }: IConstructor) =
         >
           {currencyVM.supportedCurrencies.map((c) => {
             return (
-              <MenuItem key={c.flag} styles={{ padding: 0 }}>
+              <MenuItem key={c.flag} styles={MenuItemStyle}>
                 <button onClick={() => currencyVM.setCurrency(c)}>
                   <DisplayCurrency flag={c.flag} label={c.currency} mini />
                 </button>
@@ -108,7 +181,7 @@ export default observer(({ walletVM, app, currencyVM, langsVM }: IConstructor) =
         >
           {langsVM.supportedLangs.map((lang) => {
             return (
-              <MenuItem key={lang.value} styles={{ padding: 0 }}>
+              <MenuItem key={lang.value} styles={MenuItemStyle}>
                 <button onClick={(_) => langsVM.setLang(lang)}>
                   <DisplayCurrency flag={lang.flag} label={lang.name} mini />
                 </button>

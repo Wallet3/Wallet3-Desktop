@@ -1,6 +1,7 @@
-import Messages, { TxParams } from '../../common/Messages';
-import { makeAutoObservable, reaction, runInAction, when } from 'mobx';
+import Messages, { IKey, TxParams } from '../../common/Messages';
+import { makeAutoObservable, reaction, runInAction } from 'mobx';
 
+import { AccountType } from '../../backend/models/Types';
 import { AccountVM } from './AccountVM';
 import { DAppVM } from './wallet/DAppVM';
 import { HistoryTxsVM } from './wallet/HistoryTxsVM';
@@ -18,7 +19,8 @@ export class WalletVM {
   currentAccount: AccountVM = null;
   allPendingTxs: TxParams[] = [];
   connectedDApps: IWcSession[] = [];
-  id = 1;
+
+  private key: IKey;
 
   get accountIndex() {
     return this.accounts.indexOf(this.currentAccount);
@@ -36,19 +38,32 @@ export class WalletVM {
     return this.connectedDApps.length;
   }
 
-  constructor() {
+  get name() {
+    return this.key.name;
+  }
+
+  get authenticated() {
+    return this.accounts.length > 0;
+  }
+
+  get id() {
+    return this.key.id;
+  }
+
+  get type(): AccountType {
+    return this.key.type;
+  }
+
+  constructor(key: IKey) {
     makeAutoObservable(this);
+    this.key = key;
 
     reaction(
       () => NetVM.currentChainId,
       () => this.currentAccount?.refresh()
     );
 
-    ipc.on(Messages.pendingTxsChanged, (e, content: TxParams[]) => {
-      runInAction(() => (this.allPendingTxs = content));
-    });
-
-    ipc.on(Messages.wcConnectsChanged, (e, content: IWcSession[]) =>
+    ipc.on(Messages.wcConnectsChanged(key.id), (e, content: IWcSession[]) =>
       runInAction(() => (this.connectedDApps = content.sort((a, b) => b.lastUsedTimestamp - a.lastUsedTimestamp)))
     );
   }
@@ -58,26 +73,35 @@ export class WalletVM {
     pendingTxs,
     connectedDApps,
   }: {
-    addresses: string[];
+    addresses?: string[];
     pendingTxs?: TxParams[];
     connectedDApps?: IWcSession[];
   }) {
+    if (addresses?.length > 0 && (!this.accounts || this.accounts.length === 0)) {
+      this.accounts = addresses.map((address, i) => new AccountVM({ address, accountIndex: i + 1, walletId: this.id }));
+      const lastUsedAccount = store.get(Keys.lastUsedAccount(this.id)) || addresses[0];
+      this.selectAccount(this.accounts.find((a) => a.address === lastUsedAccount) || this.accounts[0]);
+
+      setTimeout(() => this.refresh(), 45 * 1000);
+    }
+
     this.connectedDApps = connectedDApps?.sort((a, b) => b.lastUsedTimestamp - a.lastUsedTimestamp) ?? this.connectedDApps;
-    this.allPendingTxs = pendingTxs ?? this.allPendingTxs;
-    this.accounts = addresses.map((address, i) => new AccountVM({ address, accountIndex: i + 1 }));
+    this.allPendingTxs = pendingTxs?.filter((t) => this.accounts.some((acc) => acc.address === t.from)) ?? this.allPendingTxs;
 
-    const lastUsedAccount = store.get(Keys.lastUsedAccount(this.id)) || addresses[0];
-    this.currentAccount = this.accounts.find((a) => a.address === lastUsedAccount) || this.accounts[0];
-    this.currentAccount?.refresh();
+    return this;
+  }
 
-    ipc.invokeSecure(Messages.changeAccountIndex, { index: this.accountIndex });
-    setTimeout(() => this.refresh(), 45 * 1000);
+  changeName(name: string) {
+    ipc.invokeSecure(Messages.changeKeyName, { keyId: this.id, name });
+    this.key.name = name;
   }
 
   selectAccount(account: AccountVM) {
+    if (this.currentAccount === account) return;
+
     this.currentAccount = account;
     this.currentAccount.refresh();
-    ipc.invokeSecure(Messages.changeAccountIndex, { index: this.accountIndex });
+    ipc.invokeSecure(Messages.changeAccountIndex, { index: this.accountIndex, keyId: this.id });
     store.set(Keys.lastUsedAccount(this.id), account.address);
   }
 
@@ -95,7 +119,7 @@ export class WalletVM {
   dAppVM: DAppVM = null;
 
   selectDAppSession(session: IWcSession) {
-    this.dAppVM = new DAppVM(session);
+    this.dAppVM = new DAppVM(session, this.key.id);
   }
 
   private _historyTxsVM: HistoryTxsVM = null;
@@ -107,7 +131,7 @@ export class WalletVM {
   clean() {
     this.pendingTxVM = null;
     this._historyTxsVM?.selectTx(undefined);
+    this.accounts.forEach((a) => a?.clean());
+    store.remove(Keys.lastUsedAccount(this.id));
   }
 }
-
-export default new WalletVM();

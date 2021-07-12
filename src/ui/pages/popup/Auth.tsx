@@ -50,7 +50,7 @@ export default ({ app }: { app: ApplicationPopup }) => {
     }
   };
 
-  const onCacnel = () => {
+  const onCancel = () => {
     ipc.invokeSecure(`${Messages.returnAuthenticationResult(authId)}`, { result: false });
     window.close();
   };
@@ -62,7 +62,7 @@ export default ({ app }: { app: ApplicationPopup }) => {
         touchIDSupported={app.touchIDSupported}
         onAuthTouchID={authViaTouchID}
         onAuthPasscode={authViaPassword}
-        onCancel={onCacnel}
+        onCancel={onCancel}
         authMethod={app.authMethod}
         runTouchID
         authenticated={authenticated}
