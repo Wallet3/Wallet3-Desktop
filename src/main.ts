@@ -22,6 +22,7 @@ let idleTimer: NodeJS.Timeout;
 
 const prod = process.env.NODE_ENV === 'production';
 const isMac = process.platform === 'darwin';
+const isWin = process.platform === 'win32';
 
 if (!isMac) require('@electron/remote/main').initialize();
 
@@ -110,8 +111,8 @@ const createWindow = async (): Promise<void> => {
     width: 360,
     minWidth: 360,
     minHeight: 540,
-    frame: false,
-    titleBarStyle: isMac ? 'hiddenInset' : 'hidden',
+    frame: isWin ? true : false,
+    titleBarStyle: isMac ? 'hiddenInset' : isWin ? 'default' : 'hidden',
     acceptFirstMouse: true,
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,

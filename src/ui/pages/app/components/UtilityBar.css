@@ -5,6 +5,10 @@
   height: 26px;
 }
 
+.utility-bar.win32 {
+  flex-direction: row-reverse;
+}
+
 .utility-bar > button {
   border: none;
   width: auto;
@@ -32,6 +36,10 @@
   color: var(--theme-color);
   margin-right: -2px;
   padding: 0 6px !important;
+}
+
+.utility-bar.win32 > button.icon-button {
+  margin-left: -4px;
 }
 
 .utility-bar > button.walletconnect {

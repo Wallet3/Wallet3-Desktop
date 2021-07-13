@@ -38,7 +38,7 @@ export default observer(({ app, networksVM }: Props) => {
   const { currentAccount, pendingTxCount, pendingTxs, connectedDApps, appCount } = currentWallet;
 
   return (
-    <div className="utility-bar">
+    <div className={`utility-bar ${app.platform}`}>
       <button
         className="menu-button walletconnect"
         title={app.connectingApp ? t('DApp Connecting') : t('Manually Connect DApps')}
