@@ -194,7 +194,7 @@ button.menu-button:hover {
   background-color: var(--border-color);
 }
 
-:not(#root.darwin) ::-webkit-scrollbar {
+#root.win32 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
   background-color: rgba(0, 0, 0, 0);
@@ -204,15 +204,15 @@ button.menu-button:hover {
   -webkit-app-region: no-drag;
 }
 
-:not(#root.darwin) ::-webkit-scrollbar:start {
+#root.win32 ::-webkit-scrollbar:start {
   opacity: 1;
 }
 
-:not(#root.darwin) ::-webkit-scrollbar:hover {
+#root.win32 ::-webkit-scrollbar:hover {
   background-color: rgba(0, 0, 0, 0.09);
 }
 
-:not(#root.darwin) ::-webkit-scrollbar-thumb {
+#root.win32 ::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.25);
   border-radius: 100px;
   -webkit-app-region: no-drag;
@@ -221,20 +221,20 @@ button.menu-button:hover {
   transition: all 0.3s;
 }
 
-:not(#root.darwin) ::-webkit-scrollbar-thumb:active {
+#root.win32 ::-webkit-scrollbar-thumb:active {
   background: rgba(0, 0, 0, 0.5);
   border-radius: 100px;
 }
 
-:not(#root.darwin) ::-webkit-scrollbar-thumb:vertical {
+#root.win32 ::-webkit-scrollbar-thumb:vertical {
   min-height: 10px;
 }
 
-:not(#root.darwin) ::-webkit-scrollbar-thumb:horizontal {
+#root.win32 ::-webkit-scrollbar-thumb:horizontal {
   min-width: 10px;
   height: 8px;
 }
 
-:not(#root.darwin) ::-webkit-scrollbar-button {
+#root.win32 ::-webkit-scrollbar-button {
   display: none;
 }
