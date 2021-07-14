@@ -14,6 +14,9 @@ body {
   margin: 0;
   color: var(--font-color);
   -webkit-font-smoothing: antialiased;
+}
+
+#root.darwin {
   -webkit-app-region: drag;
 }
 
@@ -115,7 +118,6 @@ a.button {
   font-size: 16px;
   padding: 8px 16px;
   padding-bottom: 6px;
-  font-family: 'Avenir Next', Arial, sans-serif;
   cursor: pointer;
   transition: all 0.3s;
   outline: none;
@@ -124,6 +126,10 @@ a.button {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+#root.darwin button {
+  font-family: 'Avenir Next', Arial, sans-serif;
 }
 
 button.positive {
