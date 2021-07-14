@@ -292,7 +292,7 @@ if (!app.requestSingleInstanceLock()) {
   app.on('second-instance', (event, argv, workingDirectory) => {
     if (process.platform !== 'darwin') {
       // Find the arg that is our custom protocol url and store it
-      const deeplinkUrl = argv.find((arg) => arg.indexOf('wc?uri=wc:'));
+      const deeplinkUrl = argv.find((arg) => arg.startsWith('wallet3://') || arg.startsWith('ledgerlive://'));
       handleDeepLink(deeplinkUrl);
     }
 
