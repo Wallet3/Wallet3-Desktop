@@ -111,7 +111,7 @@ const createWindow = async (): Promise<void> => {
     width: 360,
     minWidth: 360,
     minHeight: 540,
-    frame: isWin ? true : false,
+    frame: true,
     titleBarStyle: isMac ? 'hiddenInset' : isWin ? 'default' : 'hidden',
     acceptFirstMouse: true,
     webPreferences: {
