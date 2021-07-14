@@ -16,6 +16,13 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+#root {
+  display: grid;
+  height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
+}
+
 #root.darwin {
   -webkit-app-region: drag;
 }
@@ -84,13 +91,6 @@ input {
 
 span {
   display: inline-block;
-}
-
-#root {
-  display: grid;
-  height: 100vh;
-  width: 100vw;
-  box-sizing: border-box;
 }
 
 .page {
@@ -194,8 +194,9 @@ button.menu-button:hover {
   background-color: var(--border-color);
 }
 
-#root.win32 ::-webkit-scrollbar {
+:not(#root.darwin) ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
   background-color: rgba(0, 0, 0, 0);
   border-radius: 100px;
   transition: all 0.3s;
@@ -203,15 +204,15 @@ button.menu-button:hover {
   -webkit-app-region: no-drag;
 }
 
-#root.win32 ::-webkit-scrollbar:start {
+:not(#root.darwin) ::-webkit-scrollbar:start {
   opacity: 1;
 }
 
-#root.win32 ::-webkit-scrollbar:hover {
+:not(#root.darwin) ::-webkit-scrollbar:hover {
   background-color: rgba(0, 0, 0, 0.09);
 }
 
-#root.win32 ::-webkit-scrollbar-thumb {
+:not(#root.darwin) ::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.25);
   border-radius: 100px;
   -webkit-app-region: no-drag;
@@ -220,19 +221,20 @@ button.menu-button:hover {
   transition: all 0.3s;
 }
 
-#root.win32 ::-webkit-scrollbar-thumb:active {
+:not(#root.darwin) ::-webkit-scrollbar-thumb:active {
   background: rgba(0, 0, 0, 0.5);
   border-radius: 100px;
 }
 
-#root.win32 ::-webkit-scrollbar-thumb:vertical {
+:not(#root.darwin) ::-webkit-scrollbar-thumb:vertical {
   min-height: 10px;
 }
 
-#root.win32 ::-webkit-scrollbar-thumb:horizontal {
+:not(#root.darwin) ::-webkit-scrollbar-thumb:horizontal {
   min-width: 10px;
+  height: 8px;
 }
 
-#root.win32 ::-webkit-scrollbar-button {
+:not(#root.darwin) ::-webkit-scrollbar-button {
   display: none;
 }
