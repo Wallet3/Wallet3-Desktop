@@ -1,6 +1,13 @@
 import DesktopCapturer from '../bridges/DesktopCapturer';
 
-async function scan(decoder: (imageData: string) => Promise<{ success: boolean; result: string }>) {
+interface ScanData {
+  imgDataUrl: string;
+  imgdata: ImageData;
+  width: number;
+  height: number;
+}
+
+async function scan(decoder: (data: ScanData) => Promise<{ success: boolean; result: string }>) {
   const imageFormat = 'image/jpeg';
 
   const { width, height } = window.screen;
@@ -9,7 +16,7 @@ async function scan(decoder: (imageData: string) => Promise<{ success: boolean; 
     var video = document.createElement('video'); // Create hidden video tag
     video.style.cssText = 'position:absolute;top:-10000px;left:-10000px;';
 
-    const handler = new Promise<string>((resolve) => {
+    const handler = new Promise<ScanData>((resolve) => {
       // Event connected to stream
       video.onloadedmetadata = () => {
         // Set video ORIGINAL height (screenshot)
@@ -26,7 +33,8 @@ async function scan(decoder: (imageData: string) => Promise<{ success: boolean; 
         // Draw video on canvas
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-        const data = canvas.toDataURL(imageFormat);
+        const imgDataUrl = canvas.toDataURL(imageFormat);
+        const imgdata = canvas.getContext('2d').getImageData(0, 0, width, height);
 
         // Remove hidden video tag
         video.remove();
@@ -36,7 +44,7 @@ async function scan(decoder: (imageData: string) => Promise<{ success: boolean; 
           stream.getTracks()[0].stop();
         } catch (e) {}
 
-        resolve(data);
+        resolve({ imgDataUrl, imgdata, width, height });
       };
     });
 
