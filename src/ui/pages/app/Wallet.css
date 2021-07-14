@@ -27,6 +27,9 @@
 
 .page.main > .net-worth > .value > span {
   width: 100%;
+}
+
+#root.darwin .page.main > .net-worth > .value > span {
   -webkit-app-region: drag;
 }
 
