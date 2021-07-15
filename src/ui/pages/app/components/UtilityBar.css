@@ -41,7 +41,7 @@
 }
 
 .utility-bar.win32 > button.icon-button {
-  margin-left: -4px;
+  margin-left: -8px;
 }
 
 .utility-bar > button.walletconnect {
