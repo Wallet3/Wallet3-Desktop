@@ -1,7 +1,6 @@
 import DesktopCapturer from '../bridges/DesktopCapturer';
 
 interface ScanData {
-  imgDataUrl: string;
   imgdata: ImageData;
   width: number;
   height: number;
@@ -33,7 +32,7 @@ async function scan(decoder: (data: ScanData) => Promise<{ success: boolean; res
         // Draw video on canvas
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-        const imgDataUrl = canvas.toDataURL(imageFormat);
+        // const imgDataUrl = canvas.toDataURL(imageFormat);
         const imgdata = canvas.getContext('2d').getImageData(0, 0, width, height);
 
         // Remove hidden video tag
@@ -44,7 +43,7 @@ async function scan(decoder: (data: ScanData) => Promise<{ success: boolean; res
           stream.getTracks()[0].stop();
         } catch (e) {}
 
-        resolve({ imgDataUrl, imgdata, width, height });
+        resolve({ imgdata, width, height });
       };
     });
 
