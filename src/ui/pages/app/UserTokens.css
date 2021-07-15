@@ -16,6 +16,7 @@
   color: var(--font-color);
   opacity: 0.5;
   transition: all 0.3s;
+  margin-top: 10px;
 }
 
 .page.tokens > .line-1 a:hover {
