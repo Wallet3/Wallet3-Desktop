@@ -133,6 +133,6 @@
   "Delete Wallet Message": "{{name}} 将会被永久删除，确定吗？",
   "Wallet not authorized": "当前钱包还未授权，请先登录授权",
   "WalletConnect uri expired": "该会话已过期，请刷新页面后再重试",
-  "Received Token": "收到 {{symbol}}",
+  "Received Token": "在 {{network}} 收到 {{symbol}}",
   "Received": "已到账"
 }

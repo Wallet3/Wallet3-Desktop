@@ -241,6 +241,7 @@ export class AccountVM {
 
   watchTokens() {
     const provider = NetVM.currentProvider;
+    const { network } = NetVM.currentNetwork;
 
     for (let t of this.allTokens.slice(1)) {
       if (this.tokenWatcher.has(t.id.toLowerCase())) {
@@ -266,7 +267,7 @@ export class AccountVM {
         const decimals = t.decimals;
 
         Notification.show({
-          title: i18n.t('Received Token', { symbol }),
+          title: i18n.t('Received Token', { symbol, network: network }),
           body: `${utils.formatUnits(value, decimals)} ${symbol} ${i18n.t('Received')}`,
         });
       };
