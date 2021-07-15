@@ -126,6 +126,7 @@ a.button {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  font-family: 'Segoe UI', 'Avenir Next', Arial, sans-serif;
 }
 
 #root.darwin button {

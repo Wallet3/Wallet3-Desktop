@@ -23,7 +23,7 @@ let idleTimer: NodeJS.Timeout;
 const prod = process.env.NODE_ENV === 'production';
 const isMac = process.platform === 'darwin';
 const isWin = process.platform === 'win32';
-console.log('is production', prod)
+console.log('is production', prod);
 
 if (!isMac) require('@electron/remote/main').initialize();
 
@@ -109,8 +109,8 @@ const createWindow = async (): Promise<void> => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     height: 540,
-    width: 360,
-    minWidth: 360,
+    width: isMac ? 360 : 375,
+    minWidth: isMac ? 360 : 375,
     minHeight: 540,
     frame: false,
     titleBarStyle: isMac ? 'hiddenInset' : 'hidden',
