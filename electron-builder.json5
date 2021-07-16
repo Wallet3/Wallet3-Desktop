@@ -1,4 +1,4 @@
-module.exports = {
+{
   directories: {
     app: '.',
   },
@@ -27,7 +27,7 @@ module.exports = {
     publish: ['github'],
   },
   win: {
-    target: 'nsis',
+    target: ['nsis', 'appx'],
     icon: 'assets/AppIcon.ico',
     publish: ['github'],
   },
@@ -42,4 +42,4 @@ module.exports = {
     // include: 'nsis.nsh'
   },
   publish: null,
-};
+}

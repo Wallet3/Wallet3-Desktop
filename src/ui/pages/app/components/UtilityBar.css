@@ -5,7 +5,7 @@
   height: 26px;
 }
 
-.utility-bar.win32 {
+.utility-bar.win32, .utility-bar.linux {
   flex-direction: row-reverse;
   -webkit-app-region: drag;
   margin-right: 72px;
