@@ -104,7 +104,7 @@ export default observer(({ app }: { app: Application }) => {
               return (
                 <MenuItem
                   key={t.id}
-                  styles={{ padding: '5px 10px' }}
+                  styles={{ padding: '6.25px 10px' }}
                   onClick={(_) => {
                     transferVM?.setToken(t);
                     amountInput.current.value = '';
