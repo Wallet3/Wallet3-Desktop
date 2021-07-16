@@ -2,6 +2,7 @@
   display: flex;
   column-gap: 8px;
   -webkit-app-region: no-drag;
+  z-index: 99999999999999;
 }
 
 .system-title-bar > button {

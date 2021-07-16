@@ -3,6 +3,7 @@
   color: var(--font-color);
   align-items: center;
   padding-top: 10px;
+  -webkit-app-region: drag;
 }
 
 .nav > button {
