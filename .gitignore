@@ -90,3 +90,4 @@ typings/
 out/
 appSign.js
 dist
+winSign.js

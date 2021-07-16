@@ -1,4 +1,5 @@
 const { appleId, appleIdPassword } = require('./sign/appSign');
+const { certPass, devCertPath, publisher } = require('./sign/winSign');
 const package = require('./package.json');
 
 module.exports = {
@@ -36,6 +37,14 @@ module.exports = {
         icon: 'assets/AppIcon.icns',
         background: 'assets/DMGBG.png',
         backgroundColor: '#6186ff',
+      },
+    },
+    {
+      name: '@electron-forge/maker-appx',
+      config: {
+        publisher,
+        devCert: devCertPath,
+        certPass,
       },
     },
   ],
