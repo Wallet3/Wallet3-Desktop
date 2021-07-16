@@ -137,8 +137,11 @@
 .page.main > .assets > table td .button {
   border: none;
   padding: 2px 7px;
-  padding-bottom: 1px;
   margin-bottom: 2px;
+}
+
+#root.darwin .page.main > .assets > table td .button {
+  padding-bottom: 1px;
 }
 
 .page.main > .assets > table td .button:hover {
@@ -150,6 +153,7 @@
   overflow: hidden;
   font-size: 13px;
   font-weight: 450;
+  line-height: 18px;
   display: grid;
   column-gap: 4px;
   padding: 4px 0;
@@ -180,6 +184,7 @@
 .page.main > .nfts {
   display: grid;
   grid-template-rows: auto 1fr;
+  margin-top: 4px;
 }
 
 .page.main > .nfts > .tokens {

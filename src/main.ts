@@ -108,10 +108,10 @@ const createWindow = async (): Promise<void> => {
 
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    height: 540,
-    width: isMac ? 360 : 375,
-    minWidth: isMac ? 360 : 375,
-    minHeight: 540,
+    height: 545,
+    width: isMac ? 365 : 375,
+    minWidth: isMac ? 365 : 375,
+    minHeight: 545,
     frame: false,
     titleBarStyle: isMac ? 'hiddenInset' : 'hidden',
     acceptFirstMouse: true,
