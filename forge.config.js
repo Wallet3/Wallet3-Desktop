@@ -45,6 +45,13 @@ module.exports = {
         publisher,
         devCert: devCertPath,
         certPass,
+        packageDisplayName: 'Wallet 3',
+        packageDescription: 'A Secure Wallet for Bankless Era',
+        containerVirtualization: true,
+        packageVersion: package.version,
+        makeVersionWinStoreCompatible: true,
+        flatten: true,
+        assets: './assets/AppIcon.png'
       },
     },
   ],
