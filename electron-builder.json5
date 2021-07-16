@@ -27,7 +27,7 @@
     publish: ['github'],
   },
   win: {
-    target: ['nsis', 'appx'],
+    target: ['nsis'],
     icon: 'assets/AppIcon.ico',
     publish: ['github'],
   },
@@ -40,6 +40,11 @@
     deleteAppDataOnUninstall: true,
     createDesktopShortcut: 'always',
     // include: 'nsis.nsh'
+  },
+  appx: {
+    displayName: 'Wallet 3',
+    publisher: 'CN',
+    publisherDisplayName: 'ChainBow Co, Ltd.',
   },
   publish: null,
 }
