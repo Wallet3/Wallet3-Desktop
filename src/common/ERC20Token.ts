@@ -22,7 +22,7 @@ export class ERC20Token {
   }
 
   async decimals(): Promise<number> {
-    return (await this.erc20.decimals()).toNubmer();
+    return (await this.erc20.decimals()).toNumber();
   }
 
   symbol(): Promise<string> {

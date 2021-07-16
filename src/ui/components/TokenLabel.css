@@ -11,9 +11,8 @@
   width: 12px;
   height: 12px;
   margin-right: 4px;
-  margin-top: -1px;
 }
 
 .token-label.expand > img {
-  margin-right: 6px;
+  margin-right: 8px;
 }

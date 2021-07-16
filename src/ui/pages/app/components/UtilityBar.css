@@ -3,7 +3,12 @@
   justify-content: flex-end;
   column-gap: 2px;
   height: 26px;
+}
+
+.utility-bar.win32 {
+  flex-direction: row-reverse;
   -webkit-app-region: drag;
+  margin-right: 72px;
 }
 
 .utility-bar > button {
@@ -33,6 +38,10 @@
   color: var(--theme-color);
   margin-right: -2px;
   padding: 0 6px !important;
+}
+
+.utility-bar.win32 > button.icon-button {
+  margin-left: -8px;
 }
 
 .utility-bar > button.walletconnect {

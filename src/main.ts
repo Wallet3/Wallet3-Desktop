@@ -22,6 +22,8 @@ let idleTimer: NodeJS.Timeout;
 
 const prod = process.env.NODE_ENV === 'production';
 const isMac = process.platform === 'darwin';
+const isWin = process.platform === 'win32';
+console.log('is production', prod);
 
 if (!isMac) require('@electron/remote/main').initialize();
 
@@ -79,7 +81,7 @@ const createTouchBar = (mainWindow: BrowserWindow) => {
 const createTray = async () => {
   if (tray) return;
 
-  tray = new Tray(nativeImage.createFromDataURL(require('./assets/icons/app/tray.png').default));
+  tray = new Tray(nativeImage.createFromDataURL(require(`./assets/icons/app/tray_${process.platform}.png`).default));
   const menu = Menu.buildFromTemplate([
     {
       label: i18n.t('WalletConnect'),
@@ -106,10 +108,10 @@ const createWindow = async (): Promise<void> => {
 
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    height: 540,
-    width: 360,
-    minWidth: 360,
-    minHeight: 540,
+    height: 545,
+    width: isMac ? 365 : 375,
+    minWidth: isMac ? 365 : 375,
+    minHeight: 545,
     frame: false,
     titleBarStyle: isMac ? 'hiddenInset' : 'hidden',
     acceptFirstMouse: true,
@@ -290,7 +292,7 @@ if (!app.requestSingleInstanceLock()) {
   app.on('second-instance', (event, argv, workingDirectory) => {
     if (process.platform !== 'darwin') {
       // Find the arg that is our custom protocol url and store it
-      const deeplinkUrl = argv.find((arg) => arg.indexOf('wc?uri=wc:'));
+      const deeplinkUrl = argv.find((arg) => arg.startsWith('wallet3://') || arg.startsWith('ledgerlive://'));
       handleDeepLink(deeplinkUrl);
     }
 

@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { ConfirmVM } from '../../../viewmodels/popups/ConfirmVM';
 import { CryptoIcons } from '../../../misc/Icons';
 import Feather from 'feather-icons-react';
+import KnownAddresses from '../../../misc/KnownAddresses';
 import Shell from '../../../bridges/Shell';
 import { convertToAccountUrl } from '../../../../misc/Url';
 import { formatAddress } from '../../../misc/Formatter';
@@ -36,8 +37,8 @@ export default observer(({ confirmVM, onReject, onContinue }: Props) => {
             title={approveToken.spender}
             onClick={(_) => Shell.open(convertToAccountUrl(chainId, approveToken?.spender))}
           >
-            {verifiedName || formatAddress(approveToken.spender, 8, 5)}
-            {verifiedName ? <Feather icon="award" size={12} /> : undefined}
+            {KnownAddresses[approveToken?.spender] || formatAddress(approveToken?.spender, 8, 5)}
+            {KnownAddresses[approveToken?.spender] ? <Feather icon="award" size={12} /> : undefined}
           </span>
         </div>
 

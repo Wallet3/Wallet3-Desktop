@@ -7,10 +7,10 @@ import React, { useEffect, useState } from 'react';
 
 import { PopupTitle } from '../../components';
 import QRCode from '../../../assets/icons/app/qr-code.svg';
+import ScreenScanner from '../../misc/ScreenScanner';
 import anime from 'animejs';
 import ipc from '../../bridges/IPC';
-import qrscanner from 'qr-scanner';
-import scanQR from '../../misc/QRScanner';
+import jsQR from 'jsqr';
 import { useTranslation } from 'react-i18next';
 
 export default () => {
@@ -21,11 +21,14 @@ export default () => {
     setScanning(true);
 
     try {
-      const uri = await scanQR(async (imgdata) => {
+      const uri = await ScreenScanner(async (scanning) => {
+        const { imgdata, width, height } = scanning;
+
         try {
-          const result = await qrscanner.scanImage(imgdata);
-          if (result && result.toLowerCase().startsWith('wc:')) {
-            return { success: true, result };
+          const result = jsQR(imgdata.data, width, height, {});
+
+          if (result && result.data.toLowerCase().startsWith('wc:')) {
+            return { success: true, result: result.data };
           }
         } catch (error) {}
 

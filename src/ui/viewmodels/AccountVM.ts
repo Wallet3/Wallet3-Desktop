@@ -9,9 +9,11 @@ import { ERC20Token } from '../../common/ERC20Token';
 import { NFT } from './models/NFT';
 import NetVM from './NetworksVM';
 import { Networks } from '../../misc/Networks';
+import Notification from '../bridges/Notification';
 import POAP from '../../nft/POAP';
 import Rarible from '../../nft/Rarible';
 import { TransferVM } from './account/TransferVM';
+import i18n from '../../i18n';
 import store from 'storejs';
 
 const Keys = {
@@ -239,6 +241,7 @@ export class AccountVM {
 
   watchTokens() {
     const provider = NetVM.currentProvider;
+    const { network } = NetVM.currentNetwork;
 
     for (let t of this.allTokens.slice(1)) {
       if (this.tokenWatcher.has(t.id.toLowerCase())) {
@@ -257,9 +260,21 @@ export class AccountVM {
           runInAction(() => (token.amount = Number.parseFloat(utils.formatUnits(balance, t.decimals))));
         });
 
+      const newTokenIncoming = (from: string, to: string, value: BigNumber) => {
+        refreshBalance();
+
+        const symbol = t.symbol;
+        const decimals = t.decimals;
+
+        Notification.show({
+          title: i18n.t('Received Token', { symbol, network: network }),
+          body: `${utils.formatUnits(value, decimals)} ${symbol} ${i18n.t('Received')}`,
+        });
+      };
+
       const filterTo = erc20.filters.Transfer(null, this.address);
       const filterFrom = erc20.filters.Transfer(this.address, null);
-      erc20.on(filterTo, () => refreshBalance());
+      erc20.on(filterTo, (from, to, value) => newTokenIncoming(from, to, value));
       erc20.on(filterFrom, () => refreshBalance());
 
       refreshBalance();

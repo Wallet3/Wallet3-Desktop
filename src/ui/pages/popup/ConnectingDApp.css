@@ -1,9 +1,14 @@
+.page.dapp-connecting {
+  overflow: hidden;
+}
+
 .page.dapp-connecting .content {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
   box-sizing: border-box;
   padding: 0 12px;
+  overflow: hidden;
 }
 
 .page.dapp-connecting .content img {

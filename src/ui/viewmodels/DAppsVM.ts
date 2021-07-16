@@ -40,11 +40,11 @@ const ethereum = {
 
 const polygon = {
   dexs: [
-    { name: 'Comethswap', url: 'https://swap.cometh.io' },
+    { name: 'Quickswap', url: 'https://quickswap.exchange' },
     { name: 'Curve', url: 'https://polygon.curve.fi' },
     { name: 'Sushiswap', url: 'https://app.sushi.com' },
+    { name: 'Comethswap', url: 'https://swap.cometh.io' },
     { name: 'Dodo', url: 'https://app.dodoex.io' },
-    { name: 'Quickswap', url: 'https://quickswap.exchange' },
     { name: 'Kyber', url: 'https://kyberswap.com' },
   ],
 
