@@ -1,4 +1,12 @@
-import { BscPopularTokens, EthereumPopularTokens, FTMPopularTokens, HecoPopularTokens, IToken, PolygonPopularTokens, xDaiPopularTokens } from "./Tokens";
+import {
+  BscPopularTokens,
+  EthereumPopularTokens,
+  FTMPopularTokens,
+  HecoPopularTokens,
+  IToken,
+  PolygonPopularTokens,
+  xDaiPopularTokens,
+} from './Tokens';
 
 export interface INetwork {
   comm_id?: string;
@@ -36,6 +44,15 @@ export const PublicNetworks: INetwork[] = [
     network: 'Optimism',
     chainId: 10,
     color: '#FF0420',
+    order: 3,
+    defaultTokens: [],
+  },
+  {
+    symbol: 'ETH',
+    comm_id: 'arbitrum',
+    network: 'Arbitrum',
+    chainId: 42161,
+    color: '#2D374B',
     order: 3,
     defaultTokens: [],
   },

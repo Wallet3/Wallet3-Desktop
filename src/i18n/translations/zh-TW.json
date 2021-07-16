@@ -132,5 +132,7 @@
   "Delete Wallet": "刪除錢包",
   "Delete Wallet Message": "{{name}} 將會被永久刪除，確定嗎？",
   "Wallet not authorized": "當前錢包還未授權，請先登錄授權",
-  "WalletConnect uri expired": "該會話已過期，請刷新頁面後再重試"
+  "WalletConnect uri expired": "該會話已過期，請刷新頁面後再重試",
+  "Received Token": "在 {{network}} 收到 {{symbol}}",
+  "Received": "已到賬"
 }

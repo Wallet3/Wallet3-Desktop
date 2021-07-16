@@ -95,4 +95,4 @@ const template: any[] = [
 ];
 
 const menu = Menu.buildFromTemplate(template);
-Menu.setApplicationMenu(menu);
+Menu.setApplicationMenu(isMac ? menu : undefined);

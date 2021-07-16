@@ -1,6 +1,7 @@
 div#app {
   display: grid;
   position: relative;
+  overflow: hidden;
   /* background-color: deeppink; */
 }
 
@@ -8,5 +9,5 @@ div#app {
   position: fixed;
   z-index: 9999999999999;
   top: 12px;
-  left: 12px;
+  right: 12px;
 }

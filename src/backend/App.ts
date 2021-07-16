@@ -452,9 +452,11 @@ export class App {
     let { modal, parent, height, resizable } = windowArgs || {};
 
     height = height ?? (modal ? 333 : 320);
+    const width = process.platform === 'darwin' ? 365 : 375;
+
     const popup = new BrowserWindow({
-      width: 360,
-      minWidth: 360,
+      width,
+      minWidth: width,
       height,
       minHeight: height,
       modal,
