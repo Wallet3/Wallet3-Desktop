@@ -81,7 +81,15 @@ const createTouchBar = (mainWindow: BrowserWindow) => {
 const createTray = async () => {
   if (tray) return;
 
-  tray = new Tray(nativeImage.createFromDataURL(require(`./assets/icons/app/tray_${process.platform}.png`).default));
+  const trayImage = nativeImage.createEmpty();
+  trayImage.addRepresentation({
+    scaleFactor: 5,
+    width: 20,
+    height: 20,
+    dataURL: require(`./assets/icons/app/tray_${process.platform}.png`).default,
+  });
+
+  tray = new Tray(trayImage);
   const menu = Menu.buildFromTemplate([
     {
       label: i18n.t('WalletConnect'),
