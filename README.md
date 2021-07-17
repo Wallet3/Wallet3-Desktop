@@ -54,8 +54,9 @@ Wallet 3 is available in the following languages:
 
 1. Clone the repo: `https://github.com/Wallet3/Wallet3.git`
 2. Install dependencies: `yarn install`
-3. Fill RPC urls: `src/common/.wallet3.rc.json`
-4. Launch: `yarn start`
+3. Copy `src/common/.wallet3.rc.example.json` to `src/common/.wallet3.rc.json`, and fill valid RPC urls: `src/common/.wallet3.rc.json`
+4. Copy `sign/appSign.example.js` to `sign/appSign.js`, `sign/winSign.example.js` to `sign/winSign.js`
+5. Launch: `yarn start`
 
 ## Copyright & License
 
