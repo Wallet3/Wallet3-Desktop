@@ -129,8 +129,6 @@ export class Application {
     const targetWallet = this.wallets.find((w) => w.id === keyId);
     if (!targetWallet) return;
 
-    console.log(targetWallet, targetWallet.currentAccount, 'expected:', toId, 'switched', keyId);
-
     runInAction(() => {
       this.currentWallet = targetWallet;
 

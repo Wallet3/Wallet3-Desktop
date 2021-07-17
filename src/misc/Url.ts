@@ -23,6 +23,11 @@ export function convertTxToUrl(tx: { chainId: number; hash?: string }) {
   return url;
 }
 
+export function catUrl(chainId: number, tail: string) {
+  const url = `${Explorers.get(chainId)}${tail}`;
+  return url;
+}
+
 export function convertToAccountUrl(chainId: number, address: string) {
   return `${Explorers.get(chainId)}/address/${address}`;
 }

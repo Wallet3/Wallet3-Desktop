@@ -70,7 +70,7 @@ interface NotificationConstructorOptions {
 }
 
 interface NotificationApi {
-  show(args: NotificationConstructorOptions): void;
+  show(title: string, args: NotificationOptions): void;
 }
 
 const bridge = window[KEY] as NotificationApi;

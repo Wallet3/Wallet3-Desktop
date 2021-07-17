@@ -13,6 +13,7 @@ import Notification from '../bridges/Notification';
 import POAP from '../../nft/POAP';
 import Rarible from '../../nft/Rarible';
 import { TransferVM } from './account/TransferVM';
+import { catUrl } from '../../misc/Url';
 import i18n from '../../i18n';
 import store from 'storejs';
 
@@ -185,7 +186,8 @@ export class AccountVM {
   refreshChainTokens = async () => {
     const nativeSymbols = Networks.map((n) => n?.symbol.toLowerCase());
     const userConfigs = this.loadTokenConfigs();
-
+    console.log(userConfigs);
+    
     const tokens = NetVM.currentNetwork.test ? [] : await Debank.getTokenBalances(this.address, NetVM.currentNetwork.comm_id);
 
     let assets = NetVM.currentNetwork.test
@@ -241,7 +243,7 @@ export class AccountVM {
 
   watchTokens() {
     const provider = NetVM.currentProvider;
-    const { network } = NetVM.currentNetwork;
+    const { network, chainId } = NetVM.currentNetwork;
 
     for (let t of this.allTokens.slice(1)) {
       if (this.tokenWatcher.has(t.id.toLowerCase())) {
@@ -265,10 +267,11 @@ export class AccountVM {
 
         const symbol = t.symbol;
         const decimals = t.decimals;
+        const url = catUrl(chainId, `/address/${to}#tokentxns`);
 
-        Notification.show({
-          title: i18n.t('Received Token', { symbol, network: network }),
+        Notification.show(i18n.t('Received Token', { symbol, network: network }), {
           body: `${utils.formatUnits(value, decimals)} ${symbol} ${i18n.t('Received')}`,
+          data: url,
         });
       };
 

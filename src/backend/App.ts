@@ -296,10 +296,6 @@ export class App {
       return App.encryptIpc({ txHex }, key);
     });
 
-    ipcMain.handle(MessageKeys.sendLocalNotification, async (e, content) => {
-      new Notification(content).show();
-    });
-
     ipcMain.handle(MessageKeys.setLang, async (e, content) => {
       const { lang } = content;
       i18n.changeLanguage(lang);

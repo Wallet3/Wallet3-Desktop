@@ -21,7 +21,7 @@ export default {
   returnAuthenticationResult: (id: string) => `msg-return-authentication-${id}`,
   disconnectDApp: (keyId: number) => `msg-disconnect-dapp-${keyId}`,
   switchDAppNetwork: (keyId: number) => `msg-switch-dapp-network-${keyId}`,
-  sendLocalNotification: 'msg-send-notification',
+  // sendLocalNotification: 'msg-send-notification',
   popupMessageBox: 'msg-popup-msgbox',
   returnMsgBoxResult: (id: string) => `msg-return-msgbox-result-${id}`,
   setLang: 'msg-set-lang',
