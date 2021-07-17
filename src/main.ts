@@ -105,6 +105,8 @@ const createTray = async () => {
   ]);
 
   tray.setContextMenu(menu);
+
+  if (isWin) tray.on('double-click', () => createWindow());
 };
 
 const createWindow = async (): Promise<void> => {
