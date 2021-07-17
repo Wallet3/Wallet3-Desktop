@@ -251,6 +251,10 @@ app.on('ready', async () => {
     schemes.forEach((s) => app.setAsDefaultProtocolClient(s));
   }
 
+  if (isWin) {
+    app.setAppUserModelId('co.jp.chainbow.wallet3');
+  }
+
   updateapp({ notifyUser: true });
 });
 
