@@ -1,3 +1,7 @@
+const { appleId, appleIdPassword } = require('./sign/appSign');
+const { certPass, devCertPath, publisher } = require('./sign/winSign');
+const package = require('./package.json');
+
 module.exports = {
   packagerConfig: {
     appBundleId: 'jp.co.chainbow.wallet3',
@@ -13,6 +17,10 @@ module.exports = {
       'entitlements-inherit': 'sign/entitlements.plist',
       'signature-flags': 'library',
     },
+    // osxNotarize: {
+    //   appleId,
+    //   appleIdPassword,
+    // },
     protocols: [
       {
         name: 'Wallet 3',
@@ -21,6 +29,32 @@ module.exports = {
       },
     ],
   },
+  makers: [
+    {
+      name: '@electron-forge/maker-dmg',
+      config: {
+        name: `${package.name}-mac-${process.arch}-${package.version}`,
+        icon: 'assets/AppIcon.icns',
+        background: 'assets/DMGBG.png',
+        backgroundColor: '#6186ff',
+      },
+    },
+    {
+      name: '@electron-forge/maker-appx',
+      config: {
+        publisher,
+        devCert: devCertPath,
+        certPass,
+        packageDisplayName: 'Wallet 3',
+        packageDescription: 'A Secure Wallet for Bankless Era',
+        containerVirtualization: true,
+        packageVersion: package.version,
+        makeVersionWinStoreCompatible: true,
+        flatten: true,
+        assets: './assets/AppIcon.png'
+      },
+    },
+  ],
   plugins: [
     [
       '@electron-forge/plugin-webpack',

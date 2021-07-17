@@ -83,6 +83,7 @@ export class GasnowWs {
 
     const onerror = () => {
       try {
+        if (!this.client) return;
         this.client.close();
         this.client.onmessage = undefined;
         this.client.onerror = undefined;
@@ -93,6 +94,7 @@ export class GasnowWs {
     };
 
     const onclose = () => {
+      if (!this.client) return;
       this.client.onmessage = undefined;
       this.client.onerror = undefined;
       this.client.onclose = undefined;

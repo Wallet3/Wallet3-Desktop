@@ -1,7 +1,7 @@
 {
   "name": "wallet3",
   "productName": "Wallet 3",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "A Secure Wallet for Bankless Era",
   "main": ".webpack/main",
   "repository": {
@@ -40,6 +40,7 @@
     "@babel/preset-typescript": "^7.14.5",
     "@electron-forge/cli": "^6.0.0-beta.57",
     "@electron-forge/core": "^6.0.0-beta.57",
+    "@electron-forge/maker-appx": "^6.0.0-beta.57",
     "@electron-forge/maker-deb": "^6.0.0-beta.57",
     "@electron-forge/maker-dmg": "^6.0.0-beta.57",
     "@electron-forge/maker-rpm": "^6.0.0-beta.57",
@@ -112,6 +113,7 @@
     "react-virtualized": "^9.22.3",
     "typeorm": "^0.2.34",
     "update-electron-app": "^2.0.1",
+    "storejs": "^1.1.0",
     "webpack-filter-warnings-plugin": "^1.2.1"
   },
   "dependencies": {
@@ -119,7 +121,6 @@
     "eth-sig-util": "^3.0.1",
     "ethers": "^5.4.1",
     "keytar": "^7.7.0",
-    "storejs": "^1.1.0",
     "ws": "^7.5.3"
   }
 }

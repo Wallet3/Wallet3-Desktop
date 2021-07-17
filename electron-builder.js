@@ -12,7 +12,7 @@ module.exports = {
     schemes: ['wallet3', 'wc', 'ledgerlive'],
   },
   //npmRebuild: 'false',
-  afterSign: "./sign/appSign.js",
+  //afterSign: "sign/appSign.js",
   mac: {
     icon: 'assets/AppIcon.icns',
     // background: 'assets/DMGBG.png',
@@ -27,7 +27,7 @@ module.exports = {
     publish: ['github'],
   },
   win: {
-    target: 'nsis',
+    target: ['nsis'],
     icon: 'assets/AppIcon.ico',
     publish: ['github'],
   },
@@ -41,5 +41,10 @@ module.exports = {
     createDesktopShortcut: 'always',
     // include: 'nsis.nsh'
   },
+  appx: {
+    displayName: 'Wallet 3',
+    publisher: 'CN',
+    publisherDisplayName: 'ChainBow Co, Ltd.',
+  },
   publish: null,
-};
+}
