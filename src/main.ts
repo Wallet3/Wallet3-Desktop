@@ -252,7 +252,7 @@ app.on('ready', async () => {
   }
 
   if (isWin) {
-    app.setAppUserModelId('co.jp.chainbow.wallet3');
+    app.setAppUserModelId('jp.co.chainbow.wallet3');
   }
 
   updateapp({ notifyUser: true });
