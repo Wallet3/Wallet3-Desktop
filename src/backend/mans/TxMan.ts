@@ -1,12 +1,14 @@
 import { FindManyOptions, IsNull, LessThanOrEqual } from 'typeorm';
+import MessageKeys, { TxParams } from '../../common/Messages';
 import { Notification, app, shell } from 'electron';
+import { getTransactionReceipt, sendTransaction } from '../../common/Provider';
 import { makeObservable, observable, runInAction } from 'mobx';
 
 import DBMan from './DBMan';
 import Transaction from '../models/Transaction';
 import { convertTxToUrl } from '../../misc/Url';
-import { getTransactionReceipt } from '../../common/Provider';
 import i18n from '../../i18n';
+import { utils } from 'ethers';
 
 class TxMan {
   private _timer: NodeJS.Timer;
@@ -23,7 +25,7 @@ class TxMan {
 
   async init() {
     if (this._timer) return;
-    
+
     const pendingTxs = await this.findTxs({ where: { blockNumber: null } });
     runInAction(async () => this.pendingTxs.push(...pendingTxs));
 
@@ -102,6 +104,43 @@ class TxMan {
       });
     });
   }
+
+  sendTx = async (chainId: number, params: TxParams, txHex: string) => {
+    const { result } = await sendTransaction(chainId, txHex);
+    if (!result) {
+      new Notification({
+        title: i18n.t('Transaction Failed'),
+        body: i18n.t('TxFailed2', { nonce: params.nonce }),
+      }).show();
+
+      return undefined;
+    }
+
+    this.saveTx(params, txHex);
+    return result;
+  };
+
+  saveTx = async (params: TxParams, txHex: string) => {
+    const tx = utils.parseTransaction(txHex);
+
+    if ((await this.findTxs({ where: { hash: tx.hash } })).length === 0) {
+      const t = new Transaction();
+      t.chainId = params.chainId;
+      t.from = params.from;
+      t.to = params.to;
+      t.data = params.data;
+      t.gas = params.gas;
+      t.gasPrice = params.gasPrice;
+      t.hash = tx.hash;
+      t.nonce = params.nonce;
+      t.value = params.value;
+      t.timestamp = Date.now();
+
+      this.save(t);
+    }
+
+    return tx;
+  };
 }
 
 export default new TxMan();

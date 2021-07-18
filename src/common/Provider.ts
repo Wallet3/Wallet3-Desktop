@@ -58,7 +58,7 @@ export async function getTransactionCount(chainId: number, address: string) {
       const resp = await axios.post(url, {
         jsonrpc: '2.0',
         method: 'eth_getTransactionCount',
-        params: [address, 'latest'],
+        params: [address, 'pending'],
         id: Date.now(),
       });
 

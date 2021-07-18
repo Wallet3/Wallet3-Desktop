@@ -7,6 +7,7 @@ import { call, getTransactionCount } from '../../common/Provider';
 
 import ERC20ABI from '../../abis/ERC20.json';
 import EventEmitter from 'events';
+import { TxMan } from '../mans';
 import WCSession from '../models/WCSession';
 import WalletConnector from '@walletconnect/client';
 import { WalletKey } from './WalletKey';
@@ -261,7 +262,7 @@ export class WalletConnect extends EventEmitter {
         return;
       }
 
-      const hash = await Application.sendTx(params.chainId || this.appChainId, params, txHex);
+      const hash = await TxMan.sendTx(params.chainId || this.appChainId, params, txHex);
 
       if (!hash) {
         this.connector.rejectRequest({ id: request.id, error: { message: 'Transaction failed' } });

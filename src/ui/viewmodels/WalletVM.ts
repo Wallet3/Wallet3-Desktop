@@ -27,7 +27,19 @@ export class WalletVM {
   }
 
   get pendingTxs() {
-    return this.allPendingTxs.filter((tx) => tx.from === this.currentAccount.address).sort((t1, t2) => t1.nonce - t2.nonce);
+    const pendingTxs = this.allPendingTxs
+      .filter((tx) => tx.from === this.currentAccount.address)
+      .sort((t1, t2) => t1.nonce - t2.nonce)
+      .sort((t1, t2) => t2.gasPrice - t1.gasPrice);
+
+    const distinctTxs: TxParams[] = [];
+
+    for (let tx of pendingTxs) {
+      if (distinctTxs.find((t) => t.nonce === tx.nonce)) continue;
+      distinctTxs.push(tx);
+    }
+
+    return distinctTxs;
   }
 
   get pendingTxCount() {

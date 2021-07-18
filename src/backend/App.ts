@@ -291,7 +291,7 @@ export class App {
         return App.encryptIpc({}, key);
       }
 
-      App.sendTx(params.chainId || this.chainId, params, txHex);
+      TxMan.sendTx(params.chainId || this.chainId, params, txHex);
 
       return App.encryptIpc({ txHex }, key);
     });
@@ -328,43 +328,6 @@ export class App {
 
     const password = params.viaTouchID ? await this.walletKey.decryptUserPassword() : params.password;
     return password;
-  };
-
-  static readonly sendTx = async (chainId: number, params: TxParams, txHex: string) => {
-    const { result } = await sendTransaction(chainId, txHex);
-    if (!result) {
-      new Notification({
-        title: i18n.t('Transaction Failed'),
-        body: i18n.t('TxFailed2', { nonce: params.nonce }),
-      }).show();
-
-      return undefined;
-    }
-
-    App.saveTx(params, txHex);
-    return result;
-  };
-
-  static readonly saveTx = async (params: TxParams, txHex: string) => {
-    const tx = utils.parseTransaction(txHex);
-
-    if ((await TxMan.findTxs({ where: { hash: tx.hash } })).length === 0) {
-      const t = new Transaction();
-      t.chainId = params.chainId;
-      t.from = params.from;
-      t.to = params.to;
-      t.data = params.data;
-      t.gas = params.gas;
-      t.gasPrice = params.gasPrice;
-      t.hash = tx.hash;
-      t.nonce = params.nonce;
-      t.value = params.value;
-      t.timestamp = Date.now();
-
-      TxMan.save(t);
-    }
-
-    return tx;
   };
 
   initPopupHandlers = () => {
