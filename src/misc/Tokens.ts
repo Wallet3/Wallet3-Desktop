@@ -290,7 +290,9 @@ export function findTokenByAddress(address: string) {
   return all.find((t) => t.address.toUpperCase() === upper);
 }
 
-export const EthereumPopularTokens = [DAI, USDC, USDT, UNI, SUSHI, COMP, MKR, CRV, LINK, AAVE, DPI];
+import { PartnerTokens } from './PartnerTokens'
+
+export const EthereumPopularTokens = [DAI, USDC, USDT, UNI, SUSHI, COMP, MKR, CRV, LINK, AAVE, DPI, ...PartnerTokens];
 
 const MATIC_DAI = {
   address: '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',

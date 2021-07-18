@@ -1,4 +1,4 @@
-{
+module.exports = {
   directories: {
     app: '.',
   },
@@ -11,8 +11,8 @@
     name: 'Wallet 3',
     schemes: ['wallet3', 'wc', 'ledgerlive'],
   },
-  npmRebuild: 'false',
-  // afterSign: "sign/appSign.js",
+  //npmRebuild: 'false',
+  //afterSign: "sign/appSign.js",
   mac: {
     icon: 'assets/AppIcon.icns',
     // background: 'assets/DMGBG.png',
