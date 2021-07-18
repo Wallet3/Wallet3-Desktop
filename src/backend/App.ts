@@ -422,23 +422,29 @@ export class App {
       const [iv, cipherText] = encrypted;
 
       const params = App.decryptIpc(cipherText, iv, key);
-      const reqid = randomBytes(4).toString('hex');
-      this.createPopupWindow('msgbox', { reqid, ...params }, { modal: true, parent: this.mainWindow, height: 250 });
-
-      const approved = await new Promise<boolean>((resolve) => {
-        ipcMain.handleOnce(`${MessageKeys.returnMsgBoxResult(reqid)}-secure`, async (e, encrypted, popWinId) => {
-          const { key } = this.windows.get(popWinId);
-          const [iv, cipherText] = encrypted;
-
-          const { approved } = App.decryptIpc(cipherText, iv, key) as { approved: boolean };
-
-          resolve(approved);
-        });
-      });
+      const approved = await this.ask(params);
 
       return App.encryptIpc({ approved }, key);
     });
   };
+
+  async ask(args: { title: string; icon: string; message: string }) {
+    const reqid = randomBytes(4).toString('hex');
+    this.createPopupWindow('msgbox', { reqid, ...args }, { modal: true, parent: this.mainWindow, height: 250 });
+
+    const approved = await new Promise<boolean>((resolve) => {
+      ipcMain.handleOnce(`${MessageKeys.returnMsgBoxResult(reqid)}-secure`, async (e, encrypted, popWinId) => {
+        const { key } = this.windows.get(popWinId);
+        const [iv, cipherText] = encrypted;
+
+        const { approved } = App.decryptIpc(cipherText, iv, key) as { approved: boolean };
+
+        resolve(approved);
+      });
+    });
+
+    return approved;
+  }
 
   createPopupWindow(
     type: PopupWindowTypes,

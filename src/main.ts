@@ -12,6 +12,7 @@ import { globalShortcut } from 'electron';
 import i18n from './i18n';
 import querystring from 'querystring';
 import { resolve } from 'path';
+import { updateApp } from './backend/Updater';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -253,6 +254,8 @@ app.on('ready', async () => {
   if (isWin) {
     app.setAppUserModelId('jp.co.chainbow.wallet3');
   }
+
+  updateApp();
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common

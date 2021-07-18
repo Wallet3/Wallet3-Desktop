@@ -133,5 +133,7 @@
   "Wallet not authorized": "Current wallet has not been authorized, please authorize first.",
   "WalletConnect uri expired": "This session is expired, please refresh the webpage and try again.",
   "Received Token": "Received a transfer on {{network}}",
-  "Received": "Received"
+  "Received": "Received",
+  "New Update Available": "New Update Available",
+  "Update Message": "{{version}} is available, would you like to install the update?"
 }
