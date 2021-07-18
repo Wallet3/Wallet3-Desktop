@@ -12,7 +12,6 @@ import { globalShortcut } from 'electron';
 import i18n from './i18n';
 import querystring from 'querystring';
 import { resolve } from 'path';
-import updateapp from 'update-electron-app';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -83,7 +82,7 @@ const createTray = async () => {
 
   const trayImage = nativeImage.createEmpty();
   trayImage.addRepresentation({
-    scaleFactor: 5,
+    scaleFactor: 3,
     width: 20,
     height: 20,
     dataURL: require(`./assets/icons/app/tray_${process.platform}.png`).default,
@@ -254,8 +253,6 @@ app.on('ready', async () => {
   if (isWin) {
     app.setAppUserModelId('jp.co.chainbow.wallet3');
   }
-
-  updateapp({ notifyUser: true });
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
