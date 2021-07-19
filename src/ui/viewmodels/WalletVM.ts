@@ -29,14 +29,16 @@ export class WalletVM {
   get pendingTxs() {
     const pendingTxs = this.allPendingTxs
       .filter((tx) => tx.from === this.currentAccount.address)
-      .sort((t1, t2) => t1.nonce - t2.nonce)
-      .sort((t1, t2) => t2.gasPrice - t1.gasPrice);
+
+      .sort((t1, t2) => t1.nonce - t2.nonce);
 
     const distinctTxs: TxParams[] = [];
 
     for (let tx of pendingTxs) {
       if (distinctTxs.find((t) => t.nonce === tx.nonce)) continue;
-      distinctTxs.push(tx);
+
+      const [target] = pendingTxs.filter((t) => t.nonce === tx.nonce).sort((t1, t2) => t2.gasPrice - t1.gasPrice);
+      distinctTxs.push(target);
     }
 
     return distinctTxs;

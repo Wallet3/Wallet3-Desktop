@@ -88,7 +88,7 @@ export class ConfirmVM {
     this._gas = params.gas;
     this._gasPrice = params.gasPrice / GasnowWs.gwei_1;
     this._nonce = params.nonce || 0;
-    this._value = params.value || 0;
+    this._value = Number.parseFloat(params.value) === 0 ? 0 : params.value || 0;
     this._data = params.data;
   }
 
@@ -125,7 +125,7 @@ export class ConfirmVM {
   }
 
   get totalValue() {
-    return formatEther(BigNumber.from(this.args.value || 0).add(parseUnits(this.maxFee, 18)));
+    return formatEther(BigNumber.from(this._value || 0).add(parseUnits(this.maxFee, 18)));
   }
 
   private _gas = 0;
@@ -298,7 +298,7 @@ export class ConfirmVM {
       chainId: this.args.chainId,
       from: this.args.from,
       to: this.args.to,
-      value: this.args.value,
+      value: this._value,
       gas: this.args.gas,
       gasPrice: this.args.gasPrice, // wei
       nonce: this.args.nonce,

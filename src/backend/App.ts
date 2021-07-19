@@ -210,7 +210,10 @@ export class App {
         const addresses = (await this.walletKey.genAddresses(password, count)) || [];
         const verified = addresses.length > 0;
 
-        if (verified && this.touchIDSupported) await this.walletKey.encryptUserPassword(password);
+        if (verified) {
+          setTimeout(() => this.mainWindow.webContents.send(MessageKeys.pendingTxsChanged, [...TxMan.pendingTxs]), 1000);
+          if (this.touchIDSupported) await this.walletKey.encryptUserPassword(password);
+        }
 
         // TxNotification.watch(this.currentNetwork.defaultTokens, addresses, this.chainId);
 

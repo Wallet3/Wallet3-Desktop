@@ -10,10 +10,14 @@ import { spawn } from 'child_process';
 import { tmpdir } from 'os';
 
 export async function checkUpdates() {
-  const resp = await axios.get('https://raw.githubusercontent.com/Wallet3/Wallet3/master/package.json');
-  const { version: stableVersion } = resp.data as { version: string };
-  const currentVersion = app.getVersion();
-  return { updateAvailable: stableVersion > currentVersion, stableVersion, currentVersion };
+  try {
+    const resp = await axios.get('https://raw.githubusercontent.com/Wallet3/Wallet3/master/package.json');
+    const { version: stableVersion } = resp.data as { version: string };
+    const currentVersion = app.getVersion();
+    return { updateAvailable: stableVersion > currentVersion, stableVersion, currentVersion };
+  } catch (error) {
+    return { updateAvailable: false };
+  }
 }
 
 async function installWindows(options: {
@@ -125,12 +129,14 @@ export async function updateApp() {
   const pkgUrl = `https://github.com/Wallet3/Wallet3/releases/download/v${stableVersion}/${artifactName}`;
   const dlPath = path.join(tmpdir(), artifactName);
 
-  const stat = statSync(dlPath, {});
+  try {
+    const stat = statSync(dlPath, {});
 
-  if (stat.size > 80 * 1024 * 1024) {
-    installUpdate(stableVersion, dlPath);
-    return;
-  }
+    if (stat.size > 80 * 1024 * 1024) {
+      installUpdate(stableVersion, dlPath);
+      return;
+    }
+  } catch (error) {}
 
   let dlStream = got.stream(pkgUrl);
   let tmpfileStream = createWriteStream(dlPath);
