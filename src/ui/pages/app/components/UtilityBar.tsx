@@ -117,7 +117,7 @@ export default observer(({ app, networksVM }: Props) => {
           {appCount > 6 ? <MenuDivider /> : undefined}
           {appCount > 6 ? (
             <MenuItem styles={MenuItemStyle}>
-              <button onClick={(_) => app.history.push('/connectedapps')}>
+              <button className='see-all' onClick={(_) => app.history.push('/connectedapps')}>
                 <span>{`${t('See All')} (${appCount})`}</span>
               </button>
             </MenuItem>

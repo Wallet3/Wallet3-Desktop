@@ -5,6 +5,7 @@
   "description": "A Secure Wallet for Bankless Era",
   "main": ".webpack/main",
   "repository": {
+    "type": "git",
     "url": "https://github.com/Wallet3/Wallet3.git"
   },
   "scripts": {

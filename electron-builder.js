@@ -30,7 +30,7 @@ module.exports = {
     target: ['nsis'],
     icon: 'assets/AppIcon.ico',
     publish: ['github'],
-    legalTrademarks: 'Wallet 3, ChainBow Co, Ltd.'
+    legalTrademarks: 'Wallet 3, ChainBow Co, Ltd.',
   },
   linux: {
     target: 'AppImage',
@@ -47,5 +47,7 @@ module.exports = {
     publisher: 'CN',
     publisherDisplayName: 'ChainBow Co, Ltd.',
   },
-  publish: null,
-}
+  publish: {
+    provider: ['github'],
+  },
+};

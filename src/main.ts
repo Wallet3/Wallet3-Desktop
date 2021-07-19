@@ -24,6 +24,7 @@ const prod = process.env.NODE_ENV === 'production';
 const isMac = process.platform === 'darwin';
 const isWin = process.platform === 'win32';
 
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 if (!isMac) require('@electron/remote/main').initialize();
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -134,11 +135,13 @@ const createWindow = async (): Promise<void> => {
     },
   });
 
-  // and load the index.html of the app.
+  App.mainWindow = mainWindow;
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY, {
     // extraHeaders: `Content-Security-Policy: default-src 'self' data: https: 'unsafe-inline' 'unsafe-eval';`, //https://content-security-policy.com
+    extraHeaders: prod
+      ? undefined
+      : `Content-Security-Policy: default-src * self blob: data: gap:; style-src * self 'unsafe-inline' blob: data: gap:; script-src * 'self' 'unsafe-eval' 'unsafe-inline' blob: data: gap:; object-src * 'self' blob: data: gap:; img-src * self 'unsafe-inline' blob: data: gap:; connect-src self * 'unsafe-inline' blob: data: gap:; frame-src * self blob: data: gap:;`,
   });
-  App.mainWindow = mainWindow;
 
   mainWindow.once('closed', () => {
     if (isMac) app.dock.hide();
