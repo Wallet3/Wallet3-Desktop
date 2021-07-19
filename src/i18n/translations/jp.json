@@ -134,5 +134,7 @@
   "Wallet not authorized": "ウォレットは認証されていません、まず認証してください。",
   "WalletConnect uri expired": "このセッションは期限切れです。Webページを更新して再度お試しください.",
   "Received Token": "1件の送金受領 [{{network}}]",
-  "Received": "受け取りました"
+  "Received": "受け取りました",
+  "New Update Available": "更新可能",
+  "Update Message": "新バージョン: {{version}} 公開されました、アップデートをインストールしますか？"
 }

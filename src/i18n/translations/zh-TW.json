@@ -134,5 +134,7 @@
   "Wallet not authorized": "當前錢包還未授權，請先登錄授權",
   "WalletConnect uri expired": "該會話已過期，請刷新頁面後再重試",
   "Received Token": "收到一筆匯款 [{{network}}]",
-  "Received": "已到賬"
+  "Received": "已到賬",
+  "New Update Available": "更新",
+  "Update Message": "發現新版本: {{version}}，是否安裝該更新？"
 }
