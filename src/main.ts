@@ -318,3 +318,5 @@ app.on('open-url', function (event, url) {
   event.preventDefault();
   handleDeepLink(url);
 });
+
+process.on('uncaughtException', (e) => console.error(e));
