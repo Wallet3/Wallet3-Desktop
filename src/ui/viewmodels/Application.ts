@@ -30,6 +30,7 @@ export class Application {
 
   wallets: WalletVM[] = [];
   currentWallet: WalletVM = null;
+  version = '';
 
   get currentWalletId() {
     return this.currentWallet?.id;
@@ -91,10 +92,11 @@ export class Application {
   }
 
   async init(jump = true) {
-    const { touchIDSupported, pendingTxs, platform, keys, currentKeyId } = await ipc.invokeSecure<InitStatus>(
+    const { touchIDSupported, pendingTxs, platform, keys, currentKeyId, appVersion } = await ipc.invokeSecure<InitStatus>(
       MessageKeys.getInitStatus
     );
 
+    this.version = appVersion;
     this.wallets = keys.map((k) => new WalletVM(k).initAccounts(k));
     this.switchWallet(currentKeyId);
     this.touchIDSupported = touchIDSupported;

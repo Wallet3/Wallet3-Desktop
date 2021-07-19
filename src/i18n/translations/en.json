@@ -134,6 +134,6 @@
   "WalletConnect uri expired": "This session is expired, please refresh the webpage and try again.",
   "Received Token": "Received a transfer on {{network}}",
   "Received": "Received",
-  "New Update Available": "New Update Available",
-  "Update Message": "{{version}} is available, would you like to install the update?"
+  "New Update Available": "Update Available",
+  "Update Message": "New version: {{version}} is available, would you like to install the update?"
 }

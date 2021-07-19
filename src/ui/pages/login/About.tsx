@@ -19,6 +19,7 @@ export default ({ app }: { app: Application }) => {
 
       <div className="content">
         <p>Wallet 3 - {t('A secure Wallet for Bankless Era')}</p>
+        <p className='appver'>Version: {app.version}</p>
 
         <h3>{t('Features')}</h3>
         <ul>

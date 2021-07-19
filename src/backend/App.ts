@@ -1,23 +1,19 @@
 import * as Cipher from '../common/Cipher';
 
-import { BrowserWindow, Notification, TouchBar, TouchBarButton, ipcMain, systemPreferences } from 'electron';
-import { DBMan, KeyMan, TxMan, TxNotification } from './mans';
+import { BrowserWindow, TouchBar, TouchBarButton, app, ipcMain, systemPreferences } from 'electron';
+import { DBMan, KeyMan, TxMan } from './mans';
 import MessageKeys, {
   AuthenticationResult,
   ConfirmSendTx,
   InitStatus,
   PopupWindowTypes,
   SendTxParams,
-  TxParams,
 } from '../common/Messages';
 import { createECDH, createHash, randomBytes } from 'crypto';
 import { makeObservable, observable, reaction, runInAction } from 'mobx';
 
 import { Networks } from '../misc/Networks';
-import Transaction from './models/Transaction';
 import i18n from '../i18n';
-import { sendTransaction } from '../common/Provider';
-import { utils } from 'ethers';
 
 declare const POPUP_WINDOW_WEBPACK_ENTRY: string;
 declare const POPUP_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -84,6 +80,7 @@ export class App {
           platform: process.platform,
           keys: KeyMan.overviewKeys,
           currentKeyId: KeyMan.currentId,
+          appVersion: app.getVersion(),
         } as InitStatus,
         key
       );

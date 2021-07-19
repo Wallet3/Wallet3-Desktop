@@ -12,15 +12,15 @@ export async function checkUpdates() {
   const resp = await axios.get('https://raw.githubusercontent.com/Wallet3/Wallet3/master/package.json');
   const { version: stableVersion } = resp.data as { version: string };
   const currentVersion = app.getVersion();
-  return { hasUpdate: stableVersion > currentVersion, stableVersion, currentVersion };
+  return { updateAvailable: stableVersion > currentVersion, stableVersion, currentVersion };
 }
 
-function installWindows(options: {
+async function installWindows(options: {
   installerPath: string;
   isSilent: boolean;
   isForceRunAfter: boolean;
   isAdminRightsRequired: boolean;
-}): boolean {
+}): Promise<boolean> {
   const args = ['--updated'];
   if (options.isSilent) {
     args.push('/S');
@@ -36,17 +36,17 @@ function installWindows(options: {
     args.push(`--package-file=${packagePath}`);
   }
 
-  const callUsingElevation = (): void => {
-    _spawn(path.join(process.resourcesPath!, 'elevate.exe'), [options.installerPath].concat(args)).catch((e) => {});
+  const callUsingElevation = async (): Promise<void> => {
+    await _spawn(path.join(process.resourcesPath!, 'elevate.exe'), [options.installerPath].concat(args)).catch((e) => {});
   };
 
   if (options.isAdminRightsRequired) {
     console.log('isAdminRightsRequired is set to true, run installer using elevate.exe');
-    callUsingElevation();
+    await callUsingElevation();
     return true;
   }
 
-  _spawn(options.installerPath, args).catch((e: Error) => {
+  await _spawn(options.installerPath, args).catch((e: Error) => {
     // https://github.com/electron-userland/electron-builder/issues/1129
     // Node 8 sends errors: https://nodejs.org/dist/latest-v8.x/docs/api/errors.html#errors_common_system_errors
     const errorCode = (e as NodeJS.ErrnoException).code;
@@ -58,7 +58,8 @@ function installWindows(options: {
     } else {
     }
   });
-  return true;
+
+  process.exit(0);
 }
 
 async function _spawn(exe: string, args: Array<string>): Promise<any> {
@@ -67,10 +68,14 @@ async function _spawn(exe: string, args: Array<string>): Promise<any> {
       const process = spawn(exe, args, {
         detached: true,
         stdio: 'ignore',
+        shell: true,
       });
-      process.on('error', (error) => {
+
+      process.once('error', (error) => {
+        console.error(`error: ${error}`);
         reject(error);
       });
+
       process.unref();
 
       if (process.pid !== undefined) {
@@ -82,16 +87,16 @@ async function _spawn(exe: string, args: Array<string>): Promise<any> {
   });
 }
 
-function installDMG(dmgPath: string) {
-  const magic = `sleep 2s && VOLUME=$(hdiutil attach -nobrowse ${dmgPath} | awk 'END {print $3" "$4" "$5}') && (rsync -a "$VOLUME"/*.app /Applications/; SYNCED=$? hdiutil detach -quiet "$VOLUME"; exit $? || exit "$SYNCED") && open '/Applications/Wallet 3.app'`;
-  _spawn(magic, []);
+async function installDMG(dmgPath: string) {
+  const magic = `sleep 2s && rm -rf '/Applications/Wallet 3.app'; VOLUME=$(hdiutil attach -nobrowse ${dmgPath} | awk 'END {print $3" "$4" "$5}') && (rsync -a "$VOLUME"/*.app /Applications/; SYNCED=$? hdiutil detach -quiet "$VOLUME"; exit $? || exit "$SYNCED") && open '/Applications/Wallet 3.app'`;
+  await _spawn(magic, []);
   process.exit(0);
 }
 
 async function installUpdate(version: string, execPath: string) {
   const approved = await App.ask({
     title: i18n.t('New Update Available'),
-    icon: 'power',
+    icon: 'arrow-up-circle',
     message: i18n.t('Update Message', { version }),
   });
 
@@ -108,8 +113,8 @@ async function installUpdate(version: string, execPath: string) {
 }
 
 export async function updateApp() {
-  const { hasUpdate, stableVersion } = await checkUpdates();
-  //   if (!hasUpdate) return;
+  const { updateAvailable, stableVersion } = await checkUpdates();
+  if (!updateAvailable) return;
 
   const platform = process.platform;
   const os = platform === 'win32' ? 'win' : platform === 'darwin' ? 'mac' : 'linux';

@@ -23,7 +23,6 @@ let idleTimer: NodeJS.Timeout;
 const prod = process.env.NODE_ENV === 'production';
 const isMac = process.platform === 'darwin';
 const isWin = process.platform === 'win32';
-console.log('is production', prod);
 
 if (!isMac) require('@electron/remote/main').initialize();
 
@@ -293,7 +292,7 @@ powerMonitor.on('resume', () => {
       await wcman?.dispose();
       await wcman?.init();
     });
-  }, 5000);
+  }, (isWin ? 12 : 7) * 1000);
 });
 
 powerMonitor.on('suspend', () => {
