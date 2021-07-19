@@ -143,7 +143,7 @@ export async function updateApp() {
 
   dlStream.on('downloadProgress', ({ transferred, total, percent }) => {
     const percentage = Math.round(percent * 100);
-    console.error(`progress: ${transferred}/${total} (${percentage}%)`);
+    console.log(`progress: ${transferred}/${total} (${percentage}%)`);
   });
 
   dlStream.once('error', () => dlStream.removeAllListeners());

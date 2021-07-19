@@ -1,7 +1,7 @@
 {
   "name": "wallet3",
   "productName": "Wallet 3",
-  "version": "1.3.3",
+  "version": "1.4.0",
   "description": "A Secure Wallet for Bankless Era",
   "main": ".webpack/main",
   "repository": {
@@ -16,7 +16,7 @@
     "build:linux": "npx electron-forge package --platform=linux --arch=x64 && ./node_modules/.bin/electron-builder build --linux --x64",
     "build:x64": "npx yarn run build:mac:x64 && npx yarn run build:win && npx yarn run build:linux",
     "build": "npx yarn run x64 && npx yarn run build:mac:arm64",
-    "postinstall": "DEBUG=electron-builder ./node_modules/.bin/electron-builder install-app-deps",
+    "postinstall": "./node_modules/.bin/electron-builder install-app-deps",
     "lint": "npx eslint --ext .ts .",
     "test": "npx jest"
   },
