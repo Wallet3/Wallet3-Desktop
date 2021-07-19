@@ -185,15 +185,24 @@ export class AccountVM {
 
   refreshChainTokens = async () => {
     const nativeSymbols = Networks.map((n) => n?.symbol.toLowerCase());
-    const userConfigs = this.loadTokenConfigs();
-    console.log(userConfigs);
-    
+    const defaultTokens = Networks.find((n) => n.chainId === NetVM.currentChainId).defaultTokens.map((t, i) =>
+      new UserToken().init(t, { order: i + 1, show: false })
+    );
+
+    const tmpMap = new Map<string, UserToken>();
+    this.loadTokenConfigs().map((t) => tmpMap.set(t.id.toLowerCase(), t));
+    const userConfigs = Array.from(tmpMap.values());
+
+    userConfigs.push(...defaultTokens.filter((t) => !userConfigs.find((uc) => uc.id.toLowerCase() === t.id.toLowerCase())));
+
     const tokens = NetVM.currentNetwork.test ? [] : await Debank.getTokenBalances(this.address, NetVM.currentNetwork.comm_id);
 
     let assets = NetVM.currentNetwork.test
       ? []
       : tokens
-          .filter((t) => t.amount * (t.price || 0) > 0.1 && !nativeSymbols.includes(t.id))
+          .filter(
+            (t) => !nativeSymbols.includes(t.id) && !userConfigs.find((uc) => uc.id.toLowerCase() === t.id.toLowerCase())
+          )
           .sort((a, b) => b.amount * b.price - a.amount * a.price)
           .map((t, i) => {
             const token = new UserToken();
@@ -203,32 +212,13 @@ export class AccountVM {
             token.amount = t.amount;
             token.decimals = t.decimals;
             token.price = t.price;
-
-            const userConfig = userConfigs.find((c) => c.id === t.id);
-            token.order = userConfig?.order ?? i + 1000;
-            token.show = userConfig?.show ?? true;
-
-            const foundIndex = userConfigs.findIndex((c) => c.id === t.id);
-            if (foundIndex >= 0) userConfigs.splice(foundIndex, 1);
+            token.order = i + 1000;
+            token.show = false;
 
             return token;
           });
 
-    assets.push(...userConfigs);
-
-    const defaultTokens = Networks.find((n) => n.chainId === NetVM.currentChainId).defaultTokens.map((t, i) =>
-      new UserToken().init(t, { order: i + 1, show: false })
-    );
-
-    assets.push(...defaultTokens.filter((dt) => !assets.find((a) => a.id.toLowerCase() === dt.id.toLowerCase())));
-
-    let allTokens: UserToken[] = [];
-    assets.forEach((t) => {
-      if (allTokens.find((at) => at.id.toLowerCase() === t.id.toLowerCase())) return;
-      allTokens.push(t);
-    });
-
-    allTokens = allTokens.sort((a, b) => a.order - b.order);
+    const allTokens = [...userConfigs, ...assets].sort((a, b) => a.order - b.order);
 
     const nativeCurrency = tokens.find((t) => nativeSymbols.includes(t.id));
     const nativeToken = await this.refreshNativeToken(nativeCurrency);

@@ -15,6 +15,7 @@ export interface INetwork {
   chainId: number;
   color: string;
   test?: boolean;
+  eip1559?: boolean;
   order?: number;
   defaultTokens: IToken[];
 }
@@ -110,6 +111,7 @@ export const Testnets: INetwork[] = [
     chainId: 3,
     color: '#6186ff',
     test: true,
+    eip1559: true,
     defaultTokens: [],
   },
   {
@@ -125,6 +127,7 @@ export const Testnets: INetwork[] = [
     network: 'Goerli',
     chainId: 5,
     color: '#6186ff',
+    eip1559: true,
     test: true,
     defaultTokens: [],
   },
