@@ -200,10 +200,6 @@ export class AccountVM {
     let assets = NetVM.currentNetwork.test
       ? []
       : tokens
-          .filter(
-            (t) => !nativeSymbols.includes(t.id) && !userConfigs.find((uc) => uc.id.toLowerCase() === t.id.toLowerCase())
-          )
-          .sort((a, b) => b.amount * b.price - a.amount * a.price)
           .map((t, i) => {
             const token = new UserToken();
             token.id = t.id;
@@ -215,8 +211,15 @@ export class AccountVM {
             token.order = i + 1000;
             token.show = false;
 
+            const uc = userConfigs.find((uc) => uc.id.toLowerCase() === t.id.toLowerCase());
+            if (uc) uc.price = t.price;
+
             return token;
-          });
+          })
+          .filter(
+            (t) => !nativeSymbols.includes(t.id) && !userConfigs.find((uc) => uc.id.toLowerCase() === t.id.toLowerCase())
+          )
+          .sort((a, b) => b.amount * b.price - a.amount * a.price);
 
     const allTokens = [...userConfigs, ...assets].sort((a, b) => a.order - b.order);
 

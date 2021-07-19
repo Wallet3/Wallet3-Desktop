@@ -136,7 +136,7 @@ const createWindow = async (): Promise<void> => {
 
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY, {
-    extraHeaders: `Content-Security-Policy: default-src 'self' data: https: 'unsafe-inline' 'unsafe-eval';`, //https://content-security-policy.com
+    // extraHeaders: `Content-Security-Policy: default-src 'self' data: https: 'unsafe-inline' 'unsafe-eval';`, //https://content-security-policy.com
   });
   App.mainWindow = mainWindow;
 
