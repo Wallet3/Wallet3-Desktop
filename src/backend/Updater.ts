@@ -1,7 +1,8 @@
+import { constants, createWriteStream, statSync } from 'fs';
+
 import App from './App';
 import { app } from 'electron';
 import axios from 'axios';
-import { createWriteStream } from 'fs';
 import got from 'got';
 import i18n from '../i18n';
 import path from 'path';
@@ -122,7 +123,14 @@ export async function updateApp() {
   const artifactName = `wallet3-${os}-${process.arch}-${stableVersion}.${ext}`;
 
   const pkgUrl = `https://github.com/Wallet3/Wallet3/releases/download/v${stableVersion}/${artifactName}`;
-  const dlPath = path.join(tmpdir(), `wallet3-${Date.now()}.${ext}`);
+  const dlPath = path.join(tmpdir(), artifactName);
+
+  const stat = statSync(dlPath, {});
+
+  if (stat.size > 80 * 1024 * 1024) {
+    installUpdate(stableVersion, dlPath);
+    return;
+  }
 
   let dlStream = got.stream(pkgUrl);
   let tmpfileStream = createWriteStream(dlPath);
