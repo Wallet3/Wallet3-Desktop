@@ -1,23 +1,23 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 
-import { GasnowWs } from './Gasnow';
+import { Gwei_1 } from './Gasnow';
 import axios from 'axios';
 
 class PolygonGasStation {
-  rapid: number = 7 * GasnowWs.gwei_1;
-  fast: number = 3 * GasnowWs.gwei_1;
-  standard: number = 1 * GasnowWs.gwei_1;
+  rapid: number = 7 * Gwei_1;
+  fast: number = 3 * Gwei_1;
+  standard: number = 1 * Gwei_1;
 
   get rapidGwei() {
-    return this.rapid / GasnowWs.gwei_1;
+    return this.rapid / Gwei_1;
   }
 
   get fastGwei() {
-    return this.fast / GasnowWs.gwei_1;
+    return this.fast / Gwei_1;
   }
 
   get standardGwei() {
-    return this.standard / GasnowWs.gwei_1;
+    return this.standard / Gwei_1;
   }
 
   constructor() {
@@ -37,9 +37,9 @@ class PolygonGasStation {
         };
 
         runInAction(() => {
-          this.rapid = Math.min(Math.max(fastest, 1) * GasnowWs.gwei_1, 1000 * GasnowWs.gwei_1);
-          this.fast = Math.min(Math.max(fast, 1) * GasnowWs.gwei_1, 200 * GasnowWs.gwei_1);
-          this.standard = Math.min(Math.max(standard, 1) * GasnowWs.gwei_1, 100 * GasnowWs.gwei_1);
+          this.rapid = Math.min(Math.max(fastest, 1) * Gwei_1, 1000 * Gwei_1);
+          this.fast = Math.min(Math.max(fast, 1) * Gwei_1, 200 * Gwei_1);
+          this.standard = Math.min(Math.max(standard, 1) * Gwei_1, 100 * Gwei_1);
         });
       });
     } catch (error) {}

@@ -254,7 +254,7 @@ app.on('ready', async () => {
     app.setAppUserModelId('jp.co.chainbow.wallet3');
   }
 
-  updateApp();
+  setTimeout(() => updateApp(), 5 * 1000);
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common

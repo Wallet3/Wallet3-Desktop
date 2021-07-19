@@ -1,6 +1,6 @@
 import Messages, { ConfirmSendTx } from '../../../common/Messages';
 
-import { GasnowWs } from '../../../gas/Gasnow';
+import { Gwei_1 } from '../../../gas/Gasnow';
 import { TxParams } from '../../../common/Messages';
 import ipc from '../../bridges/IPC';
 
@@ -62,7 +62,7 @@ export class PendingTxVM {
       to: this._tx.from,
       value: '0',
       gas: 21000,
-      gasPrice: Number.parseInt((this._tx.gasPrice * 1.1) as any) + GasnowWs.gwei_1,
+      gasPrice: Number.parseInt((this._tx.gasPrice * 1.1) as any) + Gwei_1,
       nonce: this.nonce,
       data: '0x',
     } as ConfirmSendTx);
@@ -71,7 +71,7 @@ export class PendingTxVM {
   async speedUp() {
     await ipc.invokeSecure<void>(Messages.createTransferTx, {
       ...this._tx,
-      gasPrice: Number.parseInt((this._tx.gasPrice * 1.1) as any) + GasnowWs.gwei_1,
+      gasPrice: Number.parseInt((this._tx.gasPrice * 1.1) as any) + Gwei_1,
     } as ConfirmSendTx);
   }
 }

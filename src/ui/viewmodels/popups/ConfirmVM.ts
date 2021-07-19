@@ -6,7 +6,7 @@ import { makeAutoObservable, runInAction } from 'mobx';
 
 import App from '../ApplicationPopup';
 import ERC20ABI from '../../../abis/ERC20.json';
-import { GasnowWs } from '../../../gas/Gasnow';
+import { Gwei_1 } from '../../../gas/Gasnow';
 import KnownAddresses from '../../misc/KnownAddresses';
 import { Networks } from '../../../misc/Networks';
 import { findTokenByAddress } from '../../../misc/Tokens';
@@ -86,7 +86,7 @@ export class ConfirmVM {
     this.chainId = params.chainId;
     this.accountIndex = params.accountIndex;
     this._gas = params.gas;
-    this._gasPrice = params.gasPrice / GasnowWs.gwei_1;
+    this._gasPrice = params.gasPrice / Gwei_1;
     this._nonce = params.nonce || 0;
     this._value = Number.parseFloat(params.value) === 0 ? 0 : params.value || 0;
     this._data = params.data;
@@ -139,7 +139,7 @@ export class ConfirmVM {
   }
 
   get gasPriceWei() {
-    return BigNumber.from(`${Number.parseInt((this.gasPrice * GasnowWs.gwei_1) as any) || 0}`);
+    return BigNumber.from(`${Number.parseInt((this.gasPrice * Gwei_1) as any) || 0}`);
   }
 
   get tokenSymbol() {

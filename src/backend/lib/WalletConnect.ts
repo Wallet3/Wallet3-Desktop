@@ -1,7 +1,7 @@
 import App, { App as Application } from '../App';
 import { AuthParams, ConfirmSendTx, RequestSignMessage, SendTxParams, WcMessages } from '../../common/Messages';
 import { BigNumber, ethers, utils } from 'ethers';
-import Gasnow, { GasnowWs } from '../../gas/Gasnow';
+import Gasnow, { Gwei_1, Gwei_5 } from '../../gas/Gasnow';
 import { IReactionDisposer, reaction } from 'mobx';
 import { call, getTransactionCount } from '../../common/Provider';
 
@@ -287,7 +287,7 @@ export class WalletConnect extends EventEmitter {
       : undefined;
 
     const chainId = requestedChainId || this.appChainId;
-    let defaultGasPrice = chainId === 56 ? GasnowWs.gwei_5 : GasnowWs.gwei_1;
+    let defaultGasPrice = chainId === 56 ? Gwei_5 : Gwei_1;
     defaultGasPrice = chainId === 1 ? Gasnow.fast : defaultGasPrice;
 
     App.createPopupWindow('sendTx', {

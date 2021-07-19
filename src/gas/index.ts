@@ -1,9 +1,9 @@
-import Gasnow, { GasnowWs } from './Gasnow';
-import { autorun, makeAutoObservable, reaction } from 'mobx';
+import Gasnow, { Gwei_1 } from './Gasnow';
 
 import BscGas from './BscGas';
 import CheapStation from './CheapStation';
 import PolygonGasStation from './PolygonGasStation';
+import { makeAutoObservable } from 'mobx';
 
 interface IGasStation {
   rapid: number;
@@ -49,15 +49,15 @@ class GasStation {
   }
 
   get rapidGwei() {
-    return this.rapid / GasnowWs.gwei_1;
+    return this.rapid / Gwei_1;
   }
 
   get fastGwei() {
-    return this.fast / GasnowWs.gwei_1;
+    return this.fast / Gwei_1;
   }
 
   get standardGwei() {
-    return this.standard / GasnowWs.gwei_1;
+    return this.standard / Gwei_1;
   }
 
   get chainId() {
@@ -73,11 +73,11 @@ class GasStation {
 
     switch (type) {
       case 'rapid':
-        return station?.rapid ?? 5 * GasnowWs.gwei_1;
+        return station?.rapid ?? 5 * Gwei_1;
       case 'fast':
-        return station?.fast ?? 1 * GasnowWs.gwei_1;
+        return station?.fast ?? 1 * Gwei_1;
       case 'standard':
-        return station?.standard ?? 1 * GasnowWs.gwei_1;
+        return station?.standard ?? 1 * Gwei_1;
     }
   }
 

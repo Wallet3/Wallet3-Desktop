@@ -1,21 +1,21 @@
-import { GasnowWs } from './Gasnow';
+import { Gwei_1 } from './Gasnow';
 import { makeAutoObservable } from 'mobx';
 
 class BscGas {
-  rapid = 10 * GasnowWs.gwei_1;
-  fast = 5 * GasnowWs.gwei_1;
-  standard = 5 * GasnowWs.gwei_1;
+  rapid = 10 * Gwei_1;
+  fast = 5 * Gwei_1;
+  standard = 5 * Gwei_1;
 
   get rapidGwei() {
-    return this.rapid / GasnowWs.gwei_1;
+    return this.rapid / Gwei_1;
   }
 
   get fastGwei() {
-    return this.fast / GasnowWs.gwei_1;
+    return this.fast / Gwei_1;
   }
 
   get standardGwei() {
-    return this.standard / GasnowWs.gwei_1;
+    return this.standard / Gwei_1;
   }
 
   constructor() {

@@ -1,5 +1,5 @@
 import { BigNumber, ethers, utils } from 'ethers';
-import Gasnow, { GasnowWs } from '../../../gas/Gasnow';
+import Gasnow, { Gwei_1 } from '../../../gas/Gasnow';
 import { IReactionDisposer, autorun, makeAutoObservable, reaction, runInAction } from 'mobx';
 import Messages, { ConfirmSendTx } from '../../../common/Messages';
 import { parseEther, parseUnits } from 'ethers/lib/utils';
@@ -57,7 +57,7 @@ export class TransferVM {
   }
 
   get insufficientFee() {
-    const maxFee = Number.parseInt((this.gasPrice * GasnowWs.gwei_1 * this.gas || 0) as any);
+    const maxFee = Number.parseInt((this.gasPrice * Gwei_1 * this.gas || 0) as any);
     const balance = parseEther(this._accountVM?.nativeToken?.amount.toString() || '0');
     return balance.lt(maxFee.toString());
   }
@@ -248,7 +248,7 @@ export class TransferVM {
     const iface = new ethers.utils.Interface(ERC20ABI);
     const data = this.isERC20 ? iface.encodeFunctionData('transfer', [this.receiptAddress, this.amountBigInt]) : '0x';
 
-    const fee = BigNumber.from(this.gasPrice * GasnowWs.gwei_1).mul(this.gas);
+    const fee = BigNumber.from(this.gasPrice * Gwei_1).mul(this.gas);
     if (!this.isERC20 && fee.add(BigNumber.from(value)).gt(this.selectedTokenBalance)) {
       value = BigNumber.from(this.selectedToken.wei || 0)
         .sub(fee)
@@ -260,7 +260,7 @@ export class TransferVM {
       to,
       value,
       gas: this.gas,
-      gasPrice: this.gasPrice * GasnowWs.gwei_1,
+      gasPrice: this.gasPrice * Gwei_1,
       nonce: this.nonce,
       data,
       chainId: NetworksVM.currentChainId,
@@ -321,7 +321,7 @@ export class TransferVM {
       to: nft.contract,
       value: '0',
       gas: gas,
-      gasPrice: this.gasPrice * GasnowWs.gwei_1,
+      gasPrice: this.gasPrice * Gwei_1,
       nonce: this.nonce,
       data,
       chainId: NetworksVM.currentChainId,

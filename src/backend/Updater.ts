@@ -119,12 +119,16 @@ async function installUpdate(version: string, execPath: string) {
 }
 
 function checkShasum(target: { sha512: string; size: number }, path: string) {
-  const shasum = execSync(
-    process.platform === 'win32' ? `certutil.exe -hashfile ${path} SHA512` : `shasum -a 512 ${path}`
-  ).toString('utf-8');
-  
-  console.log(shasum);
-  return shasum.includes(target.sha512);
+  try {
+    const shasum = execSync(
+      process.platform === 'win32' ? `certutil.exe -hashfile ${path} SHA512` : `shasum -a 512 ${path}`
+    ).toString('utf-8');
+
+    console.log(shasum);
+    return shasum.includes(target.sha512);
+  } catch (error) {}
+
+  return false;
 }
 
 export async function updateApp() {
