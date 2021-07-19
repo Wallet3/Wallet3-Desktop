@@ -117,7 +117,7 @@
     "webpack-filter-warnings-plugin": "^1.2.1"
   },
   "dependencies": {
-    "better-sqlite3": "^7.4.1",
+    "better-sqlite3": "^7.4.3",
     "eth-sig-util": "^3.0.1",
     "ethers": "^5.4.1",
     "keytar": "^7.7.0",
