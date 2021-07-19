@@ -70,6 +70,7 @@
         "rsync",
         "sandboxed",
         "secp",
+        "shasum",
         "storejs",
         "SVGs",
         "szhsin",

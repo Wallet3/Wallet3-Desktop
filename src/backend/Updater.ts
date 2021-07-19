@@ -1,4 +1,5 @@
-import { constants, createWriteStream, statSync } from 'fs';
+import { createWriteStream, statSync } from 'fs';
+import { execSync, spawn } from 'child_process';
 
 import App from './App';
 import { app } from 'electron';
@@ -6,8 +7,8 @@ import axios from 'axios';
 import got from 'got';
 import i18n from '../i18n';
 import path from 'path';
-import { spawn } from 'child_process';
 import { tmpdir } from 'os';
+import yaml from 'yaml';
 
 export async function checkUpdates() {
   try {
@@ -117,9 +118,17 @@ async function installUpdate(version: string, execPath: string) {
   }
 }
 
+function checkShasum(target: { sha512: string; size: number }, path: string) {
+  const shasum = execSync(
+    process.platform === 'win32' ? `certutil -hashfile ${path} SHA512` : `shasum -a 512 ${path}`
+  ).toString('utf-8');
+  
+  console.log(shasum);
+  return shasum.includes(target.sha512);
+}
+
 export async function updateApp() {
   const { updateAvailable, stableVersion } = await checkUpdates();
-  if (!updateAvailable) return;
 
   const platform = process.platform;
   const os = platform === 'win32' ? 'win' : platform === 'darwin' ? 'mac' : 'linux';
@@ -127,12 +136,19 @@ export async function updateApp() {
   const artifactName = `wallet3-${os}-${process.arch}-${stableVersion}.${ext}`;
 
   const pkgUrl = `https://github.com/Wallet3/Wallet3/releases/download/v${stableVersion}/${artifactName}`;
+  const ymlUrl = `https://github.com/Wallet3/Wallet3/releases/download/v${stableVersion}/latest.yml`;
   const dlPath = path.join(tmpdir(), artifactName);
 
-  try {
-    const stat = statSync(dlPath, {});
+  const secInfo = yaml.parse((await axios.get(ymlUrl)).data);
+  const targetInfo = secInfo.files.find((f) => f.url === artifactName) as { sha512: string; size: number };
 
-    if (stat.size > 80 * 1024 * 1024) {
+  if (!targetInfo) return;
+  if (!updateAvailable) return;
+
+  try {
+    statSync(dlPath, {});
+
+    if (checkShasum(targetInfo, dlPath)) {
       installUpdate(stableVersion, dlPath);
       return;
     }
@@ -154,7 +170,9 @@ export async function updateApp() {
     dlStream.removeAllListeners();
     dlStream = null;
 
-    installUpdate(stableVersion, dlPath);
+    if (checkShasum(targetInfo, dlPath)) {
+      installUpdate(stableVersion, dlPath);
+    }
   });
 
   dlStream.pipe(tmpfileStream);

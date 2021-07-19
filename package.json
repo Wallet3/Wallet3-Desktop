@@ -13,7 +13,7 @@
     "package": "npx electron-forge package",
     "build:mac:arm64": "npx electron-forge package --platform=darwin --arch=arm64 && ./node_modules/.bin/electron-builder build --mac --arm64",
     "build:mac:x64": "npx electron-forge package --platform=darwin --arch=x64 && ./node_modules/.bin/electron-builder build --mac --x64",
-    "build:win": "npx electron-forge package --platform=win32 --arch=x64 && DEBUG=electron-builder  ./node_modules/.bin/electron-builder build --win --x64",
+    "build:win": "npx electron-forge package --platform=win32 --arch=x64 && ./node_modules/.bin/electron-builder build --win --x64",
     "build:linux": "npx electron-forge package --platform=linux --arch=x64 && ./node_modules/.bin/electron-builder build --linux --x64",
     "build:x64": "npx yarn run build:mac:x64 && npx yarn run build:win && npx yarn run build:linux",
     "build": "npx yarn run x64 && npx yarn run build:mac:arm64",
@@ -115,7 +115,8 @@
     "typeorm": "^0.2.34",
     "typescript": "^4.3.5",
     "url-loader": "^4.1.1",
-    "webpack-filter-warnings-plugin": "^1.2.1"
+    "webpack-filter-warnings-plugin": "^1.2.1",
+    "yaml": "^1.10.2"
   },
   "dependencies": {
     "better-sqlite3": "^7.4.3",
