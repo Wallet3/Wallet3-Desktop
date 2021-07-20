@@ -133,13 +133,6 @@ export class AccountVM {
     this.save();
   }
 
-  save() {
-    store.set(
-      Keys.userTokens(this.walletId, NetVM.currentChainId, this.accountIndex),
-      JSON.stringify(this.allTokens.slice(1).map((t) => t.toObject()))
-    );
-  }
-
   refreshChainOverview = async () => {
     const overview = await Debank.fetchChainsOverview(this.address);
     if (!overview) {
@@ -286,6 +279,13 @@ export class AccountVM {
       return [];
     }
   };
+
+  save() {
+    store.set(
+      Keys.userTokens(this.walletId, NetVM.currentChainId, this.accountIndex),
+      JSON.stringify(this.allTokens.slice(1).map((t) => t.toObject()))
+    );
+  }
 
   refreshNFTs = async () => {
     if (NetVM.currentChainId !== 1 || this.nfts?.length > 0) {
