@@ -5,20 +5,22 @@ import { ConfirmVM } from './popups/ConfirmVM';
 import { ConnectDappVM } from './popups/ConnectDappVM';
 import { MessageBoxVM } from './popups/MessageBoxVM';
 import { SignVM } from './popups/SignVM';
+import delay from 'delay';
 import ipc from '../bridges/IPC';
 
 export class ApplicationPopup extends Application {
   type: PopupWindowTypes;
+  popupInitialized = false;
 
   constructor() {
     super();
-  }
 
-  async init() {
-    await super.init(false);
-
-    ipc.once(Messages.initWindowType, (e, { type, payload }: { type: PopupWindowTypes; payload: any }) => {
+    ipc.once(Messages.initWindowType, async (e, { type, payload }: { type: PopupWindowTypes; payload: any }) => {
       this.type = type;
+      
+      do {
+        await delay(100);
+      } while (!this.popupInitialized);
 
       switch (this.type) {
         case 'sendTx':
@@ -48,6 +50,11 @@ export class ApplicationPopup extends Application {
           break;
       }
     });
+  }
+
+  async init() {
+    await super.init(false);
+    this.popupInitialized = true;
   }
 
   confirmVM?: ConfirmVM;

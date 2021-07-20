@@ -147,7 +147,7 @@ export async function updateApp() {
   const targetInfo = secInfo.files.find((f) => f.url === artifactName) as { sha512: string; size: number };
 
   if (!targetInfo) return;
-  if (!updateAvailable) return;
+  // if (!updateAvailable) return;
 
   try {
     statSync(dlPath, {});
