@@ -148,6 +148,7 @@ export class WalletVM {
 
   clean() {
     this._historyTxsVM?.selectTx(undefined);
+    this._historyTxsVM = undefined;
     this.accounts.forEach((a) => a?.clean());
     store.remove(Keys.lastUsedAccount(this.id));
   }
