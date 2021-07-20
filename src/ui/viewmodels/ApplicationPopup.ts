@@ -17,10 +17,12 @@ export class ApplicationPopup extends Application {
 
     ipc.once(Messages.initWindowType, async (e, { type, payload }: { type: PopupWindowTypes; payload: any }) => {
       this.type = type;
-      
+      let count = 0;
+
       do {
         await delay(20);
-      } while (!this.popupInitialized);
+        count++;
+      } while (!this.popupInitialized && count < 20);
 
       switch (this.type) {
         case 'sendTx':

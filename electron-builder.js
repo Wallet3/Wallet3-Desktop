@@ -17,14 +17,17 @@ module.exports = {
     icon: 'assets/AppIcon.icns',
     // background: 'assets/DMGBG.png',
     // backgroundColor: '#6186ff',
-    //entitlements: "sign/entitlements.plist",
+    entitlements: 'sign/entitlements.plist',
     category: 'public.app-category.finance',
     target: [
       'dmg',
-      'zip',
+      // 'zip',
       // 'mas'
     ],
     publish: ['github'],
+  },
+  mas: {
+    entitlements: 'sign/entitlements.mas.plist',
   },
   win: {
     target: ['nsis'],
@@ -46,8 +49,5 @@ module.exports = {
     displayName: 'Wallet 3',
     publisher: 'CN',
     publisherDisplayName: 'ChainBow Co, Ltd.',
-  },
-  publish: {
-    provider: ['github'],
   },
 };
