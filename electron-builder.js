@@ -7,7 +7,6 @@ module.exports = {
   productName: 'Wallet 3',
   artifactName: '${name}-${os}-${arch}-${version}.${ext}',
   copyright: 'Copyright © 2021 ChainBow Co. Ltd.',
-  asar: false,
   protocols: {
     name: 'Wallet 3',
     schemes: ['wallet3', 'wc', 'ledgerlive'],
