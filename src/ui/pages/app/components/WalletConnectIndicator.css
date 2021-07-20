@@ -10,6 +10,10 @@
   animation-timing-function: ease-in-out;
 }
 
+#root.win32 .walletconnect-indicator > svg {
+  margin-top: 1px;
+}
+
 @keyframes connecting {
   0% {
     opacity: 0;
