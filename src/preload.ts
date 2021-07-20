@@ -1,7 +1,7 @@
 import * as crypto from 'crypto';
 
 import { BrowserWindow, DesktopCapturerSource, IpcRendererEvent, SourcesOptions, desktopCapturer } from 'electron';
-import { NotificationConstructorOptions, clipboard, contextBridge, ipcRenderer, shell, webFrame } from 'electron';
+import { clipboard, contextBridge, ipcRenderer, shell, webFrame } from 'electron';
 import { decrypt, encrypt } from './common/Cipher';
 
 import Messages from './common/Messages';
