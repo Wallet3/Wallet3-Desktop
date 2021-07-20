@@ -13,9 +13,9 @@ import yaml from 'yaml';
 export async function checkUpdates() {
   try {
     const resp = await axios.get('https://raw.githubusercontent.com/Wallet3/Wallet3/master/package.json');
-    const { version: stableVersion } = resp.data as { version: string };
+    const { version: latestVersion } = resp.data as { version: string };
     const currentVersion = app.getVersion();
-    return { updateAvailable: stableVersion > currentVersion, stableVersion, currentVersion };
+    return { updateAvailable: latestVersion > currentVersion, latestVersion, currentVersion };
   } catch (error) {
     return { updateAvailable: false };
   }
@@ -132,28 +132,28 @@ function checkShasum(target: { sha512: string; size: number }, path: string) {
 }
 
 export async function updateApp() {
-  const { updateAvailable, stableVersion } = await checkUpdates();
+  const { updateAvailable, latestVersion } = await checkUpdates();
 
   const platform = process.platform;
   const os = platform === 'win32' ? 'win' : platform === 'darwin' ? 'mac' : 'linux';
   const ext = platform === 'win32' ? 'exe' : platform === 'darwin' ? 'dmg' : 'AppImage';
-  const artifactName = `wallet3-${os}-${process.arch}-${stableVersion}.${ext}`;
+  const artifactName = `wallet3-${os}-${process.arch}-${latestVersion}.${ext}`;
 
-  const pkgUrl = `https://github.com/Wallet3/Wallet3/releases/download/v${stableVersion}/${artifactName}`;
-  const ymlUrl = `https://github.com/Wallet3/Wallet3/releases/download/v${stableVersion}/latest.yml`;
+  const pkgUrl = `https://github.com/Wallet3/Wallet3/releases/download/v${latestVersion}/${artifactName}`;
+  const ymlUrl = `https://github.com/Wallet3/Wallet3/releases/download/v${latestVersion}/latest.yml`;
   const dlPath = path.join(tmpdir(), artifactName);
 
   const secInfo = yaml.parse((await axios.get(ymlUrl)).data);
   const targetInfo = secInfo.files.find((f) => f.url === artifactName) as { sha512: string; size: number };
 
   if (!targetInfo) return;
-  // if (!updateAvailable) return;
+  if (!updateAvailable) return;
 
   try {
     statSync(dlPath, {});
 
     if (checkShasum(targetInfo, dlPath)) {
-      installUpdate(stableVersion, dlPath);
+      installUpdate(latestVersion, dlPath);
       return;
     }
   } catch (error) {}
@@ -175,7 +175,7 @@ export async function updateApp() {
     dlStream = null;
 
     if (checkShasum(targetInfo, dlPath)) {
-      installUpdate(stableVersion, dlPath);
+      installUpdate(latestVersion, dlPath);
     }
   });
 

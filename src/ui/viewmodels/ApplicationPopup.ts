@@ -19,7 +19,7 @@ export class ApplicationPopup extends Application {
       this.type = type;
       
       do {
-        await delay(100);
+        await delay(20);
       } while (!this.popupInitialized);
 
       switch (this.type) {
