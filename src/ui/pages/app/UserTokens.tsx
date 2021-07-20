@@ -3,7 +3,6 @@ import './UserTokens.css';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import React, { useEffect, useState } from 'react';
 
-import { AccountVM } from '../../viewmodels/AccountVM';
 import { Application } from '../../viewmodels/Application';
 import { CryptoIcons } from '../../misc/Icons';
 import Feather from 'feather-icons-react';
