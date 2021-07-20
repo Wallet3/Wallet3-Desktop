@@ -15,7 +15,7 @@ export default ({ app }: { app: Application }) => {
   let vm = pendingTxVM || historyTxsVM.selectedTx;
 
   useEffect(() => {
-    return () => app.currentWallet.clean();
+    return () => app.currentWallet.releasePendingVM();
   }, []);
 
   return (

@@ -74,7 +74,7 @@ export default observer(({ app, networksVM }: { app: Application; networksVM: Ne
           <h4>{t('Transfer')}</h4>
           <div className="to">
             <span>{t('To')}:</span>
-            <input type="text" spellCheck={false} onChange={(e) => transferVM.setReceipient(e.target.value)} />
+            <input type="text" spellCheck={false} onChange={(e) => transferVM.setRecipient(e.target.value)} />
             <Feather icon="edit" size={15} strokeWidth={2} className="edit-icon" />
           </div>
           <button disabled={!transferVM?.isNFTValid} onClick={(_) => transferVM?.sendNFT(nft)}>

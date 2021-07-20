@@ -130,6 +130,10 @@ export class WalletVM {
     this.pendingTxVM = new PendingTxVM(tx);
   }
 
+  releasePendingVM() {
+    this.pendingTxVM = null;
+  }
+
   dAppVM: DAppVM = null;
 
   selectDAppSession(session: IWcSession) {
@@ -143,7 +147,6 @@ export class WalletVM {
   }
 
   clean() {
-    this.pendingTxVM = null;
     this._historyTxsVM?.selectTx(undefined);
     this.accounts.forEach((a) => a?.clean());
     store.remove(Keys.lastUsedAccount(this.id));

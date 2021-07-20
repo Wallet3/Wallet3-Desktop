@@ -21,7 +21,7 @@ export class TransferVM {
   private gasnowDisposer: IReactionDisposer;
 
   self = '';
-  receipient: string = '';
+  recipient: string = '';
   receiptAddress = '';
   isEns = false;
   amount: string = '';
@@ -38,7 +38,7 @@ export class TransferVM {
       return (
         this.selectedTokenBalance.gt(0) &&
         this.receiptAddress &&
-        this.receipient &&
+        this.recipient &&
         this.amount.length > 0 &&
         validAmount &&
         this.gas >= 21000 &&
@@ -76,7 +76,7 @@ export class TransferVM {
 
   selectedToken: UserToken = null;
   selectedTokenBalance = BigNumber.from(0);
-  receipients: { id: number; name: string }[] = [];
+  recipients: { id: number; name: string }[] = [];
 
   // Gwei
   rapid = 0;
@@ -96,11 +96,11 @@ export class TransferVM {
     this.initGasPrice();
     this.initNonce();
 
-    this.receipients = store.get('receipients') || [];
+    this.recipients = store.get('recipients') || [];
   }
 
-  setReceipient(addressOrName: string) {
-    this.receipient = addressOrName;
+  setRecipient(addressOrName: string) {
+    this.recipient = addressOrName;
 
     if (addressOrName.toLowerCase().endsWith('.eth') || addressOrName.toLowerCase().endsWith('.xyz')) {
       NetworksVM.currentProvider.resolveName(addressOrName).then((addr) => {
@@ -194,7 +194,7 @@ export class TransferVM {
   }
 
   private initNonce() {
-    NetworksVM.currentProvider.getTransactionCount(this.self).then((nonce) => runInAction(() => (this.nonce = nonce)));
+    NetworksVM.currentProvider.getTransactionCount(this.self, 'pending').then((nonce) => runInAction(() => (this.nonce = nonce)));
   }
 
   private estimateGas() {
@@ -268,7 +268,7 @@ export class TransferVM {
       recipient: {
         address: this.receiptAddress,
         name: this.isEns
-          ? this.receipient
+          ? this.recipient
           : App.currentWallet.accounts.find((ac) => ac.address === utils.getAddress(this.receiptAddress))?.name ?? '',
       },
 
@@ -280,7 +280,7 @@ export class TransferVM {
         : undefined,
     } as ConfirmSendTx);
 
-    this.saveReceipients(this.receipient);
+    this.saveRecipients(this.recipient);
 
     runInAction(() => (this.sending = false));
   }
@@ -307,9 +307,7 @@ export class TransferVM {
           const iface = new ethers.utils.Interface(ERC1155ABI);
           const empty = ethers.utils.arrayify('0x');
           data = iface.encodeFunctionData('safeTransferFrom', [this.self, this.receiptAddress, nft.tokenId, 1, empty]);
-          gas = (
-            await erc1155.estimateGas.safeTransferFrom(this.self, this.receiptAddress, nft.tokenId, 1, empty)
-          ).toNumber();
+          gas = (await erc1155.estimateGas.safeTransferFrom(this.self, this.receiptAddress, nft.tokenId, 1, empty)).toNumber();
         } catch (error) {
           gas = 100_000;
         }
@@ -329,22 +327,22 @@ export class TransferVM {
       recipient: {
         address: this.receiptAddress,
         name: this.isEns
-          ? this.receipient
+          ? this.recipient
           : App.currentWallet.accounts.find((ac) => ac.address === utils.getAddress(this.receiptAddress))?.name ?? '',
       },
 
       transferToken: undefined,
     } as ConfirmSendTx);
 
-    this.saveReceipients(this.receipient);
+    this.saveRecipients(this.recipient);
 
     this.sending = false;
   }
 
-  private saveReceipients(receipient: string) {
-    if (this.receipients.find((a) => a.name.toLowerCase() === receipient.toLowerCase())) return;
+  private saveRecipients(recipient: string) {
+    if (this.recipients.find((a) => a.name.toLowerCase() === recipient.toLowerCase())) return;
 
-    this.receipients.push({ id: Date.now(), name: receipient });
-    store.set('receipients', this.receipients);
+    this.recipients.push({ id: Date.now(), name: recipient });
+    store.set('recipients', this.recipients);
   }
 }

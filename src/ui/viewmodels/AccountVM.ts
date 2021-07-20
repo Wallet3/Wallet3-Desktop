@@ -293,7 +293,7 @@ export class AccountVM {
       return;
     }
 
-    const addr = '0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B';
+    // const addr = '0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B';
 
     const poap = POAP.getNFTs(this.address).then(async (data) => {
       const nfts = data.map((item) => {

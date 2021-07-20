@@ -61,12 +61,12 @@ export default observer(({ app }: { app: Application }) => {
             showIcon={false}
             showClear={false}
             inputDebounce={500}
-            items={transferVM?.receipients}
+            items={transferVM?.recipients}
             autoFocus
             styling={AddressSearchStyle}
             placeholder="Receipient Address or ENS"
-            onSearch={(s, r) => transferVM?.setReceipient(s)}
-            onSelect={(item) => transferVM?.setReceipient(item.name)}
+            onSearch={(s, r) => transferVM?.setRecipient(s)}
+            onSelect={(item) => transferVM?.setRecipient(item.name)}
           />
           <Feather icon="edit" size={15} strokeWidth={2} className="edit-icon" />
         </div>
