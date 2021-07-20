@@ -15,7 +15,7 @@ export class ApplicationPopup extends Application {
   }
 
   async init() {
-    super.init(false);
+    await super.init(false);
 
     ipc.once(Messages.initWindowType, (e, { type, payload }: { type: PopupWindowTypes; payload: any }) => {
       this.type = type;
