@@ -13,3 +13,7 @@
   margin: 0;
   margin-right: 1px;
 }
+
+#root.win32 .connectedapps-indicator > svg {
+  margin-top: 1px;
+}
