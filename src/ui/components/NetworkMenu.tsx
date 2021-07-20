@@ -36,7 +36,7 @@ export default observer(
     return (
       <Menu
         menuButton={() => (
-          <MenuButton className="menu-button">
+          <MenuButton className="menu-button networks">
             <NetworkLabel chainId={currentChainId} />
           </MenuButton>
         )}

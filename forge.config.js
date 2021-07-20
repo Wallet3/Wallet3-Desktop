@@ -28,6 +28,11 @@ module.exports = {
         schemes: ['wallet3', 'wc', 'ledgerlive'],
       },
     ],
+
+    win32metadata: {
+      CompanyName: 'ChainBow Co, Ltd.',
+      ProductName: 'Wallet 3',
+    },
   },
   makers: [
     {
@@ -51,7 +56,7 @@ module.exports = {
         packageVersion: package.version,
         makeVersionWinStoreCompatible: true,
         flatten: true,
-        assets: './assets/AppIcon.png'
+        assets: './assets/AppIcon.png',
       },
     },
   ],
@@ -84,7 +89,4 @@ module.exports = {
       },
     ],
   ],
-  win32metadata: {
-    CompanyName: 'ChainBow Co, Ltd.',
-  },
 };

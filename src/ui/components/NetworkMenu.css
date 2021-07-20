@@ -1,3 +1,7 @@
+.menu-button.networks {
+  -webkit-app-region: no-drag;
+}
+
 .rc-menu__submenu {
   font-size: 12px !important;
   font-weight: 400 !important;
