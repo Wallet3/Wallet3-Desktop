@@ -82,6 +82,7 @@ const createTray = async () => {
   if (tray) return;
 
   const trayImage = nativeImage.createEmpty();
+  trayImage.isMacTemplateImage = true;
   trayImage.addRepresentation({
     scaleFactor: 3,
     width: 20,
