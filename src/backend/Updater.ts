@@ -21,6 +21,78 @@ export async function checkUpdates() {
   }
 }
 
+async function checkReleaseInfo(version: string, artifactName: string) {
+  const urls = [
+    `https://github.com/Wallet3/Wallet3/releases/download/v${version}/latest.yml`,
+    `https://wallet3.io/download/${version}/latest.yml`,
+  ];
+
+  for (let url of urls) {
+    try {
+      const releaseInfo = yaml.parse((await axios.get(url)).data);
+      const targetInfo = releaseInfo.files.find((f) => f.url === artifactName) as { sha512: string; size: number };
+      if (targetInfo) return targetInfo;
+    } catch (error) {}
+  }
+}
+
+function checkShasum(target: { sha512: string; size: number }, path: string) {
+  try {
+    const shasum = execSync(
+      process.platform === 'win32' ? `certutil.exe -hashfile ${path} SHA512` : `shasum -a 512 ${path}`
+    ).toString('utf-8');
+
+    console.log(shasum);
+    return shasum.includes(target.sha512);
+  } catch (error) {}
+
+  return false;
+}
+
+function downloadFile(url: string, dlPath: string) {
+  return new Promise<boolean>(async (resolve) => {
+    let dlStream = got.stream(url);
+    let tmpfileStream = createWriteStream(dlPath);
+
+    dlStream.on('downloadProgress', ({ transferred, total, percent }) => {
+      const percentage = Math.round(percent * 100);
+      console.log(`progress: ${transferred}/${total} (${percentage}%)`);
+    });
+
+    dlStream.once('error', () => {
+      resolve(false);
+      dlStream.removeAllListeners();
+    });
+
+    tmpfileStream.once('error', () => {
+      resolve(false);
+      dlStream.removeAllListeners();
+    });
+
+    tmpfileStream.once('finish', () => {
+      dlStream.removeAllListeners();
+      dlStream = null;
+
+      resolve(true);
+    });
+
+    dlStream.pipe(tmpfileStream);
+  });
+}
+
+async function downloadUpdate(version: string, artifactName: string, dlPath: string) {
+  const urls = [
+    `https://github.com/Wallet3/Wallet3/releases/download/v${version}/${artifactName}`,
+    `https://wallet3.io/download/${version}/${artifactName}`,
+  ];
+
+  for (let url of urls) {
+    if (await downloadFile(url, dlPath)) {
+      return true;
+    }
+  }
+}
+
 async function installWindows(options: {
   installerPath: string;
   isSilent: boolean;
@@ -118,19 +190,6 @@ async function installUpdate(version: string, execPath: string) {
   }
 }
 
-function checkShasum(target: { sha512: string; size: number }, path: string) {
-  try {
-    const shasum = execSync(
-      process.platform === 'win32' ? `certutil.exe -hashfile ${path} SHA512` : `shasum -a 512 ${path}`
-    ).toString('utf-8');
-
-    console.log(shasum);
-    return shasum.includes(target.sha512);
-  } catch (error) {}
-
-  return false;
-}
-
 export async function updateApp() {
   const { updateAvailable, latestVersion } = await checkUpdates();
 
@@ -139,12 +198,9 @@ export async function updateApp() {
   const ext = platform === 'win32' ? 'exe' : platform === 'darwin' ? 'dmg' : 'AppImage';
   const artifactName = `wallet3-${os}-${process.arch}-${latestVersion}.${ext}`;
 
-  const pkgUrl = `https://github.com/Wallet3/Wallet3/releases/download/v${latestVersion}/${artifactName}`;
-  const ymlUrl = `https://github.com/Wallet3/Wallet3/releases/download/v${latestVersion}/latest.yml`;
   const dlPath = path.join(tmpdir(), artifactName);
 
-  const secInfo = yaml.parse((await axios.get(ymlUrl)).data);
-  const targetInfo = secInfo.files.find((f) => f.url === artifactName) as { sha512: string; size: number };
+  const targetInfo = await checkReleaseInfo(latestVersion, artifactName);
 
   if (!targetInfo) return;
   if (!updateAvailable) return;
@@ -158,26 +214,7 @@ export async function updateApp() {
     }
   } catch (error) {}
 
-  let dlStream = got.stream(pkgUrl);
-  let tmpfileStream = createWriteStream(dlPath);
-
-  dlStream.on('downloadProgress', ({ transferred, total, percent }) => {
-    const percentage = Math.round(percent * 100);
-    console.log(`progress: ${transferred}/${total} (${percentage}%)`);
-  });
-
-  dlStream.once('error', () => dlStream.removeAllListeners());
-
-  tmpfileStream.once('error', () => dlStream.removeAllListeners());
-
-  tmpfileStream.once('finish', () => {
-    dlStream.removeAllListeners();
-    dlStream = null;
-
-    if (checkShasum(targetInfo, dlPath)) {
-      installUpdate(latestVersion, dlPath);
-    }
-  });
-
-  dlStream.pipe(tmpfileStream);
+  if ((await downloadUpdate(latestVersion, artifactName, dlPath)) && checkShasum(targetInfo, dlPath)) {
+    installUpdate(latestVersion, dlPath);
+  }
 }
