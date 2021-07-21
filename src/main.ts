@@ -20,7 +20,7 @@ declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 let tray: Tray;
 let idleTimer: NodeJS.Timeout;
 
-const prod = process.env.NODE_ENV === 'production';
+const prod = app.isPackaged;
 const isMac = process.platform === 'darwin';
 const isWin = process.platform === 'win32';
 

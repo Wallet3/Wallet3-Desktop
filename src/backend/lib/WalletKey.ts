@@ -9,9 +9,10 @@ import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 import { AccountType } from '../models/Types';
 import Key from '../models/Key';
 import { TxParams } from '../../common/Messages';
+import { app } from 'electron';
 
 const BasePath = `m/44\'/60\'/0\'/0`;
-const prod = process.env.NODE_ENV === 'production';
+const prod = app.isPackaged;
 
 const Keys = {
   password: 'wallet3-password',

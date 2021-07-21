@@ -1,3 +1,6 @@
+const MAS_DEV = process.env.W3_DIST === 'MAS_DEV';
+const MAS = process.env.W3_DIST === 'MAS';
+
 module.exports = {
   directories: {
     app: '.',
@@ -18,8 +21,7 @@ module.exports = {
     entitlements: 'sign/entitlements.plist',
     category: 'public.app-category.finance',
     target: [
-      // 'dmg',
-      'mas',
+      MAS_DEV ? 'mas-dev' : MAS ? 'mas' : 'dmg', // https://github.com/electron/electron-osx-sign/issues/223#issuecomment-611070794
     ],
     publish: ['github'],
   },
@@ -27,6 +29,7 @@ module.exports = {
     entitlements: 'sign/entitlements.mas.plist',
     type: 'distribution',
     identity: 'Apple Distribution: ChainBow Co. Ltd (Z3N6SZF439)',
+    provisioningProfile: '',
   },
   win: {
     target: ['nsis'],

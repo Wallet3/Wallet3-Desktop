@@ -10,6 +10,8 @@ import path from 'path';
 import { tmpdir } from 'os';
 import yaml from 'yaml';
 
+const isMas = process.env.W3_DIST === 'MAS';
+
 export async function checkUpdates() {
   try {
     const resp = await axios.get('https://raw.githubusercontent.com/Wallet3/Wallet3/master/package.json');
@@ -191,6 +193,8 @@ async function installUpdate(version: string, execPath: string) {
 }
 
 export async function updateApp() {
+  if (isMas) return;
+
   const { updateAvailable, latestVersion } = await checkUpdates();
 
   const platform = process.platform;
