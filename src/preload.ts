@@ -131,3 +131,9 @@ export class WindowApi {
 }
 
 contextBridge.exposeInMainWorld(WindowApi.API_KEY, new WindowApi());
+
+export class SecureApi {
+  static readonly API_KEY = 'wallet3_secure';
+}
+
+contextBridge.exposeInMainWorld(SecureApi.API_KEY, new SecureApi());

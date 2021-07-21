@@ -11,7 +11,7 @@
   "scripts": {
     "start": "npx electron-forge start",
     "package": "npx electron-forge package",
-    "build:mac:arm64": "npx electron-forge package --platform=darwin --arch=arm64 && DEBUG=electron-builder ./node_modules/.bin/electron-builder build --mac --arm64",
+    "build:mac:arm64": "npx electron-forge package --platform=darwin --arch=arm64 && ./node_modules/.bin/electron-builder build --mac --arm64",
     "build:mas:arm64": "W3_DIST=MAS npx electron-forge package --platform=darwin --arch=arm64 && DEBUG=electron-builder ./node_modules/.bin/electron-builder build --mac --arm64",
     "build:mas-dev:arm64": "W3_DIST=MAS_DEV npx electron-forge package --platform=darwin --arch=arm64 && DEBUG=electron-builder ./node_modules/.bin/electron-builder build --mac --arm64",
     "build:mac:x64": "npx electron-forge package --platform=darwin --arch=x64 && DEBUG=electron-builder ./node_modules/.bin/electron-builder build --mac --x64",

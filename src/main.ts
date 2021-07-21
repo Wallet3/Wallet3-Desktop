@@ -254,6 +254,8 @@ app.on('ready', async () => {
     app.setAppUserModelId('jp.co.chainbow.wallet3');
   }
 
+  if (isMac) app.setSecureKeyboardEntryEnabled(true);
+
   updateApp();
 });
 
