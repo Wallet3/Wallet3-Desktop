@@ -82,13 +82,13 @@ const createTray = async () => {
   if (tray) return;
 
   const trayImage = nativeImage.createEmpty();
-  trayImage.isMacTemplateImage = true;
   trayImage.addRepresentation({
     scaleFactor: 3,
     width: 20,
     height: 20,
     dataURL: require(`./assets/icons/app/tray_${process.platform}.png`).default,
   });
+  trayImage.isMacTemplateImage = true;
 
   tray = new Tray(trayImage);
   const menu = Menu.buildFromTemplate([
