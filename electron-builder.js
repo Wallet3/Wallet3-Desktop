@@ -15,19 +15,18 @@ module.exports = {
   //afterSign: "sign/appSign.js",
   mac: {
     icon: 'assets/AppIcon.icns',
-    // background: 'assets/DMGBG.png',
-    // backgroundColor: '#6186ff',
     entitlements: 'sign/entitlements.plist',
     category: 'public.app-category.finance',
     target: [
-      'dmg',
-      // 'zip',
-      // 'mas'
+      // 'dmg',
+      'mas',
     ],
     publish: ['github'],
   },
   mas: {
     entitlements: 'sign/entitlements.mas.plist',
+    type: 'distribution',
+    identity: 'Apple Distribution: ChainBow Co. Ltd (Z3N6SZF439)',
   },
   win: {
     target: ['nsis'],
