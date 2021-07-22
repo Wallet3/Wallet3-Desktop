@@ -6,7 +6,7 @@ Wallet 3 is a secure crypto wallet for desktop users. It has a simple, UX-friend
 
 Wallet 3 utilizes the latest macOS security features to protect users. The private key is stored in the keychain which is secured by Secure Enclave, inaccessible to anyone other than the user.
 
-Wallet 3 **DO NOT** trust users' desktop environment. After Wallet 3 is launced,  the app creates a secure pipline for inter-process communication. And no sensitive data will be resident in the memory.
+Wallet 3 **DO NOT** trust users' desktop environment. After Wallet 3 is launchd,  the app creates a secure pipline for inter-process communication. And no sensitive data will be resident in the memory.
 
 ### About hardware wallet
 
@@ -20,16 +20,17 @@ A seed file used to persist entropy across boots <br>
 Intel random instructions — for example, RDSEED and RDRAND (only on an Intel-based Mac) <br> <br>
 Source: https://support.apple.com/en-ie/guide/security/seca0c73a75b/web
 
-So, a hardware wallet is good, but we don't think users need to go out and buy an expensive hardware wallet.
+**Wallet 3** can utilize these advanced security mechanisms to protect the digital assets for desktop users.
 
 ## Features
 
 0. Built for Security.
-1. Support Layer 2 and EVM-compatible chains
-2. Connect DeFi apps with WalletConnect
-3. UX-friendly Design
-4. Support TouchBar
-5. Real-time gas price for Mac users
+1. Support Layer 2 and EVM-compatible chains.
+2. Connect DeFi apps with WalletConnect.
+3. UX-friendly Design.
+4. Support TouchBar.
+5. Real-time gas price for Mac users.
+6. Multi-account support.
 
 ## What is Ethereum
 
