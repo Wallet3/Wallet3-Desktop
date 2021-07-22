@@ -92,7 +92,7 @@ export default observer(({ app }: { app: Application }) => {
         {!validated && (!authenticated || authMethod === 'keyboard') ? (
           <div className="wallets">
             <Menu
-              styles={{ minWidth: '100px' }}
+              styles={{ minWidth: '108px' }}
               overflow="auto"
               menuButton={() => (
                 <MenuButton className="menu-button">

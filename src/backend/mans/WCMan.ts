@@ -95,7 +95,7 @@ export class WCMan {
   }
 
   recoverSessions(wcSessions: WCSession[]) {
-    const sessions: IWcSession[] = wcSessions.map((s) => s.session);
+    const sessions: IRawWcSession[] = wcSessions.map((s) => s.session);
 
     const wcs = this.connectSessions(sessions);
     wcs.filter((i) => i).map((wc, i) => (wc.wcSession = wcSessions[i]));
@@ -103,7 +103,7 @@ export class WCMan {
     runInAction(() => this.connections.push(...wcs));
   }
 
-  private connectSessions(sessions: IWcSession[]) {
+  private connectSessions(sessions: IRawWcSession[]) {
     return sessions.map((session) => {
       if (this.cache.has(session.key)) return undefined;
       this.cache.add(session.key);
@@ -121,6 +121,16 @@ export class WCMan {
       wc.dispose();
       wc.wcSession?.remove({});
       runInAction(() => this.connections.splice(this.connections.indexOf(wc), 1));
+    });
+
+    wc.once('transport_error', () => {
+      const wcSession = wc.wcSession;
+      wc.dispose();
+      runInAction(() => {
+        this.cache.delete(wcSession.session.key);
+        this.connections.splice(this.connections.indexOf(wc), 1);
+        this.recoverSessions([wcSession]);
+      });
     });
 
     wc.on('sessionUpdated', () => {

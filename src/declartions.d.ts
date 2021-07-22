@@ -76,7 +76,7 @@ interface WCEncryptionPayload {
   iv: string;
 }
 
-interface IWcSession {
+interface IRawWcSession {
   connected: boolean;
   accounts: string[];
   chainId: number;

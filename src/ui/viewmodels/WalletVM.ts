@@ -18,7 +18,7 @@ export class WalletVM {
   accounts: AccountVM[] = [];
   currentAccount: AccountVM = null;
   allPendingTxs: TxParams[] = [];
-  connectedDApps: IWcSession[] = [];
+  connectedDApps: IRawWcSession[] = [];
 
   private key: IKey;
 
@@ -77,7 +77,7 @@ export class WalletVM {
       () => this.currentAccount?.refresh()
     );
 
-    ipc.on(Messages.wcConnectsChanged(key.id), (e, content: IWcSession[]) =>
+    ipc.on(Messages.wcConnectsChanged(key.id), (e, content: IRawWcSession[]) =>
       runInAction(() => (this.connectedDApps = content.sort((a, b) => b.lastUsedTimestamp - a.lastUsedTimestamp)))
     );
   }
@@ -89,7 +89,7 @@ export class WalletVM {
   }: {
     addresses?: string[];
     pendingTxs?: TxParams[];
-    connectedDApps?: IWcSession[];
+    connectedDApps?: IRawWcSession[];
   }) {
     if (addresses?.length > 0 && (!this.accounts || this.accounts.length === 0)) {
       this.accounts = addresses.map((address, i) => new AccountVM({ address, accountIndex: i + 1, walletId: this.id }));
@@ -136,7 +136,7 @@ export class WalletVM {
 
   dAppVM: DAppVM = null;
 
-  selectDAppSession(session: IWcSession) {
+  selectDAppSession(session: IRawWcSession) {
     this.dAppVM = new DAppVM(session, this.key.id);
   }
 

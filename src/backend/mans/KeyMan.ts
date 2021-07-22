@@ -87,6 +87,8 @@ class KeyMan {
   }
 
   async switch(id: number) {
+    console.log('currentId', this.currentId, 'to', id);
+
     if (this.currentId === id) return this.currentId;
 
     this.current = this.keys.find((k) => k.id === id) || this.keys[0];

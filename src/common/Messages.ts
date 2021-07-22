@@ -140,7 +140,7 @@ export interface IKey {
   name: string;
   id: number;
   addresses: string[];
-  connectedDApps: IWcSession[];
+  connectedDApps: IRawWcSession[];
   type: number;
 }
 
