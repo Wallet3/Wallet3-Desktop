@@ -71,8 +71,8 @@ export class WalletConnect extends EventEmitter {
 
     this.connector.on('session_request', this.handleSessionRequest);
     this.connector.on('call_request', this.handleCallRequest);
-    this.connector.on('disconnect', () => this.emit('disconnect', this));
-    this.connector.on('transport_error', () => this.emit('transport_error', this));
+    this.connector.on('disconnect', () => this.emit('disconnect'));
+    this.connector.on('transport_error', () => this.emit('transport_error'));
   }
 
   connectViaSession(session: IRawWcSession) {
@@ -80,8 +80,8 @@ export class WalletConnect extends EventEmitter {
 
     this.connector.on('session_request', this.handleSessionRequest);
     this.connector.on('call_request', this.handleCallRequest);
-    this.connector.on('disconnect', () => this.emit('disconnect', this));
-    this.connector.on('transport_error', () => this.emit('transport_error', this));
+    this.connector.on('disconnect', () => this.emit('disconnect'));
+    this.connector.on('transport_error', () => this.emit('transport_error'));
 
     this.peerId = session.peerId;
     this.appMeta = session.peerMeta;
