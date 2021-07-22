@@ -146,7 +146,6 @@ const createWindow = async (): Promise<void> => {
 
   mainWindow.once('closed', () => {
     mainWindow.removeAllListeners();
-    mainWindow.setTouchBar(null);
     if (isMac) app.dock.hide();
     App.mainWindow = undefined;
   });

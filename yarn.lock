@@ -2278,19 +2278,20 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
-"@json-rpc-tools/types@^1.6.1":
-  version "1.7.6"
-  resolved "https://registry.yarnpkg.com/@json-rpc-tools/types/-/types-1.7.6.tgz#5abd5fde01364a130c46093b501715bcce5bdc0e"
-  integrity sha512-nDSqmyRNEqEK9TZHtM15uNnDljczhCUdBmRhpNZ95bIPKEDQ+nTDmGMFd2lLin3upc5h2VVVd9tkTDdbXUhDIQ==
+"@json-rpc-tools/types@^2.0.0-beta.12":
+  version "2.0.0-beta.12"
+  resolved "https://registry.yarnpkg.com/@json-rpc-tools/types/-/types-2.0.0-beta.12.tgz#358f77c48a844a3f55169c2db3b35c6af1cf4e8b"
+  integrity sha512-UM8w0RnD4DjYql/HlThe051ivW2Q8ulWarr7ux5Aas1UsOmcGQEg4slQo46p+BXgh1Nth7SHWS2tVnW/UUnCwQ==
   dependencies:
     keyvaluestorage-interface "^1.0.0"
 
-"@json-rpc-tools/utils@1.6.1":
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/@json-rpc-tools/utils/-/utils-1.6.1.tgz#26e37d0fc4522721158d0f6057e136daa8813263"
-  integrity sha512-cNwP4QapAls+xATU8zLLqPYa9qCbgwEyWEK7vE1oH91b3LfbUYwHtiWZ1+rv0X/mh/9cWNTo2Oi2Sah/QX0WwA==
+"@json-rpc-tools/utils@^2.0.0-beta.11":
+  version "2.0.0-beta.12"
+  resolved "https://registry.yarnpkg.com/@json-rpc-tools/utils/-/utils-2.0.0-beta.12.tgz#40be0f4c07e176d7fc14a441fbbf1bd1a0f9847f"
+  integrity sha512-7j3REzegFNXdgA0rjllNKz84ikIAXm4Yv3mO8Lx9D64hUOU2tUZfELtKEm2wr8FsP5if46Xl9ZH/Ch7JB4nXJQ==
   dependencies:
-    "@json-rpc-tools/types" "^1.6.1"
+    "@json-rpc-tools/types" "^2.0.0-beta.12"
+    "@pedrouid/environment" "^1.0.1"
 
 "@malept/cross-spawn-promise@^1.0.0", "@malept/cross-spawn-promise@^1.1.0", "@malept/cross-spawn-promise@^1.1.1":
   version "1.1.1"
@@ -2342,20 +2343,21 @@
   resolved "https://registry.yarnpkg.com/@pedrouid/environment/-/environment-1.0.1.tgz#858f0f8a057340e0b250398b75ead77d6f4342ec"
   integrity sha512-HaW78NszGzRZd9SeoI3JD11JqY+lubnaOx7Pewj5pfjqWXOEATpeKIFb9Z4t2WBUK2iryiXX3lzWwmYWgUL0Ug==
 
-"@pedrouid/iso-crypto@^1.0.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@pedrouid/iso-crypto/-/iso-crypto-1.1.0.tgz#3fb4050ea99f2f8ee41ba8661193c0989c815c95"
-  integrity sha512-twi+tW67XT0BSOv4rsegnGo4TQMhfFswS/GY3KhrjFiNw3z9x+cMkfO+itNe1JZghQxsxHuhifvfsnG814g1hQ==
+"@pedrouid/iso-crypto@^2.0.0-beta.3":
+  version "2.0.0-beta.7"
+  resolved "https://registry.yarnpkg.com/@pedrouid/iso-crypto/-/iso-crypto-2.0.0-beta.7.tgz#dc100f002eb4d1635e3399d03843439e497f648e"
+  integrity sha512-5FxV0kH1gWeI+ejAh3yub/niB/ecxdtUUw8BvKFsPNjNHYF4Zz7zMa1EcSSjOri5D/mw6PLW/Vp+3I2wfeICcw==
   dependencies:
-    "@pedrouid/iso-random" "^1.1.0"
+    "@pedrouid/environment" "^1.0.1"
+    "@pedrouid/iso-random" "^2.0.0-beta.6"
     aes-js "^3.1.2"
     enc-utils "^3.0.0"
     hash.js "^1.1.7"
 
-"@pedrouid/iso-random@^1.1.0":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@pedrouid/iso-random/-/iso-random-1.2.1.tgz#55178d9a2e7897b0f630dd1b4be76bc8460242d7"
-  integrity sha512-C35NqYMmLsg61WDiEup4OwjRhgfZIcK4BL+Qg49xowHUJ+f7/LFZCO+TGuQqoXFAj1beKIOpUN33f0fqV7zneQ==
+"@pedrouid/iso-random@^2.0.0-beta.6":
+  version "2.0.0-beta.6"
+  resolved "https://registry.yarnpkg.com/@pedrouid/iso-random/-/iso-random-2.0.0-beta.6.tgz#38a5974b19f1180af99964c84685383bb7c04db5"
+  integrity sha512-y2oAAPULxBWVSF2FLA0veB/qAfclbyJqepxx2p9/dT4166B+iVfIO5Y+YBXo3t9yhKfSpjdg8lJcd4Cyfe2Yvg==
   dependencies:
     "@pedrouid/environment" "^1.0.1"
     enc-utils "^3.0.0"
@@ -2931,67 +2933,67 @@
     "@typescript-eslint/types" "4.28.4"
     eslint-visitor-keys "^2.0.0"
 
-"@walletconnect/browser-utils@^1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@walletconnect/browser-utils/-/browser-utils-1.4.1.tgz#a8d5a038d28c19b739eb0ff4194ced140c922d36"
-  integrity sha512-ONrkPSI/27o1Wj8kUwE0uUZFk0GDCDQBJy614GsrhcwuQwJEW/B+nXPQ+Ca/4WvQySM5hWVHp1gO1kozSUkh3A==
+"@walletconnect/browser-utils@^1.5.0-rc.7":
+  version "1.5.0-rc.7"
+  resolved "https://registry.yarnpkg.com/@walletconnect/browser-utils/-/browser-utils-1.5.0-rc.7.tgz#2c818720b29bf89aebb346b41a00f15dc777536e"
+  integrity sha512-bSXB7hQbrXlE4uIayK5MmNTlsCewgvI+QhWpBOIgNTGHHxhgtHFiuw4HHJ4p2398L1J3SY2+7xt62PzrjVNuRA==
   dependencies:
-    "@walletconnect/types" "^1.4.1"
+    "@walletconnect/types" "^1.5.0-rc.7"
     detect-browser "5.2.0"
-    safe-json-utils "1.0.0"
+    safe-json-utils "2.0.0-beta.0"
     window-getters "1.0.0"
     window-metadata "1.0.0"
 
-"@walletconnect/client@^1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@walletconnect/client/-/client-1.4.1.tgz#c9c50df5afde23a35e23d96fe6d207c102e53850"
-  integrity sha512-JRW+9+j9LwszY76/WcIumEiLmhX7eidorH9SFFmI2pFfbrhB6KLe87FaA106kxwZUyWKOLZ6jVV4d1urYSdEwA==
+"@walletconnect/client@^1.5.0-rc.7":
+  version "1.5.0-rc.7"
+  resolved "https://registry.yarnpkg.com/@walletconnect/client/-/client-1.5.0-rc.7.tgz#a35730ce836a02fc75882696554580291fd12977"
+  integrity sha512-oz46HCWaxiIYm9i+tswRZCG870h+IFmFUb4AF/FqCCNcLbDkMY74neX48Nzl9JEsgxA/fJPbS0hRjocD2yEtjQ==
   dependencies:
-    "@walletconnect/core" "^1.4.1"
-    "@walletconnect/iso-crypto" "^1.4.1"
-    "@walletconnect/types" "^1.4.1"
-    "@walletconnect/utils" "^1.4.1"
+    "@walletconnect/core" "^1.5.0-rc.7"
+    "@walletconnect/iso-crypto" "^1.5.0-rc.7"
+    "@walletconnect/types" "^1.5.0-rc.7"
+    "@walletconnect/utils" "^1.5.0-rc.7"
 
-"@walletconnect/core@^1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@walletconnect/core/-/core-1.4.1.tgz#68310ee7c9737a7a0a7f1308abbfc1c31212b9a6"
-  integrity sha512-NzWvhk4akI2uhORUxMDMS/8yAdfp+nzvb5QdTE0eTD0WOrK16qAfYLSU/IjFc2J2lqhuPVxfO2XV7QoxgCXfwA==
+"@walletconnect/core@^1.5.0-rc.7":
+  version "1.5.0-rc.7"
+  resolved "https://registry.yarnpkg.com/@walletconnect/core/-/core-1.5.0-rc.7.tgz#170a2bb856b337e80526a46e2bc505f582f1282b"
+  integrity sha512-FKYAQFDyBtpENyChhYXzj+y/zdfJFYORCGu23VqdlVjCX9/PK+IlOWNCzTwMXJrFaFtWhowqZEoj8tBJt8wEZw==
   dependencies:
-    "@walletconnect/socket-transport" "^1.4.1"
-    "@walletconnect/types" "^1.4.1"
-    "@walletconnect/utils" "^1.4.1"
+    "@walletconnect/socket-transport" "^1.5.0-rc.7"
+    "@walletconnect/types" "^1.5.0-rc.7"
+    "@walletconnect/utils" "^1.5.0-rc.7"
 
-"@walletconnect/iso-crypto@^1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@walletconnect/iso-crypto/-/iso-crypto-1.4.1.tgz#0d9793c679d6c5443c49cce83f5d8dd476a65df2"
-  integrity sha512-rzfqM/DFhzNxBriMCU4DOarPkH+Brgll+2a2YeO6zHgMlwZtBKi5mMgzBwbDC3XygOvKbcRTB9G9hr8uYn+i5g==
+"@walletconnect/iso-crypto@^1.5.0-rc.7":
+  version "1.5.0-rc.7"
+  resolved "https://registry.yarnpkg.com/@walletconnect/iso-crypto/-/iso-crypto-1.5.0-rc.7.tgz#ea1e51a93ec2dccbcd3f34a417b0801eacf72663"
+  integrity sha512-UpUN5ddxxi6Fy8KDS0tEjd3x6rRX4EPA/k6DSiaPSoIa+9eJ0S8uGAtxN5lYpxu6fuBXU4ZoHbcJQ7bVZr7uxA==
   dependencies:
-    "@pedrouid/iso-crypto" "^1.0.0"
-    "@walletconnect/types" "^1.4.1"
-    "@walletconnect/utils" "^1.4.1"
+    "@pedrouid/iso-crypto" "^2.0.0-beta.3"
+    "@walletconnect/types" "^1.5.0-rc.7"
+    "@walletconnect/utils" "^1.5.0-rc.7"
 
-"@walletconnect/socket-transport@^1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@walletconnect/socket-transport/-/socket-transport-1.4.1.tgz#d9b7ebb9a2843cc44cf96c880c62be78d4a1625f"
-  integrity sha512-/5Mhu4bu3tS52LqTlmmjx5x/N89XqbuT0YMobvQ+k/m+VqSeBDntqIjwBt7XiFlCbrUTq3/yTajavGFxWFB6pA==
+"@walletconnect/socket-transport@^1.5.0-rc.7":
+  version "1.5.0-rc.7"
+  resolved "https://registry.yarnpkg.com/@walletconnect/socket-transport/-/socket-transport-1.5.0-rc.7.tgz#5a383d7df5059467a2e2b42c17997baf69628285"
+  integrity sha512-FBb3pBQwZ7Y4+NAeHwDQ1UhYeaMG3u174w/TelNOygnXzfwKsFuQ58ORyHCfGtVV5s3z1KhDPqtWlXJZCPvh3Q==
   dependencies:
-    "@walletconnect/types" "^1.4.1"
-    "@walletconnect/utils" "^1.4.1"
+    "@walletconnect/types" "^1.5.0-rc.7"
+    "@walletconnect/utils" "^1.5.0-rc.7"
     ws "7.3.0"
 
-"@walletconnect/types@^1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@walletconnect/types/-/types-1.4.1.tgz#48297238b86f846b8c694504ca45f0059a2cca88"
-  integrity sha512-lzS9NbXjVb5N+W/UnCZAflxjLtYepUi4ev1IeFozSvr/cWxAhEe/sjixe7WEIpYklW27kfBhKccMH/KjUoRC7w==
+"@walletconnect/types@^1.5.0-rc.7":
+  version "1.5.0-rc.7"
+  resolved "https://registry.yarnpkg.com/@walletconnect/types/-/types-1.5.0-rc.7.tgz#e321665b423d427eb03bbb6b2afb8f5dcaa89726"
+  integrity sha512-YHMRcSJFHehNEJiSvXr/kKvmOSsJNFi/T6Ea3vOmvtX3LvbX3S4cx9WNDlvrYlmcY95kGeqWr4ZW3JD/UICyKA==
 
-"@walletconnect/utils@^1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@walletconnect/utils/-/utils-1.4.1.tgz#86108470c211a02609274a6c7bbd516c5182a22e"
-  integrity sha512-JrVjcXmWVcU02fmVNZFBpJ48f84qyar24CF7szGv+k9ZxvU9J7XkM+Fic4790Dt3DaWhOzS9/eBUa+BEZcBbNw==
+"@walletconnect/utils@^1.5.0-rc.7":
+  version "1.5.0-rc.7"
+  resolved "https://registry.yarnpkg.com/@walletconnect/utils/-/utils-1.5.0-rc.7.tgz#66b2ecf6aa4972689ae4d8a804034a493b87862f"
+  integrity sha512-T1TX5zXI4fEKV1O0hre90P9enWYkKsZ0a2BJf2i1BW6O4kunKLmdy64tDSQMkBbqhUNvfN4xFCxvQUx3A5AcGA==
   dependencies:
-    "@json-rpc-tools/utils" "1.6.1"
-    "@walletconnect/browser-utils" "^1.4.1"
-    "@walletconnect/types" "^1.4.1"
+    "@json-rpc-tools/utils" "^2.0.0-beta.11"
+    "@walletconnect/browser-utils" "^1.5.0-rc.7"
+    "@walletconnect/types" "^1.5.0-rc.7"
     bn.js "4.11.8"
     enc-utils "3.0.0"
     js-sha3 "0.8.0"
@@ -10730,10 +10732,10 @@ safe-buffer@>=5.1.0, safe-buffer@^5.0.1, safe-buffer@^5.1.0, safe-buffer@^5.1.1,
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.2.1.tgz#1eaf9fa9bdb1fdd4ec75f58f9cdb4e6b7827eec6"
   integrity sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==
 
-safe-json-utils@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/safe-json-utils/-/safe-json-utils-1.0.0.tgz#8b1d68b13cff2ac6a5b68e6c9651cf7f8bb56d9b"
-  integrity sha512-n0hJm6BgX8wk3G+AS8MOQnfcA8dfE6ZMUfwkHUNx69YxPlU3HDaZTHXWto35Z+C4mOjK1odlT95WutkGC+0Idw==
+safe-json-utils@2.0.0-beta.0:
+  version "2.0.0-beta.0"
+  resolved "https://registry.yarnpkg.com/safe-json-utils/-/safe-json-utils-2.0.0-beta.0.tgz#425c0fca3057caed7a3d8d82e3d673d9dcbfa218"
+  integrity sha512-kaIaayQoR1EoeX0UIQqQyHvWNNWKnQcrNmebCpR80zSjML/EMmulChGJDSoJvFR8eWkVIpDD5kAF0dMuxl1ngg==
 
 "safer-buffer@>= 2.1.2 < 3", "safer-buffer@>= 2.1.2 < 3.0.0", safer-buffer@^2.0.2, safer-buffer@^2.1.0, safer-buffer@~2.1.0:
   version "2.1.2"

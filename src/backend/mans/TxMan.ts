@@ -136,7 +136,7 @@ class TxMan {
       t.value = params.value;
       t.timestamp = Date.now();
 
-      this.save(t);
+      await this.save(t);
     }
 
     return tx;

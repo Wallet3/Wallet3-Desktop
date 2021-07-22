@@ -343,7 +343,7 @@ export class WalletConnect extends EventEmitter {
           }
 
           this.connector.approveRequest({ id: request.id, result: signed });
-          return Application.encryptIpc({ suceess: true }, key);
+          return Application.encryptIpc({ success: true }, key);
         case 'signTypedData':
           try {
             const typedData = JSON.parse(params[1]);
@@ -400,6 +400,17 @@ export class WalletConnect extends EventEmitter {
     this._currAddrObserver?.();
     this.removeAllListeners();
 
+    this.connector['off']('session_request');
+    this.connector['off']('call_request');
+    this.connector['off']('disconnect');
+
+    this.connector = undefined;
+    this.key = undefined;
+    this.handleCallRequest = undefined;
+    this.handleSessionRequest = undefined;
+    this.eth_sendTransaction = undefined;
+    this.sign = undefined;
+    
     this._chainIdObserver = undefined;
     this._currAddrObserver = undefined;
   }
