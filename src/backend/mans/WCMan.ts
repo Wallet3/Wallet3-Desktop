@@ -124,6 +124,8 @@ export class WCMan {
     });
 
     wc.once('transport_error', () => {
+      console.log('transport_error', wc.appMeta.name);
+      
       const wcSession = wc.wcSession;
       wc.dispose();
       runInAction(() => {

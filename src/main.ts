@@ -254,7 +254,7 @@ powerMonitor.on('resume', () => {
       await wcman?.dispose();
       await wcman?.init();
     });
-  }, (isWin ? 12 : 7) * 1000);
+  }, (isWin ? 12 : 5) * 1000);
 });
 
 powerMonitor.on('suspend', () => {

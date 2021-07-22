@@ -12,6 +12,7 @@ import WCSession from '../models/WCSession';
 import WalletConnector from '@walletconnect/client';
 import { WalletKey } from './WalletKey';
 import { findTokenByAddress } from '../../misc/Tokens';
+import i18n from '../../i18n';
 import { ipcMain } from 'electron';
 
 export class WalletConnect extends EventEmitter {
@@ -130,6 +131,16 @@ export class WalletConnect extends EventEmitter {
 
     if (!this.key.authenticated) {
       this.connector.rejectSession({ message: 'This account has not been authorized' });
+
+      App.createPopupWindow(
+        'msgbox',
+        {
+          title: i18n.t('Authentication'),
+          icon: 'alert-triangle',
+          message: i18n.t('Wallet not authorized'),
+        },
+        { height: 250 }
+      );
       return;
     }
 
