@@ -1,6 +1,6 @@
 import * as erc681parser from 'eth-url-parser';
 
-import { getProviderByChainId, getTransactionCount } from '../common/Provider';
+import { call, getProviderByChainId, getTransactionCount } from '../common/Provider';
 
 import App from './App';
 import { ConfirmSendTx } from '../common/Messages';
@@ -28,14 +28,14 @@ const popupNotAuthorized = () =>
 export async function handleDeepLink(deeplink: string) {
   if (!deeplink) return;
 
+  if (deeplink.toLowerCase().startsWith('ethereum')) {
+    handleERC681(deeplink);
+    return;
+  }
+
   const query = querystring.decode(deeplink);
   const [protocol] = Object.getOwnPropertyNames(query);
   const uri = query[protocol] as string;
-
-  if (uri?.startsWith('ethereum')) {
-    handleERC681(uri);
-    return;
-  }
 
   if (!uri?.startsWith('wc:') || !uri?.includes('bridge=')) return undefined;
 
@@ -81,9 +81,12 @@ async function handleERC681(uri: string) {
     popupNotAuthorized();
     return;
   }
+
   const chainId = Number.parseInt(cid) || 1;
 
   const provider = getProviderByChainId(chainId);
+  await provider.ready;
+
   target_address = utils.isAddress(target_address) ? target_address : await provider.lookupAddress(target_address);
   const from = KeyMan.current.currentAddress;
   const gas = Number.parseInt(parameters['gas'] || parameters['gasLimit']);
@@ -91,33 +94,52 @@ async function handleERC681(uri: string) {
   const nonce = Number.parseInt(parameters['nonce']) || (await getTransactionCount(chainId, from));
 
   if (function_name) {
-    const token = new ERC20Token(target_address, provider);
+    const token = new ERC20Token(target_address, provider); // no network detected, why???
+
     const found = findTokenByAddress(target_address);
-    const balance = (await token.balanceOf(from)).toString();
     const to = parameters['address'];
     const amount = parameters['uint256'] || 0;
     const data = token.encodeTransferData(to, amount);
+
+    const balance = await call<string>(chainId, {
+      to: target_address,
+      data: token.interface.encodeFunctionData('balanceOf', [from]),
+    });
 
     let transferToken: { decimals: number; symbol: string; balance: string };
 
     if (found) {
       transferToken = { ...found, balance };
     } else {
-      transferToken == { symbol: await token.symbol(), decimals: await token.decimals(), balance };
+      const call_symbol = token.interface.encodeFunctionData('symbol');
+      const call_decimals = token.interface.encodeFunctionData('decimals');
+
+      const symbol = await call<string>(chainId, { to: target_address, data: call_symbol });
+      const decimals = Number.parseInt(await call<string>(chainId, { to: target_address, data: call_decimals }));
+
+      transferToken = {
+        symbol: symbol.startsWith('0x') ? utils.defaultAbiCoder.decode(['string'], symbol)[0] : symbol,
+        decimals,
+        balance,
+      };
     }
 
-    App.createPopupWindow('sendTx', {
-      chainId,
-      from: from,
-      to: to,
-      data: data,
-      gas: gas || (await token.estimateGas(from, to)),
-      gasPrice,
-      nonce,
-      value: '0',
+    App.createPopupWindow(
+      'sendTx',
+      {
+        chainId,
+        from: from,
+        to: to,
+        data: data,
+        gas: gas || (await token.estimateGas(from, to)),
+        gasPrice,
+        nonce,
+        value: '0',
 
-      transferToken,
-    } as ConfirmSendTx);
+        transferToken,
+      } as ConfirmSendTx,
+      { height: 320 }
+    );
     return;
   }
 
@@ -132,5 +154,5 @@ async function handleERC681(uri: string) {
     value: parameters['value'] || '0',
   };
 
-  App.createPopupWindow('sendTx', params);
+  App.createPopupWindow('sendTx', params, { height: 320 });
 }

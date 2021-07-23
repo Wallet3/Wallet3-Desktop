@@ -43,7 +43,7 @@ export class ERC20Token {
 
   async estimateGas(from: string, to: string) {
     try {
-      (await this.erc20.estimateGas.transferFrom(from, to, BigNumber.from(1))).toNumber();
+      Number.parseInt(((await this.erc20.estimateGas.transferFrom(from, to, BigNumber.from(1))).toNumber() * 1.1) as any);
     } catch (error) {
       return 150_000;
     }

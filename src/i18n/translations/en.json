@@ -130,7 +130,7 @@
   "Delete": "Delete",
   "Delete Wallet": "Delete Wallet",
   "Delete Wallet Message": "{{name}} will be permanently deleted, are you sure?",
-  "Wallet not authorized": "Current wallet has not been authorized, please authorize first.",
+  "Wallet not authorized": "Current wallet is not authorized, please authorize first.",
   "WalletConnect uri expired": "This session is expired, please refresh the webpage and try again.",
   "Received Token": "Received a transfer on {{network}}",
   "Received": "Received",
