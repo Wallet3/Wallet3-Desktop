@@ -186,11 +186,7 @@ export class WalletConnect extends EventEmitter {
       this.connector.rejectRequest({ id: request.id, error: { message: 'This account has not been authorized' } });
       return;
     }
-
-    // console.log(request.method);
-    // console.log(request.id);
-    // console.log(request.params);
-
+    
     const checkAccount = (from: string) => {
       if (from?.toLowerCase() === this.wallet.currentAddress.toLowerCase()) return true;
       this.connector.rejectRequest({ id: request.id, error: { message: 'Update session' } });

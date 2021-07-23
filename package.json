@@ -123,6 +123,7 @@
   "dependencies": {
     "better-sqlite3": "^7.4.3",
     "eth-sig-util": "^3.0.1",
+    "eth-url-parser": "^1.0.3",
     "ethers": "^5.4.1",
     "keytar": "^7.7.0",
     "ws": "^7.5.3"

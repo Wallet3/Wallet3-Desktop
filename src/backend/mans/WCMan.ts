@@ -104,7 +104,7 @@ export class WCMan {
       const wc = new WalletConnect({ key: this.key });
       wc.connectViaSession(session);
       wc.wcSession = wcSession;
-      console.log(wc.wcSession.session.key);
+
       this.handleWCEvents(wc);
 
       return wc;
