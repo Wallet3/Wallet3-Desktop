@@ -95,44 +95,40 @@ export class WCMan {
   }
 
   recoverSessions(wcSessions: WCSession[]) {
-    const sessions: IRawWcSession[] = wcSessions.map((s) => s.session);
+    const wcs = wcSessions.map((wcSession) => {
+      const { session } = wcSession;
 
-    const wcs = this.connectSessions(sessions);
-    wcs.filter((i) => i).map((wc, i) => (wc.wcSession = wcSessions[i]));
-
-    runInAction(() => this.connections.push(...wcs));
-  }
-
-  private connectSessions(sessions: IRawWcSession[]) {
-    return sessions.map((session) => {
       if (this.cache.has(session.key)) return undefined;
       this.cache.add(session.key);
 
       const wc = new WalletConnect({ key: this.key });
       wc.connectViaSession(session);
+      wc.wcSession = wcSession;
+      console.log(wc.wcSession.session.key);
       this.handleWCEvents(wc);
 
       return wc;
     });
+
+    runInAction(() => this.connections.push(...wcs.filter((i) => i)));
   }
 
   private handleWCEvents(wc: WalletConnect) {
-    wc.once('disconnect', () => {
+    wc.once('disconnect', async () => {
+      console.log('disconnect event');
+      await wc.wcSession?.remove();
       wc.dispose();
-      wc.wcSession?.remove({});
-      runInAction(() => this.connections.splice(this.connections.indexOf(wc), 1));
+      this.removeItem(wc);
     });
 
     wc.once('transport_error', () => {
       console.log('transport_error', wc.appMeta.name);
-      
+
       const wcSession = wc.wcSession;
       wc.dispose();
-      runInAction(() => {
-        this.cache.delete(wcSession.session.key);
-        this.connections.splice(this.connections.indexOf(wc), 1);
-        this.recoverSessions([wcSession]);
-      });
+      this.cache.delete(wcSession.session.key);
+      this.removeItem(wc);
+      this.recoverSessions([wcSession]);
     });
 
     wc.on('sessionUpdated', () => {
@@ -144,14 +140,23 @@ export class WCMan {
     });
   }
 
-  disconnect(key: string) {
+  async disconnect(key: string) {
+    console.log('disconnect', key);
     const target = this.connections.find((c) => c.session.key === key);
     if (!target) return;
 
-    target.disconnect();
+    await target.disconnect();
+    await target.wcSession.remove();
+
     target.dispose();
-    target.wcSession.remove();
-    runInAction(() => this.connections.splice(this.connections.indexOf(target), 1));
+    this.removeItem(target);
+  }
+
+  removeItem(wcSession: WalletConnect) {
+    const indexOf = this.connections.indexOf(wcSession);
+    if (indexOf === -1) return;
+
+    runInAction(() => this.connections.splice(indexOf, 1));
   }
 
   switchNetwork(sessionKey: string, toChainId: number) {
@@ -163,10 +168,12 @@ export class WCMan {
   }
 
   async clean() {
-    this.connections.forEach((c) => {
-      c?.disconnect();
-      c?.wcSession?.remove();
-    });
+    await Promise.all(
+      this.connections.map(async (c) => {
+        await c?.wcSession?.remove();
+        await c?.disconnect();
+      })
+    );
 
     ipcMain.removeAllListeners(`${Messages.disconnectDApp(this.keyId)}-secure`);
     ipcMain.removeAllListeners(`${Messages.switchDAppNetwork(this.keyId)}-secure`);

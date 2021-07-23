@@ -1,4 +1,5 @@
 import './backend/AppMenu';
+import './backend/CryptoRandom';
 
 import { BrowserWindow, Menu, TouchBar, TouchBarButton, Tray, app, nativeImage, powerMonitor, protocol } from 'electron';
 import { DBMan, KeyMan, TxMan } from './backend/mans';

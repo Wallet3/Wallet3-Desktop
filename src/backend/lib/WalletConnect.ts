@@ -406,7 +406,7 @@ export class WalletConnect extends EventEmitter {
   };
 
   disconnect() {
-    this.connector.killSession({ message: 'User exits' });
+    return this.connector.killSession({ message: 'User exits' });
   }
 
   dispose() {
@@ -420,6 +420,7 @@ export class WalletConnect extends EventEmitter {
     this.connector?.off('transport_error');
     this.connector?.transportClose();
 
+    console.log(this.session?.key, 'dispose');
     this.connector = undefined;
     this.key = undefined;
     this._wcSession = undefined;
