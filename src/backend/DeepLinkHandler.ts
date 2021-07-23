@@ -1,12 +1,16 @@
 import * as erc681parser from 'eth-url-parser';
 
+import { getProviderByChainId, getTransactionCount } from '../common/Provider';
+
 import App from './App';
 import { ConfirmSendTx } from '../common/Messages';
+import { ERC20Token } from '../common/ERC20Token';
 import GasnowWs from '../gas/Gasnow';
 import { KeyMan } from './mans';
-import { getTransactionCount } from '../common/Provider';
+import { findTokenByAddress } from '../misc/Tokens';
 import i18n from '../i18n';
 import querystring from 'querystring';
+import { utils } from 'ethers';
 
 export const supportedSchemes = ['ethereum', 'wallet3', 'ledgerlive'];
 
@@ -60,7 +64,7 @@ export async function handleDeepLink(deeplink: string) {
 }
 
 async function handleERC681(uri: string) {
-  const {
+  let {
     target_address,
     chainId: cid,
     parameters,
@@ -73,15 +77,47 @@ async function handleERC681(uri: string) {
     parameters: { [index: string]: string };
   };
 
-  if (!App.ready) {
+  if (!KeyMan.current.authenticated) {
     popupNotAuthorized();
     return;
   }
-
-  const from = KeyMan.current.currentAddress;
   const chainId = Number.parseInt(cid) || 1;
 
+  const provider = getProviderByChainId(chainId);
+  target_address = utils.isAddress(target_address) ? target_address : await provider.lookupAddress(target_address);
+  const from = KeyMan.current.currentAddress;
+  const gas = Number.parseInt(parameters['gas'] || parameters['gasLimit']);
+  const gasPrice = Number.parseInt(parameters['gasPrice']) || GasnowWs.fast;
+  const nonce = Number.parseInt(parameters['nonce']) || (await getTransactionCount(chainId, from));
+
   if (function_name) {
+    const token = new ERC20Token(target_address, provider);
+    const found = findTokenByAddress(target_address);
+    const balance = (await token.balanceOf(from)).toString();
+    const to = parameters['address'];
+    const amount = parameters['uint256'] || 0;
+    const data = token.encodeTransferData(to, amount);
+
+    let transferToken: { decimals: number; symbol: string; balance: string };
+
+    if (found) {
+      transferToken = { ...found, balance };
+    } else {
+      transferToken == { symbol: await token.symbol(), decimals: await token.decimals(), balance };
+    }
+
+    App.createPopupWindow('sendTx', {
+      chainId,
+      from: from,
+      to: to,
+      data: data,
+      gas: gas || (await token.estimateGas(from, to)),
+      gasPrice,
+      nonce,
+      value: '0',
+
+      transferToken,
+    } as ConfirmSendTx);
     return;
   }
 
@@ -90,9 +126,9 @@ async function handleERC681(uri: string) {
     from,
     data: '0x',
     to: target_address,
-    gas: Number.parseInt(parameters['gas'] || parameters['gasLimit']) || 21000,
-    gasPrice: Number.parseInt(parameters['gasPrice']) || GasnowWs.fast,
-    nonce: Number.parseInt(parameters['nonce']) || (await getTransactionCount(chainId, from)),
+    gas: gas || 21000,
+    gasPrice,
+    nonce,
     value: parameters['value'] || '0',
   };
 

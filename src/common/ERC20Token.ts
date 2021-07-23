@@ -1,4 +1,4 @@
-import { BigNumber, ethers } from 'ethers';
+import { BigNumber, BigNumberish, ethers } from 'ethers';
 
 import ERC20ABI from '../abis/ERC20.json';
 
@@ -6,6 +6,10 @@ export class ERC20Token {
   address: string;
   erc20: ethers.Contract;
   balance = BigNumber.from(0);
+
+  get interface() {
+    return this.erc20.interface;
+  }
 
   constructor(address: string, provider: ethers.providers.BaseProvider) {
     this.address = address;
@@ -35,5 +39,17 @@ export class ERC20Token {
 
   on(filter: string | ethers.EventFilter, listener: ethers.providers.Listener) {
     this.erc20.on(filter, listener);
+  }
+
+  async estimateGas(from: string, to: string) {
+    try {
+      (await this.erc20.estimateGas.transferFrom(from, to, BigNumber.from(1))).toNumber();
+    } catch (error) {
+      return 150_000;
+    }
+  }
+
+  encodeTransferData(to: string, amount: BigNumberish) {
+    return this.interface.encodeFunctionData('transfer', [to, amount]);
   }
 }
