@@ -3,7 +3,7 @@ import { AuthParams, ConfirmSendTx, RequestSignMessage, SendTxParams, WcMessages
 import { BigNumber, ethers, utils } from 'ethers';
 import Gasnow, { Gwei_1, Gwei_5 } from '../../gas/Gasnow';
 import { IReactionDisposer, reaction } from 'mobx';
-import { call, getTransactionCount } from '../../common/Provider';
+import { call, estimateGas, getTransactionCount } from '../../common/Provider';
 
 import ERC20ABI from '../../abis/ERC20.json';
 import EventEmitter from 'events';
@@ -287,9 +287,7 @@ export class WalletConnect extends EventEmitter {
       this.connector.rejectRequest({ id: request.id, error: { message: 'User rejected' } });
     });
 
-    const recipient: { address: string; name: string } = this.wallet.addresses.find(
-      (addr) => addr === utils.getAddress(param.to)
-    )
+    const recipient = this.wallet.addresses.find((addr) => addr === utils.getAddress(param.to))
       ? {
           address: param.to,
           name: `Account ${this.wallet.addresses.indexOf(utils.getAddress(param.to)) + 1}`,
@@ -300,18 +298,25 @@ export class WalletConnect extends EventEmitter {
     let defaultGasPrice = chainId === 56 ? Gwei_5 : Gwei_1;
     defaultGasPrice = chainId === 1 ? Gasnow.fast : defaultGasPrice;
 
-    App.createPopupWindow('sendTx', {
-      chainId,
+    const baseTx = {
       from: this.wallet.currentAddress,
-      accountIndex: this.wallet.currentAddressIndex,
       to: param.to,
       data: param.data || '0x',
-      gas: Number.parseInt(param.gas) || 21000,
+    };
+
+    const gas = Number.parseInt(param.gas) || Number.parseInt(await estimateGas<string>(chainId, baseTx)) || 21000;
+
+    App.createPopupWindow('sendTx', {
+      chainId,
+      accountIndex: this.wallet.currentAddressIndex,
+
+      ...baseTx,
+      value: param.value || 0,
       gasPrice: Number.parseInt(param.gasPrice) || defaultGasPrice,
+      gas,
       nonce:
         Number.parseInt(param.nonce) ||
         (await getTransactionCount(requestedChainId ?? this.appChainId, this.wallet.currentAddress)),
-      value: param.value || 0,
 
       recipient,
       transferToken,
