@@ -175,23 +175,31 @@ export class WCMan {
   private queueDisconnectedSession(session: WCSession) {
     if (this.reconnectingQueue.length > 32) return; // too many re-connections after sleeping
     if (this.reconnectingQueue.find((i) => i.session.key === session.session.key)) return;
-    
+
     this.reconnectingQueue.push(session);
   }
 
   private async handleReconnectingQueue() {
+    if (this.reconnectTimer) return;
+
     if (!(await isOnline({ timeout: 5000 }))) {
-      this.reconnectTimer = setTimeout(() => this.handleReconnectingQueue(), 2000);
+      this.reconnectTimer = setTimeout(() => {
+        this.reconnectTimer = undefined;
+        this.handleReconnectingQueue();
+      }, 2000);
+
       return;
     }
 
     this.reconnectTimer = setTimeout(() => {
+      this.reconnectTimer = undefined;
+
       const item = this.reconnectingQueue.shift();
       if (!item) return;
 
       this.recoverSessions([item]);
       this.handleReconnectingQueue();
-    }, 200);
+    }, 300);
   }
 
   async clean() {
@@ -210,6 +218,7 @@ export class WCMan {
 
   dispose() {
     clearTimeout(this.reconnectTimer);
+    this.reconnectTimer = undefined;
 
     this.connections.forEach((c) => c?.dispose());
     this.cache.clear();
