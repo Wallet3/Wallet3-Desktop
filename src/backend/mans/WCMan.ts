@@ -182,10 +182,10 @@ export class WCMan {
       return;
     }
 
-    const item = this.reconnectingQueue.shift();
-    if (!item) return;
-
     setTimeout(() => {
+      const item = this.reconnectingQueue.shift();
+      if (!item) return;
+
       this.recoverSessions([item]);
       this.handleReconnectingQueue();
     }, 200);
@@ -208,6 +208,7 @@ export class WCMan {
   dispose() {
     this.connections.forEach((c) => c?.dispose());
     this.cache.clear();
+    this.reconnectingQueue = [];
 
     return new Promise<void>((resolve) =>
       runInAction(() => {
