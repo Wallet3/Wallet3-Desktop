@@ -13,6 +13,7 @@ export class WCMan {
   private cache = new Set<string>();
   private key: WalletKey;
   private reconnectingQueue: WCSession[] = [];
+  private reconnectTimer: NodeJS.Timer = undefined;
 
   connections: WalletConnect[] = [];
 
@@ -178,11 +179,11 @@ export class WCMan {
 
   private async handleReconnectingQueue() {
     if (!(await isOnline({ timeout: 5000 }))) {
-      setTimeout(() => this.handleReconnectingQueue(), 2000);
+      this.reconnectTimer = setTimeout(() => this.handleReconnectingQueue(), 2000);
       return;
     }
 
-    setTimeout(() => {
+    this.reconnectTimer = setTimeout(() => {
       const item = this.reconnectingQueue.shift();
       if (!item) return;
 
@@ -206,6 +207,8 @@ export class WCMan {
   }
 
   dispose() {
+    clearTimeout(this.reconnectTimer);
+    
     this.connections.forEach((c) => c?.dispose());
     this.cache.clear();
     this.reconnectingQueue = [];

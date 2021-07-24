@@ -10,8 +10,10 @@ import Coingecko from './api/Coingecko';
 import GasnowWs from './gas/Gasnow';
 import Messages from './common/Messages';
 import { autorun } from 'mobx';
+import delay from 'delay';
 import { globalShortcut } from 'electron';
 import i18n from './i18n';
+import isOnline from 'is-online';
 import { resolve } from 'path';
 import { updateApp } from './backend/Updater';
 
@@ -247,15 +249,21 @@ app.on('web-contents-created', (event, contents) => {
   });
 });
 
-powerMonitor.on('resume', () => {
-  setTimeout(async () => {
-    GasnowWs.restart(true);
-    KeyMan.keys.forEach(async (k) => {
-      const { wcman } = KeyMan.connections.get(k.id) || {};
-      await wcman?.dispose();
-      await wcman?.init();
-    });
-  }, (isWin ? 12 : 5) * 1000);
+powerMonitor.on('resume', async () => {
+  KeyMan.keys.forEach(async (k) => {
+    const { wcman } = KeyMan.connections.get(k.id) || {};
+    await wcman?.dispose();
+  });
+
+  while (!(await isOnline({ timeout: 5000 }))) {
+    await delay(100);
+  }
+
+  GasnowWs.restart(true);
+  KeyMan.keys.forEach(async (k) => {
+    const { wcman } = KeyMan.connections.get(k.id) || {};
+    await wcman?.init();
+  });
 });
 
 powerMonitor.on('suspend', () => {
