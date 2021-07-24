@@ -250,12 +250,8 @@ app.on('web-contents-created', (event, contents) => {
 });
 
 powerMonitor.on('resume', async () => {
-  KeyMan.keys.forEach(async (k) => {
-    const { wcman } = KeyMan.connections.get(k.id) || {};
-    await wcman?.dispose();
-  });
-
   let attempts = 0;
+  
   while (!(await isOnline({ timeout: 5000 }))) {
     await delay(100);
     attempts++;
@@ -269,6 +265,13 @@ powerMonitor.on('resume', async () => {
   KeyMan.keys.forEach(async (k) => {
     const { wcman } = KeyMan.connections.get(k.id) || {};
     await wcman?.init();
+  });
+});
+
+powerMonitor.on('suspend', () => {
+  KeyMan.keys.forEach(async (k) => {
+    const { wcman } = KeyMan.connections.get(k.id) || {};
+    await wcman?.dispose();
   });
 });
 
