@@ -7,10 +7,12 @@ import WCSession from '../models/WCSession';
 import { WalletConnect } from '../lib/WalletConnect';
 import { WalletKey } from '../lib/WalletKey';
 import { ipcMain } from 'electron';
+import isOnline from 'is-online';
 
 export class WCMan {
   private cache = new Set<string>();
   private key: WalletKey;
+  private reconnectingQueue: WCSession[] = [];
 
   connections: WalletConnect[] = [];
 
@@ -128,7 +130,9 @@ export class WCMan {
       wc.dispose();
       this.cache.delete(wcSession.session.key);
       this.removeItem(wc);
-      this.recoverSessions([wcSession]);
+
+      this.queueDisconnectedSession(wcSession);
+      this.handleReconnectingQueue();
     });
 
     wc.on('sessionUpdated', () => {
@@ -165,6 +169,26 @@ export class WCMan {
 
     target.switchNetwork(toChainId);
     return true;
+  }
+
+  private queueDisconnectedSession(session: WCSession) {
+    if (this.reconnectingQueue.find((i) => i.session.key === session.session.key)) return;
+    this.reconnectingQueue.push(session);
+  }
+
+  private async handleReconnectingQueue() {
+    if (!(await isOnline({ timeout: 5000 }))) {
+      setTimeout(() => this.handleReconnectingQueue(), 2000);
+      return;
+    }
+
+    const item = this.reconnectingQueue.shift();
+    if (!item) return;
+
+    setTimeout(() => {
+      this.recoverSessions([item]);
+      this.handleReconnectingQueue();
+    }, 200);
   }
 
   async clean() {

@@ -87,6 +87,7 @@
     "fork-ts-checker-webpack-plugin": "^6.2.12",
     "got": "^11.8.2",
     "i18next": "^20.3.4",
+    "is-online": "^9.0.1",
     "jest": "^27.0.6",
     "jsqr": "^1.4.0",
     "mobx": "^6.3.2",
