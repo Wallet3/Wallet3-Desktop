@@ -52,7 +52,7 @@
     "@electron-forge/plugin-webpack": "6.0.0-beta.57",
     "@electron/remote": "^1.2.0",
     "@marshallofsound/webpack-asset-relocator-loader": "^0.5.0",
-    "@szhsin/react-menu": "^1.10.1",
+    "@szhsin/react-menu": "^1.11.0",
     "@types/animejs": "^3.1.4",
     "@types/feather-icons": "^4.7.0",
     "@types/jest": "^26.0.24",

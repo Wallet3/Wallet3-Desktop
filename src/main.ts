@@ -255,8 +255,14 @@ powerMonitor.on('resume', async () => {
     await wcman?.dispose();
   });
 
+  let attempts = 0;
   while (!(await isOnline({ timeout: 5000 }))) {
     await delay(100);
+    attempts++;
+
+    if (attempts > 10) {
+      return;
+    }
   }
 
   GasnowWs.restart(true);

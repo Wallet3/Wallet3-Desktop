@@ -92,13 +92,14 @@ async function handleERC681(uri: string) {
   const gas = Number.parseInt(parameters['gas'] || parameters['gasLimit']);
   const gasPrice = Number.parseInt(parameters['gasPrice']) || GasnowWs.fast;
   const nonce = Number.parseInt(parameters['nonce']) || (await getTransactionCount(chainId, from));
+  const value = Number(parameters['value'] || '0').toLocaleString(undefined, { useGrouping: false });
 
   if (function_name) {
     const token = new ERC20Token(target_address, provider); // no network detected, why???
 
     const found = findTokenByAddress(target_address);
     const to = parameters['address'];
-    const amount = parameters['uint256'] || 0;
+    const amount = Number(parameters['uint256'] || 0).toLocaleString(undefined, { useGrouping: false });
     const data = token.encodeTransferData(to, amount);
 
     const balance = await call<string>(chainId, {
@@ -151,7 +152,7 @@ async function handleERC681(uri: string) {
     gas: gas || 21000,
     gasPrice,
     nonce,
-    value: parameters['value'] || '0',
+    value,
   };
 
   App.createPopupWindow('sendTx', params, { height: 320 });

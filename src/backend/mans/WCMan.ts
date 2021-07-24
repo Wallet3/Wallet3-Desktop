@@ -173,7 +173,9 @@ export class WCMan {
   }
 
   private queueDisconnectedSession(session: WCSession) {
+    if (this.reconnectingQueue.length > 32) return; // too many re-connections after sleeping
     if (this.reconnectingQueue.find((i) => i.session.key === session.session.key)) return;
+    
     this.reconnectingQueue.push(session);
   }
 
@@ -208,7 +210,7 @@ export class WCMan {
 
   dispose() {
     clearTimeout(this.reconnectTimer);
-    
+
     this.connections.forEach((c) => c?.dispose());
     this.cache.clear();
     this.reconnectingQueue = [];

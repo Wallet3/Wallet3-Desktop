@@ -2406,10 +2406,10 @@
   resolved "https://registry.yarnpkg.com/@sqltools/formatter/-/formatter-1.2.3.tgz#1185726610acc37317ddab11c3c7f9066966bd20"
   integrity sha512-O3uyB/JbkAEMZaP3YqyHH7TMnex7tWyCbCI4EfJdOCoN6HIhqdJBWTM6aCCiWQ/5f5wxjgU735QAIpJbjDvmzg==
 
-"@szhsin/react-menu@^1.10.1":
-  version "1.10.1"
-  resolved "https://registry.yarnpkg.com/@szhsin/react-menu/-/react-menu-1.10.1.tgz#a09e6ce5da819afa78973d994fb446e735a0b7c6"
-  integrity sha512-41SLi9/bbZjy4cMrDONRkXuZ4trJ/Eqvd/SXNMcus7J0ZoiNp3IEVJ0yXmrm9BhhzHc9XbuS4LGTN28NkXmBPg==
+"@szhsin/react-menu@^1.11.0":
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/@szhsin/react-menu/-/react-menu-1.11.0.tgz#3b4929d5cf5bb676eac3dc962da3029080b82bc2"
+  integrity sha512-kaW/IpcokmyVwX7WGe6ijQI/xQDw5nQXUKyiioy40dm5gt45+Lo7cqGVUoy7Qj8275Q9tgN6hcazWX/DCcYUfQ==
   dependencies:
     prop-types "^15.7.2"
 
