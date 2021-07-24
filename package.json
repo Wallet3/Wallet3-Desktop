@@ -84,7 +84,7 @@
     "eslint-plugin-import": "^2.23.4",
     "feather-icons": "^4.28.0",
     "feather-icons-react": "^0.4.3",
-    "fork-ts-checker-webpack-plugin": "^6.2.12",
+    "fork-ts-checker-webpack-plugin": "^6.2.13",
     "got": "^11.8.2",
     "i18next": "^20.3.4",
     "is-online": "^9.0.1",
@@ -125,7 +125,7 @@
     "better-sqlite3": "^7.4.3",
     "eth-sig-util": "^3.0.1",
     "eth-url-parser": "^1.0.3",
-    "ethers": "^5.4.1",
+    "ethers": "^5.4.2",
     "keytar": "^7.7.0",
     "ws": "^7.5.3"
   }
