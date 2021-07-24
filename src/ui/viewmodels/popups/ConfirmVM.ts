@@ -88,7 +88,7 @@ export class ConfirmVM {
     this._gas = params.gas;
     this._gasPrice = params.gasPrice / Gwei_1;
     this._nonce = params.nonce || 0;
-    this._value = Number.parseFloat(params.value) === 0 ? 0 : params.value || 0;
+    this._value = Number(params.value) === 0 ? 0 : params.value || 0;
     this._data = params.data;
   }
 

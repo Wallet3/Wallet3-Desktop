@@ -25,7 +25,7 @@ export default observer(({ tx, rapid, fast, standard }: { tx: TxParams; rapid: n
       <div className="extra">
         <span>{`[${t('Nonce')}: ${tx.nonce}] ${new Date(tx.timestamp).toLocaleString()}`}</span>
         <span>
-          {`${utils.formatEther(tx.value === '0.0' ? 0 : tx.value).substring(0, 5)} ${
+          {`${utils.formatEther(Number(tx.value) === 0 ? 0 : tx.value).substring(0, 5)} ${
             Networks.find((n) => n.chainId === tx.chainId)?.symbol || 'ETH'
           }`}
         </span>

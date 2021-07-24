@@ -248,7 +248,7 @@ export class WalletKey {
       nonce: txParams.nonce,
       gasLimit: ethers.BigNumber.from(txParams.gas),
       gasPrice: ethers.BigNumber.from(txParams.gasPrice),
-      value: ethers.BigNumber.from(txParams.value === '0.0' ? 0 : txParams.value),
+      value: ethers.BigNumber.from(Number(txParams.value) === 0 ? 0 : txParams.value),
     });
   }
 
