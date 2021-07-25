@@ -113,7 +113,7 @@ export default observer(({ app, langsVM }: IConstructor) => {
               <button onClick={(_) => app.history.push('/generate?')}>
                 <div>
                   <Feather icon="plus-square" size={13} />
-                  <span>{t('Create')}</span>
+                  <span>{t('New')}</span>
                 </div>
               </button>
             </MenuItem>

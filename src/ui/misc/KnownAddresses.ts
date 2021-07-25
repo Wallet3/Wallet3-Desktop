@@ -42,7 +42,8 @@ const KnownAddresses = {
   '0xbEadf48d62aCC944a06EEaE0A9054A90E5A7dc97': 'Aave Polygon',
   '0x1C232F01118CB8B424793ae03F870aa7D0ac7f77': 'Honeyswap',
   '0x93bcDc45f7e62f89a8e901DC4A0E2c6C427D9F25': 'ComethSwap',
-  '0x8dFf5E27EA6b7AC08EbFdf9eB090F32ee9a30fcf': 'Aave'
+  '0x8dFf5E27EA6b7AC08EbFdf9eB090F32ee9a30fcf': 'Aave',
+  '0xA464e6DCda8AC41e03616F95f4BC98a13b8922Dc': 'Curve Fee Distribution',
 };
 
 Tokens.forEach((t) => (KnownAddresses[t.address] = t.symbol));

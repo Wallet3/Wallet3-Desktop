@@ -13,6 +13,7 @@ export class WCMan {
   private cache = new Set<string>();
   private key: WalletKey;
   private reconnectingQueue: WCSession[] = [];
+  private queueThreshold = 0;
   private reconnectTimer: NodeJS.Timer = undefined;
 
   connections: WalletConnect[] = [];
@@ -49,6 +50,7 @@ export class WCMan {
 
   async init() {
     const sessions = await DBMan.wcsessionRepo.find({ where: { keyId: this.keyId } });
+    this.queueThreshold = Math.min(Math.max(5, sessions.length), 32);
     this.recoverSessions(sessions);
   }
 
@@ -173,7 +175,7 @@ export class WCMan {
   }
 
   private queueDisconnectedSession(session: WCSession) {
-    if (this.reconnectingQueue.length > 32) return; // too many re-connections after sleeping
+    if (this.reconnectingQueue.length > this.queueThreshold) return; // too many re-connections after sleeping
     if (this.reconnectingQueue.find((i) => i.session.key === session.session.key)) return;
 
     this.reconnectingQueue.push(session);
