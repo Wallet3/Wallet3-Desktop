@@ -31,15 +31,6 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: EthereumPopularTokens,
   },
   {
-    symbol: 'MATIC',
-    comm_id: 'matic',
-    network: 'Polygon',
-    chainId: 137,
-    color: '#8247E5',
-    order: 2,
-    defaultTokens: PolygonPopularTokens,
-  },
-  {
     symbol: 'OETH',
     comm_id: 'optimism',
     network: 'Optimism',
@@ -56,6 +47,15 @@ export const PublicNetworks: INetwork[] = [
     color: '#2D374B',
     order: 3,
     defaultTokens: [],
+  },
+  {
+    symbol: 'MATIC',
+    comm_id: 'matic',
+    network: 'Polygon',
+    chainId: 137,
+    color: '#8247E5',
+    order: 2,
+    defaultTokens: PolygonPopularTokens,
   },
   {
     symbol: 'xDAI',
