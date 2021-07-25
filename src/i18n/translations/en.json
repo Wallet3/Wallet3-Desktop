@@ -135,5 +135,6 @@
   "Received Token": "Received a transfer on {{network}}",
   "Received": "Received",
   "New Update Available": "Update Available",
-  "Update Message": "New version: {{version}} is available, would you like to install the update?"
+  "Update Message": "New version: {{version}} is available, would you like to install the update?",
+  "Copy Address": "Address"
 }

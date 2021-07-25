@@ -136,5 +136,6 @@
   "Received Token": "收到一筆匯款 [{{network}}]",
   "Received": "已到賬",
   "New Update Available": "更新",
-  "Update Message": "發現新版本: {{version}}，是否安裝該更新？"
+  "Update Message": "發現新版本: {{version}}，是否安裝該更新？",
+  "Copy Address": "復製地址"
 }
