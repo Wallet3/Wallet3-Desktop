@@ -50,7 +50,7 @@ export class WCMan {
 
   async init() {
     const sessions = await DBMan.wcsessionRepo.find({ where: { keyId: this.keyId } });
-    this.queueThreshold = Math.min(Math.max(5, sessions.length), 32);
+    this.queueThreshold = Math.min(Math.max(5, sessions.length), 100);
     this.recoverSessions(sessions);
   }
 
@@ -120,7 +120,6 @@ export class WCMan {
 
   private handleWCEvents(wc: WalletConnect) {
     wc.once('disconnect', async () => {
-      console.log('disconnect event');
       await wc.wcSession?.remove();
       wc.dispose();
       this.removeItem(wc);
@@ -148,7 +147,6 @@ export class WCMan {
   }
 
   async disconnect(key: string) {
-    console.log('disconnect', key);
     const target = this.connections.find((c) => c.session.key === key);
     if (!target) return;
 
@@ -218,13 +216,13 @@ export class WCMan {
     await this.dispose();
   }
 
-  dispose() {
-    clearTimeout(this.reconnectTimer);
-    this.reconnectTimer = undefined;
-
+  dispose() {    
     this.connections.forEach((c) => c?.dispose());
     this.cache.clear();
     this.reconnectingQueue = [];
+
+    clearTimeout(this.reconnectTimer);
+    this.reconnectTimer = undefined;
 
     return new Promise<void>((resolve) =>
       runInAction(() => {
