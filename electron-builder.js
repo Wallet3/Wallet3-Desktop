@@ -1,6 +1,3 @@
-const MAS_DEV = process.env.W3_DIST === 'MAS_DEV';
-const MAS = process.env.W3_DIST === 'MAS';
-
 module.exports = {
   directories: {
     app: '.',
@@ -21,7 +18,8 @@ module.exports = {
     entitlements: 'sign/entitlements.plist',
     category: 'public.app-category.finance',
     target: [
-      MAS_DEV ? 'mas-dev' : MAS ? 'mas' : 'dmg', // https://github.com/electron/electron-osx-sign/issues/223#issuecomment-611070794
+      'mas',
+      // 'dmg', // https://github.com/electron/electron-osx-sign/issues/223#issuecomment-611070794
     ],
     publish: ['github'],
   },
