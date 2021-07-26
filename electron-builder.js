@@ -46,8 +46,10 @@ module.exports = {
     // include: 'nsis.nsh'
   },
   appx: {
+    applicationId: 'ChainBowCo.Ltd.Wallet3',
+    identityName: 'ChainBowCo.Ltd.Wallet3',
     displayName: 'Wallet 3',
-    publisher: 'CN',
-    publisherDisplayName: 'ChainBow Co, Ltd.',
+    publisher: 'CN=0C3D219C-15E2-4A43-ACCA-85E854FA9BA4',
+    publisherDisplayName: 'ChainBow Co. Ltd.',
   },
 };
