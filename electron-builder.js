@@ -9,7 +9,7 @@ module.exports = {
   copyright: 'Copyright © 2021 ChainBow Co. Ltd.',
   protocols: {
     name: 'Wallet 3',
-    schemes: ['wallet3', 'wc', 'ledgerlive'],
+    schemes: ['ethereum', 'wallet3', 'wc', 'ledgerlive'],
   },
   //npmRebuild: 'false',
   //afterSign: "sign/appSign.js",
