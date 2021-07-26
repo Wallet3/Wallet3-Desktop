@@ -30,7 +30,7 @@ module.exports = {
     provisioningProfile: '',
   },
   win: {
-    target: ['nsis'],
+    target: ['nsis', 'appx'],
     icon: 'assets/AppIcon.ico',
     publish: ['github'],
     legalTrademarks: 'Wallet 3, ChainBow Co, Ltd.',
