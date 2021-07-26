@@ -1,5 +1,5 @@
 const publisher = 'CN=';
 const devCertPath = ''; // Win path string
-const certPass = '';
+const certPassword = '';
 
-module.exports = { publisher, devCertPath, certPass };
+module.exports = { publisher, devCertPath, certPassword };
