@@ -1,3 +1,6 @@
+
+const { certPassword, devCertPath, publisher } = require('./sign/winSign');
+
 module.exports = {
   directories: {
     app: '.',
@@ -34,6 +37,8 @@ module.exports = {
     icon: 'assets/AppIcon.ico',
     publish: ['github'],
     legalTrademarks: 'Wallet 3, ChainBow Co, Ltd.',
+    certificateFile: devCertPath,
+    certificatePassword: certPassword,
   },
   linux: {
     target: 'AppImage',
@@ -49,7 +54,7 @@ module.exports = {
     applicationId: 'ChainBowCo.Ltd.Wallet3',
     identityName: 'ChainBowCo.Ltd.Wallet3',
     displayName: 'Wallet 3',
-    publisher: 'CN=0C3D219C-15E2-4A43-ACCA-85E854FA9BA4',
+    publisher: publisher,
     publisherDisplayName: 'ChainBow Co. Ltd.',
   },
 };

@@ -1,5 +1,5 @@
 const { appleId, appleIdPassword } = require('./sign/appSign');
-const { certPass, devCertPath, publisher } = require('./sign/winSign');
+const { certPassword, devCertPath, publisher } = require('./sign/winSign');
 const package = require('./package.json');
 
 module.exports = {
@@ -49,7 +49,7 @@ module.exports = {
       config: {
         publisher,
         devCert: devCertPath,
-        certPass,
+        certPass: certPassword,
         packageDisplayName: 'Wallet 3',
         packageDescription: 'A Secure Wallet for Bankless Era',
         containerVirtualization: true,
