@@ -31,6 +31,11 @@ Source: https://support.apple.com/en-ie/guide/security/seca0c73a75b/web
 4. Support TouchBar.
 5. Real-time gas price for Mac users.
 6. Multi-account support.
+7. Support DeepLink (wallet3://)
+
+## DeepLink
+
+From v1.4.0, Wallet 3 supports DeepLink. The developers can launch Wallet 3 from a url which starts with `wallet3://${walletconnect-uri}`
 
 ## What is Ethereum
 
