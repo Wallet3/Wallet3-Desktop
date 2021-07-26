@@ -201,7 +201,7 @@ export class WCMan {
 
       this.recoverSessions([item]);
       this.handleReconnectingQueue();
-    }, 300);
+    }, 3000);
   }
 
   async clean() {
