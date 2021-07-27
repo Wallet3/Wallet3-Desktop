@@ -8,19 +8,27 @@ const { UserConsentVerifier, UserConsentVerifierAvailability, UserConsentVerific
 
 async function checkWindowsTouchIDSupported() {
   return new Promise<boolean>((resolve) => {
-    UserConsentVerifier.checkAvailabilityAsync((err, result) => {
-      if (err) return resolve(false);
-      resolve(result === UserConsentVerifierAvailability.available);
-    });
+    try {
+      UserConsentVerifier.checkAvailabilityAsync((err, result) => {
+        if (err) return resolve(false);
+        resolve(result === UserConsentVerifierAvailability.available);
+      });
+    } catch (error) {
+      resolve(false);
+    }
   });
 }
 
 async function verifyWindowsTouchID(msg: string) {
   return new Promise<boolean>((resolve) => {
-    UserConsentVerifier.requestVerificationAsync(msg, (err, result) => {
-      if (err) return resolve(false);
-      resolve(result === UserConsentVerificationResult.verified);
-    });
+    try {
+      UserConsentVerifier.requestVerificationAsync(msg, (err, result) => {
+        if (err) return resolve(false);
+        resolve(result === UserConsentVerificationResult.verified);
+      });
+    } catch (error) {
+      resolve(false);
+    }
   });
 }
 
