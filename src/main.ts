@@ -140,12 +140,7 @@ const createWindow = async (): Promise<void> => {
   });
 
   App.mainWindow = mainWindow;
-  mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY, {
-    // extraHeaders: `Content-Security-Policy: default-src 'self' data: https: 'unsafe-inline' 'unsafe-eval';`, //https://content-security-policy.com
-    extraHeaders: prod
-      ? undefined
-      : `Content-Security-Policy: default-src * self blob: data: gap:; style-src * self 'unsafe-inline' blob: data: gap:; script-src * 'self' 'unsafe-eval' 'unsafe-inline' blob: data: gap:; object-src * 'self' blob: data: gap:; img-src * self 'unsafe-inline' blob: data: gap:; connect-src self * 'unsafe-inline' blob: data: gap:; frame-src * self blob: data: gap:;`,
-  });
+  mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY, {});
 
   mainWindow.once('closed', () => {
     mainWindow.removeAllListeners();
