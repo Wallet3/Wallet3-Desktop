@@ -53,6 +53,7 @@
         "mkdir",
         "msgbox",
         "nobrowse",
+        "nodert",
         "nsis",
         "Numberish",
         "OETH",

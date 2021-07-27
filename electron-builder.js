@@ -56,5 +56,6 @@ module.exports = {
     displayName: 'Wallet 3',
     publisher: publisher,
     publisherDisplayName: 'ChainBow Co. Ltd.',
+    setBuildNumber: true,
   },
 };
