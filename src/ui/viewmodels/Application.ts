@@ -24,6 +24,7 @@ type AuthMethod = 'fingerprint' | 'keyboard';
 
 export class Application {
   readonly history = createMemoryHistory();
+  private authenticating = false;
 
   touchIDSupported = false;
   connectingApp = false;
@@ -198,8 +199,15 @@ export class Application {
   };
 
   promptTouchID = async (message?: string) => {
-    const { success } = await ipc.invokeSecure<BooleanResult>(MessageKeys.promptTouchID, { message });
-    return success;
+    if (this.authenticating) return;
+
+    try {
+      this.authenticating = true;
+      const { success } = await ipc.invokeSecure<BooleanResult>(MessageKeys.promptTouchID, { message });
+      return success;
+    } finally {
+      this.authenticating = false;
+    }
   };
 
   switchAuthMethod = async (method: AuthMethod) => {
