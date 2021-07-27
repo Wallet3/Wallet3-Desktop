@@ -1,6 +1,7 @@
+import * as Biometrics from './lib/Biometrics';
 import * as Cipher from '../common/Cipher';
 
-import { BrowserWindow, TouchBar, TouchBarButton, app, ipcMain, systemPreferences } from 'electron';
+import { BrowserWindow, TouchBar, TouchBarButton, app, ipcMain } from 'electron';
 import { DBMan, KeyMan, TxMan } from './mans';
 import MessageKeys, {
   AuthenticationResult,
@@ -19,7 +20,7 @@ declare const POPUP_WINDOW_WEBPACK_ENTRY: string;
 declare const POPUP_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
 export class App {
-  touchIDSupported = process.platform === 'darwin' && systemPreferences.canPromptTouchID();
+  touchIDSupported = false;
 
   windows = new Map<string, { key: Buffer }>();
   mainWindow?: BrowserWindow;
@@ -45,6 +46,8 @@ export class App {
   }
 
   async init() {
+    this.touchIDSupported = Biometrics.isTouchIDSupported();
+
     if (this.ready) return;
 
     reaction(
@@ -102,12 +105,7 @@ export class App {
 
       if (!this.touchIDSupported) return App.encryptIpc({ success: false }, key);
 
-      try {
-        await systemPreferences.promptTouchID(message ?? i18n.t('Unlock Wallet'));
-        return App.encryptIpc({ success: true }, key);
-      } catch (error) {
-        return App.encryptIpc({ success: false }, key);
-      }
+      return App.encryptIpc({ success: await Biometrics.verifyTouchID(message ?? i18n.t('Unlock Wallet')) }, key);
     });
 
     ipcMain.handle(`${MessageKeys.genMnemonic}-secure`, (e, encrypted, winId) => {

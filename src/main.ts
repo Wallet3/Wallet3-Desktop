@@ -159,8 +159,8 @@ const createWindow = async (): Promise<void> => {
 app.on('ready', async () => {
   await DBMan.init();
   await Promise.all([KeyMan.init(), TxMan.init()]);
-
   await App.init();
+
   createWindow();
 
   GasnowWs.start(true);
