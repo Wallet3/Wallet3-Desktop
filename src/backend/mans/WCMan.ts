@@ -199,7 +199,7 @@ export class WCMan {
 
       this.recoverSessions([item]);
       this.handleReconnectingQueue();
-    }, 3000);
+    }, 1000 + Math.random() * 5000);
   }
 
   async clean() {
@@ -216,7 +216,7 @@ export class WCMan {
     await this.dispose();
   }
 
-  dispose() {    
+  dispose() {
     this.connections.forEach((c) => c?.dispose());
     this.cache.clear();
     this.reconnectingQueue = [];
