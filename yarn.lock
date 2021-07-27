@@ -2353,6 +2353,13 @@
     "@nodelib/fs.scandir" "2.1.4"
     fastq "^1.6.0"
 
+"@nodert-win10-20h1/windows.security.credentials.ui@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@nodert-win10-20h1/windows.security.credentials.ui/-/windows.security.credentials.ui-0.1.0.tgz#86b6daeae53d8164170d52bf7b21b0d4b1bff384"
+  integrity sha512-ewowTWov6ikDsybU2Vo639KcepPXvAncSrSRYBjQrQ54Vu5A4Sl1t0bGD7gWyOkBwgI5OeY9wTjJTIwgdOoE7Q==
+  dependencies:
+    nan latest
+
 "@pedrouid/environment@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@pedrouid/environment/-/environment-1.0.1.tgz#858f0f8a057340e0b250398b75ead77d6f4342ec"
@@ -8908,7 +8915,7 @@ mz@^2.4.0:
     object-assign "^4.0.1"
     thenify-all "^1.0.0"
 
-nan@^2.4.0:
+nan@^2.4.0, nan@latest:
   version "2.14.2"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.2.tgz#f5376400695168f4cc694ac9393d0c9585eeea19"
   integrity sha512-M2ufzIiINKCuDfBSAUr1vWQ+vuVcA9kqx8JJUsbQi6yf1uGRyb7HfpdfUr5qLXf3B/t8dPvcjhKMmlfnP47EzQ==

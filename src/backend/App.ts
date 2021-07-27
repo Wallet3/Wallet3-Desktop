@@ -46,7 +46,7 @@ export class App {
   }
 
   async init() {
-    this.touchIDSupported = Biometrics.isTouchIDSupported();
+    this.touchIDSupported = await Biometrics.isTouchIDSupported();
 
     if (this.ready) return;
 
