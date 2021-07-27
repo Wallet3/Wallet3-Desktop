@@ -263,15 +263,15 @@ powerMonitor.on('resume', async () => {
   });
 });
 
-powerMonitor.on('suspend', () => {
-  KeyMan.keys.map(async (k) => {
-    const { wcman } = KeyMan.connections.get(k.id) || {};
-    await wcman?.dispose();
-  });
-});
-
-powerMonitor.on('suspend', () => {
+powerMonitor.on('suspend', async () => {
   App.mainWindow?.webContents.send(Messages.idleExpired, { idleExpired: true });
+
+  await Promise.all(
+    KeyMan.keys.map(async (k) => {
+      const { wcman } = KeyMan.connections.get(k.id) || {};
+      await wcman?.dispose();
+    })
+  );
 });
 
 if (!app.requestSingleInstanceLock()) {
