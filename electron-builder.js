@@ -52,7 +52,7 @@ module.exports = {
   },
   appx: {
     applicationId: 'ChainBowCo.Ltd.Wallet3',
-    identityName: 'ChainBowCo.Ltd.Wallet3',
+    identityName: 'ChainBowCo.Ltd.8951B06B2934',
     displayName: 'Wallet 3',
     publisher: publisher,
     publisherDisplayName: 'ChainBow Co. Ltd.',
