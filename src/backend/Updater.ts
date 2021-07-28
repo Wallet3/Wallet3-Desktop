@@ -10,7 +10,7 @@ import path from 'path';
 import { tmpdir } from 'os';
 import yaml from 'yaml';
 
-const isStoreDistribution = false;
+const isStoreDistribution = true;
 
 export async function checkUpdates() {
   try {
