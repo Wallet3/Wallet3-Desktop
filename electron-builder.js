@@ -57,5 +57,6 @@ module.exports = {
     publisher: publisher,
     publisherDisplayName: 'ChainBow Co. Ltd.',
     setBuildNumber: true,
+    backgroundColor: '#ffffff'
   },
 };
