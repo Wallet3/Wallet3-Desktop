@@ -14,7 +14,7 @@ const isStoreDistribution = false;
 
 export async function checkUpdates() {
   try {
-    const resp = await axios.get('https://raw.githubusercontent.com/Wallet3/Wallet3/master/package.json');
+    const resp = await axios.get('https://raw.githubusercontent.com/Wallet3/Wallet3/store/package.json');
     const { version: latestVersion } = resp.data as { version: string };
     const currentVersion = app.getVersion();
     return { updateAvailable: latestVersion > currentVersion, latestVersion, currentVersion };
