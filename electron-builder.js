@@ -28,7 +28,7 @@ module.exports = {
   mas: {
     entitlements: 'sign/entitlements.mas.plist',
     type: 'distribution',
-    identity: 'Apple Distribution: ChainBow Co. Ltd (Z3N6SZF439)',
+    identity: 'ChainBow Co. Ltd (Z3N6SZF439)',
     provisioningProfile: '',
   },
   win: {
