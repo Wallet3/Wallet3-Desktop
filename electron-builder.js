@@ -1,4 +1,3 @@
-
 const { certPassword, devCertPath, publisher } = require('./sign/winSign');
 
 module.exports = {
@@ -33,7 +32,7 @@ module.exports = {
     provisioningProfile: '',
   },
   win: {
-    target: ['nsis', 'appx'],
+    target: devCertPath ? ['appx', 'nsis'] : ['appx'],
     icon: 'assets/AppIcon.ico',
     publish: ['github'],
     legalTrademarks: 'Wallet 3, ChainBow Co, Ltd.',
@@ -57,6 +56,5 @@ module.exports = {
     publisher: publisher,
     publisherDisplayName: 'ChainBow Co. Ltd.',
     setBuildNumber: true,
-    backgroundColor: '#f0f8ff',
   },
 };
