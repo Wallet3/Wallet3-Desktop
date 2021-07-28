@@ -218,11 +218,13 @@ export async function updateApp() {
 
     switch (platform) {
       case 'darwin':
-        return;
+        break;
       case 'win32':
         shell.openExternal(`ms-windows-store://pdp/?productid=9NH37ZC5745R`);
-        return;
+        break;
     }
+
+    return;
   }
 
   try {
