@@ -1,14 +1,16 @@
+import { app, shell } from 'electron';
 import { createWriteStream, statSync } from 'fs';
 import { execSync, spawn } from 'child_process';
 
 import App from './App';
-import { app } from 'electron';
 import axios from 'axios';
 import got from 'got';
 import i18n from '../i18n';
 import path from 'path';
 import { tmpdir } from 'os';
 import yaml from 'yaml';
+
+const isStoreDistribution = false;
 
 export async function checkUpdates() {
   try {
@@ -204,6 +206,24 @@ export async function updateApp() {
 
   if (!targetInfo) return;
   if (!updateAvailable) return;
+
+  if (isStoreDistribution) {
+    const ok = await App.ask({
+      title: i18n.t('New Update Available'),
+      icon: 'arrow-up-circle',
+      message: i18n.t('Update Message', { latestVersion }),
+    });
+
+    if (!ok) return;
+
+    switch (platform) {
+      case 'darwin':
+        return;
+      case 'win32':
+        shell.openExternal(`ms-windows-store://pdp/?productid=9NH37ZC5745R`);
+        return;
+    }
+  }
 
   try {
     statSync(dlPath, {});
