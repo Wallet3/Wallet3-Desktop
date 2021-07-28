@@ -125,17 +125,18 @@ export class WCMan {
       this.removeItem(wc);
     });
 
-    wc.once('transport_error', () => {
-      console.log('transport_error', wc.appMeta.name);
+    // WalletConnect will auto reconnect
+    // wc.once('transport_error', () => {
+    //   console.log('transport_error', wc.appMeta.name);
 
-      const wcSession = wc.wcSession;
-      wc.dispose();
-      this.cache.delete(wcSession.session.key);
-      this.removeItem(wc);
+    //   const wcSession = wc.wcSession;
+    //   wc.dispose();
+    //   this.cache.delete(wcSession.session.key);
+    //   this.removeItem(wc);
 
-      this.queueDisconnectedSession(wcSession);
-      this.handleReconnectingQueue();
-    });
+    //   this.queueDisconnectedSession(wcSession);
+    //   this.handleReconnectingQueue();
+    // });
 
     wc.on('sessionUpdated', () => {
       const { wcSession, userChainId } = wc;

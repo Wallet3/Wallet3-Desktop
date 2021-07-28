@@ -94,7 +94,7 @@ async function handleERC681(uri: string) {
   const nonce = Number.parseInt(parameters['nonce']) || (await getTransactionCount(chainId, from));
   const value = Number(parameters['value'] || '0').toLocaleString(undefined, { useGrouping: false });
 
-  if (function_name) {
+  if (function_name === 'transfer') {
     const token = new ERC20Token(target_address, provider); // no network detected, why???
 
     const found = findTokenByAddress(target_address);

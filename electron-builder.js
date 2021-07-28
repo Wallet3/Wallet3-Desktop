@@ -1,4 +1,3 @@
-
 const { certPassword, devCertPath, publisher } = require('./sign/winSign');
 
 module.exports = {
@@ -29,11 +28,11 @@ module.exports = {
   mas: {
     entitlements: 'sign/entitlements.mas.plist',
     type: 'distribution',
-    identity: 'Apple Distribution: ChainBow Co. Ltd (Z3N6SZF439)',
+    identity: 'ChainBow Co. Ltd (Z3N6SZF439)',
     provisioningProfile: '',
   },
   win: {
-    target: ['nsis', 'appx'],
+    target: devCertPath ? ['appx', 'nsis'] : ['appx'],
     icon: 'assets/AppIcon.ico',
     publish: ['github'],
     legalTrademarks: 'Wallet 3, ChainBow Co, Ltd.',
