@@ -1,7 +1,7 @@
 {
   "name": "wallet3",
   "productName": "Wallet 3",
-  "version": "1.5.0",
+  "version": "1.5.3",
   "description": "A Secure Wallet for Bankless Era",
   "main": ".webpack/main",
   "repository": {
@@ -13,6 +13,8 @@
     "package": "npx electron-forge package",
     "build:mac:arm64": "npx electron-forge package --platform=darwin --arch=arm64 && DEBUG=electron-builder ./node_modules/.bin/electron-builder build --mac --arm64",
     "build:mac:x64": "npx electron-forge package --platform=darwin --arch=x64 && DEBUG=electron-builder ./node_modules/.bin/electron-builder build --mac --x64",
+    "build:mac:universal": "npx electron-forge package --platform=darwin --arch=all && DEBUG=electron-builder ./node_modules/.bin/electron-builder build --mac --universal",
+    "build:mas": "npx electron-forge package --platform=mas --arch=all && DEBUG=electron-builder ./node_modules/.bin/electron-builder build --mac --universal",
     "build:win": "npx electron-forge package --platform=win32 --arch=x64 && ./node_modules/.bin/electron-builder build --win --x64",
     "build:linux": "npx electron-forge package --platform=linux --arch=x64 && ./node_modules/.bin/electron-builder build --linux --x64",
     "build:x64": "npx yarn run build:mac:x64 && npx yarn run build:win && npx yarn run build:linux",
@@ -66,7 +68,7 @@
     "@typescript-eslint/eslint-plugin": "^4.28.5",
     "@typescript-eslint/parser": "^4.28.5",
     "@vercel/webpack-asset-relocator-loader": "^1.6.0",
-    "@walletconnect/client": "^1.5.0",
+    "@walletconnect/client": "^1.5.1",
     "animate.css": "^4.1.1",
     "animejs": "^3.2.1",
     "axios": "^0.21.1",
