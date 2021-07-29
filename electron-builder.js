@@ -4,7 +4,7 @@ module.exports = {
   directories: {
     app: '.',
   },
-  files: ['./.webpack/**/*', './package.json', './embedded.provisionprofile'],
+  files: ['./.webpack/**/*', './package.json', './sign/embedded.provisionprofile'],
   appId: 'jp.co.chainbow.wallet3',
   productName: 'Wallet 3',
   artifactName: '${name}-${os}-${arch}-${version}.${ext}',
@@ -56,6 +56,5 @@ module.exports = {
     publisher: publisher,
     publisherDisplayName: 'ChainBow Co. Ltd.',
     setBuildNumber: true,
-    backgroundColor: '#ffffff',
   },
 };
