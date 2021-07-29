@@ -8,7 +8,7 @@ module.exports = {
     appCopyright: 'ChainBow Co, Ltd.',
     appCategoryType: 'public.app-category.finance',
     darwinDarkModeSupport: false,
-    icon: './assets/AppIcon.png',
+    icon: './assets/AppIcon.icns',
     osxSign: {
       identity: 'ChainBow Co. Ltd (Z3N6SZF439)',
       hardenedRuntime: true,
