@@ -65,6 +65,7 @@
         "prettierignore",
         "privkey",
         "productid",
+        "provisionprofile",
         "qrcode",
         "qrscanner",
         "Rarible",
