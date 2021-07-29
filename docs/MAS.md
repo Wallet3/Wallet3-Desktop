@@ -1,0 +1,1 @@
+https://github.com/electron-userland/electron-builder/issues/4553#issuecomment-623451338
