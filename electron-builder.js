@@ -17,7 +17,7 @@ module.exports = {
   //afterSign: "sign/appSign.js",
   mac: {
     icon: 'assets/AppIcon.icns',
-    entitlements: 'sign/entitlements.plist',
+    entitlements: 'sign/entitlements.mas.plist',
     category: 'public.app-category.finance',
     target: [
       'mas',

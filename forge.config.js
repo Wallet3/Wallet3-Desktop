@@ -13,8 +13,8 @@ module.exports = {
       identity: 'ChainBow Co. Ltd (Z3N6SZF439)',
       hardenedRuntime: true,
       'gatekeeper-assess': false,
-      entitlements: 'sign/entitlements.plist',
-      'entitlements-inherit': 'sign/entitlements.plist',
+      entitlements: 'sign/entitlements.mas.plist',
+      'entitlements-inherit': 'sign/entitlements.mas.plist',
       'signature-flags': 'library',
     },
     // osxNotarize: {
