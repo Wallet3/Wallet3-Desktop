@@ -12,10 +12,10 @@ module.exports = {
     osxSign: {
       identity: 'ChainBow Co. Ltd (Z3N6SZF439)',
       hardenedRuntime: true,
-      'gatekeeper-assess': false,
+      'signature-flags': 'library',
       entitlements: 'sign/entitlements.plist',
       'entitlements-inherit': 'sign/entitlements.plist',
-      'signature-flags': 'library',
+      'provisioning-profile': 'sign/embedded.provisionprofile',
     },
     // osxNotarize: {
     //   appleId,
