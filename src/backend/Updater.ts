@@ -218,6 +218,7 @@ export async function updateApp() {
 
     switch (platform) {
       case 'darwin':
+        shell.openExternal(`https://apps.apple.com/us/app/wallet-3/id1572750030`);
         break;
       case 'win32':
         shell.openExternal(`ms-windows-store://pdp/?productid=9NH37ZC5745R`);
