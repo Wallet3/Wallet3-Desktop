@@ -26,10 +26,10 @@ module.exports = {
     publish: ['github'],
   },
   mas: {
-    entitlements: 'sign/entitlements.mas.plist',
     type: 'distribution',
     identity: 'ChainBow Co. Ltd (Z3N6SZF439)',
-    provisioningProfile: '',
+    entitlements: 'sign/entitlements.mas.plist',
+    provisioningProfile: 'sign/embedded.provisionprofile',
   },
   win: {
     target: devCertPath ? ['appx', 'nsis'] : ['appx'],
