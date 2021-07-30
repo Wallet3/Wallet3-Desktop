@@ -1,7 +1,7 @@
 {
   "name": "wallet3",
   "productName": "Wallet 3",
-  "version": "1.5.5",
+  "version": "1.5.7",
   "description": "A Secure Wallet for Bankless Era",
   "main": ".webpack/main",
   "repository": {
@@ -15,6 +15,7 @@
     "build:mac:x64": "npx electron-forge package --platform=darwin --arch=x64 && DEBUG=electron-builder ./node_modules/.bin/electron-builder build --mac --x64",
     "build:mac:universal": "npx electron-forge package --platform=darwin --arch=all && DEBUG=electron-builder ./node_modules/.bin/electron-builder build --mac --universal",
     "build:mas": "npx electron-forge package --platform=mas --arch=all && DEBUG=electron-builder ./node_modules/.bin/electron-builder build --mac --universal",
+    "pack:mas": "npx electron-forge package --platform=mas --arch=all",
     "build:win": "npx electron-forge package --platform=win32 --arch=x64 && ./node_modules/.bin/electron-builder build --win --x64",
     "build:linux": "npx electron-forge package --platform=linux --arch=x64 && ./node_modules/.bin/electron-builder build --linux --x64",
     "build:x64": "npx yarn run build:mac:x64 && npx yarn run build:win && npx yarn run build:linux",
