@@ -19,11 +19,10 @@ module.exports = {
     icon: 'assets/AppIcon.icns',
     entitlements: 'sign/entitlements.mas.plist',
     category: 'public.app-category.finance',
-    target: [
-      'mas',
-      // 'dmg', // https://github.com/electron/electron-osx-sign/issues/223#issuecomment-611070794
-    ],
+    identity: 'ChainBow Co. Ltd (Z3N6SZF439)',
+    target: ['mas'],
     publish: ['github'],
+    provisioningProfile: 'sign/embedded.provisionprofile',
   },
   mas: {
     type: 'distribution',
