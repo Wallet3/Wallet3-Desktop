@@ -29,6 +29,7 @@ module.exports = {
     type: 'distribution',
     identity: 'ChainBow Co. Ltd (Z3N6SZF439)',
     entitlements: 'sign/entitlements.mas.plist',
+    entitlementsInherit: 'sign/entitlements.mas.inherit.plist',
     provisioningProfile: 'sign/embedded.provisionprofile',
   },
   win: {
