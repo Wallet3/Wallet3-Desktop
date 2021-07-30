@@ -10,7 +10,7 @@ module.exports = {
     darwinDarkModeSupport: false,
     icon: './assets/AppIcon.icns',
     osxSign: {
-      identity: 'ChainBow Co. Ltd (Z3N6SZF439)',
+      identity: '3rd Party Mac Developer Application: ChainBow Co. Ltd (Z3N6SZF439)',
       hardenedRuntime: true,
       'gatekeeper-assess': false,
       'signature-flags': 'library',
