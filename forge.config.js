@@ -14,8 +14,8 @@ module.exports = {
       hardenedRuntime: true,
       'gatekeeper-assess': false,
       'signature-flags': 'library',
-      entitlements: 'sign/entitlements.plist',
-      'entitlements-inherit': 'sign/entitlements.plist',
+      entitlements: 'sign/entitlements.mas.plist',
+      'entitlements-inherit': 'sign/entitlements.mas.plist',
       'provisioning-profile': 'sign/embedded.provisionprofile',
     },
     // osxNotarize: {
