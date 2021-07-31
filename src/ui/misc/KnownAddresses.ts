@@ -44,6 +44,8 @@ const KnownAddresses = {
   '0x93bcDc45f7e62f89a8e901DC4A0E2c6C427D9F25': 'ComethSwap',
   '0x8dFf5E27EA6b7AC08EbFdf9eB090F32ee9a30fcf': 'Aave',
   '0xA464e6DCda8AC41e03616F95f4BC98a13b8922Dc': 'Curve Fee Distribution',
+  '0x283Af0B28c62C092C9727F1Ee09c02CA627EB7F5': 'ENS Registrar',
+  '0xb47e3cd837dDF8e4c57F05d70Ab865de6e193BBB': 'CRYPTOPUNKS',
 };
 
 Tokens.forEach((t) => (KnownAddresses[t.address] = t.symbol));
