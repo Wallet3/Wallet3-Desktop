@@ -13,6 +13,9 @@ module.exports = {
     name: 'Wallet 3',
     schemes: ['ethereum', 'wallet3', 'wc', 'ledgerlive'],
   },
+  asar: {
+    smartUnpack: true,
+  },
   //npmRebuild: 'false',
   //afterSign: "sign/appSign.js",
   mac: {
