@@ -193,6 +193,8 @@ async function installUpdate(version: string, execPath: string) {
 }
 
 export async function updateApp() {
+  if (isStoreDistribution) return;
+
   const { updateAvailable, latestVersion } = await checkUpdates();
 
   const platform = process.platform;
