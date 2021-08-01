@@ -1,4 +1,4 @@
-const { certPassword, devCertPath, publisher } = require('./sign/winSign');
+const { certPassword, devCertPath, publisher, publisherName } = require('./sign/winSign');
 
 module.exports = {
   directories: {
@@ -32,7 +32,7 @@ module.exports = {
     provisioningProfile: 'sign/embedded.provisionprofile',
   },
   win: {
-    target: devCertPath ? ['appx', 'nsis'] : ['appx'],
+    target: ['appx'],
     icon: 'assets/AppIcon.ico',
     publish: ['github'],
     legalTrademarks: 'Wallet 3, ChainBow Co, Ltd.',
