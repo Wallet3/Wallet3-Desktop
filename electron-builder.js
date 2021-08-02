@@ -20,8 +20,8 @@ module.exports = {
     entitlements: 'sign/entitlements.plist',
     category: 'public.app-category.finance',
     target: [
-      'mas',
-      // 'dmg', // https://github.com/electron/electron-osx-sign/issues/223#issuecomment-611070794
+      //'mas',
+       'dmg', // https://github.com/electron/electron-osx-sign/issues/223#issuecomment-611070794
     ],
     publish: ['github'],
   },
@@ -32,7 +32,7 @@ module.exports = {
     provisioningProfile: 'sign/embedded.provisionprofile',
   },
   win: {
-    target: devCertPath ? ['appx', 'nsis'] : ['appx'],
+    target: devCertPath ? ['appx', 'nsis'] : ['nsis'],
     icon: 'assets/AppIcon.ico',
     publish: ['github'],
     legalTrademarks: 'Wallet 3, ChainBow Co, Ltd.',
