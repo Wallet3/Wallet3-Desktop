@@ -1,7 +1,7 @@
 {
   "name": "wallet3",
   "productName": "Wallet 3",
-  "version": "1.5.13",
+  "version": "1.5.14",
   "description": "A Secure Wallet for Bankless Era",
   "main": ".webpack/main",
   "repository": {
@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.14.8",
-    "@babel/preset-env": "^7.14.8",
+    "@babel/preset-env": "^7.14.9",
     "@babel/preset-typescript": "^7.14.5",
     "@electron-forge/cli": "^6.0.0-beta.59",
     "@electron-forge/core": "^6.0.0-beta.59",
@@ -76,7 +76,7 @@
     "electron-squirrel-startup": "^1.0.0",
     "eslint": "^7.32.0",
     "eslint-plugin-import": "^2.23.4",
-    "fork-ts-checker-webpack-plugin": "^6.2.13",
+    "fork-ts-checker-webpack-plugin": "^6.3.1",
     "jest": "^27.0.6",
     "node-loader": "^2.0.0",
     "react-codes-input": "^1.2.1",
