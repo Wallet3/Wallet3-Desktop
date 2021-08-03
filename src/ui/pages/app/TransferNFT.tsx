@@ -3,7 +3,6 @@ import './TransferNFT.css';
 import { Copy, Image, NavBar } from '../../components';
 import React, { useEffect, useState } from 'react';
 
-import { AccountVM } from '../../viewmodels/AccountVM';
 import { Application } from '../../viewmodels/Application';
 import Feather from 'feather-icons-react';
 import { NFT } from '../../viewmodels/models/NFT';
@@ -37,7 +36,9 @@ export default observer(({ app, networksVM }: { app: Application; networksVM: Ne
 
   return (
     <div className="page nft">
-      <NavBar title={'NFT'} onBackClick={app.history.goBack} />
+      <div className="title-area">
+        <NavBar title={'NFT'} onBackClick={app.history.goBack} />
+      </div>
 
       <div className="content">
         <div className="nft">

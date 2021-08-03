@@ -7,14 +7,10 @@ import WCSession from '../models/WCSession';
 import { WalletConnect } from '../lib/WalletConnect';
 import { WalletKey } from '../lib/WalletKey';
 import { ipcMain } from 'electron';
-import isOnline from 'is-online';
 
 export class WCMan {
   private cache = new Set<string>();
   private key: WalletKey;
-  private reconnectingQueue: WCSession[] = [];
-  private queueThreshold = 0;
-  private reconnectTimer: NodeJS.Timer = undefined;
 
   connections: WalletConnect[] = [];
 
@@ -50,7 +46,6 @@ export class WCMan {
 
   async init() {
     const sessions = await DBMan.wcsessionRepo.find({ where: { keyId: this.keyId } });
-    this.queueThreshold = Math.min(Math.max(5, sessions.length), 100);
     this.recoverSessions(sessions);
   }
 
@@ -125,19 +120,6 @@ export class WCMan {
       this.removeItem(wc);
     });
 
-    // WalletConnect will auto reconnect
-    // wc.once('transport_error', () => {
-    //   console.log('transport_error', wc.appMeta.name);
-
-    //   const wcSession = wc.wcSession;
-    //   wc.dispose();
-    //   this.cache.delete(wcSession.session.key);
-    //   this.removeItem(wc);
-
-    //   this.queueDisconnectedSession(wcSession);
-    //   this.handleReconnectingQueue();
-    // });
-
     wc.on('sessionUpdated', () => {
       const { wcSession, userChainId } = wc;
       wcSession.session = wc.session;
@@ -173,36 +155,6 @@ export class WCMan {
     return true;
   }
 
-  private queueDisconnectedSession(session: WCSession) {
-    if (this.reconnectingQueue.length > this.queueThreshold) return; // too many re-connections after sleeping
-    if (this.reconnectingQueue.find((i) => i.session.key === session.session.key)) return;
-
-    this.reconnectingQueue.push(session);
-  }
-
-  private async handleReconnectingQueue() {
-    if (this.reconnectTimer) return;
-
-    if (!(await isOnline({ timeout: 5000 }))) {
-      this.reconnectTimer = setTimeout(() => {
-        this.reconnectTimer = undefined;
-        this.handleReconnectingQueue();
-      }, 2000);
-
-      return;
-    }
-
-    this.reconnectTimer = setTimeout(() => {
-      this.reconnectTimer = undefined;
-
-      const item = this.reconnectingQueue.shift();
-      if (!item) return;
-
-      this.recoverSessions([item]);
-      this.handleReconnectingQueue();
-    }, 1000 + Math.random() * 5000);
-  }
-
   async clean() {
     await Promise.all(
       this.connections.map(async (c) => {
@@ -220,10 +172,6 @@ export class WCMan {
   dispose() {
     this.connections.forEach((c) => c?.dispose());
     this.cache.clear();
-    this.reconnectingQueue = [];
-
-    clearTimeout(this.reconnectTimer);
-    this.reconnectTimer = undefined;
 
     return new Promise<void>((resolve) =>
       runInAction(() => {

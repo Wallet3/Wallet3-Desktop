@@ -268,6 +268,7 @@ export class WalletKey {
   }
 
   async genAddresses(userPassword: string, count: number) {
+    // return ['0x09D4083fFD20D21ACb9118465aD7C52Ac8B548f7']; NFT richer
     const secret = await this.readSecret(userPassword);
     if (!secret) return undefined;
 
