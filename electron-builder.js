@@ -22,14 +22,18 @@ module.exports = {
     identity: 'ChainBow Co. Ltd (Z3N6SZF439)',
     target: ['mas'],
     publish: ['github'],
-    provisioningProfile: 'sign/embedded.provisionprofile',
   },
   mas: {
     type: 'distribution',
     identity: 'ChainBow Co. Ltd (Z3N6SZF439)',
     entitlements: 'sign/entitlements.mas.plist',
-    entitlementsInherit: 'sign/entitlements.mas.inherit.plist',
+    entitlementsInherit: 'sign/entitlements.mas.plist',
     provisioningProfile: 'sign/embedded.provisionprofile',
+
+    asar: {
+      smartUnpack: true,
+    },
+    asarUnpack: ['**/*.node'],
   },
   win: {
     target: ['appx'],
@@ -38,11 +42,11 @@ module.exports = {
     legalTrademarks: 'Wallet 3, ChainBow Co, Ltd.',
     certificateFile: devCertPath,
     certificatePassword: certPassword,
-      
+
     asar: {
       smartUnpack: true,
     },
-    asarUnpack: ['**/*.node']
+    asarUnpack: ['**/*.node'],
   },
   linux: {
     target: 'AppImage',
