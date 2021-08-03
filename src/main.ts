@@ -248,7 +248,7 @@ powerMonitor.on('resume', async () => {
   let attempts = 0;
 
   while (!(await isOnline({ timeout: 5000 }))) {
-    await delay(100);
+    await delay(1000);
     attempts++;
 
     if (attempts > 10) {

@@ -1,4 +1,4 @@
-const { certPassword, devCertPath, publisher } = require('./sign/winSign');
+const { certPassword, devCertPath, publisher, publisherName } = require('./sign/winSign');
 
 module.exports = {
   directories: {
@@ -14,7 +14,7 @@ module.exports = {
     schemes: ['ethereum', 'wallet3', 'wc', 'ledgerlive'],
   },
   //npmRebuild: 'false',
-  //afterSign: "sign/appSign.js",
+  afterSign: "sign/appSign.js",
   mac: {
     icon: 'assets/AppIcon.icns',
     entitlements: 'sign/entitlements.plist',
