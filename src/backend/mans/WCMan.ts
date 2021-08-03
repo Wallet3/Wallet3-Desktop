@@ -7,14 +7,10 @@ import WCSession from '../models/WCSession';
 import { WalletConnect } from '../lib/WalletConnect';
 import { WalletKey } from '../lib/WalletKey';
 import { ipcMain } from 'electron';
-import isOnline from 'is-online';
 
 export class WCMan {
   private cache = new Set<string>();
   private key: WalletKey;
-  // private reconnectingQueue: WCSession[] = [];
-  // private queueThreshold = 0;
-  // private reconnectTimer: NodeJS.Timer = undefined;
 
   connections: WalletConnect[] = [];
 

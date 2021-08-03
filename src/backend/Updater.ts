@@ -209,27 +209,6 @@ export async function updateApp() {
   if (!targetInfo) return;
   if (!updateAvailable) return;
 
-  if (isStoreDistribution) {
-    const ok = await App.ask({
-      title: i18n.t('New Update Available'),
-      icon: 'arrow-up-circle',
-      message: i18n.t('Update Message', { latestVersion }),
-    });
-
-    if (!ok) return;
-
-    switch (platform) {
-      case 'darwin':
-        shell.openExternal(`https://apps.apple.com/us/app/wallet-3/id1572750030`);
-        break;
-      case 'win32':
-        shell.openExternal(`ms-windows-store://pdp/?productid=9NH37ZC5745R`);
-        break;
-    }
-
-    return;
-  }
-
   try {
     statSync(dlPath, {});
 
