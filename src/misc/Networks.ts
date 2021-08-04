@@ -120,6 +120,7 @@ export const Testnets: INetwork[] = [
     chainId: 4,
     color: '#6186ff',
     test: true,
+    eip1559: true,
     defaultTokens: [],
   },
   {
