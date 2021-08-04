@@ -8,7 +8,7 @@ export default ({ app }: { app: Application }) => {
 
   return (
     <div className="page networks">
-      <NavBar title={t('Add Tokens')} onBackClick={() => app.history.goBack()} />
+      <NavBar title={t('Networks')} onBackClick={() => app.history.goBack()} />
     </div>
   );
 };
