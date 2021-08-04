@@ -14,7 +14,7 @@ import {
   UserNFTs,
   UserTokens,
 } from './pages/app';
-import { BackupMnemonic, Reset } from './pages/secure';
+import { BackupMnemonic, Reset } from './pages/security';
 import React, { useEffect } from 'react';
 import { Route, Router, Switch } from 'react-router-dom';
 

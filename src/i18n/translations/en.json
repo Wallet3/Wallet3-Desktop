@@ -136,5 +136,7 @@
   "Received": "Received",
   "New Update Available": "Update Available",
   "Update Message": "New version: {{version}} is available, would you like to install the update?",
-  "Copy Address": "Address"
+  "Copy Address": "Address",
+  "Recipient Address or ENS": "Recipient Address or ENS",
+  "Networks": "Networks"
 }

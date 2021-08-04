@@ -64,7 +64,7 @@ export default observer(({ app }: { app: Application }) => {
             items={transferVM?.recipients}
             autoFocus
             styling={AddressSearchStyle}
-            placeholder="Receipient Address or ENS"
+            placeholder={t('Recipient Address or ENS')}
             onSearch={(s, r) => transferVM?.setRecipient(s)}
             onSelect={(item) => transferVM?.setRecipient(item.name)}
           />

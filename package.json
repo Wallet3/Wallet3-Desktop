@@ -39,9 +39,9 @@
     "forge": "./forge.config.js"
   },
   "devDependencies": {
-    "@babel/core": "^7.14.8",
-    "@babel/preset-env": "^7.14.9",
-    "@babel/preset-typescript": "^7.14.5",
+    "@babel/core": "^7.15.0",
+    "@babel/preset-env": "^7.15.0",
+    "@babel/preset-typescript": "^7.15.0",
     "@electron-forge/cli": "^6.0.0-beta.59",
     "@electron-forge/core": "^6.0.0-beta.59",
     "@electron-forge/maker-appx": "^6.0.0-beta.59",
@@ -62,7 +62,7 @@
     "@types/react-dom": "^17.0.9",
     "@types/react-router-dom": "^5.1.8",
     "@types/react-select": "^4.0.17",
-    "@types/react-virtualized": "^9.21.12",
+    "@types/react-virtualized": "^9.21.13",
     "@types/ws": "^7.4.7",
     "@typescript-eslint/eslint-plugin": "^4.29.0",
     "@typescript-eslint/parser": "^4.29.0",

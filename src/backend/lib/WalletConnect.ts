@@ -409,7 +409,7 @@ export class WalletConnect extends EventEmitter {
   };
 
   disconnect() {
-    return this.connector.killSession({ message: 'User exits' });
+    return this.connector.killSession({ message: 'User quits' });
   }
 
   dispose() {
@@ -424,7 +424,6 @@ export class WalletConnect extends EventEmitter {
     this.connector?.off('transport_open');
     this.connector?.transportClose();
 
-    console.log(this.appMeta.name, 'dispose');
     this.connector = undefined;
     this.key = undefined;
     this._wcSession = undefined;
