@@ -1510,6 +1510,15 @@
   optionalDependencies:
     electron-installer-dmg "^3.0.0"
 
+"@electron-forge/maker-pkg@^6.0.0-beta.59":
+  version "6.0.0-beta.59"
+  resolved "https://registry.yarnpkg.com/@electron-forge/maker-pkg/-/maker-pkg-6.0.0-beta.59.tgz#a576817ded91e27ece46c711409cfb25a2be52ee"
+  integrity sha512-1TYYGCsK7vwDKruF7IbXj0PRNExLwayKJWRAEWK9EZNn3DeL4jhbG9rI80JByE0Ox+IVrVQE/1N//0ILPd/7/Q==
+  dependencies:
+    "@electron-forge/maker-base" "6.0.0-beta.59"
+    "@electron-forge/shared-types" "6.0.0-beta.59"
+    electron-osx-sign "^0.5.0"
+
 "@electron-forge/maker-rpm@^6.0.0-beta.59":
   version "6.0.0-beta.59"
   resolved "https://registry.yarnpkg.com/@electron-forge/maker-rpm/-/maker-rpm-6.0.0-beta.59.tgz#325d439ae15969e555258d3a76001c1474b73282"
