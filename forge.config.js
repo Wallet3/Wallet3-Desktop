@@ -9,13 +9,14 @@ module.exports = {
     appCategoryType: 'public.app-category.finance',
     darwinDarkModeSupport: false,
     icon: './assets/AppIcon.icns',
+    platform: 'mas',
     osxSign: {
       identity: '3rd Party Mac Developer Application: ChainBow Co. Ltd (Z3N6SZF439)',
       hardenedRuntime: true,
       'gatekeeper-assess': false,
       'signature-flags': 'library',
       entitlements: 'sign/entitlements.mas.plist',
-      'entitlements-inherit': 'sign/entitlements.mas.plist',
+      'entitlements-inherit': 'sign/entitlements.mas.inherit.plist',
       'provisioning-profile': 'sign/embedded.provisionprofile',
     },
     // osxNotarize: {
