@@ -137,5 +137,6 @@
   "Received": "已到賬",
   "New Update Available": "更新",
   "Update Message": "發現新版本: {{version}}，是否安裝該更新？",
-  "Copy Address": "復製地址"
+  "Copy Address": "復製地址",
+  "Recipient Address or ENS": "收款方地址或ENS域名"
 }

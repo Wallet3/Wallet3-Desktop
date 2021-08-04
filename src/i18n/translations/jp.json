@@ -137,5 +137,6 @@
   "Received": "受け取りました",
   "New Update Available": "更新可能",
   "Update Message": "新バージョン: {{version}} 公開されました、アップデートをインストールしますか？",
-  "Copy Address": "アドレス"
+  "Copy Address": "アドレス",
+  "Recipient Address or ENS": "受信者アドレスまたはENS"
 }
