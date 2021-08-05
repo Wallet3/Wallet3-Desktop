@@ -40,7 +40,7 @@ module.exports = {
     {
       name: '@electron-forge/maker-pkg',
       config: {
-        platform: ['mas'],
+        platform: 'mas',
         identity: '3rd Party Mac Developer Installer: ChainBow Co. Ltd (Z3N6SZF439)',
         name: `${package.name}-mac-${process.arch}-${package.version}`,
       },
