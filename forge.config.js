@@ -38,27 +38,10 @@ module.exports = {
   },
   makers: [
     {
-      name: '@electron-forge/maker-dmg',
+      name: '@electron-forge/maker-pkg',
       config: {
+        identity: '3rd Party Mac Developer Application: ChainBow Co. Ltd (Z3N6SZF439)',
         name: `${package.name}-mac-${process.arch}-${package.version}`,
-        icon: 'assets/AppIcon.icns',
-        background: 'assets/DMGBG.png',
-        backgroundColor: '#6186ff',
-      },
-    },
-    {
-      name: '@electron-forge/maker-appx',
-      config: {
-        publisher,
-        devCert: devCertPath,
-        certPass: certPassword,
-        packageDisplayName: 'Wallet 3',
-        packageDescription: 'A Secure Wallet for Bankless Era',
-        containerVirtualization: true,
-        packageVersion: package.version,
-        makeVersionWinStoreCompatible: true,
-        flatten: true,
-        assets: './assets/AppIcon.png',
       },
     },
   ],
