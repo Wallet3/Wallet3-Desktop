@@ -101,31 +101,28 @@ export class TransferVM {
     this.recipients = store.get('recipients') || [];
   }
 
-  setRecipient(addressOrName: string) {
+  async setRecipient(addressOrName: string) {
     this.recipient = addressOrName;
-
-    if (addressOrName.toLowerCase().endsWith('.eth') || addressOrName.toLowerCase().endsWith('.xyz')) {
-      NetworksVM.currentProvider.resolveName(addressOrName).then((addr) => {
-        if (!addr) return;
-
-        runInAction(() => {
-          this.isEns = true;
-          this.receiptAddress = addr;
-        });
-      });
-
-      return;
-    } else {
-      this.receiptAddress = '';
-    }
+    let addr = '';
 
     if (ethers.utils.isAddress(addressOrName)) {
-      this.receiptAddress = addressOrName;
+      addr = this.receiptAddress = addressOrName;
+      this.isEns = false;
     } else {
-      this.receiptAddress = '';
+      addr = await NetworksVM.currentProvider.resolveName(addressOrName);
+      if (!addr) {
+        this.receiptAddress = '';
+        this.isEns = false;
+        return;
+      }
+
+      runInAction(() => {
+        this.isEns = true;
+        this.receiptAddress = addr;
+      });
     }
 
-    this.isEns = false;
+    this.estimateGas();
   }
 
   selectToken(id: string) {
@@ -217,14 +214,20 @@ export class TransferVM {
       .then((nonce) => runInAction(() => (this.nonce = nonce)));
   }
 
-  private estimateGas() {
-    if (!this.selectToken) {
-      this.setGas(21000);
-      return;
-    }
+  private async estimateGas() {
+    const setGas = (amount: number) => runInAction(() => this.setGas(amount));
+    const isContract = this.recipient && (await NetworksVM.currentProvider.getCode(this.recipient)) !== '0x';
 
-    if (!this.isERC20) {
-      this.setGas(21000);
+    const estimateNormalGas = async () =>
+      (
+        await NetworksVM.currentProvider.estimateGas({
+          to: this.receiptAddress,
+          value: 1,
+        })
+      ).toNumber();
+
+    if (!this.selectToken || !this.isERC20) {
+      setGas(isContract ? await estimateNormalGas() : 21000);
       return;
     }
 
@@ -232,8 +235,8 @@ export class TransferVM {
     const amt = this.amountBigInt;
     erc20.estimateGas
       .transferFrom(this.self, this.receiptAddress || '0xD1b05E3AFEDcb11F29c5A560D098170bE26Fe5f5', amt)
-      .then((v) => runInAction(() => this.setGas(Number.parseInt((v.toNumber() * 2) as any))))
-      .catch(() => runInAction(() => this.setGas(150_000)));
+      .then((v) => setGas(Number.parseInt((v.toNumber() * 2) as any)))
+      .catch(() => setGas(150_000));
   }
 
   private refreshBalance() {
