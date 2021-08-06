@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import AnimatedNumber from 'react-animated-number';
 import { Application } from '../../viewmodels/Application';
+import BarLoader from 'react-spinners/BarLoader';
 import Feather from 'feather-icons-react';
 import { Gwei_1 } from '../../../gas/Gasnow';
 import { NavBar } from '../../components';
@@ -221,7 +222,11 @@ export default observer(({ app, networksVM }: { app: Application; networksVM: Ne
         disabled={!transferVM?.isValid || transferVM?.insufficientFee || transferVM?.sending}
         onClick={(_) => transferVM?.sendTx().then(() => app.history.goBack())}
       >
-        {transferVM?.insufficientFee ? t('INSUFFICIENT FEE') : t('Send')}
+        {transferVM?.loading ? (
+          <BarLoader width={52} height={2} />
+        ) : (
+          t(transferVM?.insufficientFee ? 'INSUFFICIENT FEE' : 'Send')
+        )}
       </button>
     </div>
   );

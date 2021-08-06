@@ -21,6 +21,7 @@ export class TransferVM {
   private readonly _accountVM: AccountVM;
   private gasnowDisposer: IReactionDisposer;
 
+  loading = false;
   self = '';
   recipient: string = '';
   receiptAddress = '';
@@ -47,6 +48,7 @@ export class TransferVM {
         this.gas < 12_500_000 &&
         this.nonce >= 0 &&
         this.gasPrice > 0 &&
+        !this.loading &&
         this.gasPrice <= 9007199 // MAX_SAFE_INTEGER * gwei_1
       );
     } catch (error) {
@@ -109,7 +111,10 @@ export class TransferVM {
       addr = this.receiptAddress = addressOrName;
       this.isEns = false;
     } else {
+      this.loading = true;
       addr = await NetworksVM.currentProvider.resolveName(addressOrName);
+      runInAction(() => (this.loading = false));
+
       if (!addr) {
         this.receiptAddress = '';
         this.isEns = false;
@@ -215,28 +220,42 @@ export class TransferVM {
   }
 
   private async estimateGas() {
-    const setGas = (amount: number) => runInAction(() => this.setGas(amount));
-    const isContract = this.recipient && (await NetworksVM.currentProvider.getCode(this.recipient)) !== '0x';
+    runInAction(() => (this.loading = true));
 
-    const estimateNormalGas = async () =>
-      (
-        await NetworksVM.currentProvider.estimateGas({
-          to: this.receiptAddress,
-          value: 1,
-        })
-      ).toNumber();
+    try {
+      const setGas = (amount: number) => runInAction(() => this.setGas(amount));
+      const isContract = this.recipient && (await NetworksVM.currentProvider.getCode(this.recipient)) !== '0x';
 
-    if (!this.selectToken || !this.isERC20) {
-      setGas(isContract ? await estimateNormalGas() : 21000);
-      return;
+      const estimateNormalGas = async () =>
+        (
+          await NetworksVM.currentProvider.estimateGas({
+            to: this.receiptAddress,
+            value: 1,
+          })
+        ).toNumber();
+
+      if (!this.selectToken || !this.isERC20) {
+        setGas(isContract ? await estimateNormalGas() : 21000);
+        return;
+      }
+
+      const erc20 = new ethers.Contract(this.selectedToken.id, ERC20ABI, NetworksVM.currentProvider);
+      const amt = this.amountBigInt;
+
+      try {
+        const v = await erc20.estimateGas.transferFrom(
+          this.self,
+          this.receiptAddress || '0xD1b05E3AFEDcb11F29c5A560D098170bE26Fe5f5',
+          amt
+        );
+
+        setGas(Number.parseInt((v.toNumber() * 2) as any));
+      } catch (error) {
+        setGas(150_000);
+      }
+    } finally {
+      runInAction(() => (this.loading = false));
     }
-
-    const erc20 = new ethers.Contract(this.selectedToken.id, ERC20ABI, NetworksVM.currentProvider);
-    const amt = this.amountBigInt;
-    erc20.estimateGas
-      .transferFrom(this.self, this.receiptAddress || '0xD1b05E3AFEDcb11F29c5A560D098170bE26Fe5f5', amt)
-      .then((v) => setGas(Number.parseInt((v.toNumber() * 2) as any)))
-      .catch(() => setGas(150_000));
   }
 
   private refreshBalance() {
