@@ -224,18 +224,24 @@ export class TransferVM {
 
     try {
       const setGas = (amount: number) => runInAction(() => this.setGas(amount));
-      const isContract = this.recipient && (await NetworksVM.currentProvider.getCode(this.recipient)) !== '0x';
 
-      const estimateNormalGas = async () =>
-        (
-          await NetworksVM.currentProvider.estimateGas({
+      const estimateNormalGas = async () => {
+        if (!this.receiptAddress) return 21000;
+
+        try {
+          const gas = await NetworksVM.currentProvider.estimateGas({
             to: this.receiptAddress,
             value: 1,
-          })
-        ).toNumber();
+          });
+
+          return gas.toNumber();
+        } catch (error) {
+          return 21000;
+        }
+      };
 
       if (!this.selectToken || !this.isERC20) {
-        setGas(isContract ? await estimateNormalGas() : 21000);
+        setGas(await estimateNormalGas());
         return;
       }
 
