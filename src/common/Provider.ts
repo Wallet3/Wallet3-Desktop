@@ -1,6 +1,7 @@
 import * as Providers from './.wallet3.rc.json';
 import * as ethers from 'ethers';
 
+import { Gwei_1 } from '../gas/Gasnow';
 import axios from 'axios';
 
 const cache = new Map<number, ethers.providers.JsonRpcProvider | ethers.providers.WebSocketProvider>();
@@ -175,7 +176,7 @@ export async function getNextBlockBaseFee(chainId: number) {
 
       if (baseFeePerGas.length === 0) return 0;
 
-      return Number.parseInt(baseFeePerGas[baseFeePerGas.length - 1]);
+      return Number.parseInt(baseFeePerGas[baseFeePerGas.length - 1]) + Gwei_1 / 100;
     } catch (error) {}
   }
 

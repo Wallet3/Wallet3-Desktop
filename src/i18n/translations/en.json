@@ -138,5 +138,6 @@
   "Update Message": "New version: {{version}} is available, would you like to install the update?",
   "Copy Address": "Address",
   "Recipient Address or ENS": "Recipient Address or ENS",
-  "Networks": "Networks"
+  "Networks": "Networks",
+  "Next Block Base Fee": "Next Block Base Fee"
 }

@@ -120,7 +120,13 @@
   padding: 2px 5px;
 }
 
-.page.send > .form > h6 {
+.page.send > .form > .gasprice-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.page.send > .form > .gasprice-title h6 {
   margin: 12px 0 4px 0;
   color: var(--font-color-title);
 }

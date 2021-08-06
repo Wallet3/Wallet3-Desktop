@@ -6,7 +6,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import AnimatedNumber from 'react-animated-number';
 import { Application } from '../../viewmodels/Application';
 import Feather from 'feather-icons-react';
+import { Gwei_1 } from '../../../gas/Gasnow';
 import { NavBar } from '../../components';
+import { NetworksVM } from '../../viewmodels/NetworksVM';
 import { ReactSearchAutocomplete } from 'react-search-autocomplete';
 import TokenLabel from '../../components/TokenLabel';
 import { TransferVM } from '../../viewmodels/account/TransferVM';
@@ -30,7 +32,7 @@ export const AddressSearchStyle = {
   placeholderColor: '#d0d0d0',
 };
 
-export default observer(({ app }: { app: Application }) => {
+export default observer(({ app, networksVM }: { app: Application; networksVM: NetworksVM }) => {
   const { t } = useTranslation();
   const { currentWallet } = app;
 
@@ -138,7 +140,18 @@ export default observer(({ app }: { app: Application }) => {
           <span></span>
         </div>
 
-        <h6>{t('Gas Price')}</h6>
+        <div className="gasprice-title">
+          <h6>{t('Gas Price')}</h6>
+
+          {networksVM.currentNetwork.eip1559 ? (
+            <div className="eip1559">
+              <h6>
+                {t('Next Block Base Fee')}:{' '}
+                <AnimatedNumber value={transferVM?.nextBlockBaseFee / Gwei_1} formatValue={(n) => formatNum(n, '')} /> Gwei
+              </h6>
+            </div>
+          ) : undefined}
+        </div>
 
         <div className="gas">
           <div
@@ -202,8 +215,6 @@ export default observer(({ app }: { app: Application }) => {
             />
           </div>
         </div>
-
-        <div className="eip1559"></div>
       </div>
 
       <button
