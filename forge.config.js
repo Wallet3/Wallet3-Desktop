@@ -13,11 +13,13 @@ module.exports = {
     osxSign: {
       identity: '3rd Party Mac Developer Application: ChainBow Co. Ltd (Z3N6SZF439)',
       hardenedRuntime: true,
-      'gatekeeper-assess': false,
-      'signature-flags': 'library',
+      platform: 'mas',
+      'gatekeeper-assess': true,
+      // 'signature-flags': 'library',
       entitlements: 'sign/entitlements.mas.plist',
       'entitlements-inherit': 'sign/entitlements.mas.inherit.plist',
       'provisioning-profile': 'sign/embedded.provisionprofile',
+      type: 'distribution'
     },
     // osxNotarize: {
     //   appleId,
