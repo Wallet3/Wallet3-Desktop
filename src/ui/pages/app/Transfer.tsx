@@ -202,6 +202,8 @@ export default observer(({ app }: { app: Application }) => {
             />
           </div>
         </div>
+
+        <div className="eip1559"></div>
       </div>
 
       <button

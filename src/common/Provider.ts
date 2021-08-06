@@ -181,3 +181,22 @@ export async function getNextBlockBaseFee(chainId: number) {
 
   return 0;
 }
+
+export async function getMaxPriorityFee(chainId: number) {
+  const rpcs = Providers[`${chainId}`] as string[];
+
+  for (let url of rpcs) {
+    try {
+      const resp = await axios.post(url, {
+        jsonrpc: '2.0',
+        method: 'eth_maxPriorityFeePerGas',
+        params: [],
+        id: Date.now(),
+      });
+
+      return Number.parseInt(resp.data.result);
+    } catch (error) {}
+  }
+
+  return 0;
+}
