@@ -139,5 +139,5 @@
   "Update Message": "新バージョン: {{version}} 公開されました、アップデートをインストールしますか？",
   "Copy Address": "アドレス",
   "Recipient Address or ENS": "受信者アドレスまたはENS",
-  "Next Block Base Fee": "次ブロックの基本料金"
+  "Next Block Base Price": "次ブロックの基本価格"
 }

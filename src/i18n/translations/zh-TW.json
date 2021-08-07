@@ -139,5 +139,5 @@
   "Update Message": "發現新版本: {{version}}，是否安裝該更新？",
   "Copy Address": "復製地址",
   "Recipient Address or ENS": "收款方地址或ENS域名",
-  "Next Block Base Fee": "下一區塊基本費"
+  "Next Block Base Price": "下一區塊基礎價格"
 }

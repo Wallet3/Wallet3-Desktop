@@ -147,7 +147,7 @@ export default observer(({ app, networksVM }: { app: Application; networksVM: Ne
           {networksVM.currentNetwork.eip1559 ? (
             <div className="eip1559">
               <h6>
-                {t('Next Block Base Fee')}:{' '}
+                {t('Next Block Base Price')}:{' '}
                 <AnimatedNumber value={transferVM?.nextBlockBaseFee / Gwei_1} formatValue={(n) => formatNum(n, '')} /> Gwei
               </h6>
             </div>
