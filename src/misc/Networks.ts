@@ -27,6 +27,7 @@ export const PublicNetworks: INetwork[] = [
     network: 'Ethereum',
     chainId: 1,
     color: '#6186ff',
+    eip1559: true,
     order: 1,
     defaultTokens: EthereumPopularTokens,
   },

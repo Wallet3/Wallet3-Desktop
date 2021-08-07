@@ -138,5 +138,6 @@
   "New Update Available": "更新",
   "Update Message": "发现新版本: {{version}}，是否安装该更新？",
   "Copy Address": "复制地址",
-  "Recipient Address or ENS": "收款方地址或ENS域名"
+  "Recipient Address or ENS": "收款方地址或ENS域名",
+  "Next Block Base Price": "下一区块基础价格"
 }

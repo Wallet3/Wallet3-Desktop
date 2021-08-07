@@ -13,6 +13,7 @@ import GasStation from '../../../gas';
 import { NFT } from '../models/NFT';
 import NetworksVM from '../NetworksVM';
 import { UserToken } from '../models/UserToken';
+import { getNextBlockBaseFee } from '../../../common/Provider';
 import ipc from '../../bridges/IPC';
 import store from 'storejs';
 
@@ -20,6 +21,7 @@ export class TransferVM {
   private readonly _accountVM: AccountVM;
   private gasnowDisposer: IReactionDisposer;
 
+  loading = false;
   self = '';
   recipient: string = '';
   receiptAddress = '';
@@ -30,6 +32,7 @@ export class TransferVM {
   gasPrice: number = -1; // Gwei
   gasLevel = 1; // 0 - rapid, 1 - fast, 2 - standard, 4 - custom
   sending = false;
+  nextBlockBaseFee = 0;
 
   get isValid() {
     try {
@@ -45,6 +48,7 @@ export class TransferVM {
         this.gas < 12_500_000 &&
         this.nonce >= 0 &&
         this.gasPrice > 0 &&
+        !this.loading &&
         this.gasPrice <= 9007199 // MAX_SAFE_INTEGER * gwei_1
       );
     } catch (error) {
@@ -90,8 +94,8 @@ export class TransferVM {
     this.selectedToken = accountVM.allTokens[0];
 
     this.rapid = Gasnow.rapidGwei;
-    this.fast = Gasnow.fastGwei;
     this.standard = Gasnow.standardGwei;
+    this.fast = this.nextBlockBaseFee / Gwei_1 || Gasnow.fastGwei;
 
     this.initGasPrice();
     this.initNonce();
@@ -99,31 +103,31 @@ export class TransferVM {
     this.recipients = store.get('recipients') || [];
   }
 
-  setRecipient(addressOrName: string) {
+  async setRecipient(addressOrName: string) {
     this.recipient = addressOrName;
-
-    if (addressOrName.toLowerCase().endsWith('.eth') || addressOrName.toLowerCase().endsWith('.xyz')) {
-      NetworksVM.currentProvider.resolveName(addressOrName).then((addr) => {
-        if (!addr) return;
-
-        runInAction(() => {
-          this.isEns = true;
-          this.receiptAddress = addr;
-        });
-      });
-
-      return;
-    } else {
-      this.receiptAddress = '';
-    }
+    let addr = '';
 
     if (ethers.utils.isAddress(addressOrName)) {
-      this.receiptAddress = addressOrName;
+      addr = this.receiptAddress = addressOrName;
+      this.isEns = false;
     } else {
-      this.receiptAddress = '';
+      this.loading = true;
+      addr = await NetworksVM.currentProvider.resolveName(addressOrName);
+      runInAction(() => (this.loading = false));
+
+      if (!addr) {
+        this.receiptAddress = '';
+        this.isEns = false;
+        return;
+      }
+
+      runInAction(() => {
+        this.isEns = true;
+        this.receiptAddress = addr;
+      });
     }
 
-    this.isEns = false;
+    this.estimateGas();
   }
 
   selectToken(id: string) {
@@ -175,6 +179,16 @@ export class TransferVM {
     }
   }
 
+  private fetchBaseFee = async (chainId: number) => {
+    const nextBlockBaseFee = await getNextBlockBaseFee(chainId);
+    if (!nextBlockBaseFee) return;
+
+    runInAction(() => {
+      this.nextBlockBaseFee = nextBlockBaseFee;
+      this.fast = nextBlockBaseFee / Gwei_1;
+    });
+  };
+
   private initGasPrice() {
     this.gasnowDisposer = autorun(() => {
       const rapid = GasStation.rapidGwei;
@@ -183,7 +197,7 @@ export class TransferVM {
 
       runInAction(() => {
         this.rapid = rapid;
-        this.fast = fast;
+        this.fast = this.nextBlockBaseFee / Gwei_1 || fast;
         this.standard = standard;
         this.autoSetGasPrice();
       });
@@ -191,29 +205,63 @@ export class TransferVM {
 
     GasStation.chainId = NetworksVM.currentChainId;
     GasStation.refresh();
+
+    const { currentNetwork } = NetworksVM;
+    if (!currentNetwork.eip1559) return;
+
+    this.fetchBaseFee(currentNetwork.chainId);
+    NetworksVM.currentProvider.on('block', async () => this.fetchBaseFee(currentNetwork.chainId));
   }
 
   private initNonce() {
-    NetworksVM.currentProvider.getTransactionCount(this.self, 'pending').then((nonce) => runInAction(() => (this.nonce = nonce)));
+    NetworksVM.currentProvider
+      .getTransactionCount(this.self, 'pending')
+      .then((nonce) => runInAction(() => (this.nonce = nonce)));
   }
 
-  private estimateGas() {
-    if (!this.selectToken) {
-      this.setGas(21000);
-      return;
-    }
+  private async estimateGas() {
+    runInAction(() => (this.loading = true));
 
-    if (!this.isERC20) {
-      this.setGas(21000);
-      return;
-    }
+    try {
+      const setGas = (amount: number) => runInAction(() => this.setGas(amount));
 
-    const erc20 = new ethers.Contract(this.selectedToken.id, ERC20ABI, NetworksVM.currentProvider);
-    const amt = this.amountBigInt;
-    erc20.estimateGas
-      .transferFrom(this.self, this.receiptAddress || '0xD1b05E3AFEDcb11F29c5A560D098170bE26Fe5f5', amt)
-      .then((v) => runInAction(() => this.setGas(Number.parseInt((v.toNumber() * 2) as any))))
-      .catch(() => runInAction(() => this.setGas(150_000)));
+      const estimateNormalGas = async () => {
+        if (!this.receiptAddress) return 21000;
+
+        try {
+          const gas = await NetworksVM.currentProvider.estimateGas({
+            to: this.receiptAddress,
+            value: 1,
+          });
+
+          return gas.toNumber();
+        } catch (error) {
+          return 21000;
+        }
+      };
+
+      if (!this.selectToken || !this.isERC20) {
+        setGas(await estimateNormalGas());
+        return;
+      }
+
+      const erc20 = new ethers.Contract(this.selectedToken.id, ERC20ABI, NetworksVM.currentProvider);
+      const amt = this.amountBigInt;
+
+      try {
+        const v = await erc20.estimateGas.transferFrom(
+          this.self,
+          this.receiptAddress || '0xD1b05E3AFEDcb11F29c5A560D098170bE26Fe5f5',
+          amt
+        );
+
+        setGas(Number.parseInt((v.toNumber() * 2) as any));
+      } catch (error) {
+        setGas(150_000);
+      }
+    } finally {
+      runInAction(() => (this.loading = false));
+    }
   }
 
   private refreshBalance() {
@@ -234,6 +282,7 @@ export class TransferVM {
   }
 
   dispose() {
+    NetworksVM.currentProvider.off('block');
     this.gasnowDisposer?.();
     this.gasnowDisposer = undefined;
   }

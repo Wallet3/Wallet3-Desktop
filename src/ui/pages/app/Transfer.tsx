@@ -5,8 +5,11 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import AnimatedNumber from 'react-animated-number';
 import { Application } from '../../viewmodels/Application';
+import BarLoader from 'react-spinners/BarLoader';
 import Feather from 'feather-icons-react';
+import { Gwei_1 } from '../../../gas/Gasnow';
 import { NavBar } from '../../components';
+import { NetworksVM } from '../../viewmodels/NetworksVM';
 import { ReactSearchAutocomplete } from 'react-search-autocomplete';
 import TokenLabel from '../../components/TokenLabel';
 import { TransferVM } from '../../viewmodels/account/TransferVM';
@@ -30,7 +33,7 @@ export const AddressSearchStyle = {
   placeholderColor: '#d0d0d0',
 };
 
-export default observer(({ app }: { app: Application }) => {
+export default observer(({ app, networksVM }: { app: Application; networksVM: NetworksVM }) => {
   const { t } = useTranslation();
   const { currentWallet } = app;
 
@@ -138,7 +141,18 @@ export default observer(({ app }: { app: Application }) => {
           <span></span>
         </div>
 
-        <h6>{t('Gas Price')}</h6>
+        <div className="gasprice-title">
+          <h6>{t('Gas Price')}</h6>
+
+          {networksVM.currentNetwork.eip1559 ? (
+            <div className="eip1559">
+              <h6>
+                {t('Next Block Base Price')}:{' '}
+                <AnimatedNumber value={transferVM?.nextBlockBaseFee / Gwei_1} formatValue={(n) => formatNum(n, '')} /> Gwei
+              </h6>
+            </div>
+          ) : undefined}
+        </div>
 
         <div className="gas">
           <div
@@ -208,7 +222,11 @@ export default observer(({ app }: { app: Application }) => {
         disabled={!transferVM?.isValid || transferVM?.insufficientFee || transferVM?.sending}
         onClick={(_) => transferVM?.sendTx().then(() => app.history.goBack())}
       >
-        {transferVM?.insufficientFee ? t('INSUFFICIENT FEE') : t('Send')}
+        {transferVM?.loading ? (
+          <BarLoader width={52} height={2} />
+        ) : (
+          t(transferVM?.insufficientFee ? 'INSUFFICIENT FEE' : 'Send')
+        )}
       </button>
     </div>
   );

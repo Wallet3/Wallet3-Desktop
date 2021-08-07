@@ -1,6 +1,7 @@
 import * as Providers from './.wallet3.rc.json';
 import * as ethers from 'ethers';
 
+import { Gwei_1 } from '../gas/Gasnow';
 import axios from 'axios';
 
 const cache = new Map<number, ethers.providers.JsonRpcProvider | ethers.providers.WebSocketProvider>();
@@ -157,4 +158,46 @@ export async function getTransactionReceipt(chainId: number, hash: string) {
   }
 
   return undefined;
+}
+
+export async function getNextBlockBaseFee(chainId: number) {
+  const rpcs = Providers[`${chainId}`] as string[];
+
+  for (let url of rpcs) {
+    try {
+      const resp = await axios.post(url, {
+        jsonrpc: '2.0',
+        method: 'eth_feeHistory',
+        params: [1, 'latest', []],
+        id: Date.now(),
+      });
+
+      const { baseFeePerGas } = resp.data.result as { baseFeePerGas: string[]; oldestBlock: number };
+
+      if (baseFeePerGas.length === 0) return 0;
+
+      return Number.parseInt(baseFeePerGas[baseFeePerGas.length - 1]) + Gwei_1 / 100;
+    } catch (error) {}
+  }
+
+  return 0;
+}
+
+export async function getMaxPriorityFee(chainId: number) {
+  const rpcs = Providers[`${chainId}`] as string[];
+
+  for (let url of rpcs) {
+    try {
+      const resp = await axios.post(url, {
+        jsonrpc: '2.0',
+        method: 'eth_maxPriorityFeePerGas',
+        params: [],
+        id: Date.now(),
+      });
+
+      return Number.parseInt(resp.data.result);
+    } catch (error) {}
+  }
+
+  return 0;
 }
