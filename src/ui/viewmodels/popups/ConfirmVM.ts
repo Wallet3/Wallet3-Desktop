@@ -86,7 +86,8 @@ export class ConfirmVM {
     this.chainId = params.chainId;
     this.accountIndex = params.accountIndex;
     this._gas = params.gas;
-    this._gasPrice = params.gasPrice / Gwei_1;
+    this._gasPrice = (params.gasPrice || params.maxFeePerGas) / Gwei_1;
+    this._priorityPrice = (params.maxPriorityFeePerGas || 0) / Gwei_1;
     this._nonce = params.nonce || 0;
     this._value = Number(params.value) === 0 ? 0 : params.value || 0;
     this._data = params.data;
@@ -142,6 +143,11 @@ export class ConfirmVM {
     return BigNumber.from(`${Number.parseInt((this.gasPrice * Gwei_1) as any) || 0}`);
   }
 
+  private _priorityPrice = 0; // Gwei
+  get priorityPrice() {
+    return this._priorityPrice;
+  }
+
   get tokenSymbol() {
     return this.transferToken?.symbol || this.approveToken?.symbol || Networks.find((n) => n.chainId === this.chainId).symbol;
   }
@@ -187,7 +193,7 @@ export class ConfirmVM {
   setGasPrice(value: string) {
     const price = Number.parseFloat(value) || 0;
     this._gasPrice = Math.min(price, 10000000000);
-    this.args.gasPrice = this.gasPriceWei.toNumber();
+    this.args.maxFeePerGas = this.args.gasPrice = this.gasPriceWei.toNumber();
   }
 
   setGas(value: string) {
@@ -294,13 +300,18 @@ export class ConfirmVM {
 
     if (!verified) return false;
 
+    const eip1559 = Networks.find((n) => n.chainId === this.args.chainId).eip1559;
+
     const params = {
       chainId: this.args.chainId,
       from: this.args.from,
       to: this.args.to,
       value: this._value,
       gas: this.args.gas,
-      gasPrice: this.args.gasPrice, // wei
+      gasPrice: eip1559 ? undefined : this.args.gasPrice, // wei
+      maxFeePerGas: eip1559 ? this.args.maxFeePerGas : undefined, // wei
+      maxPriorityFeePerGas: eip1559 ? this.args.maxPriorityFeePerGas : undefined, // wei
+
       nonce: this.args.nonce,
       data: this.args.data,
 

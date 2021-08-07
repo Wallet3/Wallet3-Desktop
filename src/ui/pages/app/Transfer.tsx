@@ -219,8 +219,13 @@ export default observer(({ app, networksVM }: { app: Application; networksVM: Ne
 
         {networksVM.currentNetwork.eip1559 ? (
           <div className="gas-tip amount">
-            <span>{t('Gas Tips')}:</span>
-            <input type="text" maxLength={64} placeholder="0" />
+            <span>{t('Gas Tip')}:</span>
+            <input
+              type="text"
+              maxLength={64}
+              placeholder="0"
+              onChange={(e) => transferVM?.setPriorityPrice(Number.parseFloat(e.target.value))}
+            />
             <span>Gwei</span>
           </div>
         ) : undefined}

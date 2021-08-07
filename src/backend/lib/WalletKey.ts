@@ -247,8 +247,12 @@ export class WalletKey {
       data: txParams.data,
       nonce: txParams.nonce,
       gasLimit: ethers.BigNumber.from(txParams.gas),
-      gasPrice: ethers.BigNumber.from(txParams.gasPrice),
       value: ethers.BigNumber.from(Number(txParams.value) === 0 ? 0 : txParams.value),
+      gasPrice: txParams.gasPrice > 0 ? ethers.BigNumber.from(txParams.gasPrice) : undefined,
+
+      maxFeePerGas: txParams.maxFeePerGas > 0 ? ethers.BigNumber.from(txParams.maxFeePerGas) : undefined,
+      maxPriorityFeePerGas: txParams.maxFeePerGas > 0 ? ethers.BigNumber.from(txParams.maxPriorityFeePerGas || 0) : undefined,
+      type: txParams.maxFeePerGas > 0 ? 2 : undefined,
     });
   }
 

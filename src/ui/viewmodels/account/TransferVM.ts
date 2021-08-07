@@ -30,6 +30,7 @@ export class TransferVM {
   gas: number = 0;
   nonce: number = 0;
   gasPrice: number = -1; // Gwei
+  priorityPrice: number = 0; // Gwei
   gasLevel = 1; // 0 - rapid, 1 - fast, 2 - standard, 4 - custom
   sending = false;
   nextBlockBaseFee = 0;
@@ -112,8 +113,12 @@ export class TransferVM {
       this.isEns = false;
     } else {
       this.loading = true;
-      addr = await NetworksVM.currentProvider.resolveName(addressOrName);
-      runInAction(() => (this.loading = false));
+
+      try {
+        addr = await NetworksVM.currentProvider.resolveName(addressOrName);
+      } finally {
+        runInAction(() => (this.loading = false));
+      }
 
       if (!addr) {
         this.receiptAddress = '';
@@ -127,7 +132,8 @@ export class TransferVM {
       });
     }
 
-    this.estimateGas();
+    await this.estimateGas();
+    runInAction(() => (this.loading = false));
   }
 
   selectToken(id: string) {
@@ -146,6 +152,10 @@ export class TransferVM {
 
   setGasPrice(price: number) {
     this.gasPrice = price;
+  }
+
+  setPriorityPrice(gwei: number) {
+    this.priorityPrice = Math.max(gwei, 0) || 0;
   }
 
   setNonce(nonce: number) {
@@ -303,12 +313,16 @@ export class TransferVM {
         .toString();
     }
 
+    const eip1559 = NetworksVM.currentNetwork.eip1559;
+
     await ipc.invokeSecure<void>(Messages.createTransferTx, {
       from: this._accountVM.address,
       to,
       value,
       gas: this.gas,
-      gasPrice: this.gasPrice * Gwei_1,
+      gasPrice: eip1559 ? undefined : this.gasPrice * Gwei_1,
+      maxFeePerGas: eip1559 ? this.gasPrice * Gwei_1 : undefined,
+      maxPriorityFeePerGas: eip1559 ? this.priorityPrice * Gwei_1 : undefined,
       nonce: this.nonce,
       data,
       chainId: NetworksVM.currentChainId,
