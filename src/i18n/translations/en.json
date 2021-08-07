@@ -139,5 +139,6 @@
   "Copy Address": "Address",
   "Recipient Address or ENS": "Recipient Address or ENS",
   "Networks": "Networks",
-  "Next Block Base Price": "Next Block Base Price"
+  "Next Block Base Price": "Next Block Price",
+  "Gas Tips": "Tips"
 }

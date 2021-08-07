@@ -216,6 +216,14 @@ export default observer(({ app, networksVM }: { app: Application; networksVM: Ne
             />
           </div>
         </div>
+
+        {networksVM.currentNetwork.eip1559 ? (
+          <div className="gas-tip amount">
+            <span>{t('Gas Tips')}:</span>
+            <input type="text" maxLength={64} placeholder="0" />
+            <span>Gwei</span>
+          </div>
+        ) : undefined}
       </div>
 
       <button

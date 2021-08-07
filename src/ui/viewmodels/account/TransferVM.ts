@@ -95,7 +95,7 @@ export class TransferVM {
 
     this.rapid = Gasnow.rapidGwei;
     this.standard = Gasnow.standardGwei;
-    this.fast = this.nextBlockBaseFee / Gwei_1 || Gasnow.fastGwei;
+    this.fast = Gasnow.fastGwei;
 
     this.initGasPrice();
     this.initNonce();
@@ -185,7 +185,6 @@ export class TransferVM {
 
     runInAction(() => {
       this.nextBlockBaseFee = nextBlockBaseFee;
-      this.fast = nextBlockBaseFee / Gwei_1;
     });
   };
 
@@ -197,7 +196,7 @@ export class TransferVM {
 
       runInAction(() => {
         this.rapid = rapid;
-        this.fast = this.nextBlockBaseFee / Gwei_1 || fast;
+        this.fast = fast;
         this.standard = standard;
         this.autoSetGasPrice();
       });

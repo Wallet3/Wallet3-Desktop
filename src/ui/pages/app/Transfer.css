@@ -124,6 +124,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 10px;
 }
 
 .page.send > .form > .gasprice-title h6 {
@@ -186,4 +187,13 @@
 
 .page.send > .form > .gas > div.active {
   opacity: 1;
+}
+
+.page.send > .form > .gas-tip {
+  font-size: 12px;
+}
+
+.page.send > .form > .gas-tip input {
+  font-size: 12px;
+  padding-bottom: 3px;
 }
