@@ -36,6 +36,7 @@ export const AddressSearchStyle = {
 export default observer(({ app, networksVM }: { app: Application; networksVM: NetworksVM }) => {
   const { t } = useTranslation();
   const { currentWallet } = app;
+  const { currentNetwork } = networksVM;
 
   const { tokenId } = useRouteMatch().params as { tokenId?: string };
 
@@ -43,6 +44,7 @@ export default observer(({ app, networksVM }: { app: Application; networksVM: Ne
   const [transferVM, setVM] = useState<TransferVM>(null);
   const amountInput = useRef<HTMLInputElement>();
   const gasInput = useRef<HTMLInputElement>();
+  const [advancedMode, setAdvancedMode] = useState(false);
 
   useEffect(() => {
     const { transferVM } = app.currentWallet.currentAccount;
@@ -141,83 +143,87 @@ export default observer(({ app, networksVM }: { app: Application; networksVM: Ne
           <span></span>
         </div>
 
-        <div className="gasprice-title">
-          <h6>{t('Gas Price')}</h6>
+        {currentNetwork.eip1559 ? undefined : (
+          <div className="gasprice-title">
+            <h6>{t('Gas Price')}</h6>
 
-          {networksVM.currentNetwork.eip1559 ? (
-            <div className="eip1559">
-              <h6>
-                {t('Next Block Base Price')}:{' '}
-                <AnimatedNumber value={transferVM?.nextBlockBaseFee / Gwei_1} formatValue={(n) => formatNum(n, '')} /> Gwei
-              </h6>
-            </div>
-          ) : undefined}
-        </div>
-
-        <div className="gas">
-          <div
-            className={`${activeGas === 0 ? 'active' : ''}`}
-            onClick={(_) => {
-              setActiveGas(0);
-              transferVM?.setGasLevel(0);
-            }}
-          >
-            <span>{t('Rapid')}</span>
-            <span style={{ color: '#2ecc71' }}>
-              <AnimatedNumber value={transferVM?.rapid} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
-            </span>
+            {networksVM.currentNetwork.eip1559 ? (
+              <div className="eip1559">
+                <h6>
+                  {t('Next Block Base Price')}:{' '}
+                  <AnimatedNumber value={transferVM?.nextBlockBaseFee / Gwei_1} formatValue={(n) => formatNum(n, '')} /> Gwei
+                </h6>
+              </div>
+            ) : undefined}
           </div>
+        )}
 
-          <div className="separator" />
-
-          <div
-            className={`${activeGas === 1 ? 'active' : ''}`}
-            onClick={(_) => {
-              setActiveGas(1);
-              transferVM?.setGasLevel(1);
-            }}
-          >
-            <span>{t('Fast')}</span>
-            <span style={{ color: 'orange' }}>
-              <AnimatedNumber value={transferVM?.fast} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
-            </span>
-          </div>
-
-          <div className="separator" />
-
-          <div
-            className={`${activeGas === 2 ? 'active' : ''}`}
-            onClick={(_) => {
-              setActiveGas(2);
-              transferVM?.setGasLevel(2);
-            }}
-          >
-            <span>{t('Standard')}</span>
-            <span style={{ color: 'deepskyblue' }}>
-              <AnimatedNumber value={transferVM?.standard} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
-            </span>
-          </div>
-
-          <div className="separator" />
-
-          <div className={`${activeGas === 3 ? 'active' : ''}`} onClick={(_) => setActiveGas(3)}>
-            <span>{t('Cust.')}</span>
-            <input
-              ref={gasInput}
-              type="text"
-              placeholder="20"
-              maxLength={16}
+        {currentNetwork.eip1559 ? undefined : (
+          <div className="gas">
+            <div
+              className={`${activeGas === 0 ? 'active' : ''}`}
               onClick={(_) => {
-                setActiveGas(3);
-                transferVM?.setGasPrice(Number.parseFloat(gasInput.current.value) || 0);
-                transferVM?.setGasLevel(3);
+                setActiveGas(0);
+                transferVM?.setGasLevel(0);
               }}
-              onChange={(e) => transferVM?.setGasPrice(Number.parseFloat(e.target.value) || 0)}
-            />
-          </div>
-        </div>
+            >
+              <span>{t('Rapid')}</span>
+              <span style={{ color: '#2ecc71' }}>
+                <AnimatedNumber value={transferVM?.rapid} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
+              </span>
+            </div>
 
-        {networksVM.currentNetwork.eip1559 ? (
+            <div className="separator" />
+
+            <div
+              className={`${activeGas === 1 ? 'active' : ''}`}
+              onClick={(_) => {
+                setActiveGas(1);
+                transferVM?.setGasLevel(1);
+              }}
+            >
+              <span>{t('Fast')}</span>
+              <span style={{ color: 'orange' }}>
+                <AnimatedNumber value={transferVM?.fast} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
+              </span>
+            </div>
+
+            <div className="separator" />
+
+            <div
+              className={`${activeGas === 2 ? 'active' : ''}`}
+              onClick={(_) => {
+                setActiveGas(2);
+                transferVM?.setGasLevel(2);
+              }}
+            >
+              <span>{t('Standard')}</span>
+              <span style={{ color: 'deepskyblue' }}>
+                <AnimatedNumber value={transferVM?.standard} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
+              </span>
+            </div>
+
+            <div className="separator" />
+
+            <div className={`${activeGas === 3 ? 'active' : ''}`} onClick={(_) => setActiveGas(3)}>
+              <span>{t('Cust.')}</span>
+              <input
+                ref={gasInput}
+                type="text"
+                placeholder="20"
+                maxLength={16}
+                onClick={(_) => {
+                  setActiveGas(3);
+                  transferVM?.setGasLevel(3);
+                  transferVM?.setGasPrice(Number.parseFloat(gasInput.current.value) || 0);
+                }}
+                onChange={(e) => transferVM?.setGasPrice(Number.parseFloat(e.target.value) || 0)}
+              />
+            </div>
+          </div>
+        )}
+
+        {currentNetwork.eip1559 && advancedMode ? (
           <div className="gas-tip amount">
             <span>{t('Gas Tip')}:</span>
             <input

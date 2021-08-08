@@ -46,6 +46,7 @@ const KnownAddresses = {
   '0xA464e6DCda8AC41e03616F95f4BC98a13b8922Dc': 'Curve Fee Distribution',
   '0x283Af0B28c62C092C9727F1Ee09c02CA627EB7F5': 'ENS Registrar',
   '0xb47e3cd837dDF8e4c57F05d70Ab865de6e193BBB': 'CRYPTOPUNKS',
+  '0x1A2a1c938CE3eC39b6D47113c7955bAa9DD454F2': 'Ronin Bridge',
 };
 
 Tokens.forEach((t) => (KnownAddresses[t.address] = t.symbol));

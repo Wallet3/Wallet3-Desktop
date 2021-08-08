@@ -241,19 +241,25 @@ export class WalletKey {
     if (!privKey) return '';
 
     const signer = new ethers.Wallet(privKey);
-    return await signer.signTransaction({
+
+    const tx: ethers.providers.TransactionRequest = {
       to: txParams.to,
       chainId: txParams.chainId,
       data: txParams.data,
       nonce: txParams.nonce,
       gasLimit: ethers.BigNumber.from(txParams.gas),
       value: ethers.BigNumber.from(Number(txParams.value) === 0 ? 0 : txParams.value),
-      gasPrice: txParams.gasPrice > 0 ? ethers.BigNumber.from(txParams.gasPrice) : undefined,
+    };
 
-      maxFeePerGas: txParams.maxFeePerGas > 0 ? ethers.BigNumber.from(txParams.maxFeePerGas) : undefined,
-      maxPriorityFeePerGas: txParams.maxFeePerGas > 0 ? ethers.BigNumber.from(txParams.maxPriorityFeePerGas || 0) : undefined,
-      type: txParams.maxFeePerGas > 0 ? 2 : undefined,
-    });
+    if (txParams.maxFeePerGas > 0) {
+      tx.maxFeePerGas = ethers.BigNumber.from(txParams.maxFeePerGas);
+      tx.maxPriorityFeePerGas = ethers.BigNumber.from(txParams.maxPriorityFeePerGas || 0);
+      tx.type = 2;
+    } else {
+      tx.gasPrice = ethers.BigNumber.from(txParams.gasPrice || 0);
+    }
+
+    return await signer.signTransaction(tx);
   }
 
   async personalSignMessage(userPassword: string, accountIndex = 0, msg: string | ethers.utils.Bytes) {
