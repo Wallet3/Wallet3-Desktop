@@ -143,6 +143,22 @@ export default observer(({ app, networksVM }: { app: Application; networksVM: Ne
           <span></span>
         </div>
 
+        {currentNetwork.eip1559 ? (
+          <div className="eip1559">
+            <div className="line1">
+              <span>Estimated Gas Fee</span>
+              <span>
+                <AnimatedNumber value={transferVM?.fast} duration={300} formatValue={(n) => parseInt(n)} /> ETH
+              </span>
+            </div>
+
+            <div className="line2">
+              <span>Speed: Fast</span>
+              <span>Advanced Mode</span>
+            </div>
+          </div>
+        ) : undefined}
+
         {currentNetwork.eip1559 ? undefined : (
           <div className="gasprice-title">
             <h6>{t('Gas Price')}</h6>
@@ -168,7 +184,7 @@ export default observer(({ app, networksVM }: { app: Application; networksVM: Ne
               }}
             >
               <span>{t('Rapid')}</span>
-              <span style={{ color: '#2ecc71' }}>
+              <span className="rapid">
                 <AnimatedNumber value={transferVM?.rapid} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
               </span>
             </div>
@@ -183,7 +199,7 @@ export default observer(({ app, networksVM }: { app: Application; networksVM: Ne
               }}
             >
               <span>{t('Fast')}</span>
-              <span style={{ color: 'orange' }}>
+              <span className="fast">
                 <AnimatedNumber value={transferVM?.fast} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
               </span>
             </div>
@@ -198,7 +214,7 @@ export default observer(({ app, networksVM }: { app: Application; networksVM: Ne
               }}
             >
               <span>{t('Standard')}</span>
-              <span style={{ color: 'deepskyblue' }}>
+              <span className="standard">
                 <AnimatedNumber value={transferVM?.standard} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
               </span>
             </div>

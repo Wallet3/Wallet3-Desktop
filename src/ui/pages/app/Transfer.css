@@ -197,3 +197,43 @@
   font-size: 12px;
   padding-bottom: 3px;
 }
+
+.page.send > .form > .eip1559 {
+  box-sizing: border-box;
+  padding: 8px;
+  margin-top: 12px;
+  border: 1px dashed var(--border-color);
+  border-radius: 5px;
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.page.send > .form > .eip1559 > div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.page.send > .form > .eip1559 > div.line1 {
+  font-weight: 450;
+  color: var(--font-color-title);
+}
+
+.page.send > .form > .eip1559 > div.line2 {
+  color: grey;
+  font-size: 12px;
+  color: rgb(139, 139, 139);
+}
+
+.page.send > .form .rapid {
+  color: dodgerblue;
+}
+
+.page.send > .form .fast {
+  color: #2ecc71;
+}
+
+.page.send > .form .standard {
+  color: orange;
+}
