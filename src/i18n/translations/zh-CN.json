@@ -139,6 +139,8 @@
   "Update Message": "发现新版本: {{version}}，是否安装该更新？",
   "Copy Address": "复制地址",
   "Recipient Address or ENS": "收款方地址或ENS域名",
-  "Next Block Base Price": "下一区块基础价格",
-  "Gas Tip": "小费"
+  "Next Block Base Fee": "下一区块基础价格",
+  "Gas Tip": "优先费",
+  "Max Gas Fee": "最大燃料价格",
+  "Optional": "可选"
 }

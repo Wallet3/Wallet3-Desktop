@@ -139,6 +139,8 @@
   "Update Message": "新バージョン: {{version}} 公開されました、アップデートをインストールしますか？",
   "Copy Address": "アドレス",
   "Recipient Address or ENS": "受信者アドレスまたはENS",
-  "Next Block Base Price": "次ブロックの基本価格",
-  "Gas Tip": "チップ"
+  "Next Block Base Fee": "次ブロックの基本価格",
+  "Gas Tip": "優先料金",
+  "Max Gas Fee": "最大ガス価格",
+  "Optional": "オプション"
 }

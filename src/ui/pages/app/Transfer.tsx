@@ -126,7 +126,7 @@ export default observer(({ app, networksVM }: { app: Application; networksVM: Ne
           <span>{t('Gas')}:</span>
           <input
             type="text"
-            placeholder={`${transferVM?.gas}`}
+            placeholder={`${transferVM?.gas} ${t('Optional')}`}
             onChange={(e) => transferVM?.setGas(Number.parseInt(e.target.value) || 0)}
           />
           <span></span>
@@ -154,19 +154,21 @@ export default observer(({ app, networksVM }: { app: Application; networksVM: Ne
 
             <div className="line2">
               <span>Speed: Fast</span>
-              <span>Advanced Mode</span>
+              <span className="advanced" onClick={() => setAdvancedMode(!advancedMode)}>
+                <Feather size={11} icon={advancedMode ? 'chevrons-up' : 'chevrons-down'} /> Advanced Mode
+              </span>
             </div>
           </div>
         ) : undefined}
 
-        {currentNetwork.eip1559 ? undefined : (
+        {!advancedMode && currentNetwork.eip1559 ? undefined : (
           <div className="gasprice-title">
-            <h6>{t('Gas Price')}</h6>
+            <h6>{currentNetwork.eip1559 ? t('Max Gas Fee') : t('Gas Price')}</h6>
 
             {networksVM.currentNetwork.eip1559 ? (
               <div className="eip1559">
                 <h6>
-                  {t('Next Block Base Price')}:{' '}
+                  {t('Next Block Base Fee')}:{' '}
                   <AnimatedNumber value={transferVM?.nextBlockBaseFee / Gwei_1} formatValue={(n) => formatNum(n, '')} /> Gwei
                 </h6>
               </div>
@@ -174,7 +176,7 @@ export default observer(({ app, networksVM }: { app: Application; networksVM: Ne
           </div>
         )}
 
-        {currentNetwork.eip1559 ? undefined : (
+        {!advancedMode && currentNetwork.eip1559 ? undefined : (
           <div className="gas">
             <div
               className={`${activeGas === 0 ? 'active' : ''}`}
