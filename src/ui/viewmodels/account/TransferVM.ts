@@ -14,6 +14,7 @@ import GasStation from '../../../gas';
 import { NFT } from '../models/NFT';
 import NetworksVM from '../NetworksVM';
 import { UserToken } from '../models/UserToken';
+import { calcSpeed } from '../services/EIP1559';
 import ipc from '../../bridges/IPC';
 import store from 'storejs';
 
@@ -74,21 +75,12 @@ export class TransferVM {
   }
 
   get txSpeed() {
-    if (this.gasPrice_Gwei * Gwei_1 < this.nextBlockBaseFee_Wei) {
-      return 'slow';
-    }
-
-    const diff = this.priorityPrice_Wei / this.suggestedPriorityPrice_Wei;
-
-    if (diff >= 1.5) {
-      return 'rapid';
-    } else if (diff >= 0.96) {
-      return 'fast';
-    } else if (diff >= 0.5) {
-      return 'normal';
-    }
-
-    return 'slow';
+    return calcSpeed({
+      baseFee: this.nextBlockBaseFee_Wei,
+      maxFeePerGas: this.gasPrice_Gwei * Gwei_1,
+      priorityFeePerGas: this.priorityPrice_Wei,
+      suggestedPriorityFee: this.suggestedPriorityPrice_Wei,
+    });
   }
 
   get insufficientFee() {
