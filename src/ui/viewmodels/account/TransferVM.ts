@@ -31,6 +31,7 @@ export class TransferVM {
   nonce: number = 0;
   gasPrice_Gwei: number = -1;
   priorityPrice_Wei: number = 0;
+  suggestedPriorityPrice_Wei = 0;
   gasLevel = 1; // 0 - rapid, 1 - fast, 2 - standard, 3 - custom
   sending = false;
   nextBlockBaseFee_Wei = 0;
@@ -49,7 +50,9 @@ export class TransferVM {
         this.gas < 12_500_000 &&
         this.nonce >= 0 &&
         !this.loading &&
-        (NetworksVM.currentNetwork.eip1559 ? this.priorityPrice_Wei >= 0 : true) &&
+        (NetworksVM.currentNetwork.eip1559
+          ? this.priorityPrice_Wei >= 0 && this.gasPrice_Gwei * Gwei_1 > this.priorityPrice_Wei
+          : true) &&
         this.gasPrice_Gwei > 0 &&
         this.gasPrice_Gwei <= 9007199 // MAX_SAFE_INTEGER * gwei_1
       );
@@ -71,13 +74,17 @@ export class TransferVM {
   }
 
   get txSpeed() {
-    const diff = this.gasPrice_Gwei * Gwei_1 - (this.nextBlockBaseFee_Wei + this.priorityPrice_Wei);
+    if (this.gasPrice_Gwei * Gwei_1 < this.nextBlockBaseFee_Wei) {
+      return 'slow';
+    }
 
-    if (diff > 7 * Gwei_1) {
+    const diff = this.priorityPrice_Wei / this.suggestedPriorityPrice_Wei;
+
+    if (diff >= 1.5) {
       return 'rapid';
-    } else if (diff >= 3 * Gwei_1) {
+    } else if (diff >= 0.96) {
       return 'fast';
-    } else if (diff >= 0) {
+    } else if (diff >= 0.5) {
       return 'normal';
     }
 
@@ -224,11 +231,14 @@ export class TransferVM {
   }
 
   private fetchBaseFee = async (chainId: number) => {
-    const nextBlockBaseFee = await getNextBlockBaseFee(chainId);
-    if (!nextBlockBaseFee) return;
+    const [nextBlockBaseFee, suggestedPriority] = await Promise.all([
+      getNextBlockBaseFee(chainId),
+      getMaxPriorityFee(chainId),
+    ]);
 
     runInAction(() => {
       this.nextBlockBaseFee_Wei = nextBlockBaseFee;
+      this.suggestedPriorityPrice_Wei = suggestedPriority;
     });
   };
 
