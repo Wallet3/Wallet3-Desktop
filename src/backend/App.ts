@@ -334,7 +334,11 @@ export class App {
       const [iv, cipherText] = encrypted;
 
       const params: ConfirmSendTx = App.decryptIpc(cipherText, iv, key);
-      const popup = await this.createPopupWindow('sendTx', params, { modal: true, parent: this.mainWindow });
+      const popup = await this.createPopupWindow('sendTx', params, {
+        modal: true,
+        parent: this.mainWindow,
+        height: params.maxFeePerGas ? 350 : undefined,
+      });
 
       await new Promise<boolean>((resolve) => {
         popup.once('close', () => resolve(true));

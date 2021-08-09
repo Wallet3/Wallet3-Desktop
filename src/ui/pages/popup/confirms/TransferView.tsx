@@ -28,6 +28,8 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
     networkSymbol,
     gas,
     gasPrice,
+    maxFeePerGas,
+    priorityPrice,
     maxFee,
     nonce,
     totalValue,
@@ -79,20 +81,46 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
           </div>
         </div>
 
-        <div>
-          <span>{t('Gas Price')}:</span>
+        {gasPrice ? (
           <div>
-            <input
-              ref={gasPriceRef}
-              type="text"
-              defaultValue={gasPrice}
-              onChange={(e) => implVM.setGasPrice(e.target.value)}
-            />
-            <span>
-              Gwei <Feather icon="edit-3" size={12} />
-            </span>
+            <span>{t('Gas Price')}:</span>
+            <div>
+              <input
+                ref={gasPriceRef}
+                type="text"
+                defaultValue={gasPrice}
+                onChange={(e) => implVM.setGasPrice(e.target.value)}
+              />
+              <span>
+                Gwei <Feather icon="edit-3" size={12} />
+              </span>
+            </div>
           </div>
-        </div>
+        ) : undefined}
+
+        {maxFeePerGas ? (
+          <div>
+            <span>{t('Max Gas Fee')}:</span>
+            <div>
+              <input type="text" defaultValue={maxFeePerGas} onChange={(e) => implVM.setMaxGasPrice(e.target.value)} />
+              <span>
+                Gwei <Feather icon="edit-3" size={12} />
+              </span>
+            </div>
+          </div>
+        ) : undefined}
+
+        {priorityPrice ? (
+          <div>
+            <span>{t('Gas Tip')}:</span>
+            <div>
+              <input type="text" defaultValue={priorityPrice} onChange={(e) => implVM.setPriorityPrice(e.target.value)} />
+              <span>
+                Gwei <Feather icon="edit-3" size={12} />
+              </span>
+            </div>
+          </div>
+        ) : undefined}
 
         <div>
           <span>{t('Gas Limit')}:</span>
