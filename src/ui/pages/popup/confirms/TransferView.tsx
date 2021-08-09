@@ -1,4 +1,5 @@
 import React, { createRef } from 'react';
+import { formatAddress, formatValue } from '../../../misc/Formatter';
 
 import { ConfirmVM } from '../../../viewmodels/popups/ConfirmVM';
 import { CryptoIcons } from '../../../misc/Icons';
@@ -6,7 +7,6 @@ import Feather from 'feather-icons-react';
 import { Image } from '../../../components';
 import Shell from '../../../bridges/Shell';
 import { convertToAccountUrl } from '../../../../misc/Url';
-import { formatAddress } from '../../../misc/Formatter';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 
@@ -117,7 +117,7 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
         <div>
           <span>{t('Max Fee')}:</span>
           <div className="numeric">
-            <span>{maxFee}</span>
+            <span>{formatValue(maxFee)}</span>
             <span>{networkSymbol}</span>
           </div>
         </div>
@@ -125,7 +125,7 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
         <div>
           <span>{t('Total')}:</span>
           <div className="numeric" title={`${totalValue} ${tokenSymbol}`}>
-            <span>{totalValue}</span>
+            <span>{formatValue(totalValue)}</span>
             <span>{networkSymbol}</span>
           </div>
         </div>

@@ -10,3 +10,7 @@ export function formatAddress(value: string, headLength = 10, tailLength = 8) {
     ? `${value.substring(0, headLength)}......${value.substring(value.length - tailLength)}`
     : value;
 }
+
+export function formatValue(value: string) {
+  return value.substring(0, value.indexOf('.') + 8);
+}

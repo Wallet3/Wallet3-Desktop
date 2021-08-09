@@ -220,6 +220,12 @@
   color: var(--font-color-title);
 }
 
+.page.send > .form > .eip1559 > div.line1 .usd-value {
+  color: rgba(108, 123, 255, 0.411);
+  margin-right: 2px;
+  display: inline-block;
+}
+
 .page.send > .form > .eip1559 > div.line2 {
   color: grey;
   font-size: 12px;
@@ -241,6 +247,10 @@
   color: #2ecc71;
 }
 
-.page.send > .form .standard {
+.page.send > .form .normal {
   color: orange;
+}
+
+.page.send > .form .slow {
+  color: orangered;
 }

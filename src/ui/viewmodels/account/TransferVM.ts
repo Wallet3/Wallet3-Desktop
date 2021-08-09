@@ -29,11 +29,11 @@ export class TransferVM {
   amount: string = '';
   gas: number = 0;
   nonce: number = 0;
-  gasPrice: number = -1; // Gwei
-  priorityPrice: number = 0; // Gwei
+  gasPrice_Gwei: number = -1;
+  priorityPrice_Wei: number = 0;
   gasLevel = 1; // 0 - rapid, 1 - fast, 2 - standard, 4 - custom
   sending = false;
-  nextBlockBaseFee = 0;
+  nextBlockBaseFee_Wei = 0;
 
   get isValid() {
     try {
@@ -49,9 +49,9 @@ export class TransferVM {
         this.gas < 12_500_000 &&
         this.nonce >= 0 &&
         !this.loading &&
-        (NetworksVM.currentNetwork.eip1559 ? this.priorityPrice : true) &&
-        this.gasPrice > 0 &&
-        this.gasPrice <= 9007199 // MAX_SAFE_INTEGER * gwei_1
+        (NetworksVM.currentNetwork.eip1559 ? this.priorityPrice_Wei : true) &&
+        this.gasPrice_Gwei > 0 &&
+        this.gasPrice_Gwei <= 9007199 // MAX_SAFE_INTEGER * gwei_1
       );
     } catch (error) {
       return false;
@@ -62,10 +62,37 @@ export class TransferVM {
     return this.receiptAddress && !this.insufficientFee;
   }
 
+  get estimatedEIP1559Price_Wei() {
+    return Math.min(this.gasPrice_Gwei * Gwei_1, this.nextBlockBaseFee_Wei + Number.parseInt(this.priorityPrice_Wei as any));
+  }
+
+  get estimatedEIP1559Fee() {
+    return Number.parseInt((this.estimatedEIP1559Price_Wei * this.gas) as any);
+  }
+
+  get txSpeed() {
+    const diff = this.gasPrice_Gwei * Gwei_1 - (this.nextBlockBaseFee_Wei + this.priorityPrice_Wei);
+
+    if (diff > 7 * Gwei_1) {
+      return 'rapid';
+    } else if (diff >= 3 * Gwei_1) {
+      return 'fast';
+    } else if (diff >= 0) {
+      return 'normal';
+    }
+
+    return 'slow';
+  }
+
   get insufficientFee() {
-    const maxFee = Number.parseInt((this.gasPrice * Gwei_1 * this.gas || 0) as any);
     const balance = parseEther(this._accountVM?.nativeToken?.amount.toString() || '0');
-    return balance.lt(maxFee.toString());
+
+    if (NetworksVM.currentNetwork.eip1559) {
+      return balance.lte(this.estimatedEIP1559Fee);
+    } else {
+      const maxFee = Number.parseInt((this.gasPrice_Gwei * Gwei_1 * this.gas || 0) as any);
+      return balance.lt(maxFee.toString());
+    }
   }
 
   get isERC20() {
@@ -106,6 +133,8 @@ export class TransferVM {
   }
 
   async setRecipient(addressOrName: string) {
+    if (addressOrName?.length < 4) return;
+
     this.recipient = addressOrName;
     let addr = '';
 
@@ -154,11 +183,11 @@ export class TransferVM {
   }
 
   setGasPrice(price: number) {
-    this.gasPrice = price;
+    this.gasPrice_Gwei = price;
   }
 
   setPriorityPrice(gwei: number) {
-    this.priorityPrice = Math.max(gwei, 0) || 0;
+    this.priorityPrice_Wei = (Math.max(gwei, 0) || 0) * Gwei_1;
   }
 
   setNonce(nonce: number) {
@@ -196,10 +225,8 @@ export class TransferVM {
     const nextBlockBaseFee = await getNextBlockBaseFee(chainId);
     if (!nextBlockBaseFee) return;
 
-    await getMaxPriorityFee(chainId);
-
     runInAction(() => {
-      this.nextBlockBaseFee = nextBlockBaseFee;
+      this.nextBlockBaseFee_Wei = nextBlockBaseFee;
     });
   };
 
@@ -224,6 +251,8 @@ export class TransferVM {
     if (!currentNetwork.eip1559) return;
 
     this.fetchBaseFee(currentNetwork.chainId);
+    getMaxPriorityFee(currentNetwork.chainId).then((v) => runInAction(() => (this.priorityPrice_Wei = v)));
+
     NetworksVM.currentProvider.on('block', async () => this.fetchBaseFee(currentNetwork.chainId));
   }
 
@@ -311,7 +340,7 @@ export class TransferVM {
     const iface = new ethers.utils.Interface(ERC20ABI);
     const data = this.isERC20 ? iface.encodeFunctionData('transfer', [this.receiptAddress, this.amountBigInt]) : '0x';
 
-    const fee = BigNumber.from(this.gasPrice * Gwei_1).mul(this.gas);
+    const fee = BigNumber.from(this.gasPrice_Gwei * Gwei_1).mul(this.gas);
     if (!this.isERC20 && fee.add(BigNumber.from(value)).gt(this.selectedTokenBalance)) {
       value = BigNumber.from(this.selectedToken.wei || 0)
         .sub(fee)
@@ -325,9 +354,9 @@ export class TransferVM {
       to,
       value,
       gas: this.gas,
-      gasPrice: eip1559 ? undefined : this.gasPrice * Gwei_1,
-      maxFeePerGas: eip1559 ? this.gasPrice * Gwei_1 : undefined,
-      maxPriorityFeePerGas: eip1559 ? this.priorityPrice * Gwei_1 : undefined,
+      gasPrice: eip1559 ? undefined : this.gasPrice_Gwei * Gwei_1,
+      maxFeePerGas: eip1559 ? this.gasPrice_Gwei * Gwei_1 : undefined,
+      maxPriorityFeePerGas: eip1559 ? Number.parseInt(this.priorityPrice_Wei as any) : undefined,
       nonce: this.nonce,
       data,
       chainId: NetworksVM.currentChainId,
@@ -386,7 +415,7 @@ export class TransferVM {
       to: nft.contract,
       value: '0',
       gas: gas,
-      gasPrice: this.gasPrice * Gwei_1,
+      gasPrice: this.gasPrice_Gwei * Gwei_1,
       nonce: this.nonce,
       data,
       chainId: NetworksVM.currentChainId,
