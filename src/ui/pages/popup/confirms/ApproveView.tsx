@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { formatAddress, formatValue } from '../../../misc/Formatter';
 
 import { ConfirmVM } from '../../../viewmodels/popups/ConfirmVM';
 import { CryptoIcons } from '../../../misc/Icons';
@@ -6,7 +7,6 @@ import Feather from 'feather-icons-react';
 import KnownAddresses from '../../../misc/KnownAddresses';
 import Shell from '../../../bridges/Shell';
 import { convertToAccountUrl } from '../../../../misc/Url';
-import { formatAddress } from '../../../misc/Formatter';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 
@@ -36,7 +36,7 @@ export default observer(({ confirmVM, onReject, onContinue }: Props) => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    window.resizeTo(360, eip1559 ? 396 : 365);
+    window.resizeTo(360, eip1559 ? 392 : 365);
   }, []);
 
   return (
@@ -128,14 +128,14 @@ export default observer(({ confirmVM, onReject, onContinue }: Props) => {
         <div>
           <span>{t('Max Fee')}:</span>
           <span>
-            {maxFee} {networkSymbol}
+            {formatValue(maxFee)} {networkSymbol}
           </span>
         </div>
 
         <div>
           <span>{t('Total')}:</span>
           <span>
-            {totalValue} {networkSymbol}
+            {formatValue(totalValue)} {networkSymbol}
           </span>
         </div>
       </div>
