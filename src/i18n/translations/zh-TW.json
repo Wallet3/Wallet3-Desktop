@@ -142,5 +142,12 @@
   "Next Block Base Fee": "下一區塊基礎價格",
   "Gas Tip": "優先費",
   "Max Gas Fee": "最大燃料價格",
-  "Optional": "可選"
+  "Optional": "可選",
+  "High": "高",
+  "Mid": "中",
+  "Low": "低",
+  "Estimated Gas Fee": "預計燃料費",
+  "Speed": "速度",
+  "Advanced Mode": "高級模式",
+  "Normal": "一般"
 }

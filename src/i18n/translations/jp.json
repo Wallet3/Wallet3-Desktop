@@ -142,5 +142,12 @@
   "Next Block Base Fee": "次ブロックの基本価格",
   "Gas Tip": "優先料金",
   "Max Gas Fee": "最大ガス価格",
-  "Optional": "オプション"
+  "Optional": "オプション",
+  "High": "ハイ",
+  "Mid": "ミドル",
+  "Low": "ロー",
+  "Estimated Gas Fee": "推定ガス料金",
+  "Speed": "スピード",
+  "Advanced Mode": "プロモード",
+  "Normal": "普通"
 }

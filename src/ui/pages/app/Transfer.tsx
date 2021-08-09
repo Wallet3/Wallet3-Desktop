@@ -43,7 +43,7 @@ export default observer(
 
     const { tokenId } = useRouteMatch().params as { tokenId?: string };
 
-    const [activeGas, setActiveGas] = useState(1);
+    // const [activeGas, setActiveGas] = useState(1);
     const [transferVM, setVM] = useState<TransferVM>(null);
     const amountInput = useRef<HTMLInputElement>();
     const gasInput = useRef<HTMLInputElement>();
@@ -149,7 +149,7 @@ export default observer(
           {currentNetwork.eip1559 ? (
             <div className="eip1559">
               <div className="line1">
-                <span>Estimated Gas Fee</span>
+                <span>{t('Estimated Gas Fee')}</span>
                 <span>
                   <span className="usd-value">
                     {`(${(
@@ -166,9 +166,11 @@ export default observer(
               </div>
 
               <div className="line2">
-                <span className={`speed ${transferVM?.txSpeed ?? ''}`}>Speed: {transferVM?.txSpeed.toUpperCase()}</span>
+                <span className={`speed ${transferVM?.txSpeed ?? ''}`}>
+                  {t('Speed')}: {transferVM?.txSpeed}
+                </span>
                 <span className="advanced" onClick={() => setAdvancedMode(!advancedMode)}>
-                  <Feather size={11} icon={advancedMode ? 'chevrons-up' : 'chevrons-down'} /> Advanced Mode
+                  <Feather size={11} icon={advancedMode ? 'chevrons-up' : 'chevrons-down'} /> {t('Advanced Mode')}
                 </span>
               </div>
             </div>
@@ -193,13 +195,12 @@ export default observer(
           {!advancedMode && currentNetwork.eip1559 ? undefined : (
             <div className="gas">
               <div
-                className={`${activeGas === 0 ? 'active' : ''}`}
+                className={`${transferVM?.gasLevel === 0 ? 'active' : ''}`}
                 onClick={(_) => {
-                  setActiveGas(0);
                   transferVM?.setGasLevel(0);
                 }}
               >
-                <span>{t('Rapid')}</span>
+                <span>{t(currentNetwork.eip1559 ? 'High' : 'Rapid')}</span>
                 <span className="rapid">
                   <AnimatedNumber value={transferVM?.rapid} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
                 </span>
@@ -208,13 +209,12 @@ export default observer(
               <div className="separator" />
 
               <div
-                className={`${activeGas === 1 ? 'active' : ''}`}
+                className={`${transferVM?.gasLevel === 1 ? 'active' : ''}`}
                 onClick={(_) => {
-                  setActiveGas(1);
                   transferVM?.setGasLevel(1);
                 }}
               >
-                <span>{t('Fast')}</span>
+                <span>{t(currentNetwork.eip1559 ? 'Mid' : 'Fast')}</span>
                 <span className="fast">
                   <AnimatedNumber value={transferVM?.fast} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
                 </span>
@@ -223,21 +223,20 @@ export default observer(
               <div className="separator" />
 
               <div
-                className={`${activeGas === 2 ? 'active' : ''}`}
+                className={`${transferVM?.gasLevel === 2 ? 'active' : ''}`}
                 onClick={(_) => {
-                  setActiveGas(2);
                   transferVM?.setGasLevel(2);
                 }}
               >
-                <span>{t('Standard')}</span>
-                <span className="standard">
+                <span>{t(currentNetwork.eip1559 ? 'Low' : 'Standard')}</span>
+                <span className="normal">
                   <AnimatedNumber value={transferVM?.standard} duration={300} formatValue={(n) => parseInt(n)} /> Gwei
                 </span>
               </div>
 
               <div className="separator" />
 
-              <div className={`${activeGas === 3 ? 'active' : ''}`} onClick={(_) => setActiveGas(3)}>
+              <div className={`${transferVM?.gasLevel === 3 ? 'active' : ''}`}>
                 <span>{t('Cust.')}</span>
                 <input
                   ref={gasInput}
@@ -245,7 +244,6 @@ export default observer(
                   placeholder="20"
                   maxLength={16}
                   onClick={(_) => {
-                    setActiveGas(3);
                     transferVM?.setGasLevel(3);
                     transferVM?.setGasPrice(Number.parseFloat(gasInput.current.value) || 0);
                   }}

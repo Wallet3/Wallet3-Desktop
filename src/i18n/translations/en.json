@@ -142,5 +142,12 @@
   "Next Block Base Fee": "Next Block Base Fee",
   "Gas Tip": "Pri. Fee",
   "Max Gas Fee": "Max Gas Fee",
-  "Optional": "Optional"
+  "Optional": "Optional",
+  "High": "High",
+  "Mid": "Mid.",
+  "Low": "Low",
+  "Estimated Gas Fee": "Estimated Gas Fee",
+  "Speed": "Speed",
+  "Advanced Mode": "Advanced Mode",
+  "Normal": "Normal"
 }

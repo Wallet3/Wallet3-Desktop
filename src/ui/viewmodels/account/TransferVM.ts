@@ -31,7 +31,7 @@ export class TransferVM {
   nonce: number = 0;
   gasPrice_Gwei: number = -1;
   priorityPrice_Wei: number = 0;
-  gasLevel = 1; // 0 - rapid, 1 - fast, 2 - standard, 4 - custom
+  gasLevel = 1; // 0 - rapid, 1 - fast, 2 - standard, 3 - custom
   sending = false;
   nextBlockBaseFee_Wei = 0;
 
@@ -49,7 +49,7 @@ export class TransferVM {
         this.gas < 12_500_000 &&
         this.nonce >= 0 &&
         !this.loading &&
-        (NetworksVM.currentNetwork.eip1559 ? this.priorityPrice_Wei : true) &&
+        (NetworksVM.currentNetwork.eip1559 ? this.priorityPrice_Wei >= Gwei_1 * 0.5 : true) &&
         this.gasPrice_Gwei > 0 &&
         this.gasPrice_Gwei <= 9007199 // MAX_SAFE_INTEGER * gwei_1
       );
@@ -130,6 +130,8 @@ export class TransferVM {
     this.initNonce();
 
     this.recipients = store.get('recipients') || [];
+
+    this.setGasLevel(NetworksVM.currentNetwork.eip1559 ? 0 : 1);
   }
 
   async setRecipient(addressOrName: string) {
