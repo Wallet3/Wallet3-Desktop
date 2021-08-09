@@ -243,6 +243,11 @@
   display: flex;
   align-items: center;
   column-gap: 2px;
+  transition: all 0.3s;
+}
+
+.page.send > .form > .eip1559 > div.line2 .advanced:hover {
+  opacity: 0.5;
 }
 
 .page.send > .form .rapid {

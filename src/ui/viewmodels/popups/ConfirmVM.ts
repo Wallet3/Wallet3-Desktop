@@ -189,14 +189,12 @@ export class ConfirmVM {
   }
 
   get isValid() {
+    const validGasPrice = this.maxFeePerGas_Wei.gt(0)
+      ? this.maxFeePerGas_Wei.gt(0) && this.priorityPrice_Wei.gt(0)
+      : this.gasPrice > 0;
+
     return (
-      this.gas >= 21000 &&
-      this.gas <= 12_500_000 &&
-      (this.gasPrice || this.maxFeePerGas_Wei) > 0 &&
-      this.priorityPrice_Wei.gt(0) &&
-      this.nonce >= 0 &&
-      this.data &&
-      this.nativeBalance.gt(0)
+      this.gas >= 21000 && this.gas <= 12_500_000 && validGasPrice && this.nonce >= 0 && this.data && this.nativeBalance.gt(0)
     );
   }
 

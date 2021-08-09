@@ -185,7 +185,7 @@ export class TransferVM {
   }
 
   setGasPrice(price: number) {
-    this.gasPrice_Gwei = price;
+    this.gasPrice_Gwei = Math.max(price, 0);
   }
 
   setPriorityPrice(gwei: number) {
