@@ -17,12 +17,26 @@ interface Props {
 }
 
 export default observer(({ confirmVM, onReject, onContinue }: Props) => {
-  const { approveToken, tokenSymbol, gas, gasPrice, maxFee, nonce, totalValue, networkSymbol, verifiedName, chainId } =
-    confirmVM;
+  const {
+    approveToken,
+    tokenSymbol,
+    gas,
+    gasPrice,
+    eip1559,
+    maxFeePerGas,
+    priorityPrice,
+    maxFee,
+    nonce,
+    totalValue,
+    networkSymbol,
+    verifiedName,
+
+    chainId,
+  } = confirmVM;
   const { t } = useTranslation();
 
   useEffect(() => {
-    window.resizeTo(360, 365);
+    window.resizeTo(360, eip1559 ? 396 : 365);
   }, []);
 
   return (
@@ -55,15 +69,41 @@ export default observer(({ confirmVM, onReject, onContinue }: Props) => {
           </div>
         </div>
 
-        <div>
-          <span>{t('Gas Price')}:</span>
+        {eip1559 ? undefined : (
           <div>
-            <input type="text" defaultValue={gasPrice} onChange={(e) => confirmVM.setGasPrice(e.target.value)} />
-            <span>
-              Gwei <Feather icon="edit-3" size={12} />
-            </span>
+            <span>{t('Gas Price')}:</span>
+            <div>
+              <input type="text" defaultValue={gasPrice} onChange={(e) => confirmVM.setGasPrice(e.target.value)} />
+              <span>
+                Gwei <Feather icon="edit-3" size={12} />
+              </span>
+            </div>
           </div>
-        </div>
+        )}
+
+        {eip1559 ? (
+          <div>
+            <span>{t('Max Gas Fee')}:</span>
+            <div>
+              <input type="text" defaultValue={maxFeePerGas} onChange={(e) => confirmVM.setMaxGasPrice(e.target.value)} />
+              <span>
+                Gwei <Feather icon="edit-3" size={12} />
+              </span>
+            </div>
+          </div>
+        ) : undefined}
+
+        {eip1559 ? (
+          <div>
+            <span>{t('Gas Tip')}:</span>
+            <div>
+              <input type="text" defaultValue={priorityPrice} onChange={(e) => confirmVM.setPriorityPrice(e.target.value)} />
+              <span>
+                Gwei <Feather icon="edit-3" size={12} />
+              </span>
+            </div>
+          </div>
+        ) : undefined}
 
         <div>
           <span>{t('Gas Limit')}:</span>

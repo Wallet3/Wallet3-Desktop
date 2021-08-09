@@ -33,6 +33,7 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
     maxFee,
     nonce,
     totalValue,
+    eip1559,
     chainId,
     verifiedName,
     to,
@@ -81,7 +82,7 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
           </div>
         </div>
 
-        {gasPrice ? (
+        {eip1559 ? undefined : (
           <div>
             <span>{t('Gas Price')}:</span>
             <div>
@@ -96,9 +97,9 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
               </span>
             </div>
           </div>
-        ) : undefined}
+        )}
 
-        {maxFeePerGas ? (
+        {eip1559 ? (
           <div>
             <span>{t('Max Gas Fee')}:</span>
             <div>
@@ -110,7 +111,7 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
           </div>
         ) : undefined}
 
-        {priorityPrice ? (
+        {eip1559 ? (
           <div>
             <span>{t('Gas Tip')}:</span>
             <div>

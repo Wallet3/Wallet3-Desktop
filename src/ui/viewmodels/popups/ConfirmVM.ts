@@ -180,7 +180,9 @@ export class ConfirmVM {
   }
 
   get maxFee() {
-    return formatEther(this.gasPriceWei.mul(this.gas).toString());
+    return this.eip1559
+      ? formatEther(this.maxFeePerGas_Wei.mul(this.gas))
+      : formatEther(this.gasPriceWei.mul(this.gas).toString());
   }
 
   get insufficientFee() {
