@@ -149,5 +149,7 @@
   "Estimated Gas Fee": "推定ガス料金",
   "Speed": "スピード",
   "Advanced Mode": "プロモード",
-  "Normal": "普通"
+  "Normal": "普通",
+  "Next Block Fee": "推定ブロック価格",
+  "Next Block Priority Fee": "次ブロックの優先価格"
 }

@@ -134,6 +134,31 @@
   margin-left: 4px;
 }
 
+.page.confirm > .container > .details > .form > .next-block-fee img {
+  height: 11px;
+}
+
+.page.confirm > .container > .details > .form > .next-block-fee .plus {
+  padding-bottom: 1px;
+  margin: 0 0 0 6px;
+}
+
+.page.confirm > .container > .details > .form > .next-block-fee .base-fee-value {
+  color: #FF6536;
+  line-height: 17px;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+}
+
+.page.confirm > .container > .details > .form > .next-block-fee .priority-fee-value {
+  color: #006DFF;
+  line-height: 17px;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+}
+
 .page.confirm > .container > .details > .actions {
   display: grid;
   grid-template-columns: 1fr 1fr;

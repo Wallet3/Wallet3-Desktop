@@ -149,5 +149,7 @@
   "Estimated Gas Fee": "預計燃料費",
   "Speed": "速度",
   "Advanced Mode": "高級模式",
-  "Normal": "一般"
+  "Normal": "一般",
+  "Next Block Fee": "下一區塊費用",
+  "Next Block Priority Fee": "下一區塊優先費"
 }

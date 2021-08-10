@@ -9,6 +9,8 @@ import { Gwei_1 } from '../../../../gas/Gasnow';
 import { Image } from '../../../components';
 import Shell from '../../../bridges/Shell';
 import { convertToAccountUrl } from '../../../../misc/Url';
+import fire from '../../../../assets/icons/app/fire.svg';
+import gem from '../../../../assets/icons/app/gem.svg';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 
@@ -31,6 +33,7 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
     gas,
     gasPrice,
     maxFeePerGas,
+    suggestedPriorityFee,
     nextBlockBaseFee,
     priorityPrice,
     maxFee,
@@ -99,11 +102,20 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
         )}
 
         {eip1559 ? (
-          <div>
-            <span>{t('Next Block Base Fee')}:</span>
+          <div className="next-block-fee">
+            <span>{t('Next Block Fee')}:</span>
             <div>
-              <AnimatedNumber value={nextBlockBaseFee / Gwei_1} formatValue={(n) => formatNum(n, '')} />
-              <span>Gwei</span>
+              <span className="base-fee-value" title={t('Next Block Base Fee')}>
+                <img src={fire} alt="Burn" />
+                <AnimatedNumber value={nextBlockBaseFee / Gwei_1} formatValue={(n) => formatNum(n, '')} />
+                <span>Gwei</span>
+              </span>
+              <span className="plus">+</span>
+              <span className="priority-fee-value" title={t('Next Block Priority Fee')}>
+                <img src={gem} alt="Gem" />
+                <AnimatedNumber value={suggestedPriorityFee / Gwei_1} formatValue={(n) => formatNum(n, '')} />
+                <span>Gwei</span>
+              </span>
             </div>
           </div>
         ) : undefined}

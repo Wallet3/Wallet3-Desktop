@@ -36,6 +36,7 @@ export class ConfirmVM {
   nativeBalance = BigNumber.from(0);
   transferToken?: { symbol: string; transferAmount: BigNumber; decimals: number; to: string } = undefined;
   nextBlockBaseFee = 0;
+  suggestedPriorityFee = 0;
   approveToken?: {
     symbol: string;
     decimals: number;
@@ -103,10 +104,11 @@ export class ConfirmVM {
     if (!this.eip1559) return;
 
     const refreshBaseFee = async () => {
-      const { nextBlockBaseFee } = await fetchNextBlockFeeData(this.chainId);
+      const { nextBlockBaseFee, suggestedPriorityFee } = await fetchNextBlockFeeData(this.chainId);
 
       runInAction(() => {
         this.nextBlockBaseFee = nextBlockBaseFee;
+        this.suggestedPriorityFee = suggestedPriorityFee;
       });
     };
 

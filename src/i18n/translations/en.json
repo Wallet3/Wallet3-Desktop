@@ -150,5 +150,6 @@
   "Speed": "Speed",
   "Advanced Mode": "Advanced Mode",
   "Normal": "Normal",
-  "Next Base Fee": "Next Base Fee"
+  "Next Block Fee": "Next Block Fee",
+  "Next Block Priority Fee": "Next Block Priority Fee"
 }
