@@ -55,7 +55,7 @@ export class WalletConnect extends EventEmitter {
     );
 
     this._currAddrObserver = reaction(
-      () => this.wallet.currentAddress,
+      () => this.wallet.currentAddressIndex,
       () => this.updateSession()
     );
   }
