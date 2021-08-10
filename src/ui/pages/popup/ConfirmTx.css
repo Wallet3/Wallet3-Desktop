@@ -73,7 +73,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 45vw;
+  max-width: 52vw;
 }
 
 .page.confirm > .container > .details > .form > div div.numeric {
@@ -81,7 +81,7 @@
   grid-template-columns: auto 1fr auto;
 }
 
-.page.confirm > .container > .details > .form > div div.numeric .usd-value {
+.page.confirm > .container > .details > .form .usd-value {
   color: lightgrey;
 }
 

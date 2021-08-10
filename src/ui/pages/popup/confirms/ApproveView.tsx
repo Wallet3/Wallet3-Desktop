@@ -90,25 +90,6 @@ export default observer(({ confirmVM, onReject, onContinue, currencyVM }: Props)
         )}
 
         {eip1559 ? (
-          <div className="next-block-fee">
-            <span>{t('Next Block Fee')}:</span>
-            <div>
-              <span className="base-fee-value" title={t('Next Block Base Fee')}>
-                <img src={fire} alt="Burn" />
-                <AnimatedNumber value={nextBlockBaseFee / Gwei_1} formatValue={(n) => formatNum(n, '')} />
-                <span>Gwei</span>
-              </span>
-              <span className="plus">+</span>
-              <span className="priority-fee-value" title={t('Next Block Priority Fee')}>
-                <img src={gem} alt="Gem" />
-                <AnimatedNumber value={suggestedPriorityFee / Gwei_1} formatValue={(n) => formatNum(n, '')} />
-                <span>Gwei</span>
-              </span>
-            </div>
-          </div>
-        ) : undefined}
-
-        {eip1559 ? (
           <div>
             <span>{t('Max Gas Fee')}:</span>
             <div>
@@ -152,6 +133,25 @@ export default observer(({ confirmVM, onReject, onContinue, currencyVM }: Props)
           </div>
         </div>
 
+        {eip1559 ? (
+          <div className="next-block-fee">
+            <span>{t('Next Block Fee')}:</span>
+            <div>
+              <span className="base-fee-value" title={t('Next Block Base Fee')}>
+                <img src={fire} alt="Burn" />
+                <AnimatedNumber value={nextBlockBaseFee / Gwei_1} formatValue={(n) => formatNum(n, '')} />
+                <span>Gwei</span>
+              </span>
+              <span className="plus">+</span>
+              <span className="priority-fee-value" title={t('Next Block Priority Fee')}>
+                <img src={gem} alt="Gem" />
+                <AnimatedNumber value={suggestedPriorityFee / Gwei_1} formatValue={(n) => formatNum(n, '')} />
+                <span>Gwei</span>
+              </span>
+            </div>
+          </div>
+        ) : undefined}
+
         <div>
           <span>{t('Max Fee')}:</span>
           <div>
@@ -174,6 +174,7 @@ export default observer(({ confirmVM, onReject, onContinue, currencyVM }: Props)
           </div>
         </div>
       </div>
+
       <div className="actions">
         <button onClick={(_) => onReject?.()}>{t('Cancel')}</button>
         <button
