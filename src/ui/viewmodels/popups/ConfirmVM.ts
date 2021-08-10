@@ -192,7 +192,7 @@ export class ConfirmVM {
 
   get isValid() {
     const validGasPrice = this.maxFeePerGas_Wei.gt(0)
-      ? this.maxFeePerGas_Wei.gt(0) && this.priorityPrice_Wei.gt(0) && this.maxFeePerGas_Wei.gt(this.priorityPrice_Wei)
+      ? this.maxFeePerGas_Wei.gt(0) && this.priorityPrice_Wei.gt(0) && this.maxFeePerGas_Wei.gte(this.priorityPrice_Wei)
       : this.gasPrice > 0;
 
     return (
