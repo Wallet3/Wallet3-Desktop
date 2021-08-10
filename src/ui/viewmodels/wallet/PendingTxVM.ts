@@ -41,6 +41,14 @@ export class PendingTxVM {
     return this._tx.gasPrice;
   }
 
+  get maxFeePerGas() {
+    return this._tx.maxFeePerGas || this._tx.gasPrice;
+  }
+
+  get maxPriorityFeePerGas() {
+    return this._tx.maxPriorityFeePerGas || this._tx.tipPrice;
+  }
+
   get gas() {
     return this._tx.gas;
   }

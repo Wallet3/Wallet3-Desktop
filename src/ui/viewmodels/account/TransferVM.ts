@@ -343,15 +343,14 @@ export class TransferVM {
 
     const iface = new ethers.utils.Interface(ERC20ABI);
     const data = this.isERC20 ? iface.encodeFunctionData('transfer', [this.receiptAddress, this.amountBigInt]) : '0x';
+    const eip1559 = NetworksVM.currentNetwork.eip1559;
 
-    const fee = BigNumber.from(this.gasPrice_Gwei * Gwei_1).mul(this.gas);
+    const fee = eip1559 ? BigNumber.from(this.estimatedEIP1559Fee) : BigNumber.from(this.gasPrice_Gwei * Gwei_1).mul(this.gas);
     if (!this.isERC20 && fee.add(BigNumber.from(value)).gt(this.selectedTokenBalance)) {
       value = BigNumber.from(this.selectedToken.wei || 0)
         .sub(fee)
         .toString();
     }
-
-    const eip1559 = NetworksVM.currentNetwork.eip1559;
 
     await ipc.invokeSecure<void>(Messages.createTransferTx, {
       from: this._accountVM.address,
