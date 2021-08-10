@@ -47,6 +47,10 @@ export class CurrencyVM {
   get ethPrice() {
     return Coingecko.eth || 1;
   }
+
+  getPrice(chainId: number) {
+    return Coingecko[chainId] || 1;
+  }
 }
 
 export default new CurrencyVM();

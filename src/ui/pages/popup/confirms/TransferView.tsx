@@ -171,7 +171,7 @@ export default observer(({ confirmVM, onContinue, onReject, currencyVM }: Props)
           <span>{t('Max Fee')}:</span>
           <div className="numeric">
             <span className="usd-value">
-              {chainId === 1 ? `(${(Number.parseFloat(totalValue) * currencyVM.ethPrice).toFixed(2)} USD)` : ''}
+              {`(${(Number.parseFloat(maxFee) * currencyVM.getPrice(chainId)).toFixed(2)} USD)`}
             </span>
             <AnimatedNumber value={Number.parseFloat(maxFee)} formatValue={(n: number) => formatValue(n)} />
             <span>{networkSymbol}</span>
@@ -182,7 +182,7 @@ export default observer(({ confirmVM, onContinue, onReject, currencyVM }: Props)
           <span>{t('Total')}:</span>
           <div className="numeric" title={`${totalValue} ${tokenSymbol}`}>
             <span className="usd-value">
-              {chainId === 1 ? `(${(Number.parseFloat(totalValue) * currencyVM.ethPrice).toFixed(2)} USD)` : ''}
+              {`(${(Number.parseFloat(totalValue) * currencyVM.getPrice(chainId)).toFixed(2)} USD)`}
             </span>
             <AnimatedNumber value={Number.parseFloat(totalValue)} formatValue={(n: number) => formatValue(n)} />
             <span>{networkSymbol}</span>
