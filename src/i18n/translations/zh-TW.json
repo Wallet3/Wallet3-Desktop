@@ -53,7 +53,7 @@
   "Gas Limit": "燃料上限",
   "Gas Price": "燃料價格",
   "Data": "數據",
-  "Max Fee": "手續費上限",
+  "Max Fee": "預計手續費上限",
   "Total": "總價值",
   "View on Block Explorer": "在區塊鏈瀏覽器中查看",
   "Cancel Tx": "取消交易",

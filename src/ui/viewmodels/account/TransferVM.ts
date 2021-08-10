@@ -2,6 +2,7 @@ import { BigNumber, ethers, utils } from 'ethers';
 import Gasnow, { Gwei_1 } from '../../../gas/Gasnow';
 import { IReactionDisposer, autorun, makeAutoObservable, reaction, runInAction } from 'mobx';
 import Messages, { ConfirmSendTx } from '../../../common/Messages';
+import { calcSpeed, fetchNextBlockFeeData } from '../services/EIP1559';
 import { getMaxPriorityFee, getNextBlockBaseFee } from '../../../common/Provider';
 import { parseEther, parseUnits } from 'ethers/lib/utils';
 
@@ -14,7 +15,6 @@ import GasStation from '../../../gas';
 import { NFT } from '../models/NFT';
 import NetworksVM from '../NetworksVM';
 import { UserToken } from '../models/UserToken';
-import { calcSpeed } from '../services/EIP1559';
 import ipc from '../../bridges/IPC';
 import store from 'storejs';
 
@@ -223,14 +223,11 @@ export class TransferVM {
   }
 
   private fetchBaseFee = async (chainId: number) => {
-    const [nextBlockBaseFee, suggestedPriority] = await Promise.all([
-      getNextBlockBaseFee(chainId),
-      getMaxPriorityFee(chainId),
-    ]);
+    const { nextBlockBaseFee, suggestedPriorityFee } = await fetchNextBlockFeeData(chainId);
 
     runInAction(() => {
       this.nextBlockBaseFee_Wei = nextBlockBaseFee;
-      this.suggestedPriorityPrice_Wei = suggestedPriority;
+      this.suggestedPriorityPrice_Wei = suggestedPriorityFee;
     });
   };
 

@@ -1,9 +1,11 @@
 import React, { createRef } from 'react';
-import { formatAddress, formatValue } from '../../../misc/Formatter';
+import { formatAddress, formatNum, formatValue } from '../../../misc/Formatter';
 
+import AnimatedNumber from 'react-animated-number';
 import { ConfirmVM } from '../../../viewmodels/popups/ConfirmVM';
 import { CryptoIcons } from '../../../misc/Icons';
 import Feather from 'feather-icons-react';
+import { Gwei_1 } from '../../../../gas/Gasnow';
 import { Image } from '../../../components';
 import Shell from '../../../bridges/Shell';
 import { convertToAccountUrl } from '../../../../misc/Url';
@@ -29,6 +31,7 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
     gas,
     gasPrice,
     maxFeePerGas,
+    nextBlockBaseFee,
     priorityPrice,
     maxFee,
     nonce,
@@ -38,10 +41,6 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
     verifiedName,
     to,
   } = implVM;
-
-  const gasPriceRef = createRef<HTMLInputElement>();
-  const gasLimitRef = createRef<HTMLInputElement>();
-  const nonceRef = createRef<HTMLInputElement>();
 
   return (
     <div className="details">
@@ -75,7 +74,7 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
         <div className="amount">
           <span>{t('Amount')}:</span>
           <div className="numeric" title={`${amount} ${tokenSymbol}`}>
-            <span>{amount}</span>
+            <span>{formatValue(amount)}</span>
             <span>
               <img src={CryptoIcons(tokenSymbol)} alt={tokenSymbol} /> {tokenSymbol}
             </span>
@@ -87,7 +86,7 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
             <span>{t('Gas Price')}:</span>
             <div>
               <input
-                ref={gasPriceRef}
+                // ref={gasPriceRef}
                 type="text"
                 defaultValue={gasPrice}
                 onChange={(e) => implVM.setGasPrice(e.target.value)}
@@ -98,6 +97,16 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
             </div>
           </div>
         )}
+
+        {eip1559 ? (
+          <div>
+            <span>{t('Next Block Base Fee')}:</span>
+            <div>
+              <AnimatedNumber value={nextBlockBaseFee / Gwei_1} formatValue={(n) => formatNum(n, '')} />
+              <span>Gwei</span>
+            </div>
+          </div>
+        ) : undefined}
 
         {eip1559 ? (
           <div>
@@ -126,7 +135,7 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
         <div>
           <span>{t('Gas Limit')}:</span>
           <div>
-            <input ref={gasLimitRef} type="text" defaultValue={gas} onChange={(e) => implVM.setGas(e.target.value)} />
+            <input type="text" defaultValue={gas} onChange={(e) => implVM.setGas(e.target.value)} />
             <span>
               <Feather icon="edit-3" size={12} />
             </span>
@@ -136,7 +145,7 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
         <div>
           <span>{t('Nonce')}:</span>
           <div>
-            <input ref={nonceRef} type="text" defaultValue={nonce} onChange={(e) => implVM.setNonce(e.target.value)} />
+            <input type="text" defaultValue={nonce} onChange={(e) => implVM.setNonce(e.target.value)} />
             <span>
               <Feather icon="edit-3" size={12} />
             </span>
@@ -146,7 +155,7 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
         <div>
           <span>{t('Max Fee')}:</span>
           <div className="numeric">
-            <span>{formatValue(maxFee)}</span>
+            <AnimatedNumber value={Number.parseFloat(maxFee)} formatValue={(n: number) => formatValue(n)} />
             <span>{networkSymbol}</span>
           </div>
         </div>
@@ -154,7 +163,7 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
         <div>
           <span>{t('Total')}:</span>
           <div className="numeric" title={`${totalValue} ${tokenSymbol}`}>
-            <span>{formatValue(totalValue)}</span>
+            <AnimatedNumber value={Number.parseFloat(totalValue)} formatValue={(n: number) => formatValue(n)} />
             <span>{networkSymbol}</span>
           </div>
         </div>

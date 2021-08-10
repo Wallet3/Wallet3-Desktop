@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
-import { formatAddress, formatValue } from '../../../misc/Formatter';
+import { formatAddress, formatNum, formatValue } from '../../../misc/Formatter';
 
+import AnimatedNumber from 'react-animated-number';
 import { ConfirmVM } from '../../../viewmodels/popups/ConfirmVM';
 import { CryptoIcons } from '../../../misc/Icons';
 import Feather from 'feather-icons-react';
+import { Gwei_1 } from '../../../../gas/Gasnow';
 import KnownAddresses from '../../../misc/KnownAddresses';
 import Shell from '../../../bridges/Shell';
 import { convertToAccountUrl } from '../../../../misc/Url';
@@ -25,6 +27,7 @@ export default observer(({ confirmVM, onReject, onContinue }: Props) => {
     eip1559,
     maxFeePerGas,
     priorityPrice,
+    nextBlockBaseFee,
     maxFee,
     nonce,
     totalValue,
@@ -36,7 +39,7 @@ export default observer(({ confirmVM, onReject, onContinue }: Props) => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    window.resizeTo(360, eip1559 ? 392 : 365);
+    window.resizeTo(360, eip1559 ? 405 : 365);
   }, []);
 
   return (
@@ -80,6 +83,16 @@ export default observer(({ confirmVM, onReject, onContinue }: Props) => {
             </div>
           </div>
         )}
+
+        {eip1559 ? (
+          <div>
+            <span>{t('Next Block Base Fee')}:</span>
+            <div>
+              <AnimatedNumber value={nextBlockBaseFee / Gwei_1} formatValue={(n) => formatNum(n, '')} />
+              <span>Gwei</span>
+            </div>
+          </div>
+        ) : undefined}
 
         {eip1559 ? (
           <div>
@@ -128,14 +141,16 @@ export default observer(({ confirmVM, onReject, onContinue }: Props) => {
         <div>
           <span>{t('Max Fee')}:</span>
           <span>
-            {formatValue(maxFee)} {networkSymbol}
+            <AnimatedNumber value={Number.parseFloat(maxFee)} formatValue={(n: number) => formatValue(n)} />
+            {networkSymbol}
           </span>
         </div>
 
         <div>
           <span>{t('Total')}:</span>
           <span>
-            {formatValue(totalValue)} {networkSymbol}
+            <AnimatedNumber value={Number.parseFloat(totalValue)} formatValue={(n: number) => formatValue(n)} />{' '}
+            {networkSymbol}
           </span>
         </div>
       </div>

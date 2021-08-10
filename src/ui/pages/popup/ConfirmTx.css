@@ -61,7 +61,7 @@
 .page.confirm > .container > .details > .form input.funds-limit {
   max-width: 45vw;
   text-align: end;
-  min-width: 32vw;
+  min-width: 32.5vw;
   -webkit-app-region: no-drag;
 }
 
@@ -120,7 +120,7 @@
   padding: 0;
   margin: 0 0px;
   margin-bottom: -1px;
-  width: 72px;
+  width: 75px;
   border: none;
   background: none;
   outline: none;

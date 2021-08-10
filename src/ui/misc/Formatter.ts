@@ -11,6 +11,6 @@ export function formatAddress(value: string, headLength = 10, tailLength = 8) {
     : value;
 }
 
-export function formatValue(value: string) {
-  return value.substring(0, value.indexOf('.') + 8);
+export function formatValue(value: string | number) {
+  return `${value}`.substring(0, `${value}`.indexOf('.') + 8);
 }

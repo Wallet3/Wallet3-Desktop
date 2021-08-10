@@ -53,7 +53,7 @@
   "Gas Limit": "燃料上限",
   "Gas Price": "燃料价格",
   "Data": "数据",
-  "Max Fee": "手续费上限",
+  "Max Fee": "预计手续费上限",
   "Total": "总价值",
   "View on Block Explorer": "在区块链浏览器中查看",
   "Cancel Tx": "取消交易",

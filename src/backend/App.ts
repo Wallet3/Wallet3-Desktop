@@ -337,7 +337,7 @@ export class App {
       const popup = await this.createPopupWindow('sendTx', params, {
         modal: true,
         parent: this.mainWindow,
-        height: params.maxFeePerGas ? 360 : undefined,
+        height: params.maxFeePerGas ? 375 : undefined,
       });
 
       await new Promise<boolean>((resolve) => {

@@ -9,6 +9,8 @@ import ERC20ABI from '../../../abis/ERC20.json';
 import { Gwei_1 } from '../../../gas/Gasnow';
 import KnownAddresses from '../../misc/KnownAddresses';
 import { Networks } from '../../../misc/Networks';
+import NetworksVM from '../NetworksVM';
+import { fetchNextBlockFeeData } from '../services/EIP1559';
 import { findTokenByAddress } from '../../../misc/Tokens';
 import { formatUnits } from 'ethers/lib/utils';
 import i18n from '../../../i18n';
@@ -33,6 +35,7 @@ export class ConfirmVM {
   accountIndex = -1;
   nativeBalance = BigNumber.from(0);
   transferToken?: { symbol: string; transferAmount: BigNumber; decimals: number; to: string } = undefined;
+  nextBlockBaseFee = 0;
   approveToken?: {
     symbol: string;
     decimals: number;
@@ -96,6 +99,19 @@ export class ConfirmVM {
     this._nonce = params.nonce || 0;
     this._value = Number(params.value) === 0 ? 0 : params.value || 0;
     this._data = params.data;
+
+    if (!this.eip1559) return;
+
+    const refreshBaseFee = async () => {
+      const { nextBlockBaseFee } = await fetchNextBlockFeeData(this.chainId);
+
+      runInAction(() => {
+        this.nextBlockBaseFee = nextBlockBaseFee;
+      });
+    };
+
+    refreshBaseFee();
+    this._provider.on('block', () => refreshBaseFee());
   }
 
   get recipient() {
@@ -180,9 +196,12 @@ export class ConfirmVM {
   }
 
   get maxFee() {
-    return this.eip1559
-      ? formatEther(this.maxFeePerGas_Wei.mul(this.gas))
-      : formatEther(this.gasPriceWei.mul(this.gas).toString());
+    const eip1559Fee = Math.min(
+      this.maxFeePerGas_Wei.toNumber(),
+      this.priorityPrice_Wei.add(this.nextBlockBaseFee).toNumber()
+    );
+
+    return this.eip1559 ? formatEther(eip1559Fee * this.gas) : formatEther(this.gasPriceWei.mul(this.gas).toString());
   }
 
   get insufficientFee() {

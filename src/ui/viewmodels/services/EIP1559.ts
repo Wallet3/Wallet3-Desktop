@@ -1,3 +1,5 @@
+import { getMaxPriorityFee, getNextBlockBaseFee } from '../../../common/Provider';
+
 interface EIP1559Fees {
   baseFee: number;
   maxFeePerGas: number;
@@ -21,4 +23,13 @@ export function calcSpeed({ baseFee, maxFeePerGas, priorityFeePerGas, suggestedP
   }
 
   return 'slow';
+}
+
+export async function fetchNextBlockFeeData(chainId: number) {
+  const [nextBlockBaseFee, suggestedPriorityFee] = await Promise.all([
+    getNextBlockBaseFee(chainId),
+    getMaxPriorityFee(chainId),
+  ]);
+
+  return { nextBlockBaseFee, suggestedPriorityFee };
 }

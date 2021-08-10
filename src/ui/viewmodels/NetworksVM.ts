@@ -32,7 +32,7 @@ export class NetworksVM {
     this.currentChainId = value;
     this.currentProvider.ready;
     store.set(Keys.currentNetworkId(), value);
-    ipc.invoke(Messages.changeChainId, value);
+    ipc?.invoke(Messages.changeChainId, value);
   }
 
   reportFailedRpc(network: number, rpc: string) {

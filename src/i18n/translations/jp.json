@@ -53,7 +53,7 @@
   "Gas Limit": "ガスリミット",
   "Gas Price": "ガス価格",
   "Data": "データ",
-  "Max Fee": "最大料金",
+  "Max Fee": "推定最大料金",
   "Total": "合計",
   "View on Block Explorer": "ブロックエクスプローラーで見る",
   "Cancel Tx": "キャンセル",

@@ -53,7 +53,7 @@
   "Gas Limit": "Gas Limit",
   "Gas Price": "Gas Price",
   "Data": "Data",
-  "Max Fee": "Max Fee",
+  "Max Fee": "Estimated Max Fee",
   "Total": "Total",
   "View on Block Explorer": "View on Block Explorer",
   "Cancel Tx": "Cancel Tx",
@@ -149,5 +149,6 @@
   "Estimated Gas Fee": "Estimated Gas Fee",
   "Speed": "Speed",
   "Advanced Mode": "Advanced Mode",
-  "Normal": "Normal"
+  "Normal": "Normal",
+  "Next Base Fee": "Next Base Fee"
 }
