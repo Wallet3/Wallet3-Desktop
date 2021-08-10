@@ -1,5 +1,5 @@
 import { BigNumber, ethers, utils } from 'ethers';
-import Gasnow, { Gwei_1 } from '../../../gas/Gasnow';
+import Gasnow, { Gwei_1, MAX_GWEI_PRICE } from '../../../gas/Gasnow';
 import { IReactionDisposer, autorun, makeAutoObservable, reaction, runInAction } from 'mobx';
 import Messages, { ConfirmSendTx } from '../../../common/Messages';
 import { calcSpeed, fetchNextBlockFeeData } from '../services/EIP1559';
@@ -55,7 +55,7 @@ export class TransferVM {
           ? this.priorityPrice_Wei >= 0 && this.gasPrice_Gwei * Gwei_1 > this.priorityPrice_Wei
           : true) &&
         this.gasPrice_Gwei > 0 &&
-        this.gasPrice_Gwei <= 9007199 // MAX_SAFE_INTEGER * gwei_1
+        this.gasPrice_Gwei <= MAX_GWEI_PRICE // MAX_SAFE_INTEGER * gwei_1
       );
     } catch (error) {
       return false;

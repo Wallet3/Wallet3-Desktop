@@ -57,7 +57,7 @@ export default observer(({ implVM, onContinue, onReject }: Props) => {
                 src={implVM.args.walletConnect.app.icons[0] || ''}
                 alt={implVM.args.walletConnect.app.name}
               />
-              {implVM.args.walletConnect.app.name}
+              {formatAddress(implVM.args.walletConnect.app.name, 12, 10)}
             </span>
           </div>
         ) : undefined}

@@ -42,7 +42,7 @@ export default observer(({ confirmVM, onReject, onContinue }: Props) => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    window.resizeTo(360, eip1559 ? 405 : 365);
+    window.resizeTo(360, eip1559 ? 415 : 365);
   }, []);
 
   return (
@@ -152,18 +152,18 @@ export default observer(({ confirmVM, onReject, onContinue }: Props) => {
 
         <div>
           <span>{t('Max Fee')}:</span>
-          <span>
+          <div>
             <AnimatedNumber value={Number.parseFloat(maxFee)} formatValue={(n: number) => formatValue(n)} />
-            {networkSymbol}
-          </span>
+            <span>{networkSymbol}</span>
+          </div>
         </div>
 
         <div>
           <span>{t('Total')}:</span>
-          <span>
-            <AnimatedNumber value={Number.parseFloat(totalValue)} formatValue={(n: number) => formatValue(n)} />{' '}
-            {networkSymbol}
-          </span>
+          <div>
+            <AnimatedNumber value={Number.parseFloat(totalValue)} formatValue={(n: number) => formatValue(n)} />
+            <span>{networkSymbol}</span>
+          </div>
         </div>
       </div>
       <div className="actions">

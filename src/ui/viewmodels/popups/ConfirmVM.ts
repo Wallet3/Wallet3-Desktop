@@ -1,4 +1,5 @@
 import { BigNumber, ethers, utils } from 'ethers';
+import { Gwei_1, MAX_GWEI_PRICE } from '../../../gas/Gasnow';
 import Messages, { ConfirmSendTx, SendTxParams, WcMessages } from '../../../common/Messages';
 import { formatEther, parseUnits } from '@ethersproject/units';
 import { getProviderByChainId, markRpcFailed } from '../../../common/Provider';
@@ -6,10 +7,8 @@ import { makeAutoObservable, runInAction } from 'mobx';
 
 import App from '../ApplicationPopup';
 import ERC20ABI from '../../../abis/ERC20.json';
-import { Gwei_1 } from '../../../gas/Gasnow';
 import KnownAddresses from '../../misc/KnownAddresses';
 import { Networks } from '../../../misc/Networks';
-import NetworksVM from '../NetworksVM';
 import { fetchNextBlockFeeData } from '../services/EIP1559';
 import { findTokenByAddress } from '../../../misc/Tokens';
 import { formatUnits } from 'ethers/lib/utils';
@@ -198,12 +197,11 @@ export class ConfirmVM {
   }
 
   get maxFee() {
-    const eip1559Fee = Math.min(
-      this.maxFeePerGas_Wei.toNumber(),
-      this.priorityPrice_Wei.add(this.nextBlockBaseFee).toNumber()
-    );
+    const eip1559Fee = this.maxFeePerGas_Wei.gt(this.priorityPrice_Wei.add(this.nextBlockBaseFee))
+      ? this.priorityPrice_Wei.add(this.nextBlockBaseFee)
+      : this.maxFeePerGas_Wei;
 
-    return this.eip1559 ? formatEther(eip1559Fee * this.gas) : formatEther(this.gasPriceWei.mul(this.gas).toString());
+    return this.eip1559 ? formatEther(eip1559Fee.mul(this.gas)) : formatEther(this.gasPriceWei.mul(this.gas).toString());
   }
 
   get insufficientFee() {
@@ -235,19 +233,19 @@ export class ConfirmVM {
     this.args.data = value;
   }
 
-  setGasPrice(value: string) {
-    const price = Number.parseFloat(value) || 0;
-    this._gasPrice = Math.min(price, 10000000000);
+  setGasPrice(gwei: string) {
+    const price = Number.parseFloat(gwei) || 0;
+    this._gasPrice = Math.min(price, MAX_GWEI_PRICE);
     this.args.gasPrice = this.gasPriceWei.toNumber();
   }
 
-  setMaxGasPrice(value: string) {
-    this._maxFeePerGas = Number.parseFloat(value) || 0;
+  setMaxGasPrice(gwei: string) {
+    this._maxFeePerGas = Math.min(Number.parseFloat(gwei) || 0, MAX_GWEI_PRICE);
     this.args.maxFeePerGas = this.maxFeePerGas_Wei.toNumber();
   }
 
-  setPriorityPrice(value: string) {
-    this._priorityPrice = Number.parseFloat(value) || 0;
+  setPriorityPrice(gwei: string) {
+    this._priorityPrice = Math.min(Number.parseFloat(gwei) || 0, MAX_GWEI_PRICE);
     this.args.maxPriorityFeePerGas = this.priorityPrice_Wei.toNumber();
   }
 
