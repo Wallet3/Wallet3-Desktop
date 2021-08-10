@@ -4,6 +4,7 @@ import { formatAddress, formatNum, formatValue } from '../../../misc/Formatter';
 import AnimatedNumber from 'react-animated-number';
 import { ConfirmVM } from '../../../viewmodels/popups/ConfirmVM';
 import { CryptoIcons } from '../../../misc/Icons';
+import { CurrencyVM } from '../../../viewmodels/settings/CurrencyVM';
 import Feather from 'feather-icons-react';
 import { Gwei_1 } from '../../../../gas/Gasnow';
 import KnownAddresses from '../../../misc/KnownAddresses';
@@ -16,11 +17,12 @@ import { useTranslation } from 'react-i18next';
 
 interface Props {
   confirmVM: ConfirmVM;
+  currencyVM: CurrencyVM;
   onReject?: () => void;
   onContinue?: () => void;
 }
 
-export default observer(({ confirmVM, onReject, onContinue }: Props) => {
+export default observer(({ confirmVM, onReject, onContinue, currencyVM }: Props) => {
   const {
     approveToken,
     tokenSymbol,
@@ -68,7 +70,7 @@ export default observer(({ confirmVM, onReject, onContinue }: Props) => {
             <input
               type="text"
               className={`funds-limit ${approveToken.isMax ? 'max' : ''}`}
-              defaultValue={approveToken.limitAmount}
+              defaultValue={approveToken.isMax ? (t('Unlimited') as string) : approveToken.limitAmount}
               onChange={(e) => confirmVM.setApproveAmount(e.target.value)}
             />
             <img src={CryptoIcons(tokenSymbol)} alt={tokenSymbol} /> {tokenSymbol}
@@ -153,6 +155,9 @@ export default observer(({ confirmVM, onReject, onContinue }: Props) => {
         <div>
           <span>{t('Max Fee')}:</span>
           <div>
+            <span className="usd-value">
+              {`(${(Number.parseFloat(maxFee) * currencyVM.getPrice(chainId)).toFixed(2)} USD)`}
+            </span>
             <AnimatedNumber value={Number.parseFloat(maxFee)} formatValue={(n: number) => formatValue(n)} />
             <span>{networkSymbol}</span>
           </div>
@@ -161,6 +166,9 @@ export default observer(({ confirmVM, onReject, onContinue }: Props) => {
         <div>
           <span>{t('Total')}:</span>
           <div>
+            <span className="usd-value">
+              {`(${(Number.parseFloat(totalValue) * currencyVM.getPrice(chainId)).toFixed(2)} USD)`}
+            </span>
             <AnimatedNumber value={Number.parseFloat(totalValue)} formatValue={(n: number) => formatValue(n)} />
             <span>{networkSymbol}</span>
           </div>

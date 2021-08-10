@@ -136,7 +136,7 @@ export default observer(({ app }: Props) => {
         ) : undefined}
 
         {confirmVM?.method === 'Approve' ? (
-          <ApproveView confirmVM={app.confirmVM} onContinue={onContinue} onReject={onReject} />
+          <ApproveView confirmVM={app.confirmVM} currencyVM={app.currencyVM} onContinue={onContinue} onReject={onReject} />
         ) : undefined}
 
         {confirmVM?.method === 'Contract Interaction' ? (
