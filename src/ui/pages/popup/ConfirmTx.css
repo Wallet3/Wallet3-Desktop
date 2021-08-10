@@ -78,7 +78,11 @@
 
 .page.confirm > .container > .details > .form > div div.numeric {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: auto 1fr auto;
+}
+
+.page.confirm > .container > .details > .form > div div.numeric .usd-value {
+  color: lightgrey;
 }
 
 .page.confirm > .container > .details > .form > div.to > span:last-child {
@@ -145,7 +149,7 @@
 }
 
 .page.confirm > .container > .details > .form > .next-block-fee .base-fee-value {
-  color: #FF6536;
+  color: #ff6536;
   line-height: 17px;
   font-weight: 400;
   display: flex;
@@ -153,7 +157,7 @@
 }
 
 .page.confirm > .container > .details > .form > .next-block-fee .priority-fee-value {
-  color: #006DFF;
+  color: #006dff;
   line-height: 17px;
   font-weight: 400;
   display: flex;

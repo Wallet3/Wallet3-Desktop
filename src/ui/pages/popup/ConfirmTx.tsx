@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 
 import ApproveView from './confirms/ApproveView';
 import AuthView from './confirms/AuthView';
+import { CurrencyVM } from '../../viewmodels/settings/CurrencyVM';
 import { PopupTitle } from '../../components';
 import SignView from './confirms/SignView';
 import TransferView from './confirms/TransferView';
@@ -131,7 +132,7 @@ export default observer(({ app }: Props) => {
 
       <div className="container">
         {confirmVM?.method === 'Transfer' ? (
-          <TransferView implVM={app.confirmVM} onContinue={onContinue} onReject={onReject} />
+          <TransferView confirmVM={app.confirmVM} currencyVM={app.currencyVM} onContinue={onContinue} onReject={onReject} />
         ) : undefined}
 
         {confirmVM?.method === 'Approve' ? (
@@ -139,7 +140,7 @@ export default observer(({ app }: Props) => {
         ) : undefined}
 
         {confirmVM?.method === 'Contract Interaction' ? (
-          <TransferView implVM={app.confirmVM} onContinue={onContinue} onReject={onReject} />
+          <TransferView confirmVM={app.confirmVM} currencyVM={app.currencyVM} onContinue={onContinue} onReject={onReject} />
         ) : undefined}
 
         {signVM ? <SignView signVM={signVM} onReject={onReject} onContinue={onContinue} /> : undefined}
