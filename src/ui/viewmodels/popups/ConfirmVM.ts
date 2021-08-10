@@ -2,6 +2,7 @@ import { BigNumber, ethers, utils } from 'ethers';
 import { Gwei_1, MAX_GWEI_PRICE } from '../../../gas/Gasnow';
 import Messages, { ConfirmSendTx, SendTxParams, WcMessages } from '../../../common/Messages';
 import { formatEther, parseUnits } from '@ethersproject/units';
+import { formatUnits, parseEther } from 'ethers/lib/utils';
 import { getProviderByChainId, markRpcFailed } from '../../../common/Provider';
 import { makeAutoObservable, runInAction } from 'mobx';
 
@@ -11,7 +12,6 @@ import KnownAddresses from '../../misc/KnownAddresses';
 import { Networks } from '../../../misc/Networks';
 import { fetchNextBlockFeeData } from '../services/EIP1559';
 import { findTokenByAddress } from '../../../misc/Tokens';
-import { formatUnits } from 'ethers/lib/utils';
 import i18n from '../../../i18n';
 import ipc from '../../bridges/IPC';
 
@@ -205,8 +205,7 @@ export class ConfirmVM {
   }
 
   get insufficientFee() {
-    // this._value stands for native asset (in wei)
-    return this.nativeBalance.lt(this.gasPriceWei.mul(this.gas).add(this._value));
+    return this.nativeBalance.lt(utils.parseEther(this.totalValue));
   }
 
   get isValid() {
