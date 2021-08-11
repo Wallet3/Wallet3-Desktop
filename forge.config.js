@@ -57,7 +57,7 @@ module.exports = {
         packageVersion: package.version,
         makeVersionWinStoreCompatible: true,
         flatten: true,
-        assets: './assets/AppIcon.png',
+        assets: './assets/win/AppIcon.png',
       },
     },
   ],
