@@ -9,11 +9,12 @@
   box-sizing: border-box;
   padding: 0 12px;
   overflow: hidden;
+  align-items: center;
 }
 
 .page.dapp-connecting .content img {
-  width: 80px;
-  height: 80px;
+  width: 72px;
+  height: 72px;
 }
 
 .page.dapp-connecting .content .connecting {

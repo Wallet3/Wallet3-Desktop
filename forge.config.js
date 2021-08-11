@@ -52,6 +52,21 @@ module.exports = {
         name: `${package.name}-mac-${process.arch}-${package.version}`,
       },
     },
+    {
+      name: '@electron-forge/maker-appx',
+      config: {
+        publisher,
+        devCert: devCertPath,
+        certPass: certPassword,
+        packageDisplayName: 'Wallet 3',
+        packageDescription: 'A Secure Wallet for Bankless Era',
+        containerVirtualization: true,
+        packageVersion: package.version,
+        makeVersionWinStoreCompatible: true,
+        flatten: true,
+        assets: './assets/win/AppIcon.png',
+      },
+    },
   ],
   plugins: [
     [

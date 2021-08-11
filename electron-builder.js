@@ -36,8 +36,8 @@ module.exports = {
     asarUnpack: ['**/*.node'],
   },
   win: {
-    target: ['appx'],
-    icon: 'assets/AppIcon.ico',
+    target: ['appx', 'nsis'],
+    icon: 'assets/win/AppIcon.png',
     publish: ['github'],
     legalTrademarks: 'Wallet 3, ChainBow Co, Ltd.',
     certificateFile: devCertPath,
