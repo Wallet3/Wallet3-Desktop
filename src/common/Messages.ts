@@ -93,7 +93,12 @@ export interface TxParams {
   to: string;
   value: string;
   gas: number;
-  gasPrice: number; // wei
+  gasPrice?: number; // wei
+  maxFeePerGas?: number; // wei
+
+  tipPrice?: number; // wei
+  maxPriorityFeePerGas?: number; // wei
+
   nonce: number;
   data: string;
   hash?: string;

@@ -53,7 +53,7 @@
   "Gas Limit": "Gas Limit",
   "Gas Price": "Gas Price",
   "Data": "Data",
-  "Max Fee": "Max Fee",
+  "Max Fee": "Estimated Fee",
   "Total": "Total",
   "View on Block Explorer": "View on Block Explorer",
   "Cancel Tx": "Cancel Tx",
@@ -139,5 +139,18 @@
   "Copy Address": "Address",
   "Recipient Address or ENS": "Recipient Address or ENS",
   "Networks": "Networks",
-  "Next Block Base Price": "Next Block Base Price"
+  "Next Block Base Fee": "Next Block Base Fee",
+  "Gas Tip": "Pri. Fee",
+  "Max Gas Fee": "Max Gas Fee",
+  "Optional": "Optional",
+  "High": "High",
+  "Mid": "Mid.",
+  "Low": "Low",
+  "Estimated Gas Fee": "Estimated Gas Fee",
+  "Speed": "Speed",
+  "Advanced Mode": "Advanced Mode",
+  "Normal": "Normal",
+  "Next Block Fee": "Next Block Fee",
+  "Next Block Priority Fee": "Next Block Priority Fee",
+  "Unlimited": "Unlimited"
 }

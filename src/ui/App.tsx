@@ -35,6 +35,7 @@ interface Props {
   mnVM: MnemonicVM;
   networksVM: NetworksVM;
   langsVM: LangsVM;
+  currencyVM: CurrencyVM;
 }
 
 export default observer((args: Props) => {

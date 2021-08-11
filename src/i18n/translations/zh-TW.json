@@ -53,7 +53,7 @@
   "Gas Limit": "燃料上限",
   "Gas Price": "燃料價格",
   "Data": "數據",
-  "Max Fee": "手續費上限",
+  "Max Fee": "預計手續費上限",
   "Total": "總價值",
   "View on Block Explorer": "在區塊鏈瀏覽器中查看",
   "Cancel Tx": "取消交易",
@@ -139,5 +139,18 @@
   "Update Message": "發現新版本: {{version}}，是否安裝該更新？",
   "Copy Address": "復製地址",
   "Recipient Address or ENS": "收款方地址或ENS域名",
-  "Next Block Base Price": "下一區塊基礎價格"
+  "Next Block Base Fee": "下一區塊基礎費",
+  "Gas Tip": "優先費",
+  "Max Gas Fee": "最大燃料費",
+  "Optional": "可選",
+  "High": "高",
+  "Mid": "中",
+  "Low": "低",
+  "Estimated Gas Fee": "預計燃料費",
+  "Speed": "速度",
+  "Advanced Mode": "高級模式",
+  "Normal": "一般",
+  "Next Block Fee": "下一區塊費用",
+  "Next Block Priority Fee": "下一區塊優先費",
+  "Unlimited": "無限製"
 }

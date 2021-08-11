@@ -44,8 +44,11 @@ export async function sendTransaction(chainId: number, txHex: string) {
         id: Date.now(),
       });
 
+      console.log(resp.data);
       return resp.data as { id: number; result: string };
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return undefined;

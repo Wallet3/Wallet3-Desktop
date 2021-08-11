@@ -124,10 +124,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 10px;
 }
 
 .page.send > .form > .gasprice-title h6 {
-  margin: 12px 0 4px 0;
+  margin: 10px 0 4px 0;
   color: var(--font-color-title);
 }
 
@@ -186,4 +187,79 @@
 
 .page.send > .form > .gas > div.active {
   opacity: 1;
+}
+
+.page.send > .form > .gas-tip {
+  font-size: 12px;
+}
+
+.page.send > .form > .gas-tip input {
+  font-size: 12px;
+  padding-bottom: 3px;
+}
+
+.page.send > .form > .eip1559 {
+  box-sizing: border-box;
+  padding: 8px;
+  padding-top: 10px;
+  margin-top: 12px;
+  border: 1px dashed var(--border-color);
+  border-radius: 5px;
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 450;
+}
+
+.page.send > .form > .eip1559 > div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.page.send > .form > .eip1559 > div.line1 {
+  color: var(--font-color-title);
+}
+
+.page.send > .form > .eip1559 > div.line1 .usd-value {
+  margin-right: 2px;
+  display: inline-block;
+}
+
+.page.send > .form > .eip1559 > div.line2 {
+  font-size: 12px;
+  color: rgb(139, 139, 139);
+}
+
+.page.send > .form > .eip1559 > div.line2 .speed {
+  text-transform: uppercase;
+  transition: all 0.3s;
+}
+
+.page.send > .form > .eip1559 > div.line2 .advanced {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  column-gap: 2px;
+  transition: all 0.3s;
+}
+
+.page.send > .form > .eip1559 > div.line2 .advanced:hover {
+  opacity: 0.5;
+}
+
+.page.send > .form .rapid {
+  color: dodgerblue;
+}
+
+.page.send > .form .fast {
+  color: #2ecc71;
+}
+
+.page.send > .form .normal {
+  color: orange;
+}
+
+.page.send > .form .slow {
+  color: orangered;
 }

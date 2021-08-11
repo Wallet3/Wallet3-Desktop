@@ -61,7 +61,7 @@
 .page.confirm > .container > .details > .form input.funds-limit {
   max-width: 45vw;
   text-align: end;
-  min-width: 32vw;
+  min-width: 32.5vw;
   -webkit-app-region: no-drag;
 }
 
@@ -73,12 +73,16 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 45vw;
+  max-width: 52vw;
 }
 
 .page.confirm > .container > .details > .form > div div.numeric {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: auto 1fr auto;
+}
+
+.page.confirm > .container > .details > .form .usd-value {
+  color: lightgrey;
 }
 
 .page.confirm > .container > .details > .form > div.to > span:last-child {
@@ -120,7 +124,7 @@
   padding: 0;
   margin: 0 0px;
   margin-bottom: -1px;
-  width: 72px;
+  width: 75px;
   border: none;
   background: none;
   outline: none;
@@ -132,6 +136,32 @@
 
 .page.confirm > .container > .details > .form > div > div span {
   margin-left: 4px;
+}
+
+.page.confirm > .container > .details > .form > .next-block-fee img {
+  height: 11px;
+  width: 11px;
+}
+
+.page.confirm > .container > .details > .form > .next-block-fee .plus {
+  padding-bottom: 1px;
+  margin: 0 0 0 6px;
+}
+
+.page.confirm > .container > .details > .form > .next-block-fee .base-fee-value {
+  color: #ff6536;
+  line-height: 17px;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+}
+
+.page.confirm > .container > .details > .form > .next-block-fee .priority-fee-value {
+  color: #006dff;
+  line-height: 17px;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
 }
 
 .page.confirm > .container > .details > .actions {

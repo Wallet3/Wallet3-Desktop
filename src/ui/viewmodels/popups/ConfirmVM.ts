@@ -1,16 +1,17 @@
 import { BigNumber, ethers, utils } from 'ethers';
+import { Gwei_1, MAX_GWEI_PRICE } from '../../../gas/Gasnow';
 import Messages, { ConfirmSendTx, SendTxParams, WcMessages } from '../../../common/Messages';
 import { formatEther, parseUnits } from '@ethersproject/units';
+import { formatUnits, parseEther } from 'ethers/lib/utils';
 import { getProviderByChainId, markRpcFailed } from '../../../common/Provider';
 import { makeAutoObservable, runInAction } from 'mobx';
 
 import App from '../ApplicationPopup';
 import ERC20ABI from '../../../abis/ERC20.json';
-import { Gwei_1 } from '../../../gas/Gasnow';
 import KnownAddresses from '../../misc/KnownAddresses';
 import { Networks } from '../../../misc/Networks';
+import { fetchNextBlockFeeData } from '../services/EIP1559';
 import { findTokenByAddress } from '../../../misc/Tokens';
-import { formatUnits } from 'ethers/lib/utils';
 import i18n from '../../../i18n';
 import ipc from '../../bridges/IPC';
 
@@ -33,6 +34,8 @@ export class ConfirmVM {
   accountIndex = -1;
   nativeBalance = BigNumber.from(0);
   transferToken?: { symbol: string; transferAmount: BigNumber; decimals: number; to: string } = undefined;
+  nextBlockBaseFee = 0;
+  suggestedPriorityFee = 0;
   approveToken?: {
     symbol: string;
     decimals: number;
@@ -42,6 +45,10 @@ export class ConfirmVM {
     isMax?: boolean;
     iface?: ethers.utils.Interface;
   } = undefined;
+
+  get eip1559() {
+    return Networks.find((n) => n.chainId === this.args.chainId).eip1559;
+  }
 
   private _provider: ethers.providers.JsonRpcProvider;
   private _value: string | number = '';
@@ -86,10 +93,26 @@ export class ConfirmVM {
     this.chainId = params.chainId;
     this.accountIndex = params.accountIndex;
     this._gas = params.gas;
-    this._gasPrice = params.gasPrice / Gwei_1;
+    this._gasPrice = (params.gasPrice || 0) / Gwei_1;
+    this._maxFeePerGas = (params.maxFeePerGas || 0) / Gwei_1;
+    this._priorityPrice = (params.maxPriorityFeePerGas || 0) / Gwei_1;
     this._nonce = params.nonce || 0;
     this._value = Number(params.value) === 0 ? 0 : params.value || 0;
     this._data = params.data;
+
+    if (!this.eip1559) return;
+
+    const refreshBaseFee = async () => {
+      const { nextBlockBaseFee, suggestedPriorityFee } = await fetchNextBlockFeeData(this.chainId);
+
+      runInAction(() => {
+        this.nextBlockBaseFee = nextBlockBaseFee;
+        this.suggestedPriorityFee = suggestedPriorityFee;
+      });
+    };
+
+    refreshBaseFee();
+    this._provider.on('block', () => refreshBaseFee());
   }
 
   get recipient() {
@@ -142,6 +165,24 @@ export class ConfirmVM {
     return BigNumber.from(`${Number.parseInt((this.gasPrice * Gwei_1) as any) || 0}`);
   }
 
+  private _maxFeePerGas = 0; //Gwei
+  get maxFeePerGas() {
+    return this._maxFeePerGas;
+  }
+
+  get maxFeePerGas_Wei() {
+    return BigNumber.from(`${Number.parseInt((this.maxFeePerGas * Gwei_1) as any) || 0}`);
+  }
+
+  private _priorityPrice = 0; // Gwei
+  get priorityPrice() {
+    return this._priorityPrice;
+  }
+
+  get priorityPrice_Wei() {
+    return BigNumber.from(`${Number.parseInt((this.priorityPrice * Gwei_1) as any) || 0}`);
+  }
+
   get tokenSymbol() {
     return this.transferToken?.symbol || this.approveToken?.symbol || Networks.find((n) => n.chainId === this.chainId).symbol;
   }
@@ -156,22 +197,29 @@ export class ConfirmVM {
   }
 
   get maxFee() {
-    return formatEther(this.gasPriceWei.mul(this.gas).toString());
+    const eip1559Fee = this.maxFeePerGas_Wei.gt(this.priorityPrice_Wei.add(this.nextBlockBaseFee))
+      ? this.priorityPrice_Wei.add(this.nextBlockBaseFee)
+      : this.maxFeePerGas_Wei;
+
+    return this.eip1559 ? formatEther(eip1559Fee.mul(this.gas)) : formatEther(this.gasPriceWei.mul(this.gas).toString());
   }
 
   get insufficientFee() {
-    // this._value stands for native asset (in wei)
-    return this.nativeBalance.lt(this.gasPriceWei.mul(this.gas).add(this._value));
+    return this.nativeBalance.lt(utils.parseEther(this.totalValue));
   }
 
   get isValid() {
+    const validGasPrice = this.maxFeePerGas_Wei.gt(0)
+      ? this.maxFeePerGas_Wei.gt(0) && this.priorityPrice_Wei.gt(0) && this.maxFeePerGas_Wei.gte(this.priorityPrice_Wei)
+      : this.gasPrice > 0;
+
     return (
       this.gas >= 21000 &&
       this.gas <= 12_500_000 &&
-      this.gasPrice > 0 &&
+      validGasPrice &&
       this.nonce >= 0 &&
       this.data &&
-      this.nativeBalance.gt(0)
+      this.nativeBalance.gte(utils.parseEther(this.totalValue))
     );
   }
 
@@ -184,10 +232,20 @@ export class ConfirmVM {
     this.args.data = value;
   }
 
-  setGasPrice(value: string) {
-    const price = Number.parseFloat(value) || 0;
-    this._gasPrice = Math.min(price, 10000000000);
+  setGasPrice(gwei: string) {
+    const price = Number.parseFloat(gwei) || 0;
+    this._gasPrice = Math.min(price, MAX_GWEI_PRICE);
     this.args.gasPrice = this.gasPriceWei.toNumber();
+  }
+
+  setMaxGasPrice(gwei: string) {
+    this._maxFeePerGas = Math.min(Number.parseFloat(gwei) || 0, MAX_GWEI_PRICE);
+    this.args.maxFeePerGas = this.maxFeePerGas_Wei.toNumber();
+  }
+
+  setPriorityPrice(gwei: string) {
+    this._priorityPrice = Math.min(Number.parseFloat(gwei) || 0, MAX_GWEI_PRICE);
+    this.args.maxPriorityFeePerGas = this.priorityPrice_Wei.toNumber();
   }
 
   setGas(value: string) {
@@ -300,7 +358,10 @@ export class ConfirmVM {
       to: this.args.to,
       value: this._value,
       gas: this.args.gas,
-      gasPrice: this.args.gasPrice, // wei
+      gasPrice: this.eip1559 ? undefined : this.args.gasPrice, // wei
+      maxFeePerGas: this.eip1559 ? this.args.maxFeePerGas : undefined, // wei
+      maxPriorityFeePerGas: this.eip1559 ? this.args.maxPriorityFeePerGas : undefined, // wei
+
       nonce: this.args.nonce,
       data: this.args.data,
 

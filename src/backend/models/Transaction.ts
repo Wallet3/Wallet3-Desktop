@@ -66,7 +66,11 @@ export interface ITransaction {
 
   gasPrice: number;
 
+  maxFeePerGas?: number;
+
   tipPrice: number;
+
+  maxPriorityFeePerGas?: number;
 
   nonce: number;
 
