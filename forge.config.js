@@ -2,6 +2,11 @@ const { appleId, appleIdPassword } = require('./sign/appSign');
 const { certPassword, devCertPath, publisher } = require('./sign/winSign');
 const package = require('./package.json');
 
+const entitlementsForFile = (path) => {
+  console.log(path);
+  return path.includes('Helper') ? 'sign/entitlements.mas.plist' : undefined;
+};
+
 module.exports = {
   packagerConfig: {
     appBundleId: 'jp.co.chainbow.wallet3',
@@ -19,7 +24,8 @@ module.exports = {
       entitlements: 'sign/entitlements.mas.plist',
       'entitlements-inherit': 'sign/entitlements.mas.inherit.plist',
       'provisioning-profile': 'sign/embedded.provisionprofile',
-      type: 'distribution'
+      entitlementsForFile,
+      type: 'distribution',
     },
     // osxNotarize: {
     //   appleId,
