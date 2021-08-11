@@ -3,7 +3,6 @@ const { certPassword, devCertPath, publisher } = require('./sign/winSign');
 const package = require('./package.json');
 
 const entitlementsForFile = (path) => {
-  console.log(path);
   return path.includes('Helper') ? 'sign/entitlements.mas.plist' : undefined;
 };
 
