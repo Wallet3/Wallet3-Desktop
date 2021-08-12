@@ -89,7 +89,7 @@ export default observer(
             label={() => (
               <button>
                 <div className="network-label expand">
-                  <Feather icon="radio" size={12} />
+                  <Feather icon="archive" size={12} />
                   <span>{t('Testnets')}</span>
                 </div>
               </button>
