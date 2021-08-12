@@ -8,6 +8,7 @@ import {
   ConnectedDApp,
   ConnectedDApps,
   History,
+  Networks,
   Transaction,
   Transfer,
   TransferNFT,
@@ -106,6 +107,9 @@ export default observer((args: Props) => {
           </Route>
           <Route path="/reset/:authKey">
             <Reset {...args} />
+          </Route>
+          <Route path="/networks">
+            <Networks {...args} />
           </Route>
 
           <Route path="/about">

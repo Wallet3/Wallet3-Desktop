@@ -2,6 +2,10 @@
   -webkit-app-region: no-drag;
 }
 
+.rc-menu {
+  min-width: 6rem;
+}
+
 .rc-menu__submenu {
   font-size: 12px !important;
   font-weight: 400 !important;
@@ -9,4 +13,8 @@
 
 .rc-menu__submenu > .rc-menu__item::after {
   content: '';
+}
+
+.networks-menu .rc-menu__submenu > .rc-menu__item {
+  padding: 0;
 }

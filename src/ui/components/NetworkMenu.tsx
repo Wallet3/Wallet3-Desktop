@@ -20,7 +20,7 @@ interface Props {
   onNetworkSelected: (chainId: number) => void;
   currentChainId: number;
   position?: MenuPosition;
-  collapsed?: boolean;
+  testnetsCollapsed?: boolean;
   showCustomize?: boolean;
   history?: History;
 }
@@ -33,7 +33,7 @@ export default observer(
     onNetworkSelected,
     showAutoSwitch,
     position,
-    collapsed,
+    testnetsCollapsed,
     showCustomize,
     history,
   }: Props) => {
@@ -82,10 +82,21 @@ export default observer(
           );
         })}
 
-        <MenuDivider />
+        {testnetsCollapsed ? undefined : <MenuDivider />}
 
-        {collapsed ? (
-          <SubMenu label="Testnets" className="networks-sub-menu">
+        {testnetsCollapsed ? (
+          <SubMenu
+            label={() => (
+              <button>
+                <div className="network-label expand">
+                  <Feather icon="radio" size={12} />
+                  <span>{t('Testnets')}</span>
+                </div>
+              </button>
+            )}
+            styles={MenuItemStyles}
+            className="networks-sub-menu"
+          >
             {Testnets()}
           </SubMenu>
         ) : (
