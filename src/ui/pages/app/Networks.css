@@ -1,0 +1,6 @@
+.page.networks {
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.page.networks > .list {}

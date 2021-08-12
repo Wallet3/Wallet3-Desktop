@@ -3,10 +3,13 @@ import './NetworkMenu.css';
 
 import { Menu, MenuButton, MenuDivider, MenuItem, MenuPosition, SubMenu } from '@szhsin/react-menu';
 
-import { INetwork } from '../../misc/Networks';
+import Feather from 'feather-icons-react';
+import { History } from 'history';
+import { INetwork } from '../../common/Networks';
 import NetworkLabel from './NetworkLabel';
 import React from 'react';
 import { observer } from 'mobx-react-lite';
+import { useTranslation } from 'react-i18next';
 
 const MenuItemStyles = { padding: 0 };
 
@@ -18,10 +21,24 @@ interface Props {
   currentChainId: number;
   position?: MenuPosition;
   collapsed?: boolean;
+  showCustomize?: boolean;
+  history?: History;
 }
 
 export default observer(
-  ({ publicNetworks, testnets, currentChainId, onNetworkSelected, showAutoSwitch, position, collapsed }: Props) => {
+  ({
+    publicNetworks,
+    testnets,
+    currentChainId,
+    onNetworkSelected,
+    showAutoSwitch,
+    position,
+    collapsed,
+    showCustomize,
+    history,
+  }: Props) => {
+    const { t } = useTranslation();
+
     const Testnets = () =>
       testnets.map((item) => {
         return (
@@ -43,6 +60,7 @@ export default observer(
         styles={{ minWidth: '5.5rem' }}
         direction="bottom"
         overflow="auto"
+        className="networks-menu"
         position={position || 'auto'}
       >
         {showAutoSwitch ? (
@@ -73,6 +91,18 @@ export default observer(
         ) : (
           Testnets()
         )}
+
+        {showCustomize ? <MenuDivider /> : undefined}
+
+        {showCustomize ? (
+          <MenuItem styles={MenuItemStyles}>
+            <button className="customize" onClick={(_) => history?.push('/networks')}>
+              <div className={`network-label expand`}>
+                <Feather icon="tool" size={12} /> <span>{t('Customize')}</span>
+              </div>
+            </button>
+          </MenuItem>
+        ) : undefined}
       </Menu>
     );
   }

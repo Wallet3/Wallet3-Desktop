@@ -9,7 +9,7 @@ import { makeAutoObservable, runInAction } from 'mobx';
 import App from '../ApplicationPopup';
 import ERC20ABI from '../../../abis/ERC20.json';
 import KnownAddresses from '../../misc/KnownAddresses';
-import { Networks } from '../../../misc/Networks';
+import { Networks } from '../../../common/Networks';
 import { fetchNextBlockFeeData } from '../services/EIP1559';
 import { findTokenByAddress } from '../../../misc/Tokens';
 import i18n from '../../../i18n';
