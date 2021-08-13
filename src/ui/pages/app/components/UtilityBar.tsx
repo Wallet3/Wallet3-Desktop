@@ -132,9 +132,9 @@ export default observer(({ app, networksVM }: Props) => {
         testnets={Testnets}
         onNetworkSelected={(id) => networksVM.setCurrentChainId(id)}
         position="anchor"
-        // showCustomize
-        // testnetsCollapsed
-        // history={app.history}
+        showCustomize
+        testnetsCollapsed
+        history={app.history}
       />
 
       <Menu
