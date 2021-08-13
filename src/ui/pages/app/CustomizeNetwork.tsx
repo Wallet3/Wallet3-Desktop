@@ -12,6 +12,8 @@ export default ({ app }: { app: Application }) => {
   return (
     <div className="page customize-network">
       <NavBar title={t('Networks')} onBackClick={() => app.history.goBack()} />
+
+      <div></div>
     </div>
   );
 };

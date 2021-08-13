@@ -10,7 +10,7 @@
   },
   "scripts": {
     "start": "npx electron-forge start",
-    "package": "npx electron-forge package",
+    "package": "npx electron-forge package --platform=mas",
     "build:mac:arm64": "npx electron-forge package --platform=darwin --arch=arm64 && DEBUG=electron-builder ./node_modules/.bin/electron-builder build --mac --arm64",
     "build:mac:x64": "npx electron-forge package --platform=darwin --arch=x64 && DEBUG=electron-builder ./node_modules/.bin/electron-builder build --mac --x64",
     "build:mac:universal": "npx electron-forge package --platform=darwin --arch=all && DEBUG=electron-builder ./node_modules/.bin/electron-builder build --mac --universal",
@@ -92,7 +92,7 @@
     "@electron/remote": "^1.2.1",
     "@nodert-win10-20h1/windows.security.credentials.ui": "^0.1.0",
     "@szhsin/react-menu": "^1.11.0",
-    "@walletconnect/client": "^1.5.5",
+    "@walletconnect/client": "^1.6.0",
     "animate.css": "^4.1.1",
     "animejs": "^3.2.1",
     "axios": "^0.21.1",
@@ -128,7 +128,7 @@
     "react-toggle-component": "^3.0.8",
     "react-virtualized": "^9.22.3",
     "storejs": "^1.1.0",
-    "typeorm": "^0.2.36",
+    "typeorm": "^0.2.37",
     "ws": "^7.5.3",
     "yaml": "^1.10.2"
   }
