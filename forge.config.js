@@ -13,7 +13,7 @@ module.exports = {
       identity: 'ChainBow Co. Ltd (Z3N6SZF439)',
       hardenedRuntime: true,
       'gatekeeper-assess': false,
-      'signature-flags': 'library',
+      // 'signature-flags': 'library',
       entitlements: 'sign/entitlements.plist',
       'entitlements-inherit': 'sign/entitlements.plist',
       'provisioning-profile': 'sign/embedded.provisionprofile',
