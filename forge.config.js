@@ -23,7 +23,6 @@ module.exports = {
       entitlements: 'sign/entitlements.mas.plist',
       'entitlements-inherit': 'sign/entitlements.mas.inherit.plist',
       'provisioning-profile': 'sign/embedded.provisionprofile',
-      entitlementsForFile,
       type: 'distribution',
     },
     // osxNotarize: {
