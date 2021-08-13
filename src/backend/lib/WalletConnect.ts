@@ -7,7 +7,7 @@ import { call, estimateGas, getMaxPriorityFee, getNextBlockBaseFee, getTransacti
 
 import ERC20ABI from '../../abis/ERC20.json';
 import EventEmitter from 'events';
-import { Networks } from '../../misc/Networks';
+import { Networks } from '../../common/Networks';
 import { TxMan } from '../mans';
 import WCSession from '../models/WCSession';
 import WalletConnector from '@walletconnect/client';

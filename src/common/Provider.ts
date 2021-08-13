@@ -7,17 +7,33 @@ import axios from 'axios';
 const cache = new Map<number, ethers.providers.JsonRpcProvider | ethers.providers.WebSocketProvider>();
 const failedRPCs = new Set<string>();
 
-export function getProviderByChainId(chainId: number) {
-  if (cache.has(chainId)) {
-    return cache.get(chainId);
-  }
-
+export function getChainProviderUrl(chainId: number) {
   const list = Providers[`${chainId}`] as string[];
   if (!list) {
     throw new Error(`Unsupported chain:${chainId}`);
   }
 
   const url = list.filter((rpc) => !failedRPCs.has(rpc))[0] || list[0];
+  return url;
+}
+
+export function getChainProviderMaskUrl(chainId: number) {
+  const url = getChainProviderUrl(chainId);
+  if (url.includes('.infura.io')) {
+    const comps = url.split('/');
+    comps.pop();
+    return comps.join('/');
+  }
+
+  return url;
+}
+
+export function getProviderByChainId(chainId: number) {
+  if (cache.has(chainId)) {
+    return cache.get(chainId);
+  }
+
+  const url = getChainProviderUrl(chainId);
 
   const provider = url.startsWith('http')
     ? new ethers.providers.JsonRpcProvider(url, chainId)

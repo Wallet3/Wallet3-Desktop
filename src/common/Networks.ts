@@ -6,7 +6,7 @@ import {
   IToken,
   PolygonPopularTokens,
   xDaiPopularTokens,
-} from './Tokens';
+} from '../misc/Tokens';
 
 export interface INetwork {
   comm_id?: string;

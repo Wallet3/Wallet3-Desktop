@@ -13,7 +13,7 @@ import MessageKeys, {
 import { createECDH, createHash, randomBytes } from 'crypto';
 import { makeObservable, observable, reaction, runInAction } from 'mobx';
 
-import { Networks } from '../misc/Networks';
+import { Networks } from '../common/Networks';
 import i18n from '../i18n';
 
 declare const POPUP_WINDOW_WEBPACK_ENTRY: string;

@@ -1,7 +1,7 @@
 import Messages, { ConfirmSendTx } from '../../../common/Messages';
 
 import { Gwei_1 } from '../../../gas/Gasnow';
-import { Networks } from '../../../misc/Networks';
+import { Networks } from '../../../common/Networks';
 import { TxParams } from '../../../common/Messages';
 import ipc from '../../bridges/IPC';
 

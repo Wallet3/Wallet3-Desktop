@@ -1,7 +1,7 @@
 import './ConnectedDApp.css';
 
 import { NavBar, NetworkMenu } from '../../components';
-import { PublicNetworks, Testnets } from '../../../misc/Networks';
+import { PublicNetworks, Testnets } from '../../../common/Networks';
 
 import { Application } from '../../viewmodels/Application';
 import Feather from 'feather-icons-react';

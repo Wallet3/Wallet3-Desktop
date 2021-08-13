@@ -4,6 +4,7 @@ import ConnectedDApp from './ConnectedDApp';
 import ConnectedDApps from './ConnectedDApps';
 import DApps123 from './DApps123';
 import History from './History';
+import Networks from './Networks';
 import Settings from './Settings';
 import Transaction from './Transaction';
 import Transfer from './Transfer';
@@ -26,4 +27,5 @@ export {
   UserNFTs,
   TransferNFT,
   DApps123,
+  Networks,
 };

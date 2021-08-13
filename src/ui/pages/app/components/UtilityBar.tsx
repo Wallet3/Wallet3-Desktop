@@ -1,8 +1,7 @@
 import './UtilityBar.css';
 
-import { Image, NetworkMenu } from '../../../components';
 import { Menu, MenuButton, MenuDivider, MenuItem } from '@szhsin/react-menu';
-import { PublicNetworks, Testnets } from '../../../../misc/Networks';
+import { PublicNetworks, Testnets } from '../../../../common/Networks';
 
 import { Application } from '../../../viewmodels/Application';
 import Clipboard from '../../../bridges/Clipboard';
@@ -10,6 +9,7 @@ import ConnectedAppsIndicator from './ConnectedAppsIndicator';
 import ConnectedDAppLabel from './ConnectedDAppLabel';
 import Feather from 'feather-icons-react';
 import GasStation from '../../../../gas';
+import { NetworkMenu } from '../../../components';
 import { NetworksVM } from '../../../viewmodels/NetworksVM';
 import PendingTx from './PendingTxLabel';
 import PendingTxIndicator from './PendingTxIndicator';
@@ -132,6 +132,9 @@ export default observer(({ app, networksVM }: Props) => {
         testnets={Testnets}
         onNetworkSelected={(id) => networksVM.setCurrentChainId(id)}
         position="anchor"
+        // showCustomize
+        // testnetsCollapsed
+        // history={app.history}
       />
 
       <Menu

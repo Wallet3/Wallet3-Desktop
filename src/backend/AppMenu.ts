@@ -1,7 +1,7 @@
 import { Menu, app } from 'electron';
 
 const isMac = process.platform === 'darwin';
-const prod = false; // app.isPackaged;
+const prod = app.isPackaged;
 
 const template: any[] = [
   // { role: 'appMenu' }
