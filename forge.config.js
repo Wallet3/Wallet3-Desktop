@@ -25,10 +25,10 @@ module.exports = {
       'provisioning-profile': 'sign/embedded.provisionprofile',
       type: 'distribution',
     },
-    // osxNotarize: {
-    //   appleId,
-    //   appleIdPassword,
-    // },
+    osxNotarize: {
+      appleId,
+      appleIdPassword,
+    },
     protocols: [
       {
         name: 'Wallet 3',
