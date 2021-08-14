@@ -11,7 +11,7 @@ module.exports = {
     icon: './assets/AppIcon.icns',
     osxSign: {
       identity: 'ChainBow Co. Ltd (Z3N6SZF439)',
-      hardenedRuntime: true,
+      hardenedRuntime: false,
       'gatekeeper-assess': false,
       // 'signature-flags': 'library',
       entitlements: 'sign/entitlements.plist',
