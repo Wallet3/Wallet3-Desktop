@@ -16,8 +16,8 @@ module.exports = {
     platform: 'mas',
     osxSign: {
       identity: '3rd Party Mac Developer Application: ChainBow Co. Ltd (Z3N6SZF439)',
-      hardenedRuntime: true,
       platform: 'mas',
+      hardenedRuntime: false,
       'gatekeeper-assess': true,
       // 'signature-flags': 'library',
       entitlements: 'sign/entitlements.mas.plist',

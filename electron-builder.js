@@ -25,6 +25,7 @@ module.exports = {
   },
   mas: {
     type: 'distribution',
+    hardenedRuntime: false, //IMPORTANT!!!!
     identity: 'ChainBow Co. Ltd (Z3N6SZF439)',
     entitlements: 'sign/entitlements.mas.plist',
     entitlementsInherit: 'sign/entitlements.mas.inherit.plist',
