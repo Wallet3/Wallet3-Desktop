@@ -130,7 +130,8 @@ class TxMan {
       t.to = params.to;
       t.data = params.data;
       t.gas = params.gas;
-      t.gasPrice = params.gasPrice;
+      t.gasPrice = params.gasPrice || params.maxFeePerGas;
+      t.tipPrice = params.maxPriorityFeePerGas || 0;
       t.hash = tx.hash;
       t.nonce = params.nonce;
       t.value = params.value;

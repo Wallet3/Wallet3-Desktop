@@ -13,7 +13,7 @@ import MessageKeys, {
 import { createECDH, createHash, randomBytes } from 'crypto';
 import { makeObservable, observable, reaction, runInAction } from 'mobx';
 
-import { Networks } from '../misc/Networks';
+import { Networks } from '../common/Networks';
 import i18n from '../i18n';
 
 declare const POPUP_WINDOW_WEBPACK_ENTRY: string;
@@ -334,7 +334,11 @@ export class App {
       const [iv, cipherText] = encrypted;
 
       const params: ConfirmSendTx = App.decryptIpc(cipherText, iv, key);
-      const popup = await this.createPopupWindow('sendTx', params, { modal: true, parent: this.mainWindow });
+      const popup = await this.createPopupWindow('sendTx', params, {
+        modal: true,
+        parent: this.mainWindow,
+        height: params.maxFeePerGas ? 375 : undefined,
+      });
 
       await new Promise<boolean>((resolve) => {
         popup.once('close', () => resolve(true));

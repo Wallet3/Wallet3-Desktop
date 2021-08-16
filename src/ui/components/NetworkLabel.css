@@ -31,3 +31,7 @@
 .network-label.expand > img {
   margin-right: 8px !important;
 }
+
+.network-label.expand > svg {
+  margin-right: 8px !important;
+}

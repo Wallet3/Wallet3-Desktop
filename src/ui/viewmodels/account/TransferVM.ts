@@ -1,7 +1,9 @@
 import { BigNumber, ethers, utils } from 'ethers';
-import Gasnow, { Gwei_1 } from '../../../gas/Gasnow';
+import Gasnow, { Gwei_1, MAX_GWEI_PRICE } from '../../../gas/Gasnow';
 import { IReactionDisposer, autorun, makeAutoObservable, reaction, runInAction } from 'mobx';
 import Messages, { ConfirmSendTx } from '../../../common/Messages';
+import { calcSpeed, fetchNextBlockFeeData } from '../services/EIP1559';
+import { getMaxPriorityFee, getNextBlockBaseFee } from '../../../common/Provider';
 import { parseEther, parseUnits } from 'ethers/lib/utils';
 
 import { AccountVM } from '../AccountVM';
@@ -20,6 +22,7 @@ export class TransferVM {
   private readonly _accountVM: AccountVM;
   private gasnowDisposer: IReactionDisposer;
 
+  loading = false;
   self = '';
   recipient: string = '';
   receiptAddress = '';
@@ -27,9 +30,12 @@ export class TransferVM {
   amount: string = '';
   gas: number = 0;
   nonce: number = 0;
-  gasPrice: number = -1; // Gwei
-  gasLevel = 1; // 0 - rapid, 1 - fast, 2 - standard, 4 - custom
+  gasPrice_Gwei: number = -1;
+  priorityPrice_Wei: number = 0;
+  suggestedPriorityPrice_Wei = 0;
+  gasLevel = 1; // 0 - rapid, 1 - fast, 2 - standard, 3 - custom
   sending = false;
+  nextBlockBaseFee_Wei = 0;
 
   get isValid() {
     try {
@@ -44,8 +50,12 @@ export class TransferVM {
         this.gas >= 21000 &&
         this.gas < 12_500_000 &&
         this.nonce >= 0 &&
-        this.gasPrice > 0 &&
-        this.gasPrice <= 9007199 // MAX_SAFE_INTEGER * gwei_1
+        !this.loading &&
+        (NetworksVM.currentNetwork.eip1559
+          ? this.priorityPrice_Wei >= 0 && this.gasPrice_Gwei * Gwei_1 > this.priorityPrice_Wei
+          : true) &&
+        this.gasPrice_Gwei > 0 &&
+        this.gasPrice_Gwei <= MAX_GWEI_PRICE // MAX_SAFE_INTEGER * gwei_1
       );
     } catch (error) {
       return false;
@@ -56,10 +66,32 @@ export class TransferVM {
     return this.receiptAddress && !this.insufficientFee;
   }
 
+  get estimatedEIP1559Price_Wei() {
+    return Math.min(this.gasPrice_Gwei * Gwei_1, this.nextBlockBaseFee_Wei + Number.parseInt(this.priorityPrice_Wei as any));
+  }
+
+  get estimatedEIP1559Fee() {
+    return Number.parseInt((this.estimatedEIP1559Price_Wei * this.gas) as any);
+  }
+
+  get txSpeed() {
+    return calcSpeed({
+      baseFee: this.nextBlockBaseFee_Wei,
+      maxFeePerGas: this.gasPrice_Gwei * Gwei_1,
+      priorityFeePerGas: this.priorityPrice_Wei,
+      suggestedPriorityFee: this.suggestedPriorityPrice_Wei,
+    });
+  }
+
   get insufficientFee() {
-    const maxFee = Number.parseInt((this.gasPrice * Gwei_1 * this.gas || 0) as any);
     const balance = parseEther(this._accountVM?.nativeToken?.amount.toString() || '0');
-    return balance.lt(maxFee.toString());
+
+    if (NetworksVM.currentNetwork.eip1559) {
+      return balance.lte(this.estimatedEIP1559Fee);
+    } else {
+      const maxFee = Number.parseInt((this.gasPrice_Gwei * Gwei_1 * this.gas || 0) as any);
+      return balance.lt(maxFee.toString());
+    }
   }
 
   get isERC20() {
@@ -90,40 +122,51 @@ export class TransferVM {
     this.selectedToken = accountVM.allTokens[0];
 
     this.rapid = Gasnow.rapidGwei;
-    this.fast = Gasnow.fastGwei;
     this.standard = Gasnow.standardGwei;
+    this.fast = Gasnow.fastGwei;
 
     this.initGasPrice();
     this.initNonce();
 
     this.recipients = store.get('recipients') || [];
+
+    this.setGasLevel(NetworksVM.currentNetwork.eip1559 ? 0 : 1);
   }
 
-  setRecipient(addressOrName: string) {
+  async setRecipient(addressOrName: string) {
+    if (addressOrName?.length < 4) return;
+
     this.recipient = addressOrName;
-
-    if (addressOrName.toLowerCase().endsWith('.eth') || addressOrName.toLowerCase().endsWith('.xyz')) {
-      NetworksVM.currentProvider.resolveName(addressOrName).then((addr) => {
-        if (!addr) return;
-
-        runInAction(() => {
-          this.isEns = true;
-          this.receiptAddress = addr;
-        });
-      });
-
-      return;
-    } else {
-      this.receiptAddress = '';
-    }
+    let addr = '';
 
     if (ethers.utils.isAddress(addressOrName)) {
-      this.receiptAddress = addressOrName;
+      addr = this.receiptAddress = addressOrName;
+      this.isEns = false;
     } else {
-      this.receiptAddress = '';
+      this.loading = true;
+
+      try {
+        addr = await NetworksVM.currentProvider.resolveName(addressOrName);
+      } catch (e) {
+        return;
+      } finally {
+        runInAction(() => (this.loading = false));
+      }
+
+      if (!addr) {
+        this.receiptAddress = '';
+        this.isEns = false;
+        return;
+      }
+
+      runInAction(() => {
+        this.isEns = true;
+        this.receiptAddress = addr;
+      });
     }
 
-    this.isEns = false;
+    await this.estimateGas();
+    runInAction(() => (this.loading = false));
   }
 
   selectToken(id: string) {
@@ -141,7 +184,11 @@ export class TransferVM {
   }
 
   setGasPrice(price: number) {
-    this.gasPrice = price;
+    this.gasPrice_Gwei = Math.max(price, 0);
+  }
+
+  setPriorityPrice(gwei: number) {
+    this.priorityPrice_Wei = (Math.max(gwei, 0) || 0) * Gwei_1;
   }
 
   setNonce(nonce: number) {
@@ -175,6 +222,15 @@ export class TransferVM {
     }
   }
 
+  private fetchBaseFee = async (chainId: number) => {
+    const { nextBlockBaseFee, suggestedPriorityFee } = await fetchNextBlockFeeData(chainId);
+
+    runInAction(() => {
+      this.nextBlockBaseFee_Wei = nextBlockBaseFee;
+      this.suggestedPriorityPrice_Wei = suggestedPriorityFee;
+    });
+  };
+
   private initGasPrice() {
     this.gasnowDisposer = autorun(() => {
       const rapid = GasStation.rapidGwei;
@@ -191,29 +247,65 @@ export class TransferVM {
 
     GasStation.chainId = NetworksVM.currentChainId;
     GasStation.refresh();
+
+    const { currentNetwork } = NetworksVM;
+    if (!currentNetwork.eip1559) return;
+
+    this.fetchBaseFee(currentNetwork.chainId);
+    getMaxPriorityFee(currentNetwork.chainId).then((v) => runInAction(() => (this.priorityPrice_Wei = v)));
+
+    NetworksVM.currentProvider.on('block', async () => this.fetchBaseFee(currentNetwork.chainId));
   }
 
   private initNonce() {
-    NetworksVM.currentProvider.getTransactionCount(this.self, 'pending').then((nonce) => runInAction(() => (this.nonce = nonce)));
+    NetworksVM.currentProvider
+      .getTransactionCount(this.self, 'pending')
+      .then((nonce) => runInAction(() => (this.nonce = nonce)));
   }
 
-  private estimateGas() {
-    if (!this.selectToken) {
-      this.setGas(21000);
-      return;
-    }
+  private async estimateGas() {
+    runInAction(() => (this.loading = true));
 
-    if (!this.isERC20) {
-      this.setGas(21000);
-      return;
-    }
+    try {
+      const setGas = (amount: number) => runInAction(() => this.setGas(amount));
 
-    const erc20 = new ethers.Contract(this.selectedToken.id, ERC20ABI, NetworksVM.currentProvider);
-    const amt = this.amountBigInt;
-    erc20.estimateGas
-      .transferFrom(this.self, this.receiptAddress || '0xD1b05E3AFEDcb11F29c5A560D098170bE26Fe5f5', amt)
-      .then((v) => runInAction(() => this.setGas(Number.parseInt((v.toNumber() * 2) as any))))
-      .catch(() => runInAction(() => this.setGas(150_000)));
+      const estimateNormalGas = async () => {
+        if (!this.receiptAddress) return 21000;
+
+        try {
+          const gas = await NetworksVM.currentProvider.estimateGas({
+            to: this.receiptAddress,
+            value: 1,
+          });
+
+          return gas.toNumber();
+        } catch (error) {
+          return 21000;
+        }
+      };
+
+      if (!this.selectToken || !this.isERC20) {
+        setGas(await estimateNormalGas());
+        return;
+      }
+
+      const erc20 = new ethers.Contract(this.selectedToken.id, ERC20ABI, NetworksVM.currentProvider);
+      const amt = this.amountBigInt;
+
+      try {
+        const v = await erc20.estimateGas.transferFrom(
+          this.self,
+          this.receiptAddress || '0xD1b05E3AFEDcb11F29c5A560D098170bE26Fe5f5',
+          amt
+        );
+
+        setGas(Number.parseInt((v.toNumber() * 2) as any));
+      } catch (error) {
+        setGas(150_000);
+      }
+    } finally {
+      runInAction(() => (this.loading = false));
+    }
   }
 
   private refreshBalance() {
@@ -234,6 +326,7 @@ export class TransferVM {
   }
 
   dispose() {
+    NetworksVM.currentProvider.off('block');
     this.gasnowDisposer?.();
     this.gasnowDisposer = undefined;
   }
@@ -247,8 +340,9 @@ export class TransferVM {
 
     const iface = new ethers.utils.Interface(ERC20ABI);
     const data = this.isERC20 ? iface.encodeFunctionData('transfer', [this.receiptAddress, this.amountBigInt]) : '0x';
+    const eip1559 = NetworksVM.currentNetwork.eip1559;
 
-    const fee = BigNumber.from(this.gasPrice * Gwei_1).mul(this.gas);
+    const fee = eip1559 ? BigNumber.from(this.estimatedEIP1559Fee) : BigNumber.from(this.gasPrice_Gwei * Gwei_1).mul(this.gas);
     if (!this.isERC20 && fee.add(BigNumber.from(value)).gt(this.selectedTokenBalance)) {
       value = BigNumber.from(this.selectedToken.wei || 0)
         .sub(fee)
@@ -260,7 +354,9 @@ export class TransferVM {
       to,
       value,
       gas: this.gas,
-      gasPrice: this.gasPrice * Gwei_1,
+      gasPrice: eip1559 ? undefined : this.gasPrice_Gwei * Gwei_1,
+      maxFeePerGas: eip1559 ? this.gasPrice_Gwei * Gwei_1 : undefined,
+      maxPriorityFeePerGas: eip1559 ? Number.parseInt(this.priorityPrice_Wei as any) : undefined,
       nonce: this.nonce,
       data,
       chainId: NetworksVM.currentChainId,
@@ -319,7 +415,7 @@ export class TransferVM {
       to: nft.contract,
       value: '0',
       gas: gas,
-      gasPrice: this.gasPrice * Gwei_1,
+      gasPrice: this.gasPrice_Gwei * Gwei_1,
       nonce: this.nonce,
       data,
       chainId: NetworksVM.currentChainId,

@@ -64,20 +64,6 @@ class KeyMan {
 
     if (keys.length === 0) return;
 
-    await Promise.all(
-      keys.map(async (key) => {
-        const wcman = new WCMan(key);
-        await wcman.init();
-
-        const disposer = reaction(
-          () => wcman.connectedSessions,
-          () => App.mainWindow?.webContents.send(Messages.wcConnectsChanged(key.id), wcman.connectedSessions)
-        );
-
-        this.connections.set(key.id, { wcman, disposer });
-      })
-    );
-
     runInAction(() => {
       this.keys = keys;
       this.switch(id);

@@ -1,22 +1,39 @@
 import * as Providers from './.wallet3.rc.json';
 import * as ethers from 'ethers';
 
+import { Gwei_1 } from '../gas/Gasnow';
 import axios from 'axios';
 
 const cache = new Map<number, ethers.providers.JsonRpcProvider | ethers.providers.WebSocketProvider>();
 const failedRPCs = new Set<string>();
 
-export function getProviderByChainId(chainId: number) {
-  if (cache.has(chainId)) {
-    return cache.get(chainId);
-  }
-
+export function getChainProviderUrl(chainId: number) {
   const list = Providers[`${chainId}`] as string[];
   if (!list) {
     throw new Error(`Unsupported chain:${chainId}`);
   }
 
   const url = list.filter((rpc) => !failedRPCs.has(rpc))[0] || list[0];
+  return url;
+}
+
+export function getChainProviderMaskUrl(chainId: number) {
+  const url = getChainProviderUrl(chainId);
+  if (url.includes('.infura.io')) {
+    const comps = url.split('/');
+    comps.pop();
+    return comps.join('/');
+  }
+
+  return url;
+}
+
+export function getProviderByChainId(chainId: number) {
+  if (cache.has(chainId)) {
+    return cache.get(chainId);
+  }
+
+  const url = getChainProviderUrl(chainId);
 
   const provider = url.startsWith('http')
     ? new ethers.providers.JsonRpcProvider(url, chainId)
@@ -43,8 +60,11 @@ export async function sendTransaction(chainId: number, txHex: string) {
         id: Date.now(),
       });
 
+      console.log(resp.data);
       return resp.data as { id: number; result: string };
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return undefined;
@@ -157,4 +177,46 @@ export async function getTransactionReceipt(chainId: number, hash: string) {
   }
 
   return undefined;
+}
+
+export async function getNextBlockBaseFee(chainId: number) {
+  const rpcs = Providers[`${chainId}`] as string[];
+
+  for (let url of rpcs) {
+    try {
+      const resp = await axios.post(url, {
+        jsonrpc: '2.0',
+        method: 'eth_feeHistory',
+        params: [1, 'latest', []],
+        id: Date.now(),
+      });
+
+      const { baseFeePerGas } = resp.data.result as { baseFeePerGas: string[]; oldestBlock: number };
+
+      if (baseFeePerGas.length === 0) return 0;
+
+      return Number.parseInt(baseFeePerGas[baseFeePerGas.length - 1]) + Gwei_1 / 100;
+    } catch (error) {}
+  }
+
+  return 0;
+}
+
+export async function getMaxPriorityFee(chainId: number) {
+  const rpcs = Providers[`${chainId}`] as string[];
+
+  for (let url of rpcs) {
+    try {
+      const resp = await axios.post(url, {
+        jsonrpc: '2.0',
+        method: 'eth_maxPriorityFeePerGas',
+        params: [],
+        id: Date.now(),
+      });
+
+      return Number.parseInt(resp.data.result);
+    } catch (error) {}
+  }
+
+  return 0;
 }

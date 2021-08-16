@@ -2,7 +2,7 @@ import './ConnectDapp.css';
 import '@szhsin/react-menu/dist/index.css';
 
 import { Image, NetworkMenu, PopupTitle } from '../../components';
-import { PublicNetworks, Testnets } from '../../../misc/Networks';
+import { PublicNetworks, Testnets } from '../../../common/Networks';
 
 import { ApplicationPopup } from '../../viewmodels/ApplicationPopup';
 import React from 'react';

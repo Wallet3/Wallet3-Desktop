@@ -1,0 +1,50 @@
+.page.networks {
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.page.networks > .list {
+  height: calc(100vh - 48px - 12px);
+  overflow-y: auto;
+  margin: 0 -12px;
+}
+
+.page.networks > .list .network {
+  display: grid;
+  grid-template-rows: auto auto;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.page.networks > .list .network:hover {
+  background-color: var(--border-color) !important;
+}
+
+.page.networks > .list .network.even {
+  background-color: rgba(33, 36, 83, 0.025);
+}
+
+.page.networks > .list .network .line1 {
+  font-size: 16px;
+  column-gap: 8px;
+  display: flex;
+  align-items: center;
+  line-height: 16px;
+  font-weight: 450;
+}
+
+.page.networks > .list .network .line1 img {
+  width: 16px;
+  height: 16px;
+}
+
+.page.networks > .list .network .line2 {
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  column-gap: 8px;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-top: 4px;
+}

@@ -3,10 +3,11 @@ import { AuthParams, ConfirmSendTx, RequestSignMessage, SendTxParams, WcMessages
 import { BigNumber, ethers, utils } from 'ethers';
 import Gasnow, { Gwei_1, Gwei_5 } from '../../gas/Gasnow';
 import { IReactionDisposer, reaction } from 'mobx';
-import { call, estimateGas, getTransactionCount } from '../../common/Provider';
+import { call, estimateGas, getMaxPriorityFee, getNextBlockBaseFee, getTransactionCount } from '../../common/Provider';
 
 import ERC20ABI from '../../abis/ERC20.json';
 import EventEmitter from 'events';
+import { Networks } from '../../common/Networks';
 import { TxMan } from '../mans';
 import WCSession from '../models/WCSession';
 import WalletConnector from '@walletconnect/client';
@@ -54,7 +55,7 @@ export class WalletConnect extends EventEmitter {
     );
 
     this._currAddrObserver = reaction(
-      () => this.wallet.currentAddress,
+      () => this.wallet.currentAddressIndex,
       () => this.updateSession()
     );
   }
@@ -297,8 +298,17 @@ export class WalletConnect extends EventEmitter {
       : undefined;
 
     const chainId = requestedChainId || this.appChainId;
+    const eip1559 = Networks.find((n) => n.chainId === chainId).eip1559;
+
     let defaultGasPrice = chainId === 56 ? Gwei_5 : Gwei_1;
     defaultGasPrice = chainId === 1 ? Gasnow.fast : defaultGasPrice;
+
+    let baseFee: number = undefined;
+    let priorityFee: number = undefined;
+    if (eip1559) {
+      [baseFee, priorityFee] = await Promise.all([getNextBlockBaseFee(chainId), getMaxPriorityFee(chainId)]);
+      baseFee = Math.max(Number.parseInt((baseFee * 1.5) as any), priorityFee);
+    }
 
     const baseTx = {
       from: this.wallet.currentAddress,
@@ -308,22 +318,28 @@ export class WalletConnect extends EventEmitter {
 
     const gas = Number.parseInt(param.gas) || Number.parseInt(await estimateGas<string>(chainId, baseTx)) || 21000;
 
-    App.createPopupWindow('sendTx', {
-      chainId,
-      accountIndex: this.wallet.currentAddressIndex,
+    App.createPopupWindow(
+      'sendTx',
+      {
+        chainId,
+        accountIndex: this.wallet.currentAddressIndex,
 
-      ...baseTx,
-      value: param.value || 0,
-      gasPrice: Number.parseInt(param.gasPrice) || defaultGasPrice,
-      gas,
-      nonce:
-        Number.parseInt(param.nonce) ||
-        (await getTransactionCount(requestedChainId ?? this.appChainId, this.wallet.currentAddress)),
+        ...baseTx,
+        value: param.value || 0,
+        gasPrice: eip1559 ? undefined : Number.parseInt(param.gasPrice) || defaultGasPrice,
+        maxFeePerGas: baseFee,
+        maxPriorityFeePerGas: priorityFee,
+        gas,
+        nonce:
+          Number.parseInt(param.nonce) ||
+          (await getTransactionCount(requestedChainId ?? this.appChainId, this.wallet.currentAddress)),
 
-      recipient,
-      transferToken,
-      walletConnect: { peerId: this.peerId, reqid: request.id, app: this.appMeta },
-    } as ConfirmSendTx);
+        recipient,
+        transferToken,
+        walletConnect: { peerId: this.peerId, reqid: request.id, app: this.appMeta },
+      } as ConfirmSendTx,
+      { height: eip1559 ? 375 : undefined }
+    );
   };
 
   private sign = async (request: WCCallRequestRequest, params: string[], type: 'personal_sign' | 'signTypedData') => {
@@ -409,7 +425,7 @@ export class WalletConnect extends EventEmitter {
   };
 
   disconnect() {
-    return this.connector.killSession({ message: 'User exits' });
+    return this.connector.killSession({ message: 'User quits' });
   }
 
   dispose() {
@@ -424,7 +440,6 @@ export class WalletConnect extends EventEmitter {
     this.connector?.off('transport_open');
     this.connector?.transportClose();
 
-    console.log(this.appMeta.name, 'dispose');
     this.connector = undefined;
     this.key = undefined;
     this._wcSession = undefined;

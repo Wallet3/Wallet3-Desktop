@@ -8,13 +8,14 @@ import {
   ConnectedDApp,
   ConnectedDApps,
   History,
+  Networks,
   Transaction,
   Transfer,
   TransferNFT,
   UserNFTs,
   UserTokens,
 } from './pages/app';
-import { BackupMnemonic, Reset } from './pages/secure';
+import { BackupMnemonic, Reset } from './pages/security';
 import React, { useEffect } from 'react';
 import { Route, Router, Switch } from 'react-router-dom';
 
@@ -35,6 +36,7 @@ interface Props {
   mnVM: MnemonicVM;
   networksVM: NetworksVM;
   langsVM: LangsVM;
+  currencyVM: CurrencyVM;
 }
 
 export default observer((args: Props) => {
@@ -105,6 +107,9 @@ export default observer((args: Props) => {
           </Route>
           <Route path="/reset/:authKey">
             <Reset {...args} />
+          </Route>
+          <Route path="/networks">
+            <Networks {...args} />
           </Route>
 
           <Route path="/about">

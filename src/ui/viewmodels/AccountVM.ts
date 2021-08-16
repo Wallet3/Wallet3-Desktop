@@ -8,7 +8,7 @@ import { AddTokenVM } from './account/AddTokenVM';
 import { ERC20Token } from '../../common/ERC20Token';
 import { NFT } from './models/NFT';
 import NetVM from './NetworksVM';
-import { Networks } from '../../misc/Networks';
+import { Networks } from '../../common/Networks';
 import Notification from '../bridges/Notification';
 import POAP from '../../nft/POAP';
 import Rarible from '../../nft/Rarible';

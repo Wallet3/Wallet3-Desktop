@@ -46,7 +46,7 @@ export async function handleDeepLink(deeplink: string) {
     return;
   }
 
-  const window = await App.createPopupWindow('dapp-connecting', {}, { height: 103, resizable: false });
+  const window = await App.createPopupWindow('dapp-connecting', {}, { height: 96, resizable: false });
   const success = await KeyMan.currentWCMan.connectAndWaitSession(uri);
   if (!success) {
     App.createPopupWindow(

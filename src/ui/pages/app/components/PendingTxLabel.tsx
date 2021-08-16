@@ -1,7 +1,7 @@
 import './PendingTxLabel.css';
 
 import BarLoader from 'react-spinners/BarLoader';
-import { Networks } from '../../../../misc/Networks';
+import { Networks } from '../../../../common/Networks';
 import React from 'react';
 import { TxParams } from '../../../../common/Messages';
 import { observer } from 'mobx-react-lite';
