@@ -7,6 +7,7 @@ import {
   AddToken,
   ConnectedDApp,
   ConnectedDApps,
+  CustomizeNetwork,
   History,
   Networks,
   Transaction,
@@ -110,6 +111,9 @@ export default observer((args: Props) => {
           </Route>
           <Route path="/networks">
             <Networks {...args} />
+          </Route>
+          <Route path={`/network/:chainId`}>
+            <CustomizeNetwork {...args} />
           </Route>
 
           <Route path="/about">
