@@ -152,5 +152,7 @@
   "Normal": "一般",
   "Next Block Fee": "下一區塊費用",
   "Next Block Priority Fee": "下一區塊優先費",
-  "Unlimited": "無限製"
+  "Unlimited": "無限製",
+  "Customize": "自定義",
+  "Block Explorer": "區塊瀏覽器"
 }
