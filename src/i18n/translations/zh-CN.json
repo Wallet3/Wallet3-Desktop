@@ -66,7 +66,7 @@
   "Reset_Tip2": "请妥善保管助记词",
   "Authentication": "认证",
   "Approve": "授权",
-  "Approve_Tip": "通过允许该交易，该合约或地址能在您不知道的情况下使用您授权给它的资金，但不会超过资金授权上限，请仔细检查资金授权数量。如果是已认证但合约地址，您可以放心授权。",
+  "Approve_Tip": "通过允许该交易，该合约或地址能在您不知道的情况下使用您授权给它的资金，但不会超过资金授权上限，请仔细检查资金授权数量。如果是已认证的合约地址，您可以放心授权。",
   "Spender": "资金使用方",
   "Funds Limit": "资金使用上限",
   "Contract Interaction": "合约交互",
@@ -152,5 +152,7 @@
   "Normal": "一般",
   "Next Block Fee": "下一区块费用",
   "Next Block Priority Fee": "下一区块优先费",
-  "Unlimited": "无限制"
+  "Unlimited": "无限制",
+  "Customize": "自定义",
+  "Block Explorer": "区块浏览器"
 }

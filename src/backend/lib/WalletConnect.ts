@@ -197,6 +197,9 @@ export class WalletConnect extends EventEmitter {
       return false;
     };
 
+    console.log(request.method);
+    console.log(request.params);
+
     switch (request.method) {
       case 'eth_sendTransaction':
         const [param, chainId] = request.params as [WCCallRequest_eth_sendTransaction, string];
@@ -208,6 +211,9 @@ export class WalletConnect extends EventEmitter {
         this.connector.rejectRequest({ id: request.id, error: { message: 'Use eth_sendTransaction' } });
         return;
       case 'eth_sign':
+        if (!checkAccount(request.params[0])) return;
+        this.sign(request, request.params, 'eth_sign');
+        break;
       case 'personal_sign':
         if (!checkAccount(request.params[1])) return;
         this.sign(request, request.params, 'personal_sign');
@@ -342,7 +348,11 @@ export class WalletConnect extends EventEmitter {
     );
   };
 
-  private sign = async (request: WCCallRequestRequest, params: string[], type: 'personal_sign' | 'signTypedData') => {
+  private sign = async (
+    request: WCCallRequestRequest,
+    params: string[],
+    type: 'eth_sign' | 'personal_sign' | 'signTypedData'
+  ) => {
     const clearHandlers = () => {
       ipcMain.removeHandler(`${WcMessages.approveWcCallRequest(this.peerId, request.id)}-secure`);
       ipcMain.removeHandler(`${WcMessages.rejectWcCallRequest(this.peerId, request.id)}-secure`);
@@ -363,21 +373,26 @@ export class WalletConnect extends EventEmitter {
         return Application.encryptIpc({ success: false }, key);
       }
 
-      let signed = '';
+      const signMessage = async (message: string) => {
+        const signed = await this.wallet.personalSignMessage(password, this.wallet.currentAddressIndex, message);
+
+        if (!signed) {
+          this.connector.rejectRequest({ id: request.id, error: { message: 'Permission Denied' } });
+          return false;
+        }
+
+        this.connector.approveRequest({ id: request.id, result: signed });
+        return true;
+      };
 
       switch (type) {
+        case 'eth_sign':
+          return Application.encryptIpc({ success: await signMessage(params[1]) }, key);
         case 'personal_sign':
-          const msg = params[0];
-          signed = await this.wallet.personalSignMessage(password, this.wallet.currentAddressIndex, msg);
-
-          if (!signed) {
-            this.connector.rejectRequest({ id: request.id, error: { message: 'Permission Denied' } });
-            return Application.encryptIpc({ success: false }, key);
-          }
-
-          this.connector.approveRequest({ id: request.id, result: signed });
-          return Application.encryptIpc({ success: true }, key);
+          return Application.encryptIpc({ success: await signMessage(params[0]) }, key);
         case 'signTypedData':
+          let signed = '';
+
           try {
             const typedData = JSON.parse(params[1]);
             signed = await this.wallet.signTypedData_v4(password, this.wallet.currentAddressIndex, typedData);
@@ -403,10 +418,13 @@ export class WalletConnect extends EventEmitter {
 
     let msg: string;
     let json = false;
+
     switch (type) {
+      case 'eth_sign':
+        msg = Buffer.from(utils.arrayify(params[1])).toString('utf8');
+        break;
       case 'personal_sign':
         msg = Buffer.from(utils.arrayify(params[0])).toString('utf8');
-        json = false;
         break;
       case 'signTypedData':
         const data = JSON.parse(params[1]);

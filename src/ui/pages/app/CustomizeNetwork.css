@@ -1,4 +1,43 @@
 .page.customize-network {
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto 1fr auto;
+}
+
+.page.customize-network > .form {
+  padding-top: 16px;
+}
+
+.page.customize-network > .form > div {
+  display: flex;
+  justify-content: space-between;
+  color: var(--font-color-title);
+  border-bottom: 1px dashed var(--border-color);
+  margin-bottom: 8px;
+  font-size: 14px;
+  line-height: 15px;
+  align-items: center;
+}
+
+.page.customize-network > .form > .app-item {
+  overflow: hidden;
+}
+
+.page.customize-network > .form > .app-item input {
+  padding: 0;
+  margin: 0 0px;
+  margin-bottom: -1px;
+  width: 45vw;
+  border: none;
+  background: none;
+  outline: none;
+  font-size: 16px;
+  font-weight: 100;
+  text-align: end;
+  color: var(--font-color-title);
+  -webkit-app-region: no-drag;
+}
+
+.page.customize-network > .form > .app-item svg {
+  margin-bottom: -2px;
+  opacity: 0.5;
 }

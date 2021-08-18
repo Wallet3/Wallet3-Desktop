@@ -31,3 +31,7 @@ export function catUrl(chainId: number, tail: string) {
 export function convertToAccountUrl(chainId: number, address: string) {
   return `${Explorers.get(chainId)}/address/${address}`;
 }
+
+export function getExplorerUrl(chainId: number) {
+  return Explorers.get(chainId);
+}

@@ -8,7 +8,7 @@ const cache = new Map<number, ethers.providers.JsonRpcProvider | ethers.provider
 const failedRPCs = new Set<string>();
 
 export function getChainProviderUrl(chainId: number) {
-  const list = Providers[`${chainId}`] as string[];
+  const list = [getCustomizedRPC(chainId)?.rpc || (Providers[`${chainId}`] as string[])].flat();
   if (!list) {
     throw new Error(`Unsupported chain:${chainId}`);
   }
@@ -46,6 +46,17 @@ export function getProviderByChainId(chainId: number) {
 export function markRpcFailed(network: number, rpc: string) {
   cache.delete(network);
   failedRPCs.add(rpc);
+}
+
+export function saveCustomizedRPC(networkId: number, rpc: string, explorer: string) {
+  const store = require('storejs');
+  store.set(`customizedRPC-${networkId}`, { rpc, explorer });
+}
+
+function getCustomizedRPC(networkId: number) {
+  if (!window) return undefined;
+  const store = require('storejs');
+  return store.get(`customizedRPC-${networkId}`) as { rpc: string; explorer: string };
 }
 
 export async function sendTransaction(chainId: number, txHex: string) {

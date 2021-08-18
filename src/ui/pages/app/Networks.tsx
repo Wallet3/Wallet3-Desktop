@@ -18,7 +18,11 @@ export default ({ app }: { app: Application }) => {
       <div className="list">
         {Networks.map((n, i) => {
           return (
-            <div className={`network ${i % 2 === 0 ? 'even' : ''}`} key={n.network}>
+            <div
+              className={`network ${i % 2 === 0 ? 'even' : ''}`}
+              key={n.network}
+              onClick={(_) => app.history.push(`/network/${n.chainId}`)}
+            >
               <div className="line1">
                 <img src={NetworkIcons(n.network)} alt="" />
                 {n.network}
