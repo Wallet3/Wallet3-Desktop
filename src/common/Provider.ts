@@ -237,7 +237,7 @@ export async function getMaxPriorityFee(chainId: number) {
         id: Date.now(),
       });
 
-      return Number.parseInt(resp.data.result) * 2;
+      return Number.parseInt(resp.data.result);
     } catch (error) {}
   }
 

@@ -252,7 +252,7 @@ export class TransferVM {
     if (!currentNetwork.eip1559) return;
 
     this.fetchBaseFee(currentNetwork.chainId);
-    getMaxPriorityFee(currentNetwork.chainId).then((v) => runInAction(() => (this.priorityPrice_Wei = v)));
+    getMaxPriorityFee(currentNetwork.chainId).then((v) => runInAction(() => (this.priorityPrice_Wei = v * 2)));
 
     NetworksVM.currentProvider.on('block', async () => this.fetchBaseFee(currentNetwork.chainId));
   }
