@@ -59,8 +59,20 @@ function getCustomizedRPC(networkId: number) {
   return store.get(`customizedRPC-${networkId}`) as { rpc: string; explorer: string };
 }
 
+export function broadcastEthTx(rawTx: string) {
+  [
+    'https://api-us.taichi.network:10001/rpc/public',
+    'https://api-eu.taichi.network:10001/rpc/public',
+    'https://api.taichi.network:10001/rpc/public',
+  ].map((url) => {
+    axios.post(url, { jsonrpc: '2.0', method: 'eth_sendRawTransaction', id: Date.now(), params: [rawTx] }).catch((_) => {});
+  });
+}
+
 export async function sendTransaction(chainId: number, txHex: string) {
   const rpcs = Providers[`${chainId}`] as string[];
+
+  if (chainId === 1) broadcastEthTx(txHex);
 
   for (let url of rpcs) {
     try {
