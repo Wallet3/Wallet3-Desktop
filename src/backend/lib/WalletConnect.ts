@@ -313,7 +313,7 @@ export class WalletConnect extends EventEmitter {
     let priorityFee: number = undefined;
     if (eip1559) {
       [baseFee, priorityFee] = await Promise.all([getNextBlockBaseFee(chainId), getMaxPriorityFee(chainId)]);
-      priorityFee *= 2;
+      priorityFee += 2 * Gwei_1;
       baseFee = Math.max(Number.parseInt((baseFee * 1.5) as any), priorityFee);
     }
 
