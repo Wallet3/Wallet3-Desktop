@@ -47,7 +47,7 @@ export class ERC20Token {
     } catch (error) {}
 
     try {
-      Number.parseInt(((await this.erc20.estimateGas.transferFrom(from, to, amt)).toNumber() * 3) as any);
+      return Number.parseInt(((await this.erc20.estimateGas.transferFrom(from, to, amt)).toNumber() * 3) as any);
     } catch (error) {}
 
     return 150_000;
