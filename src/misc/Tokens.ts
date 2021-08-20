@@ -286,7 +286,7 @@ export const Stablecoins = [DAI, USDC, USDT, TUSD, BUSD, sUSD, PAX, USDN, GUSD, 
 export const AlgorithmStablecoins = [ESD, DSD];
 export const ETHTokens = [ETH, sETH, WETH, ETH_0];
 export const BTCTokens = [WBTC, renBTC, hBTC, tBTC, sBTC];
-export const DeFiTokens = [CRV, UNI, SUSHI, YFI, COMP, SNX, MKR, AAVE, RPL, LDO, LON, bALPHA];
+export const DeFiTokens = [CRV, UNI, SUSHI, YFI, COMP, SNX, MKR, AAVE, RPL, LDO, LON, bALPHA, DPI, LINK];
 
 export function findTokenBySymbol(symbol: string) {
   const upper = symbol.toUpperCase();
