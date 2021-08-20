@@ -293,7 +293,7 @@ export class TransferVM {
 
       const erc20 = new ERC20Token(this.selectedToken.id, NetworksVM.currentProvider);
       const gas =
-        Tokens.find((t) => t.address === this.selectedToken.id)?.minGas ??
+        Tokens.find((t) => t.address.localeCompare(this.selectedToken.id, 'en', { sensitivity: 'base' }) === 0)?.minGas ??
         (await erc20.estimateGas(
           this.self,
           this.receiptAddress || '0xD1b05E3AFEDcb11F29c5A560D098170bE26Fe5f5',
