@@ -41,12 +41,16 @@ export class ERC20Token {
     this.erc20.on(filter, listener);
   }
 
-  async estimateGas(from: string, to: string) {
+  async estimateGas(from: string, to: string, amt: BigNumberish = BigNumber.from(1)) {
     try {
-      Number.parseInt(((await this.erc20.estimateGas.transferFrom(from, to, BigNumber.from(1))).toNumber() * 1.1) as any);
-    } catch (error) {
-      return 150_000;
-    }
+      return Number.parseInt(((await this.erc20.estimateGas.transfer(to, amt)).toNumber() * 2) as any);
+    } catch (error) {}
+
+    try {
+      Number.parseInt(((await this.erc20.estimateGas.transferFrom(from, to, amt)).toNumber() * 3) as any);
+    } catch (error) {}
+
+    return 150_000;
   }
 
   encodeTransferData(to: string, amount: BigNumberish) {

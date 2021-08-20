@@ -72,8 +72,6 @@ export function broadcastEthTx(rawTx: string) {
 export async function sendTransaction(chainId: number, txHex: string) {
   const rpcs = Providers[`${chainId}`] as string[];
 
-  if (chainId === 1) broadcastEthTx(txHex);
-
   for (let url of rpcs) {
     try {
       const resp = await axios.post(url, {
@@ -83,7 +81,8 @@ export async function sendTransaction(chainId: number, txHex: string) {
         id: Date.now(),
       });
 
-      console.log(resp.data);
+      if (chainId === 1) broadcastEthTx(txHex);
+
       return resp.data as { id: number; result: string };
     } catch (error) {
       console.log(error);

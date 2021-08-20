@@ -10,10 +10,12 @@ import { AccountVM } from '../AccountVM';
 import App from '../Application';
 import ERC1155ABI from '../../../abis/ERC1155.json';
 import ERC20ABI from '../../../abis/ERC20.json';
+import { ERC20Token } from '../../../common/ERC20Token';
 import ERC721ABI from '../../../abis/ERC721.json';
 import GasStation from '../../../gas';
 import { NFT } from '../models/NFT';
 import NetworksVM from '../NetworksVM';
+import Tokens from '../../../misc/Tokens';
 import { UserToken } from '../models/UserToken';
 import ipc from '../../bridges/IPC';
 import store from 'storejs';
@@ -278,7 +280,7 @@ export class TransferVM {
             value: 1,
           });
 
-          return gas.toNumber();
+          return Number.parseInt((gas.toNumber() * 1.5) as any);
         } catch (error) {
           return 21000;
         }
@@ -289,17 +291,17 @@ export class TransferVM {
         return;
       }
 
-      const erc20 = new ethers.Contract(this.selectedToken.id, ERC20ABI, NetworksVM.currentProvider);
-      const amt = this.amountBigInt;
-
-      try {
-        const v = await erc20.estimateGas.transferFrom(
+      const erc20 = new ERC20Token(this.selectedToken.id, NetworksVM.currentProvider);
+      const gas =
+        Tokens.find((t) => t.address === this.selectedToken.id)?.minGas ??
+        (await erc20.estimateGas(
           this.self,
           this.receiptAddress || '0xD1b05E3AFEDcb11F29c5A560D098170bE26Fe5f5',
-          amt
-        );
+          this.amountBigInt
+        ));
 
-        setGas(Number.parseInt((v.toNumber() * 2) as any));
+      try {
+        setGas(gas);
       } catch (error) {
         setGas(150_000);
       }
