@@ -5917,10 +5917,10 @@ eth-sig-util@^3.0.1:
     tweetnacl "^1.0.3"
     tweetnacl-util "^0.15.0"
 
-eth-url-parser@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/eth-url-parser/-/eth-url-parser-1.0.3.tgz#e9adce72f44dcb52363eafae14f188f45874b85e"
-  integrity sha512-ZFKN2IL4F37Xzc/64P2ur/FxpiXO240dbnR4yaLgwZ4tucDTL5u/Z3YvyshW2QuRNzjKNFQGxeP3I9sySO+MeA==
+eth-url-parser@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/eth-url-parser/-/eth-url-parser-1.0.4.tgz#310a99f331abdb8d603c74131568fb773e609cd8"
+  integrity sha512-2PTTyc9OXNxePTUlYfos1du6hytElYdubJbx2uF3wNMEsvHOg/P7ZpPFERub6vod2T8eGjDZtB8nkGsKEc4tIQ==
   dependencies:
     bignumber.js "^7.2.1"
     qs "^6.5.2"

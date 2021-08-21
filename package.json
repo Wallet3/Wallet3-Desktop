@@ -1,7 +1,7 @@
 {
   "name": "wallet3",
   "productName": "Wallet 3",
-  "version": "1.6.5",
+  "version": "1.7.1",
   "description": "A Secure Wallet for Bankless Era",
   "main": ".webpack/main",
   "repository": {
@@ -99,7 +99,7 @@
     "better-sqlite3": "^7.4.3",
     "delay": "^5.0.0",
     "eth-sig-util": "^3.0.1",
-    "eth-url-parser": "^1.0.3",
+    "eth-url-parser": "^1.0.4",
     "ethers": "^5.4.5",
     "feather-icons": "^4.28.0",
     "feather-icons-react": "^0.4.3",
