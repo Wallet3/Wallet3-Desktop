@@ -2,6 +2,7 @@ export interface IToken {
   address: string;
   decimals: number;
   symbol: string;
+  minGas?: number;
 }
 
 export const ETH = {
@@ -202,6 +203,13 @@ export const DPI = {
   symbol: 'DPI',
 };
 
+export const LDO = {
+  address: '0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32',
+  decimals: 18,
+  symbol: 'LDO',
+  minGas: 150_000,
+};
+
 export const RAI = {
   address: '0x03ab458634910AaD20eF5f1C8ee96F1D6ac54919',
   decimals: 18,
@@ -278,7 +286,7 @@ export const Stablecoins = [DAI, USDC, USDT, TUSD, BUSD, sUSD, PAX, USDN, GUSD, 
 export const AlgorithmStablecoins = [ESD, DSD];
 export const ETHTokens = [ETH, sETH, WETH, ETH_0];
 export const BTCTokens = [WBTC, renBTC, hBTC, tBTC, sBTC];
-export const DeFiTokens = [CRV, UNI, SUSHI, YFI, COMP, SNX, MKR, AAVE, RPL];
+export const DeFiTokens = [CRV, UNI, SUSHI, YFI, COMP, SNX, MKR, AAVE, RPL, LDO, LON, bALPHA, DPI, LINK];
 
 export function findTokenBySymbol(symbol: string) {
   const upper = symbol.toUpperCase();
@@ -290,7 +298,7 @@ export function findTokenByAddress(address: string) {
   return all.find((t) => t.address.toUpperCase() === upper);
 }
 
-import { PartnerTokens } from './PartnerTokens'
+import { PartnerTokens } from './PartnerTokens';
 
 export const EthereumPopularTokens = [DAI, USDC, USDT, UNI, SUSHI, COMP, MKR, CRV, LINK, AAVE, DPI, ...PartnerTokens];
 
@@ -500,19 +508,9 @@ const HECO_LTC = {
   symbol: 'HLTC',
 };
 
-export const HecoPopularTokens = [
-  HECO_ETH,
-  HECO_BTC,
-  HECO_USDC,
-  HECO_DAI,
-  HECO_UNI,
-  HECO_USDT,
-  HECO_DOT,
-  HECO_BCH,
-  HECO_LTC,
-];
+export const HecoPopularTokens = [HECO_ETH, HECO_BTC, HECO_USDC, HECO_DAI, HECO_UNI, HECO_USDT, HECO_DOT, HECO_BCH, HECO_LTC];
 
-const all = [
+const all: IToken[] = [
   ...Stablecoins,
   WETH,
   ...BTCTokens,
