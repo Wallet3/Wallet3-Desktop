@@ -84,7 +84,7 @@
     "style-loader": "^3.2.1",
     "ts-loader": "^9.2.5",
     "ts-node": "^10.2.1",
-    "typescript": "^4.3.5",
+    "typescript": "^4.4.2",
     "url-loader": "^4.1.1",
     "webpack-filter-warnings-plugin": "^1.2.1"
   },
@@ -92,7 +92,7 @@
     "@electron/remote": "^1.2.1",
     "@nodert-win10-20h1/windows.security.credentials.ui": "^0.1.0",
     "@szhsin/react-menu": "^1.11.0",
-    "@walletconnect/client": "^1.6.4",
+    "@walletconnect/client": "^1.6.5",
     "animate.css": "^4.1.1",
     "animejs": "^3.2.1",
     "axios": "^0.21.1",

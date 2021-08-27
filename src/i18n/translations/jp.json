@@ -153,6 +153,7 @@
   "Next Block Fee": "推定ブロック価格",
   "Next Block Priority Fee": "次ブロックの優先価格",
   "Unlimited": "無制限",
-  "Customize": "カスタマイズ",
-  "Block Explorer": "エクスプローラー"
+  "Customize": "カスタム",
+  "Block Explorer": "エクスプローラー",
+  "Testnets": "テスネット"
 }
