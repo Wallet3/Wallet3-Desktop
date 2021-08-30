@@ -16,7 +16,7 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  row-gap: 12px;
+  row-gap: 24px;
 }
 
 .page.swap > .swap-container input {
