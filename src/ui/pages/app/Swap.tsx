@@ -71,8 +71,8 @@ export default observer(({ app, networksVM }: IConstructor) => {
             <span>Max: 1234.22</span>
           </div>
 
-          <div className="swapbox">
-            <input type="text" autoFocus />
+          <div className="swapbox from">
+            <input type="text" autoFocus placeholder="0.00" />
             <TokenMenu selectedToken={DAI} tokens={[]} />
           </div>
 
@@ -86,8 +86,10 @@ export default observer(({ app, networksVM }: IConstructor) => {
           </div>
 
           <div className="info">
+            <div className="slippages">
+              Slippage: <span className="active">0.5%</span> <span>1%</span> <span>2%</span>
+            </div>
             <span>Fee: 0.05%</span>
-            <span>Slippage: 0.5%</span>
           </div>
         </div>
 

@@ -10,7 +10,7 @@
 }
 
 .page.swap > .swap-container {
-  padding-top: 8px;
+  padding-top: 15px;
   border-radius: 5px;
   height: auto;
   box-sizing: border-box;
@@ -36,11 +36,14 @@
 
 .page.swap > .swap-container .swap .max {
   display: flex;
-  justify-content: flex-end;
   font-size: 10px;
-  margin-bottom: 0px;
-  padding: 0 2px;
+  margin-bottom: -18px;
+  padding: 0 14px;
   box-sizing: border-box;
+}
+
+.page.swap > .swap-container .swap .max span {
+  cursor: pointer;
 }
 
 .page.swap > .swap-container .swap .swapbox {
@@ -53,6 +56,10 @@
   box-sizing: border-box;
 }
 
+.page.swap > .swap-container .swap .swapbox.from {
+  padding-top: 20px;
+}
+
 .page.swap > .swap-container .swap .arrow {
   display: flex;
   justify-content: center;
@@ -61,7 +68,34 @@
 
 .page.swap > .swap-container .swap .info {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  line-height: 12px;
   font-size: 12px;
   margin-top: 4px;
+}
+
+.page.swap > .swap-container .swap .info .slippages span {
+  padding: 2px 5px;
+  padding-top: 3px;
+  color: dimgrey;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.page.swap > .swap-container .swap .info .slippages span.active {
+  background-color: lightskyblue;
+  border-radius: 3px;
+  color: white;
+}
+
+.page.swap .token-label {
+  font-size: 16px;
+}
+
+.page.swap .token-label img {
+  width: 16px;
+  height: 16px;
+  margin-top: -2px;
+  margin-right: 5px;
 }
