@@ -1,0 +1,67 @@
+.page.swap {
+  padding: 0;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  box-sizing: border-box;
+}
+
+.page.swap > .utility-bar {
+  margin-top: -5px;
+}
+
+.page.swap > .swap-container {
+  padding-top: 8px;
+  border-radius: 5px;
+  height: auto;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  row-gap: 12px;
+}
+
+.page.swap > .swap-container input {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  font-size: 20px;
+  line-height: 20px;
+  font-weight: 450;
+  font-family: 'Inter var', sans-serif;
+}
+
+.page.swap > .swap-container .swap {
+  display: flex;
+  flex-direction: column;
+}
+
+.page.swap > .swap-container .swap .max {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 10px;
+  margin-bottom: 0px;
+  padding: 0 2px;
+  box-sizing: border-box;
+}
+
+.page.swap > .swap-container .swap .swapbox {
+  display: grid;
+  grid-template-columns: 1fr 100px;
+  column-gap: 8px;
+  border-radius: 7px;
+  border: 1px solid var(--border-color);
+  padding: 6px 10px;
+  box-sizing: border-box;
+}
+
+.page.swap > .swap-container .swap .arrow {
+  display: flex;
+  justify-content: center;
+  margin: 2px;
+}
+
+.page.swap > .swap-container .swap .info {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  margin-top: 4px;
+}
