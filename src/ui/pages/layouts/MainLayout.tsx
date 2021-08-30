@@ -1,6 +1,6 @@
 import './MainLayout.css';
 
-import { DApps123, Settings, Wallet } from '../app';
+import { DApps123, Settings, Swap, Wallet } from '../app';
 import { Link, useLocation, useRouteMatch } from 'react-router-dom';
 import { Route, Switch } from 'react-router';
 
@@ -24,9 +24,8 @@ export default observer((args: Props) => {
   const { pathname } = useLocation();
   const { t } = useTranslation();
 
- const paths= pathname.split('/');
- const activeTab = paths[paths.length-1];
- console.log(activeTab);
+  const paths = pathname.split('/');
+  const activeTab = paths[paths.length - 1];
 
   return (
     <SkeletonTheme color="#eeeeee90" highlightColor="#f5f5f5d0">
@@ -35,6 +34,10 @@ export default observer((args: Props) => {
           <Switch>
             <Route path={`${path}/settings`} exact>
               <Settings {...args} />
+            </Route>
+
+            <Route path={`${path}/swap`} exact>
+              <Swap {...args} />
             </Route>
 
             <Route path={`${path}/dapps`} exact>
