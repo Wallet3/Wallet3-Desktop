@@ -5,13 +5,11 @@ import { Link, useLocation, useRouteMatch } from 'react-router-dom';
 import { Route, Switch } from 'react-router';
 
 import { Application } from '../../viewmodels/Application';
-import { CurrencyVM } from '../../viewmodels/settings/CurrencyVM';
 import Feather from 'feather-icons-react';
 import { LangsVM } from '../../viewmodels/settings/LangsVM';
 import { NetworksVM } from '../../viewmodels/NetworksVM';
 import React from 'react';
 import { SkeletonTheme } from 'react-loading-skeleton';
-import { WalletVM } from '../../viewmodels/WalletVM';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 
@@ -26,9 +24,9 @@ export default observer((args: Props) => {
   const { pathname } = useLocation();
   const { t } = useTranslation();
 
-  let activeTab = '';
-  if (pathname.endsWith('settings')) activeTab = 'settings';
-  if (pathname.endsWith('dapps')) activeTab = 'dapps';
+ const paths= pathname.split('/');
+ const activeTab = paths[paths.length-1];
+ console.log(activeTab);
 
   return (
     <SkeletonTheme color="#eeeeee90" highlightColor="#f5f5f5d0">
@@ -51,9 +49,16 @@ export default observer((args: Props) => {
 
         <div className="tabs">
           <Link to={`${url}`}>
-            <div className={activeTab === '' ? 'active' : ''}>
+            <div className={activeTab === 'app' ? 'active' : ''}>
               <Feather icon="credit-card" size={20} />
               <span>{t('Wallet')}</span>
+            </div>
+          </Link>
+
+          <Link to={`${url}/swap`}>
+            <div className={activeTab === 'swap' ? 'active' : ''}>
+              <Feather icon="repeat" size={19} />
+              <span>{t('Swap')}</span>
             </div>
           </Link>
 
