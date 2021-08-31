@@ -9,19 +9,21 @@ import currencyVM, { CurrencyVM } from './ui/viewmodels/settings/CurrencyVM';
 import langsVM, { LangsVM } from './ui/viewmodels/settings/LangsVM';
 import mnVM, { MnemonicVM } from './ui/viewmodels/MnemonicVM';
 import networksVM, { NetworksVM } from './ui/viewmodels/NetworksVM';
+import swapVM, { SwapVM } from './ui/viewmodels/SwapVM';
 
 import AppPage from './ui/App';
 import { observer } from 'mobx-react-lite';
 
-interface ViewModels {
+export interface ViewModels {
   app: Application;
   mnVM: MnemonicVM;
   networksVM: NetworksVM;
   langsVM: LangsVM;
   currencyVM: CurrencyVM;
+  swapVM: SwapVM;
 }
 
-const viewmodels = { app: App, mnVM, networksVM, langsVM, currencyVM };
+const viewmodels = { app: App, mnVM, networksVM, langsVM, currencyVM, swapVM };
 const AppView = observer((args: ViewModels) => <AppPage {...args} />);
 
 function render() {

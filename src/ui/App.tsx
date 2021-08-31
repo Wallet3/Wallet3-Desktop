@@ -20,27 +20,14 @@ import { BackupMnemonic, Reset } from './pages/security';
 import React, { useEffect } from 'react';
 import { Route, Router, Switch } from 'react-router-dom';
 
-import { Application } from './viewmodels/Application';
-import { CurrencyVM } from './viewmodels/settings/CurrencyVM';
-import { LangsVM } from './viewmodels/settings/LangsVM';
 import MainLayout from './pages/layouts/MainLayout';
-import { MnemonicVM } from './viewmodels/MnemonicVM';
-import { NetworksVM } from './viewmodels/NetworksVM';
 import { TitleBar } from './components';
-import { WalletVM } from './viewmodels/WalletVM';
+import { ViewModels } from '../index';
 import WindowApi from './bridges/Window';
 import mousetrap from 'mousetrap';
 import { observer } from 'mobx-react-lite';
 
-interface Props {
-  app: Application;
-  mnVM: MnemonicVM;
-  networksVM: NetworksVM;
-  langsVM: LangsVM;
-  currencyVM: CurrencyVM;
-}
-
-export default observer((args: Props) => {
+export default observer((args: ViewModels) => {
   const { app } = args;
 
   useEffect(() => {
