@@ -21,46 +21,49 @@ export class SwapVM {
   }
 
   get fromList(): ISwapToken[] {
-    return this.currentExecutor.fromTokens(NetworksVM.currentChainId).filter((t) => t.address !== this.for?.address);
+    return this.currentExecutor.fromTokens(NetworksVM.currentChainId).filter((t) => t.address !== this.from?.address);
   }
 
   get forList(): ISwapToken[] {
-    return this.currentExecutor.forTokens(NetworksVM.currentChainId).filter((t) => t.address !== this.from?.address);
+    return this.currentExecutor.forTokens(NetworksVM.currentChainId).filter((t) => t.address !== this.for?.address);
   }
 
   constructor() {
     makeAutoObservable(this);
 
     this.from = this.fromList[0];
-    this.for = this.forList[0];
+    this.for = this.forList[1];
   }
 
-  selectFrom(token: ISwapToken) {
+  selectFrom(token: ISwapToken, check = true) {
+    if (this.for?.address === token.address && check) {
+      this.interchange();
+      return;
+    }
+
     this.from = token;
+
     new ERC20Token(token.address, NetworksVM.currentProvider)
       .balanceOf(App.currentWallet.currentAccount.address)
       .then((balance) => {
         runInAction(() => (this.max = balance));
       });
-
-    if (this.for === token) {
-      this.for = this.forList[0];
-    }
   }
 
-  selectFor(token: ISwapToken) {
-    this.for = token;
-
-    if (this.from === token) {
-      this.from = this.fromList[0];
+  selectFor(token: ISwapToken, check = true) {
+    if (this.from?.address === token.address && check) {
+      this.interchange();
+      return;
     }
+
+    this.for = token;
   }
 
   interchange() {
     const forToken = this.for;
     const fromToken = this.from;
-    this.selectFrom(forToken);
-    this.selectFor(fromToken);
+    this.selectFrom(forToken, false);
+    this.selectFor(fromToken, false);
   }
 }
 
