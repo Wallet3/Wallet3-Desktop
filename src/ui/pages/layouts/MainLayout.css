@@ -12,6 +12,7 @@ div[class$='-SkeletonTheme'] {
 
 .layout > .ui {
   display: grid;
+  overflow-x: hidden;
 }
 
 .layout > .tabs {

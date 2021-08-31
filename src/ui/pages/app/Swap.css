@@ -3,6 +3,8 @@
   display: grid;
   grid-template-rows: auto 1fr;
   box-sizing: border-box;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .page.swap > .utility-bar {
@@ -17,6 +19,8 @@
   display: flex;
   flex-direction: column;
   row-gap: 24px;
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 .page.swap > .swap-container input {
