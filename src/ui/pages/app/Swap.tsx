@@ -12,6 +12,7 @@ import { SwapVM } from '../../viewmodels/SwapVM';
 import UtilityBar from './components/UtilityBar';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
+import { utils } from 'ethers';
 
 interface IConstructor {
   app: Application;
@@ -69,21 +70,21 @@ export default observer(({ app, networksVM, swapVM }: IConstructor) => {
       <div className="swap-container">
         <div className="swap">
           <div className="max">
-            <span>Max: 1234.22</span>
+            <span>Max: {utils.formatUnits(swapVM.max, swapVM.from?.decimals || 0)}</span>
           </div>
 
           <div className="swapbox from">
             <input type="text" autoFocus placeholder="0.00" />
-            <TokenMenu selectedToken={DAI} tokens={swapVM.fromList} />
+            <TokenMenu selectedToken={swapVM.from} tokens={swapVM.fromList} onTokenSelected={(t) => swapVM.selectFrom(t)} />
           </div>
 
-          <div className="arrow">
+          <div className="arrow" onClick={(_) => swapVM.interchange()}>
             <Feather icon="arrow-down" size={12} />
           </div>
 
           <div className="swapbox">
             <input type="text" />
-            <TokenMenu selectedToken={USDC} tokens={swapVM.forList} />
+            <TokenMenu selectedToken={swapVM.for} tokens={swapVM.forList} onTokenSelected={(t) => swapVM.selectFor(t)} />
           </div>
 
           <div className="info">

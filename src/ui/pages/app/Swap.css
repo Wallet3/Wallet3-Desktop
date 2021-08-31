@@ -47,6 +47,7 @@
 
 .page.swap > .swap-container .swap .max span {
   cursor: pointer;
+  z-index: 9;
 }
 
 .page.swap > .swap-container .swap .swapbox {
@@ -79,6 +80,24 @@
   display: flex;
   justify-content: center;
   margin: 2px;
+  cursor: pointer;
+}
+
+.page.swap > .swap-container .swap .arrow svg {
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  background-color: aliceblue;
+  width: 15px;
+  height: 15px;
+  padding: 3px;
+  margin: -8px;
+  z-index: 9;
+  transition: all 0.3s;
+}
+
+.page.swap > .swap-container .swap .arrow svg:hover {
+  background-color: var(--border-color);
+  color: white;
 }
 
 .page.swap > .swap-container .swap .info {
