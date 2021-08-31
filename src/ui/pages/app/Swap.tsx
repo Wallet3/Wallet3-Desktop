@@ -8,7 +8,7 @@ import { CryptoIcons } from '../../misc/Icons';
 import Feather from 'feather-icons-react';
 import { NetworksVM } from '../../viewmodels/NetworksVM';
 import React from 'react';
-import TokenLabel from '../../components/TokenLabel';
+import { SwapVM } from '../../viewmodels/SwapVM';
 import UtilityBar from './components/UtilityBar';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
@@ -16,9 +16,10 @@ import { useTranslation } from 'react-i18next';
 interface IConstructor {
   app: Application;
   networksVM: NetworksVM;
+  swapVM: SwapVM;
 }
 
-export default observer(({ app, networksVM }: IConstructor) => {
+export default observer(({ app, networksVM, swapVM }: IConstructor) => {
   const { t } = useTranslation();
 
   const TokenLabel = ({ symbol, name }: { symbol: string; name: string }) => {
@@ -52,7 +53,7 @@ export default observer(({ app, networksVM }: IConstructor) => {
       >
         {tokens.map((t) => {
           return (
-            <MenuItem key={t.address} styles={{ padding: '6.25px 10px' }} onClick={(_) => onTokenSelected?.(t)}>
+            <MenuItem key={t.address} styles={{ padding: '8px 16px' }} onClick={(_) => onTokenSelected?.(t)}>
               <TokenLabel symbol={t.symbol} name={t.symbol} />
             </MenuItem>
           );
@@ -73,7 +74,7 @@ export default observer(({ app, networksVM }: IConstructor) => {
 
           <div className="swapbox from">
             <input type="text" autoFocus placeholder="0.00" />
-            <TokenMenu selectedToken={DAI} tokens={[]} />
+            <TokenMenu selectedToken={DAI} tokens={swapVM.fromList} />
           </div>
 
           <div className="arrow">
@@ -82,14 +83,16 @@ export default observer(({ app, networksVM }: IConstructor) => {
 
           <div className="swapbox">
             <input type="text" />
-            <TokenMenu selectedToken={USDC} tokens={[]} />
+            <TokenMenu selectedToken={USDC} tokens={swapVM.forList} />
           </div>
 
           <div className="info">
             <div className="slippages">
-              Slippage: <span className="active">0.5%</span> <span>1%</span> <span>2%</span>
+              {t('Slippage')}: <span className="active">0.5%</span> <span>1%</span> <span>2%</span>
             </div>
-            <span>Fee: 0.05%</span>
+            <span>
+              {t('Fee')}: {swapVM.fee}%
+            </span>
           </div>
         </div>
 

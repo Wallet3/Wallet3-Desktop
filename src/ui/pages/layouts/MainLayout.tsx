@@ -10,6 +10,7 @@ import { LangsVM } from '../../viewmodels/settings/LangsVM';
 import { NetworksVM } from '../../viewmodels/NetworksVM';
 import React from 'react';
 import { SkeletonTheme } from 'react-loading-skeleton';
+import { SwapVM } from '../../viewmodels/SwapVM';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
 
@@ -17,6 +18,7 @@ interface Props {
   networksVM: NetworksVM;
   app: Application;
   langsVM: LangsVM;
+  swapVM: SwapVM;
 }
 
 export default observer((args: Props) => {

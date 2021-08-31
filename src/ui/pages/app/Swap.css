@@ -4,7 +4,6 @@
   grid-template-rows: auto 1fr;
   box-sizing: border-box;
   max-width: 100%;
-  overflow-x: hidden;
 }
 
 .page.swap > .utility-bar {
@@ -60,6 +59,18 @@
   box-sizing: border-box;
 }
 
+.page.swap > .swap-container .swap .swapbox .rc-menu {
+  background-color: transparent !important;
+  backdrop-filter: blur(10px);
+  -webkit-app-region: no-drag !important;
+  z-index: 99999999;
+}
+
+.page.swap > .swap-container .swap .swapbox .rc-menu__item--hover {
+  background-color: #00000010 !important;
+  -webkit-app-region: no-drag;
+}
+
 .page.swap > .swap-container .swap .swapbox.from {
   padding-top: 20px;
 }
@@ -95,11 +106,12 @@
 
 .page.swap .token-label {
   font-size: 16px;
+  text-transform: none;
 }
 
 .page.swap .token-label img {
   width: 16px;
   height: 16px;
   margin-top: -2px;
-  margin-right: 5px;
+  margin-right: 8px;
 }
