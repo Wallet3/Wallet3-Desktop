@@ -1,6 +1,7 @@
 import { BigNumber, Contract } from 'ethers';
 import { DAI, IToken, USDC, USDT, sUSD } from '../../../misc/Tokens';
 
+import ERC20ABI from '../../../abis/ERC20.json';
 import StableswapABI from '../../../abis/Stableswap.json';
 import { getProviderByChainId } from '../../../common/Provider';
 
@@ -16,6 +17,10 @@ const Tokens: { [chain: number]: { tokens: IToken[]; targets: string[] } } = {
 export class Stableswap {
   _fromTokens = Tokens;
   _forTokens = Tokens;
+
+  get address() {
+    return StableswapAddr;
+  }
 
   fromTokens(chainId: number): IToken[] {
     return this._fromTokens[chainId]?.tokens ?? [];

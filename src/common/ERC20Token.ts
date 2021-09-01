@@ -21,6 +21,10 @@ export class ERC20Token {
     return this.balance;
   }
 
+  allowance(owner: string, spender: string): Promise<BigNumber> {
+    return this.erc20.allowance(owner, spender);
+  }
+
   name(): Promise<string> {
     return this.erc20.name();
   }

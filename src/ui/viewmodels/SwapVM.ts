@@ -7,11 +7,14 @@ import { IToken } from '../../misc/Tokens';
 import NetworksVM from './NetworksVM';
 import Stableswap from './swap/Stableswap';
 
-interface ISwapToken extends IToken {}
+interface ISwapToken extends IToken {
+  allowance?: BigNumber;
+}
 
 export class SwapVM {
   from: ISwapToken = undefined;
   for: ISwapToken = undefined;
+
   max = BigNumber.from(0);
   fromAmount = '';
   forAmount = '';
@@ -34,17 +37,25 @@ export class SwapVM {
     return Number(this.fromAmount) > 0 && this.from && this.for;
   }
 
+  get account() {
+    return App.currentWallet?.currentAccount.address;
+  }
+
+  get approved() {
+    return this.from.allowance?.gte(utils.parseUnits(this.fromAmount, this.from.decimals));
+  }
+
   constructor() {
     makeAutoObservable(this);
 
-    this.from = this.fromList[0];
-    this.for = this.forList[1];
+    this.selectFrom(this.fromList[0]);
+    this.selectFor(this.forList[1]);
 
     reaction(
       () => NetworksVM.currentChainId,
       () => {
-        this.from = this.fromList[0];
-        this.for = this.forList[1];
+        this.selectFrom(this.fromList[0]);
+        this.selectFor(this.forList[1]);
       }
     );
   }
@@ -56,12 +67,17 @@ export class SwapVM {
     }
 
     this.from = token;
+    if (!token) return;
 
-    new ERC20Token(token.address, NetworksVM.currentProvider)
-      .balanceOf(App.currentWallet.currentAccount.address)
-      .then((balance) => {
-        runInAction(() => (this.max = balance));
-      });
+    const erc20 = new ERC20Token(token.address, NetworksVM.currentProvider);
+
+    erc20.balanceOf(this.account).then((balance) => {
+      runInAction(() => (this.max = balance));
+    });
+
+    erc20.allowance(this.account, this.currentExecutor.address).then((allowance) => {
+      token.allowance = allowance;
+    });
   }
 
   selectFor(token: ISwapToken, check = true) {
