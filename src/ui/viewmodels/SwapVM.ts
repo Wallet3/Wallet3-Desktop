@@ -65,6 +65,10 @@ export class SwapVM {
     this.selectFrom(forToken, false);
     this.selectFor(fromToken, false);
   }
+
+  setSlippage(value: number) {
+    this.slippage = value;
+  }
 }
 
 export default new SwapVM();

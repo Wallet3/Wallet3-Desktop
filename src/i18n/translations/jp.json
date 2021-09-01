@@ -156,5 +156,7 @@
   "Customize": "カスタム",
   "Block Explorer": "エクスプローラー",
   "Testnets": "テスネット",
-  "Swap": "スワップ"
+  "Swap": "スワップ",
+  "Slippage": "スリッページ",
+  "Fee": "手数料"
 }

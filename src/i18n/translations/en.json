@@ -156,5 +156,7 @@
   "Customize": "Customize",
   "Block Explorer": "Block Explorer",
   "Testnets": "Testnets",
-  "Swap": "Swap"
+  "Swap": "Swap",
+  "Slippage": "Slippage",
+  "Fee": "Fee"
 }

@@ -89,7 +89,16 @@ export default observer(({ app, networksVM, swapVM }: IConstructor) => {
 
           <div className="info">
             <div className="slippages">
-              {t('Slippage')}: <span className="active">0.5%</span> <span>1%</span> <span>2%</span>
+              {t('Slippage')}:
+              <span className={`${swapVM.slippage === 0.5 ? 'active' : ''}`} onClick={(_) => swapVM.setSlippage(0.5)}>
+                0.5%
+              </span>
+              <span className={`${swapVM.slippage === 1 ? 'active' : ''}`} onClick={(_) => swapVM.setSlippage(1)}>
+                1%
+              </span>
+              <span className={`${swapVM.slippage === 2 ? 'active' : ''}`} onClick={(_) => swapVM.setSlippage(2)}>
+                2%
+              </span>
             </div>
             <span>
               {t('Fee')}: {swapVM.fee}%

@@ -109,6 +109,12 @@
   margin-top: 4px;
 }
 
+.page.swap > .swap-container .swap .info .slippages {
+  display: flex;
+  align-items: center;
+  column-gap: 4px;
+}
+
 .page.swap > .swap-container .swap .info .slippages span {
   padding: 2px 5px;
   padding-top: 3px;

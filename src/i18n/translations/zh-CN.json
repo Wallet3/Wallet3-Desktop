@@ -156,5 +156,7 @@
   "Customize": "自定义",
   "Block Explorer": "区块浏览器",
   "Testnets": "测试网络",
-  "Swap": "兑换"
+  "Swap": "兑换",
+  "Slippage": "滑点",
+  "Fee": "手续费"
 }
