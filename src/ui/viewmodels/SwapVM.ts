@@ -84,8 +84,15 @@ export class SwapVM {
     this.slippage = value;
   }
 
-  setFromAmount(value: string) {
+  async setFromAmount(value: string) {
+    if (this.fromAmount === value) return;
+    if (!this.from || !this.for) return;
+
     this.fromAmount = value;
+    const amount = utils.parseUnits(value, this.from.decimals);
+
+    const forAmount = await this.currentExecutor.getAmountOut(1337, this.from, this.for, amount);
+    runInAction(() => (this.forAmount = utils.formatUnits(forAmount, this.for.decimals)));
   }
 }
 

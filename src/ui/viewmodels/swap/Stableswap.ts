@@ -10,6 +10,7 @@ const StableswapAddr = '0xF16cC3B1B3c3072Ba1110e336212EF72C2Fa59cD';
 
 const Tokens: { [chain: number]: { tokens: IToken[]; targets: string[] } } = {
   1: { tokens: [DAI, USDC, USDT, sUSD], targets: [TriPool, TriPool, TriPool, sUSDPool] },
+  1337: { tokens: [DAI, USDC, USDT, sUSD], targets: [TriPool, TriPool, TriPool, sUSDPool] },
 };
 
 export class Stableswap {
@@ -24,7 +25,7 @@ export class Stableswap {
     return this._forTokens[chainId]?.tokens ?? [];
   }
 
-  async getForAmount(chainId: number, from: IToken, to: IToken, amount: BigNumber): Promise<BigNumber> {
+  async getAmountOut(chainId: number, from: IToken, to: IToken, amountIn: BigNumber): Promise<BigNumber> {
     const swap = new Contract(StableswapAddr, StableswapABI, getProviderByChainId(chainId));
     const { tokens, targets } = Tokens[chainId] ?? {};
     if (!tokens || !targets) return;
@@ -33,7 +34,7 @@ export class Stableswap {
     const j = tokens.findIndex((t) => t.address === to.address);
     const target = targets[i];
 
-    return await swap.get_dy(target, i, j, amount, false);
+    return await swap.get_dy(target, i, j, amountIn, false);
   }
 }
 
