@@ -33,7 +33,7 @@ export const PublicNetworks: INetwork[] = [
   },
   {
     symbol: 'OETH',
-    comm_id: 'optimism',
+    comm_id: 'op',
     network: 'Optimism',
     chainId: 10,
     color: '#FF0420',
@@ -42,7 +42,7 @@ export const PublicNetworks: INetwork[] = [
   },
   {
     symbol: 'ETH',
-    comm_id: 'arbitrum',
+    comm_id: 'arb',
     network: 'Arbitrum',
     chainId: 42161,
     color: '#2D374B',

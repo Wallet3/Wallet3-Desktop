@@ -61,13 +61,14 @@ export class SwapVM {
   }
 
   selectFrom(token: ISwapToken, check = true) {
-    if (this.for?.address === token.address && check) {
+    if (!token) return;
+
+    if (this.for?.address === token?.address && check) {
       this.interchange();
       return;
     }
 
     this.from = token;
-    if (!token) return;
 
     const erc20 = new ERC20Token(token.address, NetworksVM.currentProvider);
 
@@ -81,7 +82,9 @@ export class SwapVM {
   }
 
   selectFor(token: ISwapToken, check = true) {
-    if (this.from?.address === token.address && check) {
+    if (!token) return;
+
+    if (this.from?.address === token?.address && check) {
       this.interchange();
       return;
     }
@@ -111,9 +114,7 @@ export class SwapVM {
     runInAction(() => (this.forAmount = utils.formatUnits(forAmount, this.for.decimals)));
   }
 
-  approve() {
-    
-  }
+  approve() {}
 }
 
 export default new SwapVM();

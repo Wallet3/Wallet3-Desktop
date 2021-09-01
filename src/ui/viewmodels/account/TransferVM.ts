@@ -277,7 +277,7 @@ export class TransferVM {
         try {
           const gas = await NetworksVM.currentProvider.estimateGas({
             to: this.receiptAddress,
-            value: 1,
+            value: 0,
           });
 
           return Number.parseInt((gas.toNumber() * 1.5) as any);
