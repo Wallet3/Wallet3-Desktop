@@ -280,7 +280,7 @@ export class TransferVM {
             value: 0,
           });
 
-          return Number.parseInt((gas.toNumber() * 1.5) as any);
+          return gas.toNumber();
         } catch (error) {
           return 21000;
         }
