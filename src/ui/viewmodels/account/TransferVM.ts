@@ -73,7 +73,7 @@ export class TransferVM {
   }
 
   get estimatedEIP1559Fee() {
-    return Number.parseInt((this.estimatedEIP1559Price_Wei * this.gas) as any);
+    return BigNumber.from(this.estimatedEIP1559Price_Wei).mul(this.gas); // Number.parseInt((this.estimatedEIP1559Price_Wei * this.gas) as any);
   }
 
   get txSpeed() {
