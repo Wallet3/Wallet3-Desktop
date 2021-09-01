@@ -160,8 +160,9 @@ export default observer(
                     value={Number.parseFloat(utils.formatEther(transferVM?.estimatedEIP1559Fee || 0))}
                     duration={300}
                     formatValue={(n: any) => formatValue(n)}
-                  />{' '}
-                  ETH
+                  />
+                  {' '}
+                  {networksVM.currentNetwork.symbol}
                 </span>
               </div>
 
