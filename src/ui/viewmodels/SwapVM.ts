@@ -2,10 +2,10 @@ import { BigNumber, utils } from 'ethers';
 import { autorun, makeAutoObservable, reaction, runInAction } from 'mobx';
 
 import App from './Application';
-import CurveExecutor from './swap/CurveExecutor';
 import { ERC20Token } from '../../common/ERC20Token';
 import { IToken } from '../../misc/Tokens';
 import NetworksVM from './NetworksVM';
+import Stableswap from './swap/Stableswap';
 
 interface ISwapToken extends IToken {}
 
@@ -19,7 +19,7 @@ export class SwapVM {
   fee = 0.05;
 
   get currentExecutor() {
-    return CurveExecutor;
+    return Stableswap;
   }
 
   get fromList(): ISwapToken[] {
