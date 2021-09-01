@@ -83,7 +83,7 @@ export default observer(({ app, networksVM, swapVM }: IConstructor) => {
           </div>
 
           <div className="swapbox">
-            <input type="text" />
+            <input type="text" readOnly />
             <TokenMenu selectedToken={swapVM.for} tokens={swapVM.forList} onTokenSelected={(t) => swapVM.selectFor(t)} />
           </div>
 

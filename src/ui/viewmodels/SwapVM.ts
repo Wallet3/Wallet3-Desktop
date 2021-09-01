@@ -1,5 +1,5 @@
 import { BigNumber, utils } from 'ethers';
-import { makeAutoObservable, runInAction } from 'mobx';
+import { autorun, makeAutoObservable, reaction, runInAction } from 'mobx';
 
 import App from './Application';
 import CurveExecutor from './swap/CurveExecutor';
@@ -13,6 +13,8 @@ export class SwapVM {
   from: ISwapToken = undefined;
   for: ISwapToken = undefined;
   max = BigNumber.from(0);
+  fromAmount = '';
+  forAmount = '';
   slippage = 0.5;
   fee = 0.05;
 
@@ -33,6 +35,14 @@ export class SwapVM {
 
     this.from = this.fromList[0];
     this.for = this.forList[1];
+
+    reaction(
+      () => NetworksVM.currentChainId,
+      () => {
+        this.from = this.fromList[0];
+        this.for = this.forList[1];
+      }
+    );
   }
 
   selectFrom(token: ISwapToken, check = true) {
