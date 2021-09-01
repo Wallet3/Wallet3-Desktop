@@ -110,6 +110,10 @@ export class SwapVM {
     const forAmount = await this.currentExecutor.getAmountOut(1337, this.from, this.for, amount);
     runInAction(() => (this.forAmount = utils.formatUnits(forAmount, this.for.decimals)));
   }
+
+  approve() {
+    
+  }
 }
 
 export default new SwapVM();

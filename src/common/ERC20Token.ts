@@ -60,4 +60,8 @@ export class ERC20Token {
   encodeTransferData(to: string, amount: BigNumberish) {
     return this.interface.encodeFunctionData('transfer', [to, amount]);
   }
+
+  encodeApproveData(spender: string, amount: BigNumberish) {
+    return this.interface.encodeFunctionData('approve', [spender, amount]);
+  }
 }
