@@ -74,7 +74,7 @@ export default observer(({ app, networksVM, swapVM }: IConstructor) => {
           </div>
 
           <div className="swapbox from">
-            <input type="text" autoFocus placeholder="0.00" />
+            <input type="text" autoFocus placeholder="0.00" onChange={(e) => swapVM.setFromAmount(e.target.value)} />
             <TokenMenu selectedToken={swapVM.from} tokens={swapVM.fromList} onTokenSelected={(t) => swapVM.selectFrom(t)} />
           </div>
 
@@ -106,7 +106,7 @@ export default observer(({ app, networksVM, swapVM }: IConstructor) => {
           </div>
         </div>
 
-        <button>{t('Swap')}</button>
+        <button disabled={!swapVM.isValid}>{t('Swap')}</button>
       </div>
     </div>
   );

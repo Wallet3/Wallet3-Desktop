@@ -30,6 +30,10 @@ export class SwapVM {
     return this.currentExecutor.forTokens(NetworksVM.currentChainId).filter((t) => t.address !== this.for?.address);
   }
 
+  get isValid() {
+    return Number(this.fromAmount) > 0 && this.from && this.for;
+  }
+
   constructor() {
     makeAutoObservable(this);
 
@@ -78,6 +82,10 @@ export class SwapVM {
 
   setSlippage(value: number) {
     this.slippage = value;
+  }
+
+  setFromAmount(value: string) {
+    this.fromAmount = value;
   }
 }
 
