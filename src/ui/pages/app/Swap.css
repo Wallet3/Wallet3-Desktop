@@ -121,11 +121,15 @@
   color: dimgrey;
   cursor: pointer;
   transition: all 0.3s;
+  border-radius: 3px;
+}
+
+.page.swap > .swap-container .swap .info .slippages span:hover {
+  background: var(--border-color);
 }
 
 .page.swap > .swap-container .swap .info .slippages span.active {
   background-color: lightskyblue;
-  border-radius: 3px;
   color: white;
 }
 
