@@ -42,22 +42,21 @@ export class SwapVM {
   }
 
   get approved() {
-    return this.from.allowance?.gte(utils.parseUnits(this.fromAmount, this.from.decimals));
+    return this.from?.allowance?.gte(utils.parseUnits(this.fromAmount, this.from.decimals));
   }
 
   constructor() {
     makeAutoObservable(this);
 
-    this.selectFrom(this.fromList[0]);
-    this.selectFor(this.forList[1]);
-
     reaction(
       () => NetworksVM.currentChainId,
-      () => {
-        this.selectFrom(this.fromList[0]);
-        this.selectFor(this.forList[1]);
-      }
+      () => this.init()
     );
+  }
+
+  init() {
+    this.selectFrom(this.fromList[0]);
+    this.selectFor(this.forList[1]);
   }
 
   selectFrom(token: ISwapToken, check = true) {

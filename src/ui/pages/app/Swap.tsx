@@ -11,6 +11,8 @@ import React from 'react';
 import { SwapVM } from '../../viewmodels/SwapVM';
 import UtilityBar from './components/UtilityBar';
 import { observer } from 'mobx-react-lite';
+import { useEffect } from 'react';
+import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { utils } from 'ethers';
 
@@ -22,6 +24,7 @@ interface IConstructor {
 
 export default observer(({ app, networksVM, swapVM }: IConstructor) => {
   const { t } = useTranslation();
+  const fromAmountRef = useRef<HTMLInputElement>();
 
   const TokenLabel = ({ symbol, name }: { symbol: string; name: string }) => {
     return (
@@ -63,6 +66,10 @@ export default observer(({ app, networksVM, swapVM }: IConstructor) => {
     );
   };
 
+  useEffect(() => {
+    swapVM.init();
+  }, []);
+
   return (
     <div className="page swap">
       <UtilityBar app={app} networksVM={networksVM} />
@@ -70,11 +77,25 @@ export default observer(({ app, networksVM, swapVM }: IConstructor) => {
       <div className="swap-container">
         <div className="swap">
           <div className="max">
-            <span>Max: {utils.formatUnits(swapVM.max, swapVM.from?.decimals || 0)}</span>
+            <span
+              onClick={(_) => {
+                const value = utils.formatUnits(swapVM.max, swapVM.from?.decimals);
+                swapVM.setFromAmount(value);
+                fromAmountRef.current.value = value;
+              }}
+            >
+              Max: {utils.formatUnits(swapVM.max, swapVM.from?.decimals || 0)}
+            </span>
           </div>
 
           <div className="swapbox from">
-            <input type="text" autoFocus placeholder="0.00" onChange={(e) => swapVM.setFromAmount(e.target.value)} />
+            <input
+              ref={fromAmountRef}
+              type="text"
+              autoFocus
+              placeholder="0.00"
+              onChange={(e) => swapVM.setFromAmount(e.target.value)}
+            />
             <TokenMenu selectedToken={swapVM.from} tokens={swapVM.fromList} onTokenSelected={(t) => swapVM.selectFrom(t)} />
           </div>
 
@@ -106,7 +127,7 @@ export default observer(({ app, networksVM, swapVM }: IConstructor) => {
           </div>
         </div>
 
-        {!swapVM.approved ? <button>{t('Approve')}</button> : undefined}
+        {!swapVM.approved ? <button disabled={!swapVM.fromAmount}>{t('Approve')}</button> : undefined}
         {swapVM.approved ? <button disabled={!swapVM.isValid}>{t('Swap')}</button> : undefined}
       </div>
     </div>
