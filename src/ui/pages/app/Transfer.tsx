@@ -157,11 +157,12 @@ export default observer(
                     ).toFixed(2)} USD)`}
                   </span>
                   <AnimatedNumber
-                    value={transferVM?.estimatedEIP1559Fee || 0}
+                    value={Number.parseFloat(utils.formatEther(transferVM?.estimatedEIP1559Fee || 0))}
                     duration={300}
-                    formatValue={(n: any) => formatValue(utils.formatEther(Number.parseInt(n) || 0))}
-                  />{' '}
-                  ETH
+                    formatValue={(n: any) => formatValue(n)}
+                  />
+                  {' '}
+                  {networksVM.currentNetwork.symbol}
                 </span>
               </div>
 

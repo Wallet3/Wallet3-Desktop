@@ -42,6 +42,7 @@ export class TransferVM {
   get isValid() {
     try {
       const validAmount = this.amountBigInt.lte(this.selectedTokenBalance) && Number.parseFloat(this.amount) >= 0;
+      const { currentNetwork } = NetworksVM;
 
       return (
         this.selectedTokenBalance.gt(0) &&
@@ -49,11 +50,11 @@ export class TransferVM {
         this.recipient &&
         this.amount.length > 0 &&
         validAmount &&
-        this.gas >= 21000 &&
+        this.gas >= (currentNetwork.l2 ? 0 : 21000) &&
         this.gas < 12_500_000 &&
         this.nonce >= 0 &&
         !this.loading &&
-        (NetworksVM.currentNetwork.eip1559
+        (currentNetwork.eip1559
           ? this.priorityPrice_Wei >= 0 && this.gasPrice_Gwei * Gwei_1 > this.priorityPrice_Wei
           : true) &&
         this.gasPrice_Gwei > 0 &&
@@ -73,7 +74,7 @@ export class TransferVM {
   }
 
   get estimatedEIP1559Fee() {
-    return Number.parseInt((this.estimatedEIP1559Price_Wei * this.gas) as any);
+    return BigNumber.from(this.estimatedEIP1559Price_Wei).mul(this.gas); // Number.parseInt((this.estimatedEIP1559Price_Wei * this.gas) as any);
   }
 
   get txSpeed() {
@@ -277,10 +278,12 @@ export class TransferVM {
         try {
           const gas = await NetworksVM.currentProvider.estimateGas({
             to: this.receiptAddress,
-            value: 1,
+            from: this.self,
+            value: 0,
+            data: '0x',
           });
 
-          return Number.parseInt((gas.toNumber() * 1.5) as any);
+          return gas.toNumber();
         } catch (error) {
           return 21000;
         }

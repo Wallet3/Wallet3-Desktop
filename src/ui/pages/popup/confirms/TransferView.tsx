@@ -42,11 +42,12 @@ export default observer(({ confirmVM, onContinue, onReject, currencyVM }: Props)
     maxFee,
     nonce,
     totalValue,
-    eip1559,
+    currentNetwork,
     chainId,
     verifiedName,
     to,
   } = confirmVM;
+  const { eip1559 } = currentNetwork;
 
   return (
     <div className="details">

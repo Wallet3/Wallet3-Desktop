@@ -28,7 +28,7 @@ export default observer(({ confirmVM, onReject, onContinue, currencyVM }: Props)
     tokenSymbol,
     gas,
     gasPrice,
-    eip1559,
+    currentNetwork,
     maxFeePerGas,
     priorityPrice,
     nextBlockBaseFee,
@@ -41,6 +41,7 @@ export default observer(({ confirmVM, onReject, onContinue, currencyVM }: Props)
 
     chainId,
   } = confirmVM;
+  const { eip1559 } = currentNetwork;
   const { t } = useTranslation();
 
   useEffect(() => {

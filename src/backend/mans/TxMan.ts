@@ -106,11 +106,12 @@ class TxMan {
   }
 
   sendTx = async (chainId: number, params: TxParams, txHex: string) => {
-    const { result } = await sendTransaction(chainId, txHex);
+    const { result, error } = await sendTransaction(chainId, txHex);
+
     if (!result) {
       new Notification({
         title: i18n.t('Transaction Failed'),
-        body: i18n.t('TxFailed2', { nonce: params.nonce }),
+        body: i18n.t('TxFailed2', { nonce: params.nonce, message: error?.message }),
       }).show();
 
       return undefined;

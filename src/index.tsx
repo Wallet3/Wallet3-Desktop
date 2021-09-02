@@ -13,12 +13,16 @@ import networksVM, { NetworksVM } from './ui/viewmodels/NetworksVM';
 import AppPage from './ui/App';
 import { observer } from 'mobx-react-lite';
 
-interface ViewModels {
+// import swapVM, { SwapVM } from './ui/viewmodels/SwapVM';
+
+
+export interface ViewModels {
   app: Application;
   mnVM: MnemonicVM;
   networksVM: NetworksVM;
   langsVM: LangsVM;
   currencyVM: CurrencyVM;
+  // swapVM?: SwapVM;
 }
 
 const viewmodels = { app: App, mnVM, networksVM, langsVM, currencyVM };
