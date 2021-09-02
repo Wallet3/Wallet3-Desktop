@@ -42,18 +42,19 @@ export class TransferVM {
   get isValid() {
     try {
       const validAmount = this.amountBigInt.lte(this.selectedTokenBalance) && Number.parseFloat(this.amount) >= 0;
-      console.log(validAmount);
+      const { currentNetwork } = NetworksVM;
+
       return (
         this.selectedTokenBalance.gt(0) &&
         this.receiptAddress &&
         this.recipient &&
         this.amount.length > 0 &&
         validAmount &&
-        this.gas >= 21000 &&
+        this.gas >= (currentNetwork.l2 ? 0 : 21000) &&
         this.gas < 12_500_000 &&
         this.nonce >= 0 &&
         !this.loading &&
-        (NetworksVM.currentNetwork.eip1559
+        (currentNetwork.eip1559
           ? this.priorityPrice_Wei >= 0 && this.gasPrice_Gwei * Gwei_1 > this.priorityPrice_Wei
           : true) &&
         this.gasPrice_Gwei > 0 &&
