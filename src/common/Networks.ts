@@ -15,6 +15,7 @@ export interface INetwork {
   chainId: number;
   color: string;
   test?: boolean;
+  l2?: boolean;
   eip1559?: boolean;
   order?: number;
   defaultTokens: IToken[];
@@ -32,12 +33,13 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: EthereumPopularTokens,
   },
   {
-    symbol: 'OETH',
+    symbol: 'ETH',
     comm_id: 'op',
     network: 'Optimism',
     chainId: 10,
     color: '#FF0420',
     order: 3,
+    l2: true,
     defaultTokens: [],
   },
   {
@@ -47,6 +49,7 @@ export const PublicNetworks: INetwork[] = [
     chainId: 42161,
     color: '#2D374B',
     order: 3,
+    l2: true,
     defaultTokens: [],
   },
   {

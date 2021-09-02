@@ -42,7 +42,7 @@ export class TransferVM {
   get isValid() {
     try {
       const validAmount = this.amountBigInt.lte(this.selectedTokenBalance) && Number.parseFloat(this.amount) >= 0;
-
+      console.log(validAmount);
       return (
         this.selectedTokenBalance.gt(0) &&
         this.receiptAddress &&

@@ -168,16 +168,13 @@ export class AccountVM {
     nativeToken.wei = balance.toString();
     nativeToken.price = nativeCurrency?.price ?? (this.nativeToken?.price || 0);
 
-    runInAction(() => {
-      this.nativeToken = nativeToken;
-      this.allTokens[0] = nativeToken;
-    });
+    runInAction(() => (this.nativeToken = nativeToken));
 
     return nativeToken;
   }
 
   refreshChainTokens = async () => {
-    const nativeSymbols = Networks.map((n) => n?.symbol.toLowerCase());
+    const nativeSymbols = Networks.map((n) => n?.symbol.toLowerCase()).concat(Networks.map((n) => n.comm_id));
     const defaultTokens = Networks.find((n) => n.chainId === NetVM.currentChainId).defaultTokens.map((t, i) =>
       new UserToken().init(t, { order: i + 1, show: false })
     );
@@ -214,7 +211,9 @@ export class AccountVM {
           )
           .sort((a, b) => b.amount * b.price - a.amount * a.price);
 
-    const allTokens = [...userConfigs, ...assets].sort((a, b) => a.order - b.order);
+    const allTokens = [...userConfigs, ...assets]
+      .filter((t) => !nativeSymbols.find((n) => n === t.id))
+      .sort((a, b) => a.order - b.order);
 
     const nativeCurrency = tokens.find((t) => nativeSymbols.includes(t.id));
     const nativeToken = await this.refreshNativeToken(nativeCurrency);
