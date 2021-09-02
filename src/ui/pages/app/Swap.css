@@ -1,0 +1,146 @@
+.page.swap {
+  padding: 0;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.page.swap > .utility-bar {
+  margin-top: -5px;
+}
+
+.page.swap > .swap-container {
+  padding-top: 15px;
+  border-radius: 5px;
+  height: auto;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  row-gap: 32px;
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+.page.swap > .swap-container input {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  font-size: 20px;
+  line-height: 20px;
+  font-weight: 450;
+  font-family: 'Inter var', sans-serif;
+}
+
+.page.swap > .swap-container .swap {
+  display: flex;
+  flex-direction: column;
+}
+
+.page.swap > .swap-container .swap .max {
+  display: flex;
+  font-size: 10px;
+  margin-bottom: -18px;
+  padding: 0 14px;
+  box-sizing: border-box;
+}
+
+.page.swap > .swap-container .swap .max span {
+  cursor: pointer;
+  z-index: 9;
+}
+
+.page.swap > .swap-container .swap .swapbox {
+  display: grid;
+  grid-template-columns: 1fr 100px;
+  column-gap: 8px;
+  border-radius: 7px;
+  border: 1px solid var(--border-color);
+  padding: 6px 10px;
+  box-sizing: border-box;
+}
+
+.page.swap > .swap-container .swap .swapbox .rc-menu {
+  background-color: transparent !important;
+  backdrop-filter: blur(10px);
+  -webkit-app-region: no-drag !important;
+  z-index: 99999999;
+}
+
+.page.swap > .swap-container .swap .swapbox .rc-menu__item--hover {
+  background-color: #00000010 !important;
+  -webkit-app-region: no-drag;
+}
+
+.page.swap > .swap-container .swap .swapbox.from {
+  padding-top: 20px;
+}
+
+.page.swap > .swap-container .swap .arrow {
+  display: flex;
+  justify-content: center;
+  margin: 2px;
+  cursor: pointer;
+}
+
+.page.swap > .swap-container .swap .arrow svg {
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  background-color: aliceblue;
+  width: 15px;
+  height: 15px;
+  padding: 3px;
+  margin: -8px;
+  z-index: 9;
+  transition: all 0.3s;
+}
+
+.page.swap > .swap-container .swap .arrow svg:hover {
+  background-color: var(--border-color);
+  color: white;
+}
+
+.page.swap > .swap-container .swap .info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  line-height: 12px;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.page.swap > .swap-container .swap .info .slippages {
+  display: flex;
+  align-items: center;
+  column-gap: 4px;
+}
+
+.page.swap > .swap-container .swap .info .slippages span {
+  padding: 2px 5px;
+  padding-top: 3px;
+  color: dimgrey;
+  cursor: pointer;
+  transition: all 0.3s;
+  border-radius: 3px;
+}
+
+.page.swap > .swap-container .swap .info .slippages span:hover {
+  background: var(--border-color);
+}
+
+.page.swap > .swap-container .swap .info .slippages span.active {
+  background-color: lightskyblue;
+  color: white;
+}
+
+.page.swap .token-label {
+  font-size: 16px;
+  text-transform: none;
+}
+
+.page.swap .token-label img {
+  width: 16px;
+  height: 16px;
+  margin-top: -2px;
+  margin-right: 8px;
+}

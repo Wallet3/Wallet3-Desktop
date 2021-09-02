@@ -46,10 +46,6 @@ export class ConfirmVM {
     iface?: ethers.utils.Interface;
   } = undefined;
 
-  get eip1559() {
-    return Networks.find((n) => n.chainId === this.args.chainId).eip1559;
-  }
-
   private _provider: ethers.providers.JsonRpcProvider;
   private _value: string | number = '';
   private _data: string = '';
@@ -100,7 +96,7 @@ export class ConfirmVM {
     this._value = Number(params.value) === 0 ? 0 : params.value || 0;
     this._data = params.data;
 
-    if (!this.eip1559) return;
+    if (!this.currentNetwork.eip1559) return;
 
     const refreshBaseFee = async () => {
       const { nextBlockBaseFee, suggestedPriorityFee } = await fetchNextBlockFeeData(this.chainId);
@@ -184,11 +180,15 @@ export class ConfirmVM {
   }
 
   get tokenSymbol() {
-    return this.transferToken?.symbol || this.approveToken?.symbol || Networks.find((n) => n.chainId === this.chainId).symbol;
+    return this.transferToken?.symbol || this.approveToken?.symbol || this.currentNetwork.symbol;
   }
 
   get networkSymbol() {
-    return Networks.find((c) => c.chainId === this.chainId).symbol ?? 'ETH';
+    return this.currentNetwork.symbol ?? 'ETH';
+  }
+
+  get currentNetwork() {
+    return Networks.find((c) => c.chainId === this.chainId);
   }
 
   private _nonce = -1;
@@ -201,7 +201,9 @@ export class ConfirmVM {
       ? this.priorityPrice_Wei.add(this.nextBlockBaseFee)
       : this.maxFeePerGas_Wei;
 
-    return this.eip1559 ? formatEther(eip1559Fee.mul(this.gas)) : formatEther(this.gasPriceWei.mul(this.gas).toString());
+    return this.currentNetwork.eip1559
+      ? formatEther(eip1559Fee.mul(this.gas))
+      : formatEther(this.gasPriceWei.mul(this.gas).toString());
   }
 
   get insufficientFee() {
@@ -217,7 +219,7 @@ export class ConfirmVM {
       : this.gasPrice > 0 && this.gasPrice <= MAX_GWEI_PRICE;
 
     return (
-      this.gas >= 21000 &&
+      this.gas >= (this.currentNetwork.l2 ? 0 : 21000) &&
       this.gas <= 12_500_000 &&
       validGasPrice &&
       this.nonce >= 0 &&
@@ -361,9 +363,9 @@ export class ConfirmVM {
       to: this.args.to,
       value: this._value,
       gas: this.args.gas,
-      gasPrice: this.eip1559 ? undefined : this.args.gasPrice, // wei
-      maxFeePerGas: this.eip1559 ? this.args.maxFeePerGas : undefined, // wei
-      maxPriorityFeePerGas: this.eip1559 ? this.args.maxPriorityFeePerGas : undefined, // wei
+      gasPrice: this.currentNetwork.eip1559 ? undefined : this.args.gasPrice, // wei
+      maxFeePerGas: this.currentNetwork.eip1559 ? this.args.maxFeePerGas : undefined, // wei
+      maxPriorityFeePerGas: this.currentNetwork.eip1559 ? this.args.maxPriorityFeePerGas : undefined, // wei
 
       nonce: this.args.nonce,
       data: this.args.data,

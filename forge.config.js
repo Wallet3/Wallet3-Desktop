@@ -2,6 +2,10 @@ const { appleId, appleIdPassword } = require('./sign/appSign');
 const { certPassword, devCertPath, publisher } = require('./sign/winSign');
 const package = require('./package.json');
 
+const entitlementsForFile = (path) => {
+  return path.includes('Helper') ? 'sign/entitlements.mas.plist' : undefined;
+};
+
 module.exports = {
   packagerConfig: {
     appBundleId: 'jp.co.chainbow.wallet3',
@@ -9,14 +13,17 @@ module.exports = {
     appCategoryType: 'public.app-category.finance',
     darwinDarkModeSupport: false,
     icon: './assets/AppIcon.icns',
+    platform: 'mas',
     osxSign: {
-      identity: 'ChainBow Co. Ltd (Z3N6SZF439)',
+      identity: '3rd Party Mac Developer Application: ChainBow Co. Ltd (Z3N6SZF439)',
+      platform: 'mas',
       hardenedRuntime: false,
-      'gatekeeper-assess': false,
+      'gatekeeper-assess': true,
       // 'signature-flags': 'library',
-      entitlements: 'sign/entitlements.plist',
-      'entitlements-inherit': 'sign/entitlements.plist',
+      entitlements: 'sign/entitlements.mas.plist',
+      'entitlements-inherit': 'sign/entitlements.mas.inherit.plist',
       'provisioning-profile': 'sign/embedded.provisionprofile',
+      type: 'distribution',
     },
     // osxNotarize: {
     //   appleId,
@@ -37,12 +44,11 @@ module.exports = {
   },
   makers: [
     {
-      name: '@electron-forge/maker-dmg',
+      name: '@electron-forge/maker-pkg',
       config: {
+        platform: 'mas',
+        identity: '3rd Party Mac Developer Installer: ChainBow Co. Ltd (Z3N6SZF439)',
         name: `${package.name}-mac-${process.arch}-${package.version}`,
-        icon: 'assets/AppIcon.icns',
-        background: 'assets/DMGBG.png',
-        backgroundColor: '#6186ff',
       },
     },
     {
