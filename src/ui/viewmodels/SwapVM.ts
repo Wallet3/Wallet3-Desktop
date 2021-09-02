@@ -1,4 +1,5 @@
 import { BigNumber, utils } from 'ethers';
+import Messages, { ConfirmSendTx } from '../../common/Messages';
 import { autorun, makeAutoObservable, reaction, runInAction } from 'mobx';
 
 import App from './Application';
@@ -6,6 +7,7 @@ import { ERC20Token } from '../../common/ERC20Token';
 import { IToken } from '../../misc/Tokens';
 import NetworksVM from './NetworksVM';
 import Stableswap from './swap/Stableswap';
+import ipc from '../bridges/IPC';
 
 interface ISwapToken extends IToken {
   allowance?: BigNumber;
@@ -42,7 +44,11 @@ export class SwapVM {
   }
 
   get approved() {
-    return this.from?.allowance?.gte(utils.parseUnits(this.fromAmount, this.from.decimals));
+    try {
+      return this.from?.allowance?.gte(utils.parseUnits(this.fromAmount || '0', this.from.decimals || 0));
+    } catch (error) {
+      return false;
+    }
   }
 
   constructor() {
@@ -60,14 +66,16 @@ export class SwapVM {
   }
 
   selectFrom(token: ISwapToken, check = true) {
-    if (!token) return;
-
     if (this.for?.address === token?.address && check) {
       this.interchange();
       return;
     }
 
     this.from = token;
+    if (!token) {
+      this.max = BigNumber.from(0);
+      return;
+    }
 
     const erc20 = new ERC20Token(token.address, NetworksVM.currentProvider);
 
@@ -81,8 +89,6 @@ export class SwapVM {
   }
 
   selectFor(token: ISwapToken, check = true) {
-    if (!token) return;
-
     if (this.from?.address === token?.address && check) {
       this.interchange();
       return;
@@ -113,7 +119,24 @@ export class SwapVM {
     runInAction(() => (this.forAmount = utils.formatUnits(forAmount, this.for.decimals)));
   }
 
-  approve() {}
+  async approve() {
+    const erc20 = new ERC20Token(this.from.address, NetworksVM.currentProvider);
+    const data = erc20.encodeApproveData(
+      this.currentExecutor.address,
+      '115792089237316195423570985008687907853269984665640564039457584007913129639935'
+    );
+
+    await ipc.invokeSecure<void>(Messages.sendTx, {
+      from: this.account,
+      to: this.from.address,
+      value: '0',
+      gas: 100_000,
+      // gasPrice: this.gasPrice_Gwei * Gwei_1,
+      // nonce: this.nonce,
+      data,
+      chainId: NetworksVM.currentChainId,
+    } as ConfirmSendTx);
+  }
 }
 
 export default new SwapVM();

@@ -9,7 +9,7 @@ const KnownAddresses = {
   '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506': 'SushiSwap',
   '0x722122dF12D4e14e13Ac3b6895a86e84145b6967': 'Tornado.Cash',
   '0xd1917932A7Db6Af687B523D5Db5d7f5c2734763F': 'Bulksender.app',
-  '0xA0c68C638235ee32657e8f720a23ceC1bFc77C77': 'Polygon (Matic): Bridge',
+  '0xA0c68C638235ee32657e8f720a23ceC1bFc77C77': 'Polygon Bridge',
   '0xDef1C0ded9bec7F1a1670819833240f027b25EfF': '0x: Exchange Proxy',
   '0x881D40237659C251811CEC9c364ef91dC08D300C': 'Metamask Router',
   '0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9': 'Aave',
@@ -63,6 +63,7 @@ const KnownAddresses = {
   '0xB3319f5D18Bc0D84dD1b4825Dcde5d5f7266d407': 'Compound: cZRX',
   '0x0650d780292142835F6ac58dd8E2a336e87b4393': 'UNI Prize Pool',
   '0x4Dbd4fc535Ac27206064B68FfCf827b0A60BAB3f': 'Arbitrum: Inbox',
+  '0xC36442b4a4522E871399CD717aBDD847Ab11FE88': 'Uniswap V3 NFT',
 };
 
 Tokens.forEach((t) => (KnownAddresses[t.address] = t.symbol));

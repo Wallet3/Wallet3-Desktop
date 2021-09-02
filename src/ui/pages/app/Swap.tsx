@@ -51,7 +51,7 @@ export default observer(({ app, networksVM, swapVM }: IConstructor) => {
         style={{ marginTop: 1 }}
         menuButton={() => (
           <MenuButton className="menu-button">
-            <TokenLabel symbol={selectedToken?.symbol} name={selectedToken?.symbol} />
+            <TokenLabel symbol={selectedToken?.symbol ?? ''} name={selectedToken?.symbol ?? ''} />
           </MenuButton>
         )}
       >
@@ -67,7 +67,7 @@ export default observer(({ app, networksVM, swapVM }: IConstructor) => {
   };
 
   useEffect(() => {
-    swapVM.init();
+    if (!swapVM.from) swapVM.init();
   }, []);
 
   return (
@@ -127,7 +127,12 @@ export default observer(({ app, networksVM, swapVM }: IConstructor) => {
           </div>
         </div>
 
-        {!swapVM.approved ? <button disabled={!swapVM.fromAmount}>{t('Approve')}</button> : undefined}
+        {!swapVM.approved ? (
+          <button disabled={!swapVM.fromAmount} onClick={(_) => swapVM.approve()}>
+            {t('Approve')}
+          </button>
+        ) : undefined}
+
         {swapVM.approved ? <button disabled={!swapVM.isValid}>{t('Swap')}</button> : undefined}
       </div>
     </div>
