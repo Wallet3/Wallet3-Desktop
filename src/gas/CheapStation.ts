@@ -30,6 +30,10 @@ export default class CheapStation {
   async refresh() {
     const provider = getProviderByChainId(this.chainId);
     const gasPrice = await provider.getGasPrice();
-    runInAction(() => (this.rapid = Math.max(gasPrice.toNumber(), 5 * Gwei_1)));
+
+    runInAction(() => {
+      this.rapid = Math.max(gasPrice.toNumber() + 2 * Gwei_1, 5 * Gwei_1);
+      this.fast = gasPrice.toNumber();
+    });
   }
 }

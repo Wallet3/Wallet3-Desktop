@@ -83,7 +83,9 @@ export async function sendTransaction(chainId: number, txHex: string) {
 
       if (chainId === 1) broadcastEthTx(txHex);
 
-      return resp.data as { id: number; result: string };
+      console.log(resp.data);
+
+      return resp.data as { id: number; result: string; error: { code: number; message: string } };
     } catch (error) {
       console.log(error);
     }

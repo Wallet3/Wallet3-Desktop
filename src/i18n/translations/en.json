@@ -84,7 +84,7 @@
   "Transaction Failed": "Transaction Failed",
   "TxConfirmed": "Transaction {{nonce}} confirmed, view it on Block Explorer",
   "TxFailed": "Transaction {{nonce}} failed, view it on Block Explorer",
-  "TxFailed2": "Transaction {{nonce}} failed, please try again. Gas price to low or insufficient balance.",
+  "TxFailed2": "Transaction {{nonce}} failed, please try again. Error Message: {{message}}",
   "Auto Switch": "Auto Switch",
   "Passcode updated": "Passcode updated",
   "Network": "Network",

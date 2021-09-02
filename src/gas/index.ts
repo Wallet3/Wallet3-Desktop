@@ -22,6 +22,8 @@ class GasStation {
     [100, new CheapStation(100)],
     [250, new CheapStation(250)],
     [128, new CheapStation(128)],
+    [10, new CheapStation(10)],
+    [42161, new CheapStation(42161)],
     [137, PolygonGasStation],
     [66, new CheapStation(66)],
     [56, BscGas],
