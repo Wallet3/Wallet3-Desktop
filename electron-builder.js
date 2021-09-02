@@ -34,7 +34,7 @@ module.exports = {
   },
   win: {
     target: ['nsis'],
-    icon: 'assets/AppIcon.ico',
+    icon: 'assets/win/AppIcon.png',
     publish: ['github'],
     legalTrademarks: 'Wallet 3, ChainBow Co, Ltd.',
     certificateFile: devCertPath,

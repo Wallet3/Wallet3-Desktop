@@ -62,6 +62,7 @@ const KnownAddresses = {
   '0x80a2AE356fc9ef4305676f7a3E2Ed04e12C33946': 'Compound: cYFI',
   '0xB3319f5D18Bc0D84dD1b4825Dcde5d5f7266d407': 'Compound: cZRX',
   '0x0650d780292142835F6ac58dd8E2a336e87b4393': 'UNI Prize Pool',
+  '0x4Dbd4fc535Ac27206064B68FfCf827b0A60BAB3f': 'Arbitrum: Inbox',
 };
 
 Tokens.forEach((t) => (KnownAddresses[t.address] = t.symbol));
