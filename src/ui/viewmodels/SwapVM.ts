@@ -9,7 +9,6 @@ import { IToken } from '../../misc/Tokens';
 import NetworksVM from './NetworksVM';
 import Stableswap from './swap/Stableswap';
 import delay from 'delay';
-import { getProviderByChainId } from '../../common/Provider';
 import ipc from '../bridges/IPC';
 
 interface ISwapToken extends IToken {
@@ -80,6 +79,7 @@ export class SwapVM {
       return;
     }
 
+    this.fromAmount = '';
     this.from = token;
     if (!token) {
       this.max = BigNumber.from(0);
@@ -92,7 +92,7 @@ export class SwapVM {
       runInAction(() => (this.max = balance));
     });
 
-    erc20.allowance(this.account, this.currentExecutor.address).then((allowance) => {
+    erc20.allowance(this.account, this.currentExecutor.getContractAddress(NetworksVM.currentChainId)).then((allowance) => {
       token.allowance = allowance;
     });
   }
@@ -103,6 +103,7 @@ export class SwapVM {
       return;
     }
 
+    this.forAmount = '';
     this.for = token;
   }
 
@@ -124,7 +125,7 @@ export class SwapVM {
     this.fromAmount = value;
     const amount = utils.parseUnits(value, this.from.decimals);
 
-    const forAmount = await this.currentExecutor.getAmountOut(1337, this.from, this.for, amount);
+    const forAmount = await this.currentExecutor.getAmountOut(NetworksVM.currentChainId, this.from, this.for, amount);
     runInAction(() => (this.forAmount = utils.formatUnits(forAmount, this.for.decimals)));
   }
 
@@ -137,7 +138,7 @@ export class SwapVM {
 
     const erc20 = new ERC20Token(token.address, provider);
     const data = erc20.encodeApproveData(
-      this.currentExecutor.address,
+      this.currentExecutor.getContractAddress(NetworksVM.currentChainId),
       '115792089237316195423570985008687907853269984665640564039457584007913129639935'
     );
 
@@ -168,7 +169,7 @@ export class SwapVM {
 
     runInAction(() => this.isApproving.set(chainId, false));
 
-    const allowance = await erc20.allowance(this.account, this.currentExecutor.address);
+    const allowance = await erc20.allowance(this.account, this.currentExecutor.getContractAddress(NetworksVM.currentChainId));
     console.log(allowance.toString());
 
     runInAction(() => {

@@ -62,14 +62,14 @@ export class AccountVM {
 
   get chainsOverview(): ChainOverview[] {
     return this.chains
-      .filter((c) => Networks.find((n) => n?.symbol.toLowerCase() === c.id)) // Filter supported chains
+      .filter((c) => Networks.find((n) => n.comm_id === c.id && n.showOverview && !n.test))
       .map((chain) => {
-        const network = Networks.find((n) => n?.symbol.toLowerCase() === chain.id);
+        const network = Networks.find((n) => n?.comm_id === chain.id);
         return {
           name: network?.network ?? '',
           value: chain?.usd_value ?? 0,
           color: network?.color ?? '',
-          order: network.order ?? chain.community_id,
+          order: network?.order ?? chain.community_id,
         };
       })
       .sort((a, b) => a.order - b.order);

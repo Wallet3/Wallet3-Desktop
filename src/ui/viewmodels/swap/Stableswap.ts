@@ -8,20 +8,31 @@ import { getProviderByChainId } from '../../../common/Provider';
 
 const TriPool = '0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7';
 const sUSDPool = '0xA5407eAE9Ba41422680e2e00537571bcC53efBfD';
-const StableswapAddr = '0xF16cC3B1B3c3072Ba1110e336212EF72C2Fa59cD';
 
-const Tokens: { [chain: number]: { tokens: IToken[]; targets: string[] } } = {
-  1: { tokens: [DAI, USDC, USDT, sUSD], targets: [TriPool, TriPool, TriPool, sUSDPool] },
-  137: { tokens: [MATIC_DAI, MATIC_USDC, MATIC_USDT], targets: [] },
-  1337: { tokens: [DAI, USDC, USDT, sUSD], targets: [TriPool, TriPool, TriPool, sUSDPool] },
+const Polygon_Aave_Pool = '0x445FE580eF8d70FF569aB36e80c647af338db351';
+
+const Tokens: { [chain: number]: { tokens: IToken[]; targets: string[]; contract: string } } = {
+  1: { tokens: [DAI, USDC, USDT, sUSD], targets: [TriPool, TriPool, TriPool, sUSDPool], contract: '' },
+
+  137: {
+    tokens: [MATIC_DAI, MATIC_USDC, MATIC_USDT],
+    targets: [Polygon_Aave_Pool, Polygon_Aave_Pool, Polygon_Aave_Pool],
+    contract: '',
+  },
+
+  1337: {
+    tokens: [DAI, USDC, USDT, sUSD],
+    targets: [TriPool, TriPool, TriPool, sUSDPool],
+    contract: '0xF16cC3B1B3c3072Ba1110e336212EF72C2Fa59cD',
+  },
 };
 
 export class Stableswap {
   _fromTokens = Tokens;
   _forTokens = Tokens;
 
-  get address() {
-    return StableswapAddr;
+  getContractAddress(chainId: number) {
+    return Tokens[chainId].contract;
   }
 
   fromTokens(chainId: number): IToken[] {
@@ -33,8 +44,8 @@ export class Stableswap {
   }
 
   async getAmountOut(chainId: number, from: IToken, to: IToken, amountIn: BigNumber): Promise<BigNumber> {
-    const swap = new Contract(StableswapAddr, StableswapABI, getProviderByChainId(chainId));
-    const { tokens, targets } = Tokens[chainId] ?? {};
+    const { tokens, targets, contract } = Tokens[chainId] ?? {};
+    const swap = new Contract(contract, StableswapABI, getProviderByChainId(chainId));
     if (!tokens || !targets) return;
 
     const i = tokens.findIndex((t) => t.address === from.address);
