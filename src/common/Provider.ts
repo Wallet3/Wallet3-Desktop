@@ -51,6 +51,7 @@ export function markRpcFailed(network: number, rpc: string) {
 export function saveCustomizedRPC(networkId: number, rpc: string, explorer: string) {
   const store = require('storejs');
   store.set(`customizedRPC-${networkId}`, { rpc, explorer });
+  cache.delete(networkId);
 }
 
 function getCustomizedRPC(networkId: number) {
