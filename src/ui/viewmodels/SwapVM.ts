@@ -8,6 +8,8 @@ import { Gwei_1 } from '../../gas/Gasnow';
 import { IToken } from '../../misc/Tokens';
 import NetworksVM from './NetworksVM';
 import Stableswap from './swap/Stableswap';
+import delay from 'delay';
+import { getProviderByChainId } from '../../common/Provider';
 import ipc from '../bridges/IPC';
 
 interface ISwapToken extends IToken {
@@ -24,7 +26,11 @@ export class SwapVM {
   slippage = 0.5;
   fee = 0.05;
 
-  loading = false;
+  private isApproving = new Map<number, boolean>();
+
+  get loading() {
+    return this.isApproving.get(NetworksVM.currentChainId);
+  }
 
   get currentExecutor() {
     return Stableswap;
@@ -123,33 +129,51 @@ export class SwapVM {
   }
 
   async approve() {
-    this.loading = true;
+    const provider = NetworksVM.currentProvider;
+    const chainId = NetworksVM.currentChainId;
+    const token = this.from;
 
-    const erc20 = new ERC20Token(this.from.address, NetworksVM.currentProvider);
+    runInAction(() => this.isApproving.set(chainId, true));
+
+    const erc20 = new ERC20Token(token.address, provider);
     const data = erc20.encodeApproveData(
       this.currentExecutor.address,
       '115792089237316195423570985008687907853269984665640564039457584007913129639935'
     );
 
-    const [feeData, nonce] = await Promise.all([
-      NetworksVM.currentProvider.getFeeData(),
-      NetworksVM.currentProvider.getTransactionCount(this.account, 'pending'),
-    ]);
+    const [feeData, nonce] = await Promise.all([provider.getFeeData(), provider.getTransactionCount(this.account, 'pending')]);
 
     await ipc.invokeSecure<void>(Messages.createTransferTx, {
       from: this.account,
       to: this.from.address,
       value: '0',
       gas: 100_000,
-      maxFeePerGas: feeData.maxFeePerGas.toNumber(),
-      maxPriorityFeePerGas: feeData.maxPriorityFeePerGas.toNumber() + 2 * Gwei_1,
+      maxFeePerGas: feeData.maxFeePerGas?.toNumber(),
+      maxPriorityFeePerGas: feeData.maxPriorityFeePerGas?.toNumber() + 2 * Gwei_1,
       gasPrice: feeData.gasPrice.toNumber(),
       nonce,
       data,
-      chainId: NetworksVM.currentChainId,
+      chainId,
     } as ConfirmSendTx);
 
-    // runInAction(() => (this.loading = false));
+    await delay(200);
+
+    const tx = App.currentWallet?.pendingTxs.find((tx) => tx.from === this.account && tx.nonce === nonce);
+
+    while (tx) {
+      const receipt = await provider.getTransactionReceipt(tx.hash);
+      if (receipt) break;
+      delay(3000);
+    }
+
+    runInAction(() => this.isApproving.set(chainId, false));
+
+    const allowance = await erc20.allowance(this.account, this.currentExecutor.address);
+    console.log(allowance.toString());
+
+    runInAction(() => {
+      token.allowance = allowance;
+    });
   }
 }
 

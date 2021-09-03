@@ -1,5 +1,6 @@
 import { BigNumber, Contract } from 'ethers';
 import { DAI, IToken, USDC, USDT, sUSD } from '../../../misc/Tokens';
+import { MATIC_DAI, MATIC_USDC, MATIC_USDT } from '../../../misc/Tokens';
 
 import ERC20ABI from '../../../abis/ERC20.json';
 import StableswapABI from '../../../abis/Stableswap.json';
@@ -11,6 +12,7 @@ const StableswapAddr = '0xF16cC3B1B3c3072Ba1110e336212EF72C2Fa59cD';
 
 const Tokens: { [chain: number]: { tokens: IToken[]; targets: string[] } } = {
   1: { tokens: [DAI, USDC, USDT, sUSD], targets: [TriPool, TriPool, TriPool, sUSDPool] },
+  137: { tokens: [MATIC_DAI, MATIC_USDC, MATIC_USDT], targets: [] },
   1337: { tokens: [DAI, USDC, USDT, sUSD], targets: [TriPool, TriPool, TriPool, sUSDPool] },
 };
 
