@@ -80,6 +80,15 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: FTMPopularTokens,
   },
   {
+    symbol: 'AVAX',
+    comm_id: 'avax',
+    chainId: 43114,
+    network: 'Avalanche',
+    color: '#E84142',
+    order: 5,
+    defaultTokens: [],
+  },
+  {
     symbol: 'HT',
     comm_id: 'heco',
     chainId: 128,

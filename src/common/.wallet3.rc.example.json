@@ -4,10 +4,12 @@
   "4": [],
   "5": [],
   "42": [],
-  
+
   "10": [],
 
   "42161": [],
+
+  "43114": ["https://api.avax.network/ext/bc/C/rpc"],
 
   "66": ["https://exchainrpc.okex.org"],
   "100": ["https://rpc.xdaichain.com"],
@@ -23,11 +25,7 @@
 
   "250": ["https://rpcapi.fantom.network", "https://rpc.fantom.network"],
 
-  "80001": [
-    "https://rpc-mumbai.matic.today",
-    "https://rpc-mumbai.maticvigil.com",
-    "https://matic-mumbai.chainstacklabs.com"
-  ],
+  "80001": ["https://rpc-mumbai.matic.today", "https://rpc-mumbai.maticvigil.com", "https://matic-mumbai.chainstacklabs.com"],
 
   "56": [
     "https://bsc-dataseed1.ninicoin.io",
