@@ -144,3 +144,15 @@
   margin-top: -2px;
   margin-right: 8px;
 }
+
+.page.swap > .swap-container > button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 16px;
+  padding-bottom: 6px;
+}
+
+.page.swap > .swap-container > button > span[class^='css-'] {
+  margin-bottom: 8px;
+}

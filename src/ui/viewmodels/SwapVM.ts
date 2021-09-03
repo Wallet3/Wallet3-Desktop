@@ -4,6 +4,7 @@ import { autorun, makeAutoObservable, reaction, runInAction } from 'mobx';
 
 import App from './Application';
 import { ERC20Token } from '../../common/ERC20Token';
+import { Gwei_1 } from '../../gas/Gasnow';
 import { IToken } from '../../misc/Tokens';
 import NetworksVM from './NetworksVM';
 import Stableswap from './swap/Stableswap';
@@ -22,6 +23,8 @@ export class SwapVM {
   forAmount = '';
   slippage = 0.5;
   fee = 0.05;
+
+  loading = false;
 
   get currentExecutor() {
     return Stableswap;
@@ -120,22 +123,33 @@ export class SwapVM {
   }
 
   async approve() {
+    this.loading = true;
+
     const erc20 = new ERC20Token(this.from.address, NetworksVM.currentProvider);
     const data = erc20.encodeApproveData(
       this.currentExecutor.address,
       '115792089237316195423570985008687907853269984665640564039457584007913129639935'
     );
 
-    await ipc.invokeSecure<void>(Messages.sendTx, {
+    const [feeData, nonce] = await Promise.all([
+      NetworksVM.currentProvider.getFeeData(),
+      NetworksVM.currentProvider.getTransactionCount(this.account, 'pending'),
+    ]);
+
+    await ipc.invokeSecure<void>(Messages.createTransferTx, {
       from: this.account,
       to: this.from.address,
       value: '0',
       gas: 100_000,
-      // gasPrice: this.gasPrice_Gwei * Gwei_1,
-      // nonce: this.nonce,
+      maxFeePerGas: feeData.maxFeePerGas.toNumber(),
+      maxPriorityFeePerGas: feeData.maxPriorityFeePerGas.toNumber() + 2 * Gwei_1,
+      gasPrice: feeData.gasPrice.toNumber(),
+      nonce,
       data,
       chainId: NetworksVM.currentChainId,
     } as ConfirmSendTx);
+
+    // runInAction(() => (this.loading = false));
   }
 }
 

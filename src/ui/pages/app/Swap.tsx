@@ -7,6 +7,7 @@ import { Application } from '../../viewmodels/Application';
 import { CryptoIcons } from '../../misc/Icons';
 import Feather from 'feather-icons-react';
 import { NetworksVM } from '../../viewmodels/NetworksVM';
+import PuffLoader from 'react-spinners/PuffLoader';
 import React from 'react';
 import { SwapVM } from '../../viewmodels/SwapVM';
 import UtilityBar from './components/UtilityBar';
@@ -128,8 +129,8 @@ export default observer(({ app, networksVM, swapVM }: IConstructor) => {
         </div>
 
         {!swapVM.approved ? (
-          <button disabled={!swapVM.fromAmount} onClick={(_) => swapVM.approve()}>
-            {t('Approve')}
+          <button disabled={!swapVM.fromAmount || swapVM.loading} onClick={(_) => swapVM.approve()}>
+            {swapVM.loading ? <PuffLoader size={15} color="#dfe8f9" /> : <span>{t('Approve')}</span>}
           </button>
         ) : undefined}
 
