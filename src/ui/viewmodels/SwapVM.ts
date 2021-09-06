@@ -69,6 +69,8 @@ export class SwapVM {
   }
 
   init() {
+    this.forAmount = '';
+    this.fromAmount = '';
     this.selectFrom(this.fromList[0]);
     this.selectFor(this.forList[1]);
   }
@@ -93,7 +95,7 @@ export class SwapVM {
     });
 
     erc20.allowance(this.account, this.currentExecutor.getContractAddress(NetworksVM.currentChainId)).then((allowance) => {
-      token.allowance = allowance;
+      runInAction(() => (this.from.allowance = allowance));
     });
   }
 
@@ -175,6 +177,35 @@ export class SwapVM {
     runInAction(() => {
       token.allowance = allowance;
     });
+  }
+
+  async swap() {
+    const provider = NetworksVM.currentProvider;
+    const chainId = NetworksVM.currentChainId;
+
+    const amountIn = utils.parseUnits(this.fromAmount || '0', this.from.decimals || 0);
+    const minOut = utils
+      .parseUnits(this.forAmount || '0', this.for.decimals || 0)
+      .mul(this.slippage * 10)
+      .div(1000);
+
+    const data = this.currentExecutor.encodeSwapData(NetworksVM.currentChainId, this.from, this.for, amountIn, minOut);
+    console.log(amountIn, minOut, data);
+
+    const [feeData, nonce] = await Promise.all([provider.getFeeData(), provider.getTransactionCount(this.account, 'pending')]);
+
+    await ipc.invokeSecure<void>(Messages.createTransferTx, {
+      from: this.account,
+      to: this.currentExecutor.getContractAddress(chainId),
+      value: '0',
+      gas: 300_000,
+      maxFeePerGas: feeData.maxFeePerGas?.toNumber(),
+      maxPriorityFeePerGas: feeData.maxPriorityFeePerGas?.toNumber() + 2 * Gwei_1,
+      gasPrice: feeData.gasPrice.toNumber(),
+      nonce,
+      data,
+      chainId,
+    } as ConfirmSendTx);
   }
 }
 
