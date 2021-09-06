@@ -21,7 +21,7 @@ export async function sendTx({
   gas: number;
   value?: string;
 }) {
-  const [feeData, nonce] = await Promise.all([provider.getFeeData(), provider.getTransactionCount(this.account, 'pending')]);
+  const [feeData, nonce] = await Promise.all([provider.getFeeData(), provider.getTransactionCount(from, 'pending')]);
 
   await ipc.invokeSecure<void>(Messages.createTransferTx, {
     from,

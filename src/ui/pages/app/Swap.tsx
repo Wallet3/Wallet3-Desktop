@@ -141,8 +141,8 @@ export default observer(({ app, networksVM, swapVM }: IConstructor) => {
         ) : undefined}
 
         {swapVM.approved ? (
-          <button disabled={!swapVM.isValid} onClick={(_) => swapVM.swap()}>
-            {t('Swap')}
+          <button disabled={!swapVM.isValid || swapVM.swapping} onClick={(_) => swapVM.swap()}>
+            {swapVM.swapping ? <PuffLoader size={15} color="#dfe8f9" /> : <span>{t('Swap')}</span>}
           </button>
         ) : undefined}
       </div>

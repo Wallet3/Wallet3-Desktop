@@ -50,7 +50,16 @@ export class SwapVM {
   }
 
   get isValid() {
-    return Number(this.fromAmount) > 0 && this.from && this.for;
+    try {
+      return (
+        this.max.gte(utils.parseUnits(this.fromAmount || '0', this.from.decimals)) &&
+        Number(this.fromAmount) > 0 &&
+        this.from &&
+        this.for
+      );
+    } catch (error) {
+      return false;
+    }
   }
 
   get account() {
@@ -116,12 +125,14 @@ export class SwapVM {
   }
 
   interchange() {
+    this.max = BigNumber.from(0);
+    this.fromAmount = this.forAmount = '';
+
     const forToken = this.for;
     const fromToken = this.from;
+
     this.selectFrom(forToken, false);
     this.selectFor(fromToken, false);
-
-    this.fromAmount = this.forAmount = '';
   }
 
   setSlippage(value: number) {
@@ -139,33 +150,35 @@ export class SwapVM {
     runInAction(() => (this.forAmount = utils.formatUnits(forAmount, this.for.decimals)));
   }
 
-  // private async refreshTokens({
-  //   provider,
-  //   nonce,
-  //   chainId,
-  // }: {
-  //   chainId: number;
-  //   nonce: number;
-  //   provider: providers.BaseProvider;
-  // }) {
-  //   await delay(200);
+  private async awaitTx({ provider, nonce, chainId }: { chainId: number; nonce: number; provider: providers.BaseProvider }) {
+    await delay(200);
 
-  //   const tx = App.currentWallet?.pendingTxs.find((tx) => tx.from === this.account && tx.nonce === nonce);
+    const tx = App.currentWallet?.pendingTxs.find((tx) => tx.from === this.account && tx.nonce === nonce);
 
-  //   while (tx) {
-  //     const receipt = await provider.getTransactionReceipt(tx.hash);
-  //     if (receipt) break;
-  //     delay(3000);
-  //   }
+    while (tx) {
+      const receipt = await provider.getTransactionReceipt(tx.hash);
+      if (receipt) break;
+      delay(3000);
+    }
 
-  //   runInAction(() => this.isApproving.set(chainId, false));
+    runInAction(() => {
+      this.isApproving.set(chainId, false);
+      this.isSwapping.set(chainId, false);
+    });
 
-  //   const allowance = await erc20.allowance(this.account, this.currentExecutor.getContractAddress(NetworksVM.currentChainId));
+    const erc20From = new ERC20Token(this.from.address, provider);
+    const erc20For = new ERC20Token(this.for.address, provider);
 
-  //   runInAction(() => {
-  //     token.allowance = allowance;
-  //   });
-  // }
+    const [allowanceFrom, allowanceFor] = await Promise.all([
+      erc20From.allowance(this.account, this.currentExecutor.getContractAddress(chainId)),
+      erc20For.allowance(this.account, this.currentExecutor.getContractAddress(chainId)),
+    ]);
+
+    runInAction(() => {
+      this.from.allowance = allowanceFrom;
+      this.for.allowance = allowanceFor;
+    });
+  }
 
   async approve() {
     const provider = NetworksVM.currentProvider;
@@ -190,28 +203,31 @@ export class SwapVM {
       data,
     });
 
-    await delay(200);
+    await this.awaitTx({ provider, nonce, chainId });
+    // await delay(200);
 
-    const tx = App.currentWallet?.pendingTxs.find((tx) => tx.from === this.account && tx.nonce === nonce);
+    // const tx = App.currentWallet?.pendingTxs.find((tx) => tx.from === this.account && tx.nonce === nonce);
 
-    while (tx) {
-      const receipt = await provider.getTransactionReceipt(tx.hash);
-      if (receipt) break;
-      delay(3000);
-    }
+    // while (tx) {
+    //   const receipt = await provider.getTransactionReceipt(tx.hash);
+    //   if (receipt) break;
+    //   delay(3000);
+    // }
 
-    runInAction(() => this.isApproving.set(chainId, false));
+    // runInAction(() => this.isApproving.set(chainId, false));
 
-    const allowance = await erc20.allowance(this.account, this.currentExecutor.getContractAddress(NetworksVM.currentChainId));
+    // const allowance = await erc20.allowance(this.account, this.currentExecutor.getContractAddress(NetworksVM.currentChainId));
 
-    runInAction(() => {
-      token.allowance = allowance;
-    });
+    // runInAction(() => {
+    //   token.allowance = allowance;
+    // });
   }
 
   async swap() {
     const provider = NetworksVM.currentProvider;
     const chainId = NetworksVM.currentChainId;
+
+    runInAction(() => this.isSwapping.set(chainId, true));
 
     const amountIn = utils.parseUnits(this.fromAmount || '0', this.from.decimals || 0);
     const minOut = utils
@@ -230,6 +246,8 @@ export class SwapVM {
       data,
       provider,
     });
+
+    this.awaitTx({ nonce, provider, chainId });
   }
 }
 
