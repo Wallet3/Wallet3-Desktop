@@ -56,7 +56,7 @@ export class Stableswap {
   }
 
   encodeSwapData(chainId: number, from: IToken, to: IToken, amountIn: BigNumberish, minAmountOut: BigNumberish) {
-    const { tokens, targets, contract } = Tokens[chainId] ?? {};
+    const { tokens, targets, contract, underlying } = Tokens[chainId] ?? {};
     if (!tokens) return;
 
     const i = tokens.findIndex((t) => t.address === from.address);
@@ -72,7 +72,7 @@ export class Stableswap {
       to.address,
       amountIn,
       minAmountOut,
-      false,
+      underlying ?? false,
     ]);
   }
 }

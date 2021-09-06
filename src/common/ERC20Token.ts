@@ -5,7 +5,6 @@ import ERC20ABI from '../abis/ERC20.json';
 export class ERC20Token {
   address: string;
   erc20: ethers.Contract;
-  balance = BigNumber.from(0);
 
   get interface() {
     return this.erc20.interface;
@@ -17,8 +16,7 @@ export class ERC20Token {
   }
 
   async balanceOf(guy: string): Promise<BigNumber> {
-    this.balance = await this.erc20.balanceOf(guy);
-    return this.balance;
+    return await this.erc20.balanceOf(guy);
   }
 
   allowance(owner: string, spender: string): Promise<BigNumber> {

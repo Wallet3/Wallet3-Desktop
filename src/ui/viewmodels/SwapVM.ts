@@ -1,4 +1,4 @@
-import { BigNumber, utils } from 'ethers';
+import { BigNumber, providers, utils } from 'ethers';
 import Messages, { ConfirmSendTx } from '../../common/Messages';
 import { autorun, makeAutoObservable, reaction, runInAction } from 'mobx';
 
@@ -10,6 +10,7 @@ import NetworksVM from './NetworksVM';
 import Stableswap from './swap/Stableswap';
 import delay from 'delay';
 import ipc from '../bridges/IPC';
+import { sendTx } from './services/Tx';
 
 interface ISwapToken extends IToken {
   allowance?: BigNumber;
@@ -26,9 +27,14 @@ export class SwapVM {
   fee = 0.05;
 
   private isApproving = new Map<number, boolean>();
+  private isSwapping = new Map<number, boolean>();
 
-  get loading() {
+  get approving() {
     return this.isApproving.get(NetworksVM.currentChainId);
+  }
+
+  get swapping() {
+    return this.isSwapping.get(NetworksVM.currentChainId);
   }
 
   get currentExecutor() {
@@ -114,6 +120,8 @@ export class SwapVM {
     const fromToken = this.from;
     this.selectFrom(forToken, false);
     this.selectFor(fromToken, false);
+
+    this.fromAmount = this.forAmount = '';
   }
 
   setSlippage(value: number) {
@@ -131,6 +139,34 @@ export class SwapVM {
     runInAction(() => (this.forAmount = utils.formatUnits(forAmount, this.for.decimals)));
   }
 
+  // private async refreshTokens({
+  //   provider,
+  //   nonce,
+  //   chainId,
+  // }: {
+  //   chainId: number;
+  //   nonce: number;
+  //   provider: providers.BaseProvider;
+  // }) {
+  //   await delay(200);
+
+  //   const tx = App.currentWallet?.pendingTxs.find((tx) => tx.from === this.account && tx.nonce === nonce);
+
+  //   while (tx) {
+  //     const receipt = await provider.getTransactionReceipt(tx.hash);
+  //     if (receipt) break;
+  //     delay(3000);
+  //   }
+
+  //   runInAction(() => this.isApproving.set(chainId, false));
+
+  //   const allowance = await erc20.allowance(this.account, this.currentExecutor.getContractAddress(NetworksVM.currentChainId));
+
+  //   runInAction(() => {
+  //     token.allowance = allowance;
+  //   });
+  // }
+
   async approve() {
     const provider = NetworksVM.currentProvider;
     const chainId = NetworksVM.currentChainId;
@@ -144,20 +180,15 @@ export class SwapVM {
       '115792089237316195423570985008687907853269984665640564039457584007913129639935'
     );
 
-    const [feeData, nonce] = await Promise.all([provider.getFeeData(), provider.getTransactionCount(this.account, 'pending')]);
-
-    await ipc.invokeSecure<void>(Messages.createTransferTx, {
+    const { nonce } = await sendTx({
+      chainId,
+      provider,
       from: this.account,
       to: this.from.address,
       value: '0',
-      gas: 100_000,
-      maxFeePerGas: feeData.maxFeePerGas?.toNumber(),
-      maxPriorityFeePerGas: feeData.maxPriorityFeePerGas?.toNumber() + 2 * Gwei_1,
-      gasPrice: feeData.gasPrice.toNumber(),
-      nonce,
+      gas: 150_000,
       data,
-      chainId,
-    } as ConfirmSendTx);
+    });
 
     await delay(200);
 
@@ -172,7 +203,6 @@ export class SwapVM {
     runInAction(() => this.isApproving.set(chainId, false));
 
     const allowance = await erc20.allowance(this.account, this.currentExecutor.getContractAddress(NetworksVM.currentChainId));
-    console.log(allowance.toString());
 
     runInAction(() => {
       token.allowance = allowance;
@@ -190,22 +220,16 @@ export class SwapVM {
       .div(1000);
 
     const data = this.currentExecutor.encodeSwapData(NetworksVM.currentChainId, this.from, this.for, amountIn, minOut);
-    console.log(amountIn, minOut, data);
 
-    const [feeData, nonce] = await Promise.all([provider.getFeeData(), provider.getTransactionCount(this.account, 'pending')]);
-
-    await ipc.invokeSecure<void>(Messages.createTransferTx, {
+    const { nonce } = await sendTx({
+      chainId,
       from: this.account,
       to: this.currentExecutor.getContractAddress(chainId),
       value: '0',
-      gas: 300_000,
-      maxFeePerGas: feeData.maxFeePerGas?.toNumber(),
-      maxPriorityFeePerGas: feeData.maxPriorityFeePerGas?.toNumber() + 2 * Gwei_1,
-      gasPrice: feeData.gasPrice.toNumber(),
-      nonce,
+      gas: 900_000,
       data,
-      chainId,
-    } as ConfirmSendTx);
+      provider,
+    });
   }
 }
 

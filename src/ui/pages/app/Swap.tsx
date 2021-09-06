@@ -100,7 +100,13 @@ export default observer(({ app, networksVM, swapVM }: IConstructor) => {
             <TokenMenu selectedToken={swapVM.from} tokens={swapVM.fromList} onTokenSelected={(t) => swapVM.selectFrom(t)} />
           </div>
 
-          <div className="arrow" onClick={(_) => swapVM.interchange()}>
+          <div
+            className="arrow"
+            onClick={(_) => {
+              swapVM.interchange();
+              fromAmountRef.current.value = '';
+            }}
+          >
             <Feather icon="arrow-down" size={12} />
           </div>
 
@@ -129,8 +135,8 @@ export default observer(({ app, networksVM, swapVM }: IConstructor) => {
         </div>
 
         {!swapVM.approved ? (
-          <button disabled={!swapVM.fromAmount || swapVM.loading} onClick={(_) => swapVM.approve()}>
-            {swapVM.loading ? <PuffLoader size={15} color="#dfe8f9" /> : <span>{t('Approve')}</span>}
+          <button disabled={!swapVM.fromAmount || swapVM.approving} onClick={(_) => swapVM.approve()}>
+            {swapVM.approving ? <PuffLoader size={15} color="#dfe8f9" /> : <span>{t('Approve')}</span>}
           </button>
         ) : undefined}
 
