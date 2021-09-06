@@ -122,6 +122,7 @@ export class SwapVM {
 
     this.forAmount = '';
     this.for = token;
+    this.setFromAmount(this.fromAmount);
   }
 
   interchange() {
@@ -140,7 +141,6 @@ export class SwapVM {
   }
 
   async setFromAmount(value: string) {
-    if (this.fromAmount === value) return;
     if (!this.from || !this.for) return;
 
     this.fromAmount = value;
@@ -151,32 +151,19 @@ export class SwapVM {
   }
 
   private async awaitTx({ provider, nonce, chainId }: { chainId: number; nonce: number; provider: providers.BaseProvider }) {
-    await delay(200);
+    await delay(1200);
 
     const tx = App.currentWallet?.pendingTxs.find((tx) => tx.from === this.account && tx.nonce === nonce);
 
     while (tx) {
+      await delay(3000);
       const receipt = await provider.getTransactionReceipt(tx.hash);
       if (receipt) break;
-      delay(3000);
     }
 
     runInAction(() => {
       this.isApproving.set(chainId, false);
       this.isSwapping.set(chainId, false);
-    });
-
-    const erc20From = new ERC20Token(this.from.address, provider);
-    const erc20For = new ERC20Token(this.for.address, provider);
-
-    const [allowanceFrom, allowanceFor] = await Promise.all([
-      erc20From.allowance(this.account, this.currentExecutor.getContractAddress(chainId)),
-      erc20For.allowance(this.account, this.currentExecutor.getContractAddress(chainId)),
-    ]);
-
-    runInAction(() => {
-      this.from.allowance = allowanceFrom;
-      this.for.allowance = allowanceFor;
     });
   }
 
@@ -204,23 +191,12 @@ export class SwapVM {
     });
 
     await this.awaitTx({ provider, nonce, chainId });
-    // await delay(200);
 
-    // const tx = App.currentWallet?.pendingTxs.find((tx) => tx.from === this.account && tx.nonce === nonce);
+    const allowance = await erc20.allowance(this.account, this.currentExecutor.getContractAddress(NetworksVM.currentChainId));
 
-    // while (tx) {
-    //   const receipt = await provider.getTransactionReceipt(tx.hash);
-    //   if (receipt) break;
-    //   delay(3000);
-    // }
-
-    // runInAction(() => this.isApproving.set(chainId, false));
-
-    // const allowance = await erc20.allowance(this.account, this.currentExecutor.getContractAddress(NetworksVM.currentChainId));
-
-    // runInAction(() => {
-    //   token.allowance = allowance;
-    // });
+    runInAction(() => {
+      token.allowance = allowance;
+    });
   }
 
   async swap() {
@@ -247,7 +223,12 @@ export class SwapVM {
       provider,
     });
 
-    this.awaitTx({ nonce, provider, chainId });
+    await this.awaitTx({ nonce, provider, chainId });
+
+    runInAction(() => {
+      this.selectFrom(this.from, false);
+      this.selectFor(this.for, false);
+    });
   }
 }
 
