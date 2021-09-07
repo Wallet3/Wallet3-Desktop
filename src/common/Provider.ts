@@ -73,28 +73,20 @@ export function broadcastEthTx(rawTx: string) {
 export async function sendTransaction(chainId: number, txHex: string) {
   const rpcs = Providers[`${chainId}`] as string[];
 
-  const results = await Promise.all(
+  return await Promise.any(
     rpcs.map(async (url) => {
-      try {
-        const resp = await axios.post(url, {
-          jsonrpc: '2.0',
-          method: 'eth_sendRawTransaction',
-          params: [txHex],
-          id: Date.now(),
-        });
+      const resp = await axios.post(url, {
+        jsonrpc: '2.0',
+        method: 'eth_sendRawTransaction',
+        params: [txHex],
+        id: Date.now(),
+      });
 
-        if (chainId === 1) broadcastEthTx(txHex);
+      if (chainId === 1) broadcastEthTx(txHex);
 
-        console.log(resp.data);
-
-        return resp.data as { id: number; result: string; error: { code: number; message: string } };
-      } catch (error) {
-        return undefined;
-      }
+      return resp.data as { id: number; result: string; error: { code: number; message: string } };
     })
   );
-
-  return results.filter((i) => i?.result)[0];
 }
 
 export async function getTransactionCount(chainId: number, address: string) {

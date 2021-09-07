@@ -69,6 +69,8 @@ export default observer(({ app, networksVM, swapVM }: IConstructor) => {
 
   useEffect(() => {
     if (!swapVM.from) swapVM.init();
+
+    return () => swapVM.clean();
   }, []);
 
   return (

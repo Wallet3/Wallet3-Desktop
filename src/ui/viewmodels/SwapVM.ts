@@ -68,7 +68,7 @@ export class SwapVM {
 
   get approved() {
     try {
-      console.log('approved', this.from?.allowance?.toString(), this.fromAmount)
+      console.log('approved', this.from?.allowance?.toString(), this.fromAmount);
       return this.from?.allowance?.gte(utils.parseUnits(this.fromAmount || '0', this.from?.decimals || 0));
     } catch (error) {
       return false;
@@ -89,6 +89,13 @@ export class SwapVM {
     this.fromAmount = '';
     this.selectFrom(this.fromList[0]);
     this.selectFor(this.forList[1]);
+  }
+
+  clean() {
+    this.from = undefined;
+    this.for = undefined;
+    this.fromAmount = '';
+    this.forAmount = '';
   }
 
   selectFrom(token: ISwapToken, check = true) {
@@ -152,7 +159,7 @@ export class SwapVM {
   }
 
   private async awaitTx({ provider, nonce, chainId }: { chainId: number; nonce: number; provider: providers.BaseProvider }) {
-    await delay(1200);
+    await delay(3000);
 
     const tx = App.currentWallet?.pendingTxs.find((tx) => tx.from === this.account && tx.nonce === nonce);
 
