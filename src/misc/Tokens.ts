@@ -361,6 +361,12 @@ export const PolygonPopularTokens = [
   MATIC_COMP,
 ];
 
+export const wxDAI = {
+  address: '0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d',
+  decimals: 18,
+  symbol: 'WXDAI',
+};
+
 const xDAI_AAVE = {
   address: '0xDF613aF6B44a31299E48131e9347F034347E2F00',
   decimals: 18,
@@ -373,10 +379,16 @@ const xDAI_UNI = {
   symbol: 'UNI',
 };
 
-const xDAI_USDC = {
+export const xDAI_USDC = {
   address: '0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83',
   decimals: 6,
   symbol: 'USDC',
+};
+
+export const xDAI_USDT = {
+  address: '0x4ECaBa5870353805a9F068101A40E0f32ed605C6',
+  decimals: 6,
+  symbol: 'USDT',
 };
 
 const xDAI_HNY = {

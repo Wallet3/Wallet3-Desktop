@@ -159,7 +159,7 @@ export class SwapVM {
   }
 
   private async awaitTx({ provider, nonce, chainId }: { chainId: number; nonce: number; provider: providers.BaseProvider }) {
-    await delay(3000);
+    await delay(1000);
 
     const tx = App.currentWallet?.pendingTxs.find((tx) => tx.from === this.account && tx.nonce === nonce);
 
@@ -173,6 +173,8 @@ export class SwapVM {
       this.isApproving.set(chainId, false);
       this.isSwapping.set(chainId, false);
     });
+
+    return tx ? true : false;
   }
 
   async approve() {
@@ -231,7 +233,7 @@ export class SwapVM {
       provider,
     });
 
-    await this.awaitTx({ nonce, provider, chainId });
+    if (!(await this.awaitTx({ nonce, provider, chainId }))) return;
 
     runInAction(() => {
       this.selectFrom(this.from, false);

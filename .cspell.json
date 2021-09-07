@@ -99,7 +99,8 @@
     "wcsession",
     "xdai",
     "Yahei",
-    "AVAX"
+    "AVAX",
+    "WXDAI"
   ],
   "flagWords": [],
   "ignorePaths": ["package.json", "package-lock.json", "yarn.lock", "tsconfig.json", "node_modules/**"]
