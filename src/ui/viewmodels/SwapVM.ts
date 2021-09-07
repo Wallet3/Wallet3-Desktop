@@ -68,7 +68,8 @@ export class SwapVM {
 
   get approved() {
     try {
-      return this.from?.allowance?.gte(utils.parseUnits(this.fromAmount || '0', this.from.decimals || 0));
+      console.log('approved', this.from?.allowance?.toString(), this.fromAmount)
+      return this.from?.allowance?.gte(utils.parseUnits(this.fromAmount || '0', this.from?.decimals || 0));
     } catch (error) {
       return false;
     }

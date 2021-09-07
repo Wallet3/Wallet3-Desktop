@@ -94,7 +94,7 @@ export async function sendTransaction(chainId: number, txHex: string) {
     })
   );
 
-  return results.filter((i) => i.result)[0];
+  return results.filter((i) => i?.result)[0];
 }
 
 export async function getTransactionCount(chainId: number, address: string) {
