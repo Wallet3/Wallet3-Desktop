@@ -1,15 +1,12 @@
 import { BigNumber, providers, utils } from 'ethers';
-import Messages, { ConfirmSendTx } from '../../common/Messages';
-import { autorun, makeAutoObservable, reaction, runInAction } from 'mobx';
+import { makeAutoObservable, reaction, runInAction } from 'mobx';
 
 import App from './Application';
 import { ERC20Token } from '../../common/ERC20Token';
-import { Gwei_1 } from '../../gas/Gasnow';
 import { IToken } from '../../misc/Tokens';
 import NetworksVM from './NetworksVM';
 import Stableswap from './swap/Stableswap';
 import delay from 'delay';
-import ipc from '../bridges/IPC';
 import { sendTx } from './services/Tx';
 
 interface ISwapToken extends IToken {
