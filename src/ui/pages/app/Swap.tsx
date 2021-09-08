@@ -48,7 +48,7 @@ export default observer(({ app, networksVM, swapVM }: IConstructor) => {
     return (
       <Menu
         overflow="auto"
-        styles={{ minWidth: '0', marginRight: '12px' }}
+        styles={{ overflow: 'hidden', marginRight: '12px' }}
         style={{ marginTop: 1 }}
         menuButton={() => (
           <MenuButton className="menu-button">
@@ -99,7 +99,12 @@ export default observer(({ app, networksVM, swapVM }: IConstructor) => {
               placeholder="0.00"
               onChange={(e) => swapVM.setFromAmount(e.target.value)}
             />
-            <TokenMenu selectedToken={swapVM.from} tokens={swapVM.fromList} onTokenSelected={(t) => swapVM.selectFrom(t)} />
+
+            {swapVM.fromList.length > 0 ? (
+              <TokenMenu selectedToken={swapVM.from} tokens={swapVM.fromList} onTokenSelected={(t) => swapVM.selectFrom(t)} />
+            ) : (
+              <div className="empty-menu-placeholder" />
+            )}
           </div>
 
           <div
@@ -114,7 +119,12 @@ export default observer(({ app, networksVM, swapVM }: IConstructor) => {
 
           <div className="swapbox">
             <input type="text" readOnly value={swapVM.forAmount} />
-            <TokenMenu selectedToken={swapVM.for} tokens={swapVM.forList} onTokenSelected={(t) => swapVM.selectFor(t)} />
+
+            {swapVM.forList.length > 0 ? (
+              <TokenMenu selectedToken={swapVM.for} tokens={swapVM.forList} onTokenSelected={(t) => swapVM.selectFor(t)} />
+            ) : (
+              <div className="empty-menu-placeholder" />
+            )}
           </div>
 
           <div className="info">
@@ -137,7 +147,10 @@ export default observer(({ app, networksVM, swapVM }: IConstructor) => {
         </div>
 
         {!swapVM.approved ? (
-          <button disabled={!swapVM.fromAmount || swapVM.approving} onClick={(_) => swapVM.approve()}>
+          <button
+            disabled={!swapVM.fromAmount || swapVM.approving || swapVM.fromList.length === 0}
+            onClick={(_) => swapVM.approve()}
+          >
             {swapVM.approving ? <PuffLoader size={15} color="#dfe8f9" /> : <span>{t('Approve')}</span>}
           </button>
         ) : undefined}

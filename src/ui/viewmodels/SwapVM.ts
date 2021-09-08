@@ -27,23 +27,27 @@ export class SwapVM {
   private isSwapping = new Map<number, boolean>();
 
   get approving() {
-    return this.isApproving.get(NetworksVM.currentChainId);
+    return this.isApproving.get(this.currentChainId);
   }
 
   get swapping() {
-    return this.isSwapping.get(NetworksVM.currentChainId);
+    return this.isSwapping.get(this.currentChainId);
   }
 
   get currentExecutor() {
     return Stableswap;
   }
 
+  get currentChainId() {
+    return NetworksVM.currentChainId;
+  }
+
   get fromList(): ISwapToken[] {
-    return this.currentExecutor.fromTokens(NetworksVM.currentChainId).filter((t) => t.address !== this.from?.address);
+    return this.currentExecutor.fromTokens(this.currentChainId).filter((t) => t.address !== this.from?.address);
   }
 
   get forList(): ISwapToken[] {
-    return this.currentExecutor.forTokens(NetworksVM.currentChainId).filter((t) => t.address !== this.for?.address);
+    return this.currentExecutor.forTokens(this.currentChainId).filter((t) => t.address !== this.for?.address);
   }
 
   get isValid() {
@@ -52,7 +56,9 @@ export class SwapVM {
         this.max.gte(utils.parseUnits(this.fromAmount || '0', this.from.decimals)) &&
         Number(this.fromAmount) > 0 &&
         this.from &&
-        this.for
+        this.for &&
+        this.fromList?.length > 0 &&
+        this.forList?.length > 0
       );
     } catch (error) {
       return false;
@@ -65,7 +71,6 @@ export class SwapVM {
 
   get approved() {
     try {
-      console.log('approved', this.from?.allowance?.toString(), this.fromAmount);
       return this.from?.allowance?.gte(utils.parseUnits(this.fromAmount || '0', this.from?.decimals || 0));
     } catch (error) {
       return false;
@@ -76,7 +81,7 @@ export class SwapVM {
     makeAutoObservable(this);
 
     reaction(
-      () => NetworksVM.currentChainId,
+      () => this.currentChainId,
       () => this.init()
     );
   }
@@ -114,7 +119,7 @@ export class SwapVM {
       runInAction(() => (this.max = balance));
     });
 
-    erc20.allowance(this.account, this.currentExecutor.getContractAddress(NetworksVM.currentChainId)).then((allowance) => {
+    erc20.allowance(this.account, this.currentExecutor.getContractAddress(this.currentChainId)).then((allowance) => {
       runInAction(() => (this.from.allowance = allowance));
     });
   }
@@ -151,7 +156,7 @@ export class SwapVM {
     this.fromAmount = value;
     const amount = utils.parseUnits(value, this.from.decimals);
 
-    const forAmount = await this.currentExecutor.getAmountOut(NetworksVM.currentChainId, this.from, this.for, amount);
+    const forAmount = await this.currentExecutor.getAmountOut(this.currentChainId, this.from, this.for, amount);
     runInAction(() => (this.forAmount = utils.formatUnits(forAmount, this.for.decimals)));
   }
 
@@ -176,14 +181,14 @@ export class SwapVM {
 
   async approve() {
     const provider = NetworksVM.currentProvider;
-    const chainId = NetworksVM.currentChainId;
+    const chainId = this.currentChainId;
     const token = this.from;
 
     runInAction(() => this.isApproving.set(chainId, true));
 
     const erc20 = new ERC20Token(token.address, provider);
     const data = erc20.encodeApproveData(
-      this.currentExecutor.getContractAddress(NetworksVM.currentChainId),
+      this.currentExecutor.getContractAddress(this.currentChainId),
       '115792089237316195423570985008687907853269984665640564039457584007913129639935'
     );
 
@@ -199,7 +204,7 @@ export class SwapVM {
 
     await this.awaitTx({ provider, nonce, chainId });
 
-    const allowance = await erc20.allowance(this.account, this.currentExecutor.getContractAddress(NetworksVM.currentChainId));
+    const allowance = await erc20.allowance(this.account, this.currentExecutor.getContractAddress(this.currentChainId));
 
     runInAction(() => {
       token.allowance = allowance;
@@ -208,7 +213,7 @@ export class SwapVM {
 
   async swap() {
     const provider = NetworksVM.currentProvider;
-    const chainId = NetworksVM.currentChainId;
+    const chainId = this.currentChainId;
 
     runInAction(() => this.isSwapping.set(chainId, true));
 
@@ -218,7 +223,7 @@ export class SwapVM {
       .mul(this.slippage * 10)
       .div(1000);
 
-    const data = this.currentExecutor.encodeSwapData(NetworksVM.currentChainId, this.from, this.for, amountIn, minOut);
+    const data = this.currentExecutor.encodeSwapData(chainId, this.from, this.for, amountIn, minOut);
 
     const { nonce } = await sendTx({
       chainId,

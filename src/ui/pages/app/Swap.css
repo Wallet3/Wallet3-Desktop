@@ -60,6 +60,10 @@
   box-sizing: border-box;
 }
 
+.page.swap > .swap-container .swap .swapbox .empty-menu-placeholder {
+  height: 29px;
+}
+
 .page.swap > .swap-container .swap .swapbox .rc-menu {
   background-color: transparent !important;
   backdrop-filter: blur(10px);
