@@ -399,13 +399,13 @@ const xDAI_HNY = {
 
 export const xDaiPopularTokens = [xDAI_USDC, xDAI_HNY, xDAI_AAVE, xDAI_UNI];
 
-const FTM_USDC = {
+export const FTM_USDC = {
   address: '0x04068DA6C83AFCFA0e13ba15A6696662335D5B75',
   decimals: 6,
   symbol: 'USDC',
 };
 
-const FTM_DAI = {
+export const FTM_DAI = {
   address: '0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E',
   decimals: 18,
   symbol: 'DAI',

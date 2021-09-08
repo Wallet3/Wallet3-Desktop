@@ -1,5 +1,5 @@
 import { BigNumber, BigNumberish, Contract } from 'ethers';
-import { DAI, IToken, USDC, USDT, sUSD, wxDAI, xDAI_USDC, xDAI_USDT } from '../../../misc/Tokens';
+import { DAI, FTM_DAI, FTM_USDC, IToken, USDC, USDT, sUSD, wxDAI, xDAI_USDC, xDAI_USDT } from '../../../misc/Tokens';
 import { MATIC_DAI, MATIC_USDC, MATIC_USDT } from '../../../misc/Tokens';
 
 import StableswapABI from '../../../abis/Stableswap.json';
@@ -11,6 +11,8 @@ const sUSDPool = '0xA5407eAE9Ba41422680e2e00537571bcC53efBfD';
 const Polygon_Aave_Pool = '0x445FE580eF8d70FF569aB36e80c647af338db351';
 
 const xDai_TriPool = '0x7f90122BF0700F9E7e1F688fe926940E8839F353';
+
+const ftm_2Pool = '0x27E611FD27b276ACbd5Ffd632E5eAEBEC9761E40';
 
 const Tokens: { [chain: number]: { tokens: IToken[]; targets: string[]; contract: string; underlying?: boolean } } = {
   1: { tokens: [DAI, USDC, USDT], targets: [TriPool, TriPool, TriPool], contract: '' },
@@ -25,6 +27,12 @@ const Tokens: { [chain: number]: { tokens: IToken[]; targets: string[]; contract
   100: {
     tokens: [wxDAI, xDAI_USDC, xDAI_USDT],
     targets: [xDai_TriPool, xDai_TriPool, xDai_TriPool],
+    contract: '0x3D5f301C93476C0Ae7d2Eab2a369DE4cbb0700aB',
+  },
+
+  250: {
+    tokens: [FTM_DAI, FTM_USDC],
+    targets: [ftm_2Pool, ftm_2Pool],
     contract: '0x3D5f301C93476C0Ae7d2Eab2a369DE4cbb0700aB',
   },
 
