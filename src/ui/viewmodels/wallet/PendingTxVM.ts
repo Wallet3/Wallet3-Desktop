@@ -10,7 +10,6 @@ export class PendingTxVM {
 
   constructor(tx: TxParams) {
     this._tx = tx;
-    console.log(tx);
   }
 
   get chainId() {

@@ -168,7 +168,11 @@ export class AccountVM {
     nativeToken.wei = balance.toString();
     nativeToken.price = nativeCurrency?.price ?? (this.nativeToken?.price || 0);
 
-    runInAction(() => (this.nativeToken = nativeToken));
+    runInAction(() => {
+      this.nativeToken = nativeToken;
+      if (this.allTokens.length === 0) return;
+      this.allTokens[0] = nativeToken;
+    });
 
     return nativeToken;
   }
