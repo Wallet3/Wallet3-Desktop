@@ -20,6 +20,7 @@ export interface INetwork {
   order?: number;
   defaultTokens: IToken[];
   showOverview?: boolean;
+  minGwei?: number;
 }
 
 export const PublicNetworks: INetwork[] = [
@@ -85,6 +86,7 @@ export const PublicNetworks: INetwork[] = [
     order: 4,
     defaultTokens: FTMPopularTokens,
     showOverview: true,
+    minGwei: 50,
   },
   {
     symbol: 'AVAX',
@@ -123,6 +125,7 @@ export const PublicNetworks: INetwork[] = [
     order: 5,
     defaultTokens: BscPopularTokens,
     showOverview: true,
+    minGwei: 5,
   },
 ];
 

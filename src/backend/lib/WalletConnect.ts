@@ -1,7 +1,7 @@
 import App, { App as Application } from '../App';
 import { AuthParams, ConfirmSendTx, RequestSignMessage, SendTxParams, WcMessages } from '../../common/Messages';
 import { BigNumber, ethers, utils } from 'ethers';
-import Gasnow, { Gwei_1, Gwei_5 } from '../../gas/Gasnow';
+import Gasnow, { Gwei_1 } from '../../gas/Gasnow';
 import { IReactionDisposer, reaction } from 'mobx';
 import { call, estimateGas, getMaxPriorityFee, getNextBlockBaseFee, getTransactionCount } from '../../common/Provider';
 
@@ -304,9 +304,12 @@ export class WalletConnect extends EventEmitter {
       : undefined;
 
     const chainId = requestedChainId || this.appChainId;
-    const eip1559 = Networks.find((n) => n.chainId === chainId).eip1559;
+    const network = Networks.find((n) => n.chainId === chainId);
+    if (!network) return;
 
-    let defaultGasPrice = chainId === 56 ? Gwei_5 : Gwei_1;
+    const { eip1559, minGwei } = network;
+
+    let defaultGasPrice = (minGwei ?? 1) * Gwei_1;
     defaultGasPrice = chainId === 1 ? Gasnow.fast : defaultGasPrice;
 
     let baseFee: number = undefined;

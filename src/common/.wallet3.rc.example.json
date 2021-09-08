@@ -24,7 +24,7 @@
     "https://matic-mainnet-archive-rpc.bwarelabs.com"
   ],
 
-  "250": ["https://rpcapi.fantom.network", "https://rpc.fantom.network"],
+  "250": ["https://rpc.ftm.tools", "https://rpcapi.fantom.network", "https://rpc.fantom.network"],
 
   "80001": ["https://rpc-mumbai.matic.today", "https://rpc-mumbai.maticvigil.com", "https://matic-mumbai.chainstacklabs.com"],
 
