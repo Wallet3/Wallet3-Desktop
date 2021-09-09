@@ -84,6 +84,11 @@ export class SwapVM {
       () => this.currentChainId,
       () => this.init()
     );
+
+    reaction(
+      () => App.currentWallet,
+      () => this.init()
+    );
   }
 
   init() {
