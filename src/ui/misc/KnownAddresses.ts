@@ -65,6 +65,7 @@ const KnownAddresses = {
   '0x4Dbd4fc535Ac27206064B68FfCf827b0A60BAB3f': 'Arbitrum: Inbox',
   '0xC36442b4a4522E871399CD717aBDD847Ab11FE88': 'Uniswap V3 NFT',
   '0x0D5550d52428E7e3175bfc9550207e4ad3859b17': 'Tornado Matic',
+  '0xce761D788DF608BD21bdd59d6f4B54b2e27F25Bb': 'Rarity',
 };
 
 Tokens.forEach((t) => (KnownAddresses[t.address] = t.symbol));
