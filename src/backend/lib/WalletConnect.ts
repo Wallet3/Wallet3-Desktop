@@ -3,7 +3,14 @@ import { AuthParams, ConfirmSendTx, RequestSignMessage, SendTxParams, WcMessages
 import { BigNumber, ethers, utils } from 'ethers';
 import Gasnow, { Gwei_1 } from '../../gas/Gasnow';
 import { IReactionDisposer, reaction } from 'mobx';
-import { call, estimateGas, getMaxPriorityFee, getNextBlockBaseFee, getTransactionCount } from '../../common/Provider';
+import {
+  call,
+  estimateGas,
+  getGasPrice,
+  getMaxPriorityFee,
+  getNextBlockBaseFee,
+  getTransactionCount,
+} from '../../common/Provider';
 
 import ERC20ABI from '../../abis/ERC20.json';
 import EventEmitter from 'events';
@@ -339,7 +346,7 @@ export class WalletConnect extends EventEmitter {
 
         ...baseTx,
         value: param.value || 0,
-        gasPrice: eip1559 ? undefined : Number.parseInt(param.gasPrice) || defaultGasPrice,
+        gasPrice: eip1559 ? undefined : Number.parseInt(param.gasPrice) || (await getGasPrice(chainId)) || defaultGasPrice,
         maxFeePerGas: baseFee,
         maxPriorityFeePerGas: priorityFee,
         gas,

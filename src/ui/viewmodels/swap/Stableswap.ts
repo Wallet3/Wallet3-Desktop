@@ -20,7 +20,7 @@ const Tokens: { [chain: number]: { tokens: IToken[]; targets: string[]; contract
   137: {
     tokens: [MATIC_DAI, MATIC_USDC, MATIC_USDT],
     targets: [Polygon_Aave_Pool, Polygon_Aave_Pool, Polygon_Aave_Pool],
-    contract: '0x3D5f301C93476C0Ae7d2Eab2a369DE4cbb0700aB',
+    contract: '0x71d0e2881cEfEcf0e97499a0Cff6a6F470c05cfB',
     underlying: true,
   },
 

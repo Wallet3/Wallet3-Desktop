@@ -177,6 +177,25 @@ export async function estimateGas<T>(
   return undefined;
 }
 
+export async function getGasPrice(chainId: number) {
+  const rpcs = Providers[`${chainId}`] as string[];
+
+  for (let url of rpcs) {
+    try {
+      const resp = await axios.post(url, {
+        jsonrpc: '2.0',
+        method: 'eth_gasPrice',
+        params: [],
+        id: Date.now(),
+      });
+
+      return Number.parseInt(resp.data.result);
+    } catch (error) {}
+  }
+
+  return undefined;
+}
+
 export async function getTransactionReceipt(chainId: number, hash: string) {
   const rpcs = Providers[`${chainId}`] as string[];
 
