@@ -55,6 +55,7 @@ export class SwapVM {
       return (
         this.max.gte(utils.parseUnits(this.fromAmount || '0', this.from.decimals)) &&
         Number(this.fromAmount) > 0 &&
+        this.forAmount &&
         this.from &&
         this.for &&
         this.fromList?.length > 0 &&
