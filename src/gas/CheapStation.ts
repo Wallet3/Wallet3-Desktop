@@ -36,6 +36,7 @@ export default class CheapStation {
     runInAction(() => {
       this.rapid = Math.max(gasPrice.toNumber() + 2 * Gwei_1, 5 * Gwei_1);
       this.fast = gasPrice.toNumber();
+      this.standard = Math.min(this.fast, this.standard);
     });
   }
 }
