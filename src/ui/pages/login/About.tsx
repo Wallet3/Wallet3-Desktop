@@ -18,7 +18,7 @@ export default ({ app }: { app: Application }) => {
       <NavBar title={t('About')} onBackClick={() => app.history.goBack()} />
 
       <div className="content">
-        <p>Wallet 3 - {t('A secure Wallet for Bankless Era')}</p>
+        <p>Wallet 3 - {t('A Secure Wallet for Web3 Era')}</p>
         <p className='appver'>Version: {app.version}</p>
 
         <h3>{t('Features')}</h3>

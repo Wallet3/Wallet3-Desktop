@@ -2,7 +2,7 @@
   "name": "wallet3",
   "productName": "Wallet 3",
   "version": "1.7.2",
-  "description": "A Secure Wallet for Bankless Era",
+  "description": "A Secure Wallet for Web3 Era",
   "main": ".webpack/main",
   "repository": {
     "type": "git",

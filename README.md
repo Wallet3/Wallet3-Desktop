@@ -1,4 +1,4 @@
-# Wallet 3 - A Secure Wallet for Bankless Era
+# Wallet 3 - A Secure Wallet for Web3 Era
 
 Wallet 3 is a secure crypto wallet for desktop users. It has a simple, UX-friendly design for users. With WalletConnect, users can experience the powerful DeFi ecosystem.
 

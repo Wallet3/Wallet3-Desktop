@@ -72,7 +72,7 @@ export class WalletConnect extends EventEmitter {
       uri,
       clientMeta: {
         name: 'Wallet 3',
-        description: 'A Secure Wallet for Bankless Era',
+        description: 'A Secure Wallet for Web3 Era',
         icons: [],
         url: 'https://wallet3.io',
       },
