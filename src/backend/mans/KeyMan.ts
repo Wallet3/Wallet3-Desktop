@@ -1,4 +1,4 @@
-import { IReactionDisposer, autorun, makeAutoObservable, reaction, runInAction } from 'mobx';
+import { IReactionDisposer, makeAutoObservable, reaction, runInAction } from 'mobx';
 import Messages, { IKey } from '../../common/Messages';
 
 import App from '../App';
