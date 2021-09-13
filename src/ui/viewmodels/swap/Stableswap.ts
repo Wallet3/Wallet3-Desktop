@@ -15,7 +15,11 @@ const xDai_TriPool = '0x7f90122BF0700F9E7e1F688fe926940E8839F353';
 const ftm_2Pool = '0x27E611FD27b276ACbd5Ffd632E5eAEBEC9761E40';
 
 const Tokens: { [chain: number]: { tokens: IToken[]; targets: string[]; contract: string; underlying?: boolean } } = {
-  1: { tokens: [DAI, USDC, USDT], targets: [TriPool, TriPool, TriPool], contract: '' },
+  1: {
+    tokens: [DAI, USDC, USDT],
+    targets: [TriPool, TriPool, TriPool],
+    contract: '0x3D5f301C93476C0Ae7d2Eab2a369DE4cbb0700aB',
+  },
 
   137: {
     tokens: [MATIC_DAI, MATIC_USDC, MATIC_USDT],
@@ -27,13 +31,13 @@ const Tokens: { [chain: number]: { tokens: IToken[]; targets: string[]; contract
   100: {
     tokens: [wxDAI, xDAI_USDC, xDAI_USDT],
     targets: [xDai_TriPool, xDai_TriPool, xDai_TriPool],
-    contract: '0x3D5f301C93476C0Ae7d2Eab2a369DE4cbb0700aB',
+    contract: '0x71d0e2881cEfEcf0e97499a0Cff6a6F470c05cfB',
   },
 
   250: {
     tokens: [FTM_DAI, FTM_USDC],
     targets: [ftm_2Pool, ftm_2Pool],
-    contract: '0x3D5f301C93476C0Ae7d2Eab2a369DE4cbb0700aB',
+    contract: '0x71d0e2881cEfEcf0e97499a0Cff6a6F470c05cfB',
   },
 
   1337: {

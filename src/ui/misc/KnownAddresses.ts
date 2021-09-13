@@ -66,6 +66,9 @@ const KnownAddresses = {
   '0xC36442b4a4522E871399CD717aBDD847Ab11FE88': 'Uniswap V3 NFT',
   '0x0D5550d52428E7e3175bfc9550207e4ad3859b17': 'Tornado Matic',
   '0xce761D788DF608BD21bdd59d6f4B54b2e27F25Bb': 'Rarity',
+
+  '0x3D5f301C93476C0Ae7d2Eab2a369DE4cbb0700aB': 'Wallet 3 Swap',
+  '0x71d0e2881cEfEcf0e97499a0Cff6a6F470c05cfB': 'Wallet 3 Swap',
 };
 
 Tokens.forEach((t) => (KnownAddresses[t.address] = t.symbol));
