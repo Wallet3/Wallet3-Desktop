@@ -1,13 +1,16 @@
 {
   "1": [],
+
   "3": [],
   "4": [],
   "5": [],
   "42": [],
-  
-  "10": [],
 
-  "42161": [],
+  "10": ["https://mainnet.optimism.io"],
+
+  "42161": ["https://arb1.arbitrum.io/rpc"],
+
+  "43114": ["https://api.avax.network/ext/bc/C/rpc"],
 
   "66": ["https://exchainrpc.okex.org"],
   "100": ["https://rpc.xdaichain.com"],
@@ -21,13 +24,9 @@
     "https://matic-mainnet-archive-rpc.bwarelabs.com"
   ],
 
-  "250": ["https://rpcapi.fantom.network", "https://rpc.fantom.network"],
+  "250": ["https://rpc.ftm.tools", "https://rpcapi.fantom.network", "https://rpc.fantom.network"],
 
-  "80001": [
-    "https://rpc-mumbai.matic.today",
-    "https://rpc-mumbai.maticvigil.com",
-    "https://matic-mumbai.chainstacklabs.com"
-  ],
+  "80001": ["https://rpc-mumbai.matic.today", "https://rpc-mumbai.maticvigil.com", "https://matic-mumbai.chainstacklabs.com"],
 
   "56": [
     "https://bsc-dataseed1.ninicoin.io",

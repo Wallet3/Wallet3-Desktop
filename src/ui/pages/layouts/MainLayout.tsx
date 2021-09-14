@@ -18,7 +18,7 @@ interface Props {
   networksVM: NetworksVM;
   app: Application;
   langsVM: LangsVM;
-  swapVM?: SwapVM;
+  swapVM: SwapVM;
 }
 
 export default observer((args: Props) => {
@@ -38,9 +38,9 @@ export default observer((args: Props) => {
               <Settings {...args} />
             </Route>
 
-            {/* <Route path={`${path}/swap`} exact>
+            <Route path={`${path}/swap`} exact>
               <Swap {...args} />
-            </Route> */}
+            </Route>
 
             <Route path={`${path}/dapps`} exact>
               <DApps123 {...args} />
@@ -60,12 +60,12 @@ export default observer((args: Props) => {
             </div>
           </Link>
 
-          {/* <Link to={`${url}/swap`}>
+          <Link to={`${url}/swap`}>
             <div className={activeTab === 'swap' ? 'active' : ''}>
               <Feather icon="repeat" size={19} />
               <span>{t('Swap')}</span>
             </div>
-          </Link> */}
+          </Link>
 
           <Link to={`${url}/dapps`}>
             <div className={activeTab === 'dapps' ? 'active' : ''}>

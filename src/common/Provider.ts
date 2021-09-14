@@ -51,6 +51,7 @@ export function markRpcFailed(network: number, rpc: string) {
 export function saveCustomizedRPC(networkId: number, rpc: string, explorer: string) {
   const store = require('storejs');
   store.set(`customizedRPC-${networkId}`, { rpc, explorer });
+  cache.delete(networkId);
 }
 
 function getCustomizedRPC(networkId: number) {
@@ -72,26 +73,30 @@ export function broadcastEthTx(rawTx: string) {
 export async function sendTransaction(chainId: number, txHex: string) {
   const rpcs = Providers[`${chainId}`] as string[];
 
-  for (let url of rpcs) {
-    try {
-      const resp = await axios.post(url, {
-        jsonrpc: '2.0',
-        method: 'eth_sendRawTransaction',
-        params: [txHex],
-        id: Date.now(),
-      });
+  try {
+    const result = await Promise.any(
+      rpcs.map(async (url) => {
+        const resp = await axios.post(url, {
+          jsonrpc: '2.0',
+          method: 'eth_sendRawTransaction',
+          params: [txHex],
+          id: Date.now(),
+        });
 
-      if (chainId === 1) broadcastEthTx(txHex);
+        if (resp.data.error) {
+          throw new Error(resp.data.error.message);
+        }
 
-      console.log(resp.data);
+        return resp.data as { id: number; result: string; error: { code: number; message: string } };
+      })
+    );
 
-      return resp.data as { id: number; result: string; error: { code: number; message: string } };
-    } catch (error) {
-      console.log(error);
-    }
+    if (chainId === 1) broadcastEthTx(txHex);
+
+    return result;
+  } catch (error) {
+    return { error: (error as AggregateError).errors[0], result: undefined };
   }
-
-  return undefined;
 }
 
 export async function getTransactionCount(chainId: number, address: string) {
@@ -166,6 +171,25 @@ export async function estimateGas<T>(
       });
 
       return resp.data.result as T;
+    } catch (error) {}
+  }
+
+  return undefined;
+}
+
+export async function getGasPrice(chainId: number) {
+  const rpcs = Providers[`${chainId}`] as string[];
+
+  for (let url of rpcs) {
+    try {
+      const resp = await axios.post(url, {
+        jsonrpc: '2.0',
+        method: 'eth_gasPrice',
+        params: [],
+        id: Date.now(),
+      });
+
+      return Number.parseInt(resp.data.result);
     } catch (error) {}
   }
 

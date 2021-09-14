@@ -118,6 +118,7 @@ class TxMan {
     }
 
     this.saveTx(params, txHex);
+    
     return result;
   };
 

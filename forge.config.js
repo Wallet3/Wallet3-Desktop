@@ -58,7 +58,7 @@ module.exports = {
         devCert: devCertPath,
         certPass: certPassword,
         packageDisplayName: 'Wallet 3',
-        packageDescription: 'A Secure Wallet for Bankless Era',
+        packageDescription: 'A Secure Wallet for Web3 Era',
         containerVirtualization: true,
         packageVersion: package.version,
         makeVersionWinStoreCompatible: true,

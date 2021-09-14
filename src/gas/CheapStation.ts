@@ -1,6 +1,7 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 
 import { Gwei_1 } from './Gasnow';
+import { Networks } from '../common/Networks';
 import { getProviderByChainId } from '../common/Provider';
 
 export default class CheapStation {
@@ -25,6 +26,7 @@ export default class CheapStation {
   constructor(chainId: number) {
     makeAutoObservable(this);
     this.chainId = chainId;
+    this.standard = (Networks.find((n) => n.chainId === chainId).minGwei || 1) * Gwei_1;
   }
 
   async refresh() {
@@ -34,6 +36,7 @@ export default class CheapStation {
     runInAction(() => {
       this.rapid = Math.max(gasPrice.toNumber() + 2 * Gwei_1, 5 * Gwei_1);
       this.fast = gasPrice.toNumber();
+      this.standard = Math.min(this.fast, this.standard);
     });
   }
 }

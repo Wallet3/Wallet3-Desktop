@@ -60,6 +60,10 @@
   box-sizing: border-box;
 }
 
+.page.swap > .swap-container .swap .swapbox .empty-menu-placeholder {
+  height: 29px;
+}
+
 .page.swap > .swap-container .swap .swapbox .rc-menu {
   background-color: transparent !important;
   backdrop-filter: blur(10px);
@@ -143,4 +147,16 @@
   height: 16px;
   margin-top: -2px;
   margin-right: 8px;
+}
+
+.page.swap > .swap-container > button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 16px;
+  padding-bottom: 6px;
+}
+
+.page.swap > .swap-container > button > span[class^='css-'] {
+  margin-bottom: 8px;
 }

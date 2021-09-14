@@ -13,7 +13,7 @@ export default () => {
       <div className="brand">
         <Logo className="logo animate__animated animate__fadeInUp" width={152} height={80} opacity={0} />
         <div className="slogan animate__animated animate__fadeInUp animate__delay-1s" style={{ opacity: 0 }}>
-          A Secure Wallet for Bankless Era
+          A Secure Wallet for Web3 Era
         </div>
       </div>
 

@@ -19,6 +19,8 @@ export interface INetwork {
   eip1559?: boolean;
   order?: number;
   defaultTokens: IToken[];
+  showOverview?: boolean;
+  minGwei?: number;
 }
 
 export const PublicNetworks: INetwork[] = [
@@ -31,6 +33,7 @@ export const PublicNetworks: INetwork[] = [
     eip1559: true,
     order: 1,
     defaultTokens: EthereumPopularTokens,
+    showOverview: true,
   },
   {
     symbol: 'ETH',
@@ -41,6 +44,7 @@ export const PublicNetworks: INetwork[] = [
     order: 3,
     l2: true,
     defaultTokens: [],
+    showOverview: false,
   },
   {
     symbol: 'ETH',
@@ -51,6 +55,7 @@ export const PublicNetworks: INetwork[] = [
     order: 3,
     l2: true,
     defaultTokens: [],
+    showOverview: false,
   },
   {
     symbol: 'MATIC',
@@ -60,6 +65,7 @@ export const PublicNetworks: INetwork[] = [
     color: '#8247E5',
     order: 2,
     defaultTokens: PolygonPopularTokens,
+    showOverview: true,
   },
   {
     symbol: 'xDAI',
@@ -69,6 +75,7 @@ export const PublicNetworks: INetwork[] = [
     color: '#48A9A6',
     order: 3,
     defaultTokens: xDaiPopularTokens,
+    showOverview: true,
   },
   {
     symbol: 'FTM',
@@ -78,6 +85,18 @@ export const PublicNetworks: INetwork[] = [
     color: '#1969FF',
     order: 4,
     defaultTokens: FTMPopularTokens,
+    showOverview: true,
+    minGwei: 50,
+  },
+  {
+    symbol: 'AVAX',
+    comm_id: 'avax',
+    chainId: 43114,
+    network: 'Avalanche',
+    color: '#E84142',
+    order: 5,
+    defaultTokens: [],
+    showOverview: true,
   },
   {
     symbol: 'HT',
@@ -105,6 +124,8 @@ export const PublicNetworks: INetwork[] = [
     color: '#f3ba2f',
     order: 5,
     defaultTokens: BscPopularTokens,
+    showOverview: true,
+    minGwei: 5,
   },
 ];
 

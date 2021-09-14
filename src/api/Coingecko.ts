@@ -13,11 +13,15 @@ interface ChainsPrice {
   'matic-network': Price;
   binancecoin: Price;
   okexchain: Price;
+  avax: Price;
 }
 
 const host = 'https://api.coingecko.com';
 
-export async function getPrice(ids = 'ethereum,matic-network,fantom,okexchain,huobi-token,binancecoin', currencies = 'usd') {
+export async function getPrice(
+  ids = 'ethereum,matic-network,fantom,okexchain,huobi-token,binancecoin,avalanche-2',
+  currencies = 'usd'
+) {
   try {
     const resp = await axios.get(`${host}/api/v3/simple/price?ids=${ids}&vs_currencies=${currencies}`);
     return resp.data as ChainsPrice;
@@ -60,6 +64,7 @@ class Coingecko {
           this['128'] = data['huobi-token'].usd;
           this['66'] = data['huobi-token'].usd;
           this['56'] = data.binancecoin.usd;
+          this['43114'] = data['avalanche-2'].usd;
         });
         run();
       })

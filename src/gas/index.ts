@@ -1,8 +1,7 @@
 import Gasnow, { Gwei_1 } from './Gasnow';
 
-import BscGas from './BscGas';
 import CheapStation from './CheapStation';
-import PolygonGasStation from './PolygonGasStation';
+import { Networks } from '../common/Networks';
 import { makeAutoObservable } from 'mobx';
 
 interface IGasStation {
@@ -17,22 +16,11 @@ interface IGasStation {
 
 class GasStation {
   private _chainId = 1;
-  private _stations = new Map<number, IGasStation>([
-    [1, Gasnow],
-    [100, new CheapStation(100)],
-    [250, new CheapStation(250)],
-    [128, new CheapStation(128)],
-    [10, new CheapStation(10)],
-    [42161, new CheapStation(42161)],
-    [137, PolygonGasStation],
-    [66, new CheapStation(66)],
-    [56, BscGas],
-    [3, new CheapStation(3)],
-    [4, new CheapStation(4)],
-    [5, new CheapStation(5)],
-    [42, new CheapStation(42)],
-    [80001, new CheapStation(80001)],
-  ]);
+  private _stations = new Map<number, IGasStation>(
+    Networks.map((network) => {
+      return [network.chainId, network.chainId === 1 ? Gasnow : new CheapStation(network.chainId)];
+    })
+  );
 
   constructor() {
     makeAutoObservable(this);

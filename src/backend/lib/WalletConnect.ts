@@ -1,9 +1,16 @@
 import App, { App as Application } from '../App';
 import { AuthParams, ConfirmSendTx, RequestSignMessage, SendTxParams, WcMessages } from '../../common/Messages';
 import { BigNumber, ethers, utils } from 'ethers';
-import Gasnow, { Gwei_1, Gwei_5 } from '../../gas/Gasnow';
+import Gasnow, { Gwei_1 } from '../../gas/Gasnow';
 import { IReactionDisposer, reaction } from 'mobx';
-import { call, estimateGas, getMaxPriorityFee, getNextBlockBaseFee, getTransactionCount } from '../../common/Provider';
+import {
+  call,
+  estimateGas,
+  getGasPrice,
+  getMaxPriorityFee,
+  getNextBlockBaseFee,
+  getTransactionCount,
+} from '../../common/Provider';
 
 import ERC20ABI from '../../abis/ERC20.json';
 import EventEmitter from 'events';
@@ -65,7 +72,7 @@ export class WalletConnect extends EventEmitter {
       uri,
       clientMeta: {
         name: 'Wallet 3',
-        description: 'A Secure Wallet for Bankless Era',
+        description: 'A Secure Wallet for Web3 Era',
         icons: [],
         url: 'https://wallet3.io',
       },
@@ -304,9 +311,12 @@ export class WalletConnect extends EventEmitter {
       : undefined;
 
     const chainId = requestedChainId || this.appChainId;
-    const eip1559 = Networks.find((n) => n.chainId === chainId).eip1559;
+    const network = Networks.find((n) => n.chainId === chainId);
+    if (!network) return;
 
-    let defaultGasPrice = chainId === 56 ? Gwei_5 : Gwei_1;
+    const { eip1559, minGwei } = network;
+
+    let defaultGasPrice = (minGwei ?? 1) * Gwei_1;
     defaultGasPrice = chainId === 1 ? Gasnow.fast : defaultGasPrice;
 
     let baseFee: number = undefined;
@@ -336,7 +346,7 @@ export class WalletConnect extends EventEmitter {
 
         ...baseTx,
         value: param.value || 0,
-        gasPrice: eip1559 ? undefined : Number.parseInt(param.gasPrice) || defaultGasPrice,
+        gasPrice: eip1559 ? undefined : Number.parseInt(param.gasPrice) || (await getGasPrice(chainId)) || defaultGasPrice,
         maxFeePerGas: baseFee,
         maxPriorityFeePerGas: priorityFee,
         gas,

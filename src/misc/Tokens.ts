@@ -302,7 +302,7 @@ import { PartnerTokens } from './PartnerTokens';
 
 export const EthereumPopularTokens = [DAI, USDC, USDT, UNI, SUSHI, COMP, MKR, CRV, LINK, AAVE, DPI, ...PartnerTokens];
 
-const MATIC_DAI = {
+export const MATIC_DAI = {
   address: '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
   decimals: 18,
   symbol: 'DAI',
@@ -320,10 +320,16 @@ const MATIC_UNI = {
   symbol: 'UNI',
 };
 
-const MATIC_USDC = {
+export const MATIC_USDC = {
   address: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
   decimals: 6,
   symbol: 'USDC',
+};
+
+export const MATIC_USDT = {
+  address: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
+  decimals: 6,
+  symbol: 'USDT',
 };
 
 const MATIC_CRV = {
@@ -344,7 +350,22 @@ const MATIC_SUSHI = {
   symbol: 'SUSHI',
 };
 
-export const PolygonPopularTokens = [MATIC_DAI, MATIC_USDC, MATIC_AAVE, MATIC_UNI, MATIC_CRV, MATIC_SUSHI, MATIC_COMP];
+export const PolygonPopularTokens = [
+  MATIC_DAI,
+  MATIC_USDC,
+  MATIC_USDT,
+  MATIC_AAVE,
+  MATIC_UNI,
+  MATIC_CRV,
+  MATIC_SUSHI,
+  MATIC_COMP,
+];
+
+export const wxDAI = {
+  address: '0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d',
+  decimals: 18,
+  symbol: 'WXDAI',
+};
 
 const xDAI_AAVE = {
   address: '0xDF613aF6B44a31299E48131e9347F034347E2F00',
@@ -358,10 +379,16 @@ const xDAI_UNI = {
   symbol: 'UNI',
 };
 
-const xDAI_USDC = {
+export const xDAI_USDC = {
   address: '0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83',
   decimals: 6,
   symbol: 'USDC',
+};
+
+export const xDAI_USDT = {
+  address: '0x4ECaBa5870353805a9F068101A40E0f32ed605C6',
+  decimals: 6,
+  symbol: 'USDT',
 };
 
 const xDAI_HNY = {
@@ -372,13 +399,13 @@ const xDAI_HNY = {
 
 export const xDaiPopularTokens = [xDAI_USDC, xDAI_HNY, xDAI_AAVE, xDAI_UNI];
 
-const FTM_USDC = {
+export const FTM_USDC = {
   address: '0x04068DA6C83AFCFA0e13ba15A6696662335D5B75',
   decimals: 6,
   symbol: 'USDC',
 };
 
-const FTM_DAI = {
+export const FTM_DAI = {
   address: '0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E',
   decimals: 18,
   symbol: 'DAI',
