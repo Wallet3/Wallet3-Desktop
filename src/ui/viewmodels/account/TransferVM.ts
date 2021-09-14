@@ -39,6 +39,10 @@ export class TransferVM {
   sending = false;
   nextBlockBaseFee_Wei = 0;
 
+  get gasPrice_Wei() {
+    return Number.parseInt((this.gasPrice_Gwei * Gwei_1) as any);
+  }
+
   get isValid() {
     try {
       const validAmount = this.amountBigInt.lte(this.selectedTokenBalance) && Number.parseFloat(this.amount) >= 0;
@@ -54,9 +58,7 @@ export class TransferVM {
         this.gas < 12_500_000 &&
         this.nonce >= 0 &&
         !this.loading &&
-        (currentNetwork.eip1559
-          ? this.priorityPrice_Wei >= 0 && this.gasPrice_Gwei * Gwei_1 > this.priorityPrice_Wei
-          : true) &&
+        (currentNetwork.eip1559 ? this.priorityPrice_Wei >= 0 && this.gasPrice_Wei > this.priorityPrice_Wei : true) &&
         this.gasPrice_Gwei > 0 &&
         this.gasPrice_Gwei <= MAX_GWEI_PRICE // MAX_SAFE_INTEGER * gwei_1
       );
@@ -70,7 +72,7 @@ export class TransferVM {
   }
 
   get estimatedEIP1559Price_Wei() {
-    return Math.min(this.gasPrice_Gwei * Gwei_1, this.nextBlockBaseFee_Wei + Number.parseInt(this.priorityPrice_Wei as any));
+    return Math.min(this.gasPrice_Wei, this.nextBlockBaseFee_Wei + Number.parseInt(this.priorityPrice_Wei as any));
   }
 
   get estimatedEIP1559Fee() {
@@ -80,7 +82,7 @@ export class TransferVM {
   get txSpeed() {
     return calcSpeed({
       baseFee: this.nextBlockBaseFee_Wei,
-      maxFeePerGas: this.gasPrice_Gwei * Gwei_1,
+      maxFeePerGas: this.gasPrice_Wei,
       priorityFeePerGas: this.priorityPrice_Wei,
       suggestedPriorityFee: this.suggestedPriorityPrice_Wei,
     });
@@ -92,7 +94,7 @@ export class TransferVM {
     if (NetworksVM.currentNetwork.eip1559) {
       return balance.lte(this.estimatedEIP1559Fee);
     } else {
-      const maxFee = Number.parseInt((this.gasPrice_Gwei * Gwei_1 * this.gas || 0) as any);
+      const maxFee = Number.parseInt((this.gasPrice_Wei * this.gas || 0) as any);
       return balance.lt(maxFee.toString());
     }
   }
@@ -347,7 +349,7 @@ export class TransferVM {
     const data = this.isERC20 ? iface.encodeFunctionData('transfer', [this.receiptAddress, this.amountBigInt]) : '0x';
     const eip1559 = NetworksVM.currentNetwork.eip1559;
 
-    const fee = eip1559 ? BigNumber.from(this.estimatedEIP1559Fee) : BigNumber.from(this.gasPrice_Gwei * Gwei_1).mul(this.gas);
+    const fee = eip1559 ? BigNumber.from(this.estimatedEIP1559Fee) : BigNumber.from(this.gasPrice_Wei).mul(this.gas);
     if (!this.isERC20 && fee.add(BigNumber.from(value)).gt(this.selectedTokenBalance)) {
       value = BigNumber.from(this.selectedToken.wei || 0)
         .sub(fee)
@@ -359,8 +361,8 @@ export class TransferVM {
       to,
       value,
       gas: this.gas,
-      gasPrice: eip1559 ? undefined : this.gasPrice_Gwei * Gwei_1,
-      maxFeePerGas: eip1559 ? this.gasPrice_Gwei * Gwei_1 : undefined,
+      gasPrice: eip1559 ? undefined : this.gasPrice_Wei,
+      maxFeePerGas: eip1559 ? this.gasPrice_Wei : undefined,
       maxPriorityFeePerGas: eip1559 ? Number.parseInt(this.priorityPrice_Wei as any) : undefined,
       nonce: this.nonce,
       data,
@@ -420,7 +422,7 @@ export class TransferVM {
       to: nft.contract,
       value: '0',
       gas: gas,
-      gasPrice: this.gasPrice_Gwei * Gwei_1,
+      gasPrice: this.gasPrice_Wei,
       nonce: this.nonce,
       data,
       chainId: NetworksVM.currentChainId,

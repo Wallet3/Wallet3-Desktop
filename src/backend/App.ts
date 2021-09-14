@@ -427,7 +427,7 @@ export class App {
       height,
       minHeight: height,
       maxWidth: process.platform === 'win32' ? width : undefined,
-      maxHeight: process.platform === 'win32' ? height : undefined,
+      maxHeight: process.platform === 'win32' ? height + 52 : undefined,
       modal,
       parent,
       resizable: resizable ?? true,
