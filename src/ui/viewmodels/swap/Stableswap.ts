@@ -52,7 +52,7 @@ export class Stableswap {
   _forTokens = Tokens;
 
   getContractAddress(chainId: number) {
-    return Tokens[chainId].contract;
+    return Tokens[chainId]?.contract ?? '';
   }
 
   fromTokens(chainId: number): IToken[] {

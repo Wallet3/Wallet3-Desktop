@@ -104,7 +104,7 @@ export const PublicNetworks: INetwork[] = [
     comm_id: 'celo',
     chainId: 42220,
     network: 'Celo',
-    color: '#00A6FF',
+    color: '#5EA33B',
     order: 6,
     defaultTokens: CeloPopularTokens,
   },
