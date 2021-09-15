@@ -15,18 +15,20 @@ const SVGs = new Map([
   [42, [NetworkIcons('Kovan'), 'Kovan']],
   [10, [NetworkIcons('Optimism'), 'Optimism']],
   [42161, [NetworkIcons('Arbitrum'), 'Arbitrum']],
-  [43114, [NetworkIcons('Avalanche'), 'Avalanche']],
   [69, [NetworkIcons('Optimism'), 'Op Kovan']],
   [420, [NetworkIcons('Optimism'), 'Op Goerli']],
 
+  [43114, [NetworkIcons('Avalanche'), 'Avalanche']],
   [137, [NetworkIcons('Polygon'), 'Polygon']],
+  [80001, [NetworkIcons('Polygon'), 'Mumbai']],
   [100, [NetworkIcons('xDAI'), 'xDAI']],
   [250, [NetworkIcons('Fantom'), 'Fantom']],
-  [56, [NetworkIcons('bsc'), 'BSC']],
+  [42220, [NetworkIcons('Celo'), 'Celo']],
+
   [128, [NetworkIcons('Heco'), 'Heco']],
+  [56, [NetworkIcons('bsc'), 'BSC']],
   [66, [NetworkIcons('OKEx'), 'OKEx']],
 
-  [80001, [NetworkIcons('Polygon'), 'Mumbai']],
   [1337, [NetworkIcons('Ganache'), 'Ganache']],
 ]);
 

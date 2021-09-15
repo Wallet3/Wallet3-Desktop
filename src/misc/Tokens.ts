@@ -537,6 +537,20 @@ const HECO_LTC = {
 
 export const HecoPopularTokens = [HECO_ETH, HECO_BTC, HECO_USDC, HECO_DAI, HECO_UNI, HECO_USDT, HECO_DOT, HECO_BCH, HECO_LTC];
 
+const CELO_USD = {
+  address: '0x765de816845861e75a25fca122bb6898b8b1282a',
+  decimals: 18,
+  symbol: 'cUSD',
+};
+
+const CELO_EUR = {
+  address: '0xd8763cba276a3738e6de85b4b3bf5fded6d6ca73',
+  decimals: 18,
+  symbol: 'cEUR',
+};
+
+export const CeloPopularTokens = [CELO_USD, CELO_EUR];
+
 const all: IToken[] = [
   ...Stablecoins,
   WETH,

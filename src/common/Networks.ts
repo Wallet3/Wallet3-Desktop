@@ -1,5 +1,6 @@
 import {
   BscPopularTokens,
+  CeloPopularTokens,
   EthereumPopularTokens,
   FTMPopularTokens,
   HecoPopularTokens,
@@ -97,6 +98,15 @@ export const PublicNetworks: INetwork[] = [
     order: 5,
     defaultTokens: [],
     showOverview: true,
+  },
+  {
+    symbol: 'CELO',
+    comm_id: 'celo',
+    chainId: 42220,
+    network: 'Celo',
+    color: '#00A6FF',
+    order: 6,
+    defaultTokens: CeloPopularTokens,
   },
   {
     symbol: 'HT',

@@ -100,7 +100,9 @@
     "xdai",
     "Yahei",
     "AVAX",
-    "WXDAI"
+    "WXDAI",
+    "CELO",
+    "Stablecoins"
   ],
   "flagWords": [],
   "ignorePaths": ["package.json", "package-lock.json", "yarn.lock", "tsconfig.json", "node_modules/**"]

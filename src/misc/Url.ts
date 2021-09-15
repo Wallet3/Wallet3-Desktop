@@ -7,16 +7,17 @@ const Explorers = new Map<number, string>([
   [10, 'https://optimistic.etherscan.io'],
   [69, 'https://kovan-optimistic.etherscan.io'],
   [42161, 'https://arbiscan.io'],
-  [43114, 'https://cchain.explorer.avax.network'],
 
-  [56, 'https://bscscan.com'],
   [100, 'https://blockscout.com/xdai/mainnet'],
-  [128, 'https://hecoinfo.com'],
-  [66, 'https://www.oklink.com/okexchain'],
-
   [137, 'https://polygonscan.com'],
   [250, 'https://ftmscan.com'],
   [80001, 'https://explorer-mumbai.maticvigil.com'],
+  [42220, 'https://explorer.celo.org'],
+  [43114, 'https://cchain.explorer.avax.network'],
+
+  [56, 'https://bscscan.com'],
+  [128, 'https://hecoinfo.com'],
+  [66, 'https://www.oklink.com/okexchain'],
 ]);
 
 export function convertTxToUrl(tx: { chainId: number; hash?: string }) {
