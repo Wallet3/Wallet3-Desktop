@@ -1,7 +1,6 @@
 import './Unsupported.css';
 
-import App, { ApplicationPopup } from '../../viewmodels/ApplicationPopup';
-
+import { ApplicationPopup } from '../../viewmodels/ApplicationPopup';
 import { PopupTitle } from '../../components';
 import React from 'react';
 import maintenance from '../../../assets/icons/app/maintenance.svg';
@@ -9,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 export default ({ app }: { app: ApplicationPopup }) => {
   const { t } = useTranslation();
+  const { connectDappVM: vm } = app;
 
   return (
     <div className="page unsupported">
@@ -23,6 +23,7 @@ export default ({ app }: { app: ApplicationPopup }) => {
       <div className="actions">
         <button
           onClick={(_) => {
+            vm.reject();
             window.close();
           }}
         >

@@ -36,9 +36,9 @@ export class ApplicationPopup extends Application {
         case 'connectDapp':
           const chainId = payload[0]?.chainId || 1;
           const network = Networks.find((n) => n.chainId === chainId);
+          this.connectDappVM = new ConnectDappVM(payload);
 
           if (network) {
-            this.connectDappVM = new ConnectDappVM(payload);
             this.history.push('/connectDapp');
           } else {
             this.history.push('/unsupported');

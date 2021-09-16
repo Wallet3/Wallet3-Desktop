@@ -2,9 +2,9 @@ import './ConfirmTx.css';
 
 import * as Anime from '../../misc/Anime';
 
-import App, { ApplicationPopup } from '../../viewmodels/ApplicationPopup';
 import React, { useEffect, useState } from 'react';
 
+import { ApplicationPopup } from '../../viewmodels/ApplicationPopup';
 import ApproveView from './confirms/ApproveView';
 import AuthView from './confirms/AuthView';
 import { CurrencyVM } from '../../viewmodels/settings/CurrencyVM';
