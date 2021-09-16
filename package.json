@@ -89,7 +89,7 @@
     "webpack-filter-warnings-plugin": "^1.2.1"
   },
   "dependencies": {
-    "@electron/remote": "^1.2.1",
+    "@electron/remote": "^2.0.1",
     "@nodert-win10-20h1/windows.security.credentials.ui": "^0.1.0",
     "@szhsin/react-menu": "^1.11.0",
     "@walletconnect/client": "^1.6.5",

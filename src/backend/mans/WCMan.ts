@@ -3,7 +3,6 @@ import { computed, makeObservable, observable, runInAction } from 'mobx';
 
 import DBMan from './DBMan';
 import Messages from '../../common/Messages';
-import { MoreThan } from 'typeorm';
 import WCSession from '../models/WCSession';
 import { WalletConnect } from '../lib/WalletConnect';
 import { WalletKey } from '../lib/WalletKey';
@@ -112,6 +111,8 @@ export class WCMan {
     });
 
     runInAction(() => this.connections.push(...wcs.filter((i) => i)));
+
+    if (wcs.length < 8) return;
 
     const expiredDate = Date.now() - 91 * 24 * 60 * 60 * 1000;
     const expiredSessions = wcs.filter((i) => i?.wcSession?.lastUsedTimestamp < expiredDate);
