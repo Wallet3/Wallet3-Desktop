@@ -4,6 +4,7 @@ import { Application } from './Application';
 import { ConfirmVM } from './popups/ConfirmVM';
 import { ConnectDappVM } from './popups/ConnectDappVM';
 import { MessageBoxVM } from './popups/MessageBoxVM';
+import { Networks } from '../../common/Networks';
 import { SignVM } from './popups/SignVM';
 import delay from 'delay';
 import ipc from '../bridges/IPC';
@@ -33,8 +34,16 @@ export class ApplicationPopup extends Application {
           this.history.push('/scanQR');
           break;
         case 'connectDapp':
-          this.connectDappVM = new ConnectDappVM(payload);
-          this.history.push('/connectDapp');
+          const chainId = payload[0]?.chainId || 1;
+          const network = Networks.find((n) => n.chainId === chainId);
+
+          if (network) {
+            this.connectDappVM = new ConnectDappVM(payload);
+            this.history.push('/connectDapp');
+          } else {
+            this.history.push('/unsupported');
+          }
+
           break;
         case 'sign':
           this.signVM = new SignVM(payload);

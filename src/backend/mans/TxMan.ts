@@ -93,7 +93,7 @@ class TxMan {
       notification.show();
 
       const invalidTxs = await this.findTxs({
-        where: { chainId: tx.chainId, nonce: LessThanOrEqual(tx.nonce), blockNumber: IsNull() },
+        where: { from: tx.from, chainId: tx.chainId, nonce: LessThanOrEqual(tx.nonce), blockNumber: IsNull() },
       });
 
       removeTxs.push(...invalidTxs);

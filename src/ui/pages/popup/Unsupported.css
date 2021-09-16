@@ -1,0 +1,15 @@
+.page.unsupported {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.page.unsupported .content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.page.unsupported .content img {
+  width: 64px;
+}

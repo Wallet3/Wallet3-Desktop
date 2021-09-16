@@ -158,5 +158,7 @@
   "Testnets": "テスネット",
   "Swap": "スワップ",
   "Slippage": "スリッページ",
-  "Fee": "手数料"
+  "Fee": "手数料",
+  "Unsupported Network": "非対応のネットワーク",
+  "Current network is not supported yet": "現在のネットワークはまだサポートされていません"
 }

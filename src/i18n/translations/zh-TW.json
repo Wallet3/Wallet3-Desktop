@@ -158,5 +158,7 @@
   "Testnets": "測試網路",
   "Swap": "兌換",
   "Slippage": "滑點",
-  "Fee": "手續費"
+  "Fee": "手續費",
+  "Unsupported Network": "暫未支持該網絡",
+  "Current network is not supported yet": "該網絡暫未支持，請關註最新版本的 Wallet 3"
 }

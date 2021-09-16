@@ -108,6 +108,15 @@ export const PublicNetworks: INetwork[] = [
     order: 6,
     defaultTokens: CeloPopularTokens,
   },
+  // {
+  //   symbol: 'BCH',
+  //   comm_id: 'bch',
+  //   chainId: 10000,
+  //   network: 'SmartBCH',
+  //   order: 7,
+  //   color: '#2C3E50',
+  //   defaultTokens: [],
+  // },
   {
     symbol: 'HT',
     comm_id: 'heco',
