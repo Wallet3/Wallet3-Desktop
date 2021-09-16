@@ -28,6 +28,7 @@ const SVGs = new Map([
   [128, [NetworkIcons('Heco'), 'Heco']],
   [56, [NetworkIcons('bsc'), 'BSC']],
   [66, [NetworkIcons('OKEx'), 'OKEx']],
+  [10000, [NetworkIcons('SmartBCH'), 'SmartBCH']],
 
   [1337, [NetworkIcons('Ganache'), 'Ganache']],
 ]);
