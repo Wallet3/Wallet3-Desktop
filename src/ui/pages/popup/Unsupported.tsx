@@ -1,37 +1,33 @@
-import './MessageBox.css';
+import './Unsupported.css';
 
 import { ApplicationPopup } from '../../viewmodels/ApplicationPopup';
 import { PopupTitle } from '../../components';
 import React from 'react';
+import maintenance from '../../../assets/icons/app/maintenance.svg';
 import { useTranslation } from 'react-i18next';
 
 export default ({ app }: { app: ApplicationPopup }) => {
   const { t } = useTranslation();
-  const { msgboxVM } = app;
+  const { connectDappVM: vm } = app;
 
   return (
-    <div className="page messagebox">
-      <PopupTitle title={msgboxVM.title} icon={msgboxVM.icon} />
+    <div className="page unsupported">
+      <PopupTitle title={t('Unsupported Network')} />
 
-      <div className="content">{msgboxVM.message}</div>
+      <div className="content">
+        <img src={maintenance} alt="maintenance" />
+
+        <span>{t('Current network is not supported yet')}</span>
+      </div>
 
       <div className="actions">
         <button
           onClick={(_) => {
-            msgboxVM.reject();
+            vm.reject();
             window.close();
           }}
         >
           {t('Cancel')}
-        </button>
-        <button
-          className="positive"
-          onClick={(_) => {
-            msgboxVM.approve();
-            window.close();
-          }}
-        >
-          {t('OK')}
         </button>
       </div>
     </div>

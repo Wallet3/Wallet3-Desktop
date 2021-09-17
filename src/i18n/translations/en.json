@@ -158,5 +158,7 @@
   "Testnets": "Testnets",
   "Swap": "Swap",
   "Slippage": "Slippage",
-  "Fee": "Fee"
+  "Fee": "Fee",
+  "Unsupported Network": "Unsupported Network",
+  "Current network is not supported yet": "Current network is not supported yet"
 }

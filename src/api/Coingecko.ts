@@ -19,7 +19,7 @@ interface ChainsPrice {
 const host = 'https://api.coingecko.com';
 
 export async function getPrice(
-  ids = 'ethereum,matic-network,fantom,okexchain,huobi-token,binancecoin,avalanche-2',
+  ids = 'ethereum,matic-network,fantom,okexchain,huobi-token,binancecoin,avalanche-2,celo',
   currencies = 'usd'
 ) {
   try {
@@ -65,6 +65,7 @@ class Coingecko {
           this['66'] = data['huobi-token'].usd;
           this['56'] = data.binancecoin.usd;
           this['43114'] = data['avalanche-2'].usd;
+          this['42220'] = data['celo'].usd;
         });
         run();
       })

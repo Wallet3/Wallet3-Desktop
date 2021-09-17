@@ -1,4 +1,4 @@
-import { FindManyOptions, IsNull, LessThanOrEqual } from 'typeorm';
+import { FindManyOptions, IsNull, LessThanOrEqual, MoreThan, Not } from 'typeorm';
 import MessageKeys, { TxParams } from '../../common/Messages';
 import { Notification, app, shell } from 'electron';
 import { getTransactionReceipt, sendTransaction } from '../../common/Provider';
@@ -26,7 +26,29 @@ class TxMan {
   async init() {
     if (this._timer) return;
 
-    const pendingTxs = await this.findTxs({ where: { blockNumber: null } });
+    let pendingTxs = await this.findTxs({ where: { blockNumber: null } });
+    let confirmedTxs: Transaction[] = [];
+
+    await Promise.all(
+      pendingTxs.map(async (pendingTx) => {
+        const newerTxs = await this.findTxs({
+          where: {
+            from: pendingTx.from,
+            chainId: pendingTx.chainId,
+            nonce: MoreThan(pendingTx.nonce),
+            blockNumber: Not(IsNull()),
+          },
+        });
+
+        if (newerTxs.length > 0) {
+          await pendingTx.remove();
+          confirmedTxs.push(pendingTx);
+        }
+      })
+    );
+
+    pendingTxs = pendingTxs.filter((tx) => !confirmedTxs.includes(tx));
+
     runInAction(async () => this.pendingTxs.push(...pendingTxs));
 
     this.checkPendingTxs();
@@ -71,7 +93,7 @@ class TxMan {
       notification.show();
 
       const invalidTxs = await this.findTxs({
-        where: { chainId: tx.chainId, nonce: LessThanOrEqual(tx.nonce), blockNumber: IsNull() },
+        where: { from: tx.from, chainId: tx.chainId, nonce: LessThanOrEqual(tx.nonce), blockNumber: IsNull() },
       });
 
       removeTxs.push(...invalidTxs);
@@ -118,7 +140,7 @@ class TxMan {
     }
 
     this.saveTx(params, txHex);
-    
+
     return result;
   };
 
