@@ -1,10 +1,21 @@
+import * as os from 'os';
+
 import { systemPreferences } from 'electron';
 
 const isWin = process.platform === 'win32';
+const isWin10OrLater = isWin && Number.parseFloat(os.release()) >= 10;
+
+const EmptyWindowsSecurity = {
+  UserConsentVerifier: undefined,
+  UserConsentVerificationResult: undefined,
+  UserConsentVerifierAvailability: undefined,
+};
 
 const { UserConsentVerifier, UserConsentVerifierAvailability, UserConsentVerificationResult } = isWin
-  ? require('@nodert-win10-20h1/windows.security.credentials.ui')
-  : { UserConsentVerifier: undefined, UserConsentVerificationResult: undefined, UserConsentVerifierAvailability: undefined };
+  ? isWin10OrLater
+    ? require('@nodert-win10-20h1/windows.security.credentials.ui')
+    : EmptyWindowsSecurity
+  : EmptyWindowsSecurity;
 
 async function checkWindowsTouchIDSupported() {
   return new Promise<boolean>((resolve) => {
