@@ -11,10 +11,8 @@ const EmptyWindowsSecurity = {
   UserConsentVerifierAvailability: undefined,
 };
 
-const { UserConsentVerifier, UserConsentVerifierAvailability, UserConsentVerificationResult } = isWin
-  ? isWin10OrLater
-    ? require('@nodert-win10-20h1/windows.security.credentials.ui')
-    : EmptyWindowsSecurity
+const { UserConsentVerifier, UserConsentVerifierAvailability, UserConsentVerificationResult } = isWin10OrLater
+  ? require('@nodert-win10-20h1/windows.security.credentials.ui')
   : EmptyWindowsSecurity;
 
 async function checkWindowsTouchIDSupported() {
