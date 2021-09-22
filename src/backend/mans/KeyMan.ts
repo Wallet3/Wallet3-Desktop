@@ -73,7 +73,7 @@ class KeyMan {
   }
 
   async switch(id: number) {
-    console.log('currentId', this.currentId, 'to', id);
+    // console.log('currentId', this.currentId, 'to', id);
 
     if (this.currentId === id) return this.currentId;
 
