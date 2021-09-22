@@ -20,7 +20,7 @@ export function checkSecretType(secret: string) {
   if (ethers.utils.isValidMnemonic(secret)) return SecretType.mnemonic;
   if (hasJapanese(secret) && ethers.utils.isValidMnemonic(secret, ethers.wordlists.ja)) return SecretType.mnemonic;
   if (hasChinese(secret) && ethers.utils.isValidMnemonic(secret, ethers.wordlists.zh)) return SecretType.mnemonic;
-  if (hasKorean(secret) && ethers.utils.isValidMnemonic(secret, ethers.wordlists.kr)) return SecretType.mnemonic;
+  if (hasKorean(secret) && ethers.utils.isValidMnemonic(secret, ethers.wordlists.ko)) return SecretType.mnemonic;
 
   if ((secret.toLowerCase().startsWith('0x') && secret.length === 66) || secret.length === 64) return SecretType.privkey;
 
@@ -30,7 +30,7 @@ export function checkSecretType(secret: string) {
 export function langToWordlist(secret: string) {
   if (hasJapanese(secret) && ethers.utils.isValidMnemonic(secret, ethers.wordlists.ja)) return ethers.wordlists.ja;
   if (hasChinese(secret) && ethers.utils.isValidMnemonic(secret, ethers.wordlists.zh)) return ethers.wordlists.zh;
-  if (hasKorean(secret) && ethers.utils.isValidMnemonic(secret, ethers.wordlists.kr)) return ethers.wordlists.kr;
+  if (hasKorean(secret) && ethers.utils.isValidMnemonic(secret, ethers.wordlists.ko)) return ethers.wordlists.ko;
 
   return ethers.wordlists.en;
 }
