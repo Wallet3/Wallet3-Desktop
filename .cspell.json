@@ -102,7 +102,9 @@
     "AVAX",
     "WXDAI",
     "CELO",
-    "Stablecoins"
+    "Stablecoins",
+    "Wordlist",
+    "wordlists"
   ],
   "flagWords": [],
   "ignorePaths": ["package.json", "package-lock.json", "yarn.lock", "tsconfig.json", "node_modules/**"]

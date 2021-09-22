@@ -2,7 +2,6 @@ import './Settings.css';
 
 import { Menu, MenuButton, MenuDivider, MenuItem } from '@szhsin/react-menu';
 
-import { AccountType } from '../../../backend/models/Types';
 import { AccountVM } from '../../viewmodels/AccountVM';
 import { Application } from '../../viewmodels/Application';
 import DisplayCurrency from './components/DisplayCurrency';

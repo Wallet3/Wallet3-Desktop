@@ -11773,10 +11773,10 @@ stat-mode@^1.0.0:
   resolved "https://registry.yarnpkg.com/statuses/-/statuses-1.5.0.tgz#161c7dac177659fd9811f43771fa99381478628c"
   integrity sha1-Fhx9rBd2Wf2YEfQ3cfqZOBR4Yow=
 
-storejs@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/storejs/-/storejs-1.1.0.tgz#f63be43c747c14be3a7b17018392938091d64679"
-  integrity sha512-RCQ7dhTmaRJ8IYW6zprhESmSij6Dy4lGvAaRFgHhhYvhIb8B+WHmvim+ELub07AuF7vHgB79pYgsTQBRLtEOew==
+storejs@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/storejs/-/storejs-2.0.0.tgz#8dc8e4026ba0fe7049c4acd65de0f9e8f89025a0"
+  integrity sha512-DM0MCa0eOXATIyM+QNuuIB+XReYfUSGXTIYeyWKG3Dz5GwJNpR/jE6nZXcydnUbtkqkyFdkxUZ7acdSiNmv3FA==
 
 stream-buffers@~2.2.0:
   version "2.2.0"
