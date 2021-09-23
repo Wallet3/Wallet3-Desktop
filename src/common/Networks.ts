@@ -1,4 +1,5 @@
 import {
+  ArbiPopularTokens,
   BscPopularTokens,
   CeloPopularTokens,
   EthereumPopularTokens,
@@ -55,7 +56,7 @@ export const PublicNetworks: INetwork[] = [
     color: '#2D374B',
     order: 3,
     l2: true,
-    defaultTokens: [],
+    defaultTokens: ArbiPopularTokens,
     showOverview: false,
   },
   {

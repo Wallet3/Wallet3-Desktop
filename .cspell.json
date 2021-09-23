@@ -104,7 +104,8 @@
     "CELO",
     "Stablecoins",
     "Wordlist",
-    "wordlists"
+    "wordlists",
+    "Arbi"
   ],
   "flagWords": [],
   "ignorePaths": ["package.json", "package-lock.json", "yarn.lock", "tsconfig.json", "node_modules/**"]
