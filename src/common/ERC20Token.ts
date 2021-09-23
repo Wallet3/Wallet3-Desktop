@@ -45,7 +45,7 @@ export class ERC20Token {
     this.erc20.on(filter, listener);
   }
 
-  async estimateGas(from: string, to: string, amt: BigNumberish = BigNumber.from(1)) {
+  async estimateGas(from: string, to: string, amt: BigNumberish = BigNumber.from(0), l2?: boolean) {
     try {
       return Number.parseInt(((await this.erc20.estimateGas.transfer(to, amt)).toNumber() * 2) as any);
     } catch (error) {}
@@ -54,7 +54,7 @@ export class ERC20Token {
       return Number.parseInt(((await this.erc20.estimateGas.transferFrom(from, to, amt)).toNumber() * 3) as any);
     } catch (error) {}
 
-    return 150_000;
+    return 150_000 + (l2 ? 1_000_000 : 0);
   }
 
   encodeTransferData(to: string, amount: BigNumberish) {
