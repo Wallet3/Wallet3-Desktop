@@ -67,7 +67,7 @@ export class SwapVM {
   }
 
   get account() {
-    return App.currentWallet?.currentAccount.address;
+    return App.currentWallet?.currentAccount?.address;
   }
 
   get approved() {

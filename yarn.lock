@@ -3025,10 +3025,10 @@
     "@types/history" "*"
     "@types/react" "*"
 
-"@types/react-select@^4.0.17":
-  version "4.0.17"
-  resolved "https://registry.yarnpkg.com/@types/react-select/-/react-select-4.0.17.tgz#2e5ab4042c09c988bfc2711550329b0c3c9f8513"
-  integrity sha512-ZK5wcBhJaqC8ntQl0CJvK2KXNNsk1k5flM7jO+vNPPlceRzdJQazA6zTtQUyNr6exp5yrAiwiudtYxgGlgGHLg==
+"@types/react-select@^4.0.18":
+  version "4.0.18"
+  resolved "https://registry.yarnpkg.com/@types/react-select/-/react-select-4.0.18.tgz#f907f406411afa862217a9d86c54a301367a35c1"
+  integrity sha512-uCPRMPshd96BwHuT7oCrFduiv5d6km3VwmtW7rVl9g4XetS3VoJ9nZo540LiwtQgaFcW96POwaxQDZDAyYaepg==
   dependencies:
     "@emotion/serialize" "^1.0.0"
     "@types/react" "*"
@@ -7460,10 +7460,10 @@ hyphenate-style-name@^1.0.2:
   resolved "https://registry.yarnpkg.com/hyphenate-style-name/-/hyphenate-style-name-1.0.4.tgz#691879af8e220aea5750e8827db4ef62a54e361d"
   integrity sha512-ygGZLjmXfPHj+ZWh6LwbC37l43MhfztxetbFCoYTM2VjkIUpeHgSNn7QIyVFj7YQ1Wl9Cbw5sholVJPzWvC2MQ==
 
-i18next@^21.0.1:
-  version "21.0.1"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-21.0.1.tgz#6b20df6135579c54c2f401590be4ea444b37a40f"
-  integrity sha512-t2qKY5tO9FPCS9TBajVRQ/FSCf8AAolLP6O2YCUGyR3qLeznlpPnrmzLmQo+Aqe/W3cY/znaV1d6AEIEVxcCAg==
+i18next@^21.0.2:
+  version "21.0.2"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-21.0.2.tgz#a394cbd0cc1879a9ad7a4a979a222d12033022cc"
+  integrity sha512-cSjRitffS1xm90YgPFTaqut89Y4Oc2i4aiCmAuhxHPryYdKzSIGl1YSv8PzlW+UPFOKRIUCOYZ5Rn+aUXKq/qQ==
   dependencies:
     "@babel/runtime" "^7.12.0"
 
