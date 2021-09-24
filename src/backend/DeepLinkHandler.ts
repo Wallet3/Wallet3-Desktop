@@ -7,6 +7,7 @@ import { ConfirmSendTx } from '../common/Messages';
 import { ERC20Token } from '../common/ERC20Token';
 import GasnowWs from '../gas/Gasnow';
 import { KeyMan } from './mans';
+import { Networks } from '../common/Networks';
 import { findTokenByAddress } from '../misc/Tokens';
 import i18n from '../i18n';
 import querystring from 'querystring';
@@ -83,7 +84,7 @@ async function handleERC681(uri: string) {
   }
 
   const chainId = Number.parseInt(cid) || 1;
-
+  const network = Networks.find((n) => n.chainId === chainId);
   const provider = getProviderByChainId(chainId);
   await provider.ready;
 
@@ -132,7 +133,7 @@ async function handleERC681(uri: string) {
         from: from,
         to: to,
         data: data,
-        gas: gas || (await token.estimateGas(from, to)),
+        gas: gas || (await token.estimateGas(from, to, 0, network?.l2)),
         gasPrice,
         nonce,
         value: '0',

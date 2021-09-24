@@ -4,9 +4,9 @@ import * as ethSignUtil from 'eth-sig-util';
 import * as ethers from 'ethers';
 import * as keytar from 'keytar';
 
+import { SecretType, checkSecretType, langToWordlist } from '../../common/Mnemonic';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
-import { AccountType } from '../models/Types';
 import Key from '../models/Key';
 import { TxParams } from '../../common/Messages';
 import { app } from 'electron';
@@ -51,7 +51,7 @@ export class WalletKey {
   }
 
   get name() {
-    return this.key?.name || `${this.type === AccountType.privkey ? 'Key' : 'Wallet'} ${this.key?.id ?? 'Temp'}`;
+    return this.key?.name || `${this.type === SecretType.privkey ? 'Key' : 'Wallet'} ${this.key?.id ?? 'Temp'}`;
   }
 
   get type() {
@@ -61,7 +61,7 @@ export class WalletKey {
   private get tmpSecretType() {
     if (!this.tmpSecret) return undefined;
 
-    return this.checkSecretType(this.tmpSecret);
+    return checkSecretType(this.tmpSecret);
   }
 
   constructor() {
@@ -284,9 +284,9 @@ export class WalletKey {
 
     let addresses: string[] = [];
 
-    switch (this.checkSecretType(secret)) {
-      case AccountType.mnemonic:
-        const hd = ethers.utils.HDNode.fromMnemonic(secret);
+    switch (checkSecretType(secret)) {
+      case SecretType.mnemonic:
+        const hd = ethers.utils.HDNode.fromMnemonic(secret, undefined, langToWordlist(secret));
         addresses = [hd.derivePath(`${this.basePath}/${this.basePathIndex}`).address];
 
         for (let i = 1; i < count; i++) {
@@ -295,7 +295,7 @@ export class WalletKey {
 
         break;
 
-      case AccountType.privkey:
+      case SecretType.privkey:
         const signer = new ethers.Wallet(secret);
         addresses = [signer.address];
         break;
@@ -322,27 +322,23 @@ export class WalletKey {
     const secret = await this.readSecret(userPassword);
     if (!secret) return undefined;
 
-    switch (this.checkSecretType(secret)) {
-      case AccountType.mnemonic:
+    switch (checkSecretType(secret)) {
+      case SecretType.mnemonic:
         const root = ethers.utils.HDNode.fromMnemonic(secret);
         const account = root.derivePath(`${this.basePath}/${this.basePathIndex + accountIndex}`);
         return account.privateKey;
 
-      case AccountType.privkey:
+      case SecretType.privkey:
         return secret;
     }
-  }
-
-  checkSecretType(secret: string) {
-    if (ethers.utils.isValidMnemonic(secret)) return AccountType.mnemonic;
-
-    if ((secret.toLowerCase().startsWith('0x') && secret.length === 66) || secret.length === 64) return AccountType.privkey;
-
-    return undefined;
   }
 
   private getCorePassword(userPassword: string) {
     const salt = Cipher.decrypt(Buffer.from(this.key.saltIv, 'hex'), this.key.salt, userPassword);
     return `${salt}-${userPassword}`;
+  }
+
+  checkSecretType(secret: string) {
+    return checkSecretType(secret);
   }
 }

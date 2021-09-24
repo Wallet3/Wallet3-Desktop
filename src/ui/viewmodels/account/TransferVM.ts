@@ -302,13 +302,14 @@ export class TransferVM {
         (await erc20.estimateGas(
           this.self,
           this.receiptAddress || '0xD1b05E3AFEDcb11F29c5A560D098170bE26Fe5f5',
-          this.amountBigInt
+          this.amountBigInt,
+          NetworksVM.currentNetwork.l2
         ));
 
       try {
         setGas(gas);
       } catch (error) {
-        setGas(150_000);
+        setGas(150_000 + (NetworksVM.currentNetwork.l2 ? 1_000_000 : 0));
       }
     } finally {
       runInAction(() => (this.loading = false));

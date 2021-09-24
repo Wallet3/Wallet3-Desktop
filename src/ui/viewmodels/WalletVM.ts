@@ -1,12 +1,12 @@
 import Messages, { IKey, TxParams } from '../../common/Messages';
 import { makeAutoObservable, reaction, runInAction } from 'mobx';
 
-import { AccountType } from '../../backend/models/Types';
 import { AccountVM } from './AccountVM';
 import { DAppVM } from './wallet/DAppVM';
 import { HistoryTxsVM } from './wallet/HistoryTxsVM';
 import NetVM from './NetworksVM';
 import { PendingTxVM } from './wallet/PendingTxVM';
+import { SecretType } from '../../common/Mnemonic';
 import ipc from '../bridges/IPC';
 import store from 'storejs';
 
@@ -64,7 +64,7 @@ export class WalletVM {
     return this.key.id;
   }
 
-  get type(): AccountType {
+  get type(): SecretType {
     return this.key.type;
   }
 
