@@ -13,6 +13,7 @@ import MessageKeys, {
 import { createECDH, createHash, randomBytes } from 'crypto';
 import { makeObservable, observable, reaction, runInAction } from 'mobx';
 
+import BluetoothTransport from '@ledgerhq/hw-transport-node-ble';
 import { Networks } from '../common/Networks';
 import i18n from '../i18n';
 
@@ -47,7 +48,8 @@ export class App {
 
   async init() {
     this.touchIDSupported = await Biometrics.isTouchIDSupported();
-
+    console.log(await BluetoothTransport.isSupported());
+    
     if (this.ready) return;
 
     reaction(
