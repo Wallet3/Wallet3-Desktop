@@ -13,7 +13,7 @@ import MessageKeys, {
 import { createECDH, createHash, randomBytes } from 'crypto';
 import { makeObservable, observable, reaction, runInAction } from 'mobx';
 
-import BluetoothTransport from '@ledgerhq/hw-transport-node-ble';
+// import BluetoothTransport from '@ledgerhq/hw-transport-node-ble';
 import { Networks } from '../common/Networks';
 import i18n from '../i18n';
 
@@ -22,6 +22,7 @@ declare const POPUP_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
 export class App {
   touchIDSupported = false;
+  bluetoothSupported = false;
 
   windows = new Map<string, { key: Buffer }>();
   mainWindow?: BrowserWindow;
@@ -48,8 +49,8 @@ export class App {
 
   async init() {
     this.touchIDSupported = await Biometrics.isTouchIDSupported();
-    console.log(await BluetoothTransport.isSupported());
-    
+    // this.bluetoothSupported = await BluetoothTransport.isSupported();
+
     if (this.ready) return;
 
     reaction(
