@@ -46,6 +46,15 @@ export default observer(({ confirmVM, onReject, onContinue, currencyVM }: Props)
 
   useEffect(() => {
     window.resizeTo(360, eip1559 ? 415 : 365);
+
+    document.onkeydown = (ev) => {
+      if (ev.code !== 'Enter') return;
+
+      onContinue?.();
+
+      ev.preventDefault();
+      ev.stopPropagation();
+    };
   }, []);
 
   return (
