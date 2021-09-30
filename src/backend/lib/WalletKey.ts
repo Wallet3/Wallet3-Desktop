@@ -70,6 +70,7 @@ export class WalletKey {
       currentAddressIndex: observable,
       currentAddress: computed,
       changeAddressIndex: action,
+      authenticated: computed,
     });
   }
 
