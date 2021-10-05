@@ -15,7 +15,7 @@ class EIP1559Price {
   priorityGasPrice = 0;
 
   get rapid() {
-    return this.baseGasPrice * 2;
+    return this.baseGasPrice + 20 * Gwei_1;
   }
 
   get fast() {
@@ -23,7 +23,11 @@ class EIP1559Price {
   }
 
   get standard() {
-    return this.baseGasPrice;
+    return Math.max(this.baseGasPrice - 2 * Gwei_1, 0);
+  }
+
+  get slow() {
+    return Math.max(this.baseGasPrice - 5 * Gwei_1, 0);
   }
 
   get priorityGasPriceGwei() {
@@ -31,19 +35,19 @@ class EIP1559Price {
   }
 
   get rapidGwei() {
-    return Number.parseInt(((this.baseGasPrice * 2) / Gwei_1) as any);
+    return Number.parseInt((this.rapid / Gwei_1) as any);
   }
 
   get fastGwei() {
-    return Number.parseInt((this.baseGasPrice / Gwei_1) as any);
+    return Number.parseInt((this.fast / Gwei_1) as any);
   }
 
   get standardGwei() {
-    return Math.max(Number.parseInt(((this.baseGasPrice - 2 * Gwei_1) / Gwei_1) as any), 1);
+    return Number.parseInt((this.standard / Gwei_1) as any);
   }
 
   get slowGwei() {
-    return Math.max(Number.parseInt(((this.baseGasPrice - 5 * Gwei_1) / Gwei_1) as any), 0);
+    return Number.parseInt((this.slow / Gwei_1) as any);
   }
 
   constructor() {
