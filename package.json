@@ -91,7 +91,7 @@
     "@electron/remote": "^2.0.1",
     "@nodert-win10-20h1/windows.security.credentials.ui": "^0.1.0",
     "@szhsin/react-menu": "^1.11.0",
-    "@walletconnect/client": "^1.6.5",
+    "@walletconnect/client": "^1.6.6",
     "animate.css": "^4.1.1",
     "animejs": "^3.2.1",
     "axios": "^0.21.4",
