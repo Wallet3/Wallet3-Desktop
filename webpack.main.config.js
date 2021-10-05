@@ -12,6 +12,11 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json'],
-    alias: {},
+    alias: {
+      // [path.join(__dirname, '/node_modules/@abandonware/noble/lib/mac/bindings.js')]: path.join(
+      //   __dirname,
+      //   'bindings/noble-bindings.js'
+      // ),
+    },
   },
 };

@@ -3,9 +3,9 @@ import '@szhsin/react-menu/dist/index.css';
 
 import { Image, NetworkMenu, PopupTitle } from '../../components';
 import { PublicNetworks, Testnets } from '../../../common/Networks';
+import React, { useEffect } from 'react';
 
 import { ApplicationPopup } from '../../viewmodels/ApplicationPopup';
-import React from 'react';
 import { formatAddress } from '../../misc/Formatter';
 import { observer } from 'mobx-react-lite';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +13,18 @@ import { useTranslation } from 'react-i18next';
 export default observer(({ app }: { app: ApplicationPopup }) => {
   const { connectDappVM: vm, currentWallet } = app;
   const { t } = useTranslation();
+
+  useEffect(() => {
+    document.onkeydown = (ev) => {
+      if (ev.code !== 'Enter') return;
+
+      ev.preventDefault();
+      ev.stopPropagation();
+
+      vm?.approve();
+      window.close();
+    };
+  });
 
   return (
     <div className="page connectdapp">

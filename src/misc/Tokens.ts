@@ -350,6 +350,12 @@ const MATIC_SUSHI = {
   symbol: 'SUSHI',
 };
 
+const MATIC_WETH = {
+  address: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+  decimals: 18,
+  symbol: 'WETH',
+};
+
 export const PolygonPopularTokens = [
   MATIC_DAI,
   MATIC_USDC,
@@ -359,6 +365,7 @@ export const PolygonPopularTokens = [
   MATIC_CRV,
   MATIC_SUSHI,
   MATIC_COMP,
+  MATIC_WETH,
 ];
 
 export const wxDAI = {
@@ -563,7 +570,13 @@ const ARBI_USDC = {
   symbol: 'USDC',
 };
 
-export const ArbiPopularTokens = [ARBI_USDT, ARBI_USDC];
+const ARBI_DAI = {
+  address: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
+  decimals: 18,
+  symbol: 'DAI',
+};
+
+export const ArbiPopularTokens = [ARBI_DAI, ARBI_USDC, ARBI_USDT];
 
 const all: IToken[] = [
   ...Stablecoins,

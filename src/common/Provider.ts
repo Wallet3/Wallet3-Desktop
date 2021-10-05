@@ -1,7 +1,7 @@
 import * as Providers from './.wallet3.rc.json';
 import * as ethers from 'ethers';
 
-import { Gwei_1 } from '../gas/Gasnow';
+import { Gwei_1 } from './Constants';
 import axios from 'axios';
 
 const cache = new Map<number, ethers.providers.JsonRpcProvider | ethers.providers.WebSocketProvider>();

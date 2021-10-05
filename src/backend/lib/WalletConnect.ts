@@ -1,7 +1,6 @@
 import App, { App as Application } from '../App';
 import { AuthParams, ConfirmSendTx, RequestSignMessage, SendTxParams, WcMessages } from '../../common/Messages';
 import { BigNumber, ethers, utils } from 'ethers';
-import Gasnow, { Gwei_1 } from '../../gas/Gasnow';
 import { IReactionDisposer, reaction } from 'mobx';
 import {
   call,
@@ -12,8 +11,10 @@ import {
   getTransactionCount,
 } from '../../common/Provider';
 
+import EIP1559Price from '../../gas/EIP1559Price';
 import ERC20ABI from '../../abis/ERC20.json';
 import EventEmitter from 'events';
+import { Gwei_1 } from '../../common/Constants';
 import { Networks } from '../../common/Networks';
 import { TxMan } from '../mans';
 import WCSession from '../models/WCSession';
@@ -317,7 +318,7 @@ export class WalletConnect extends EventEmitter {
     const { eip1559, minGwei } = network;
 
     let defaultGasPrice = (minGwei ?? 1) * Gwei_1;
-    defaultGasPrice = chainId === 1 ? Gasnow.fast : defaultGasPrice;
+    defaultGasPrice = chainId === 1 ? EIP1559Price.fast : defaultGasPrice;
 
     let baseFee: number = undefined;
     let priorityFee: number = undefined;

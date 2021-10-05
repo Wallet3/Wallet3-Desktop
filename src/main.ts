@@ -7,7 +7,7 @@ import { handleDeepLink, supportedSchemes } from './backend/DeepLinkHandler';
 
 import App from './backend/App';
 import Coingecko from './api/Coingecko';
-import GasnowWs from './gas/Gasnow';
+import EIP1559Price from './gas/EIP1559Price';
 import Messages from './common/Messages';
 import { autorun } from 'mobx';
 import delay from 'delay';
@@ -163,13 +163,12 @@ app.on('ready', async () => {
 
   createWindow();
 
-  GasnowWs.start(true);
-  GasnowWs.onclose = () => GasnowWs.start(true);
+  EIP1559Price.refresh();
   autorun(() => {
     const { gas } = App.touchBarButtons || {};
     if (!gas) return;
 
-    gas.label = `${GasnowWs.rapidGwei} | ${GasnowWs.fastGwei} | ${GasnowWs.standardGwei}`;
+    gas.label = `${EIP1559Price.baseGasPriceGwei} + ${EIP1559Price.priorityGasPriceGwei}`;
     tray?.setTitle(gas.label);
   });
 
@@ -256,7 +255,6 @@ powerMonitor.on('resume', async () => {
     }
   }
 
-  GasnowWs.restart(true);
   KeyMan.keys.forEach(async (k) => {
     const { wcman } = KeyMan.connections.get(k.id) || {};
     await wcman?.init();
