@@ -163,7 +163,7 @@ app.on('ready', async () => {
 
   createWindow();
 
-  EIP1559Price.start();
+  EIP1559Price.refresh();
   autorun(() => {
     const { gas } = App.touchBarButtons || {};
     if (!gas) return;

@@ -9,7 +9,7 @@ export const Gwei_5 = 5000000000;
 
 export const MAX_GWEI_PRICE = 9007199;
 
-export class GasnowWs {
+class GasnowWs {
   static readonly host = 'wss://www.gasnow.org/ws';
 
   client: WebSocket | ws;
@@ -99,4 +99,4 @@ export class GasnowWs {
   }
 }
 
-export default new GasnowWs();
+// export default new GasnowWs();

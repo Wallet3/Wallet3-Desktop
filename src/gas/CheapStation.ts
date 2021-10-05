@@ -1,6 +1,6 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 
-import { Gwei_1 } from './Gasnow';
+import { Gwei_1 } from '../common/Constants';
 import { Networks } from '../common/Networks';
 import { getProviderByChainId } from '../common/Provider';
 

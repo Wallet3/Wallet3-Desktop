@@ -4,8 +4,8 @@ import { call, getProviderByChainId, getTransactionCount } from '../common/Provi
 
 import App from './App';
 import { ConfirmSendTx } from '../common/Messages';
+import EIP1559Price from '../gas/EIP1559Price';
 import { ERC20Token } from '../common/ERC20Token';
-import GasnowWs from '../gas/Gasnow';
 import { KeyMan } from './mans';
 import { Networks } from '../common/Networks';
 import { findTokenByAddress } from '../misc/Tokens';
@@ -91,7 +91,7 @@ async function handleERC681(uri: string) {
   target_address = utils.isAddress(target_address) ? target_address : await provider.lookupAddress(target_address);
   const from = KeyMan.current.currentAddress;
   const gas = Number.parseInt(parameters['gas'] || parameters['gasLimit']);
-  const gasPrice = Number.parseInt(parameters['gasPrice']) || GasnowWs.fast;
+  const gasPrice = Number.parseInt(parameters['gasPrice']) || EIP1559Price.fast;
   const nonce = Number.parseInt(parameters['nonce']) || (await getTransactionCount(chainId, from));
   const value = Number(parameters['value'] || '0').toLocaleString(undefined, { useGrouping: false });
 

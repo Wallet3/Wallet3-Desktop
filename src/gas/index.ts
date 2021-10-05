@@ -1,6 +1,6 @@
-import Gasnow, { Gwei_1 } from './Gasnow';
-
 import CheapStation from './CheapStation';
+import EIP1559Price from './EIP1559Price';
+import { Gwei_1 } from '../common/Constants';
 import { Networks } from '../common/Networks';
 import { makeAutoObservable } from 'mobx';
 
@@ -18,7 +18,7 @@ class GasStation {
   private _chainId = 1;
   private _stations = new Map<number, IGasStation>(
     Networks.map((network) => {
-      return [network.chainId, network.chainId === 1 ? Gasnow : new CheapStation(network.chainId)];
+      return [network.chainId, network.chainId === 1 ? EIP1559Price : new CheapStation(network.chainId)];
     })
   );
 
@@ -73,7 +73,7 @@ class GasStation {
 
   refresh() {
     this._stations.get(this.chainId)?.refresh();
-    Gasnow.refresh();
+    EIP1559Price.refresh();
   }
 }
 

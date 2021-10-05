@@ -1,14 +1,11 @@
 import { computed, makeObservable, observable, runInAction } from 'mobx';
 import { getMaxPriorityFee, getNextBlockBaseFee } from '../common/Provider';
 
-export const Gwei_10 = 10000000000;
-export const Gwei_20 = 20000000000;
-export const Gwei_1 = 1000000000;
-export const Gwei_5 = 5000000000;
-
-export const MAX_GWEI_PRICE = 9007199;
+import { Gwei_1 } from '../common/Constants';
 
 class EIP1559Price {
+  private timer: NodeJS.Timer;
+
   baseGasPrice = 0;
 
   get baseGasPriceGwei() {
@@ -16,6 +13,18 @@ class EIP1559Price {
   }
 
   priorityGasPrice = 0;
+
+  get rapid() {
+    return this.baseGasPrice * 2;
+  }
+
+  get fast() {
+    return this.baseGasPrice;
+  }
+
+  get standard() {
+    return this.baseGasPrice;
+  }
 
   get priorityGasPriceGwei() {
     return Number((this.priorityGasPrice / Gwei_1).toFixed(2));
@@ -50,9 +59,11 @@ class EIP1559Price {
     });
   }
 
-  async start() {
+  async refresh() {
+    clearTimeout(this.timer);
+
     await this.fetchData();
-    setTimeout(() => this.start(), 15 * 1000);
+    this.timer = setTimeout(() => this.refresh(), 15 * 1000);
   }
 
   private async fetchData() {

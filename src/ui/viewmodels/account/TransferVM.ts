@@ -1,5 +1,5 @@
 import { BigNumber, ethers, utils } from 'ethers';
-import Gasnow, { Gwei_1, MAX_GWEI_PRICE } from '../../../gas/Gasnow';
+import { Gwei_1, MAX_GWEI_PRICE } from '../../../common/Constants';
 import { IReactionDisposer, autorun, makeAutoObservable, reaction, runInAction } from 'mobx';
 import Messages, { ConfirmSendTx } from '../../../common/Messages';
 import { calcSpeed, fetchNextBlockFeeData } from '../services/EIP1559';
@@ -8,6 +8,7 @@ import { parseEther, parseUnits } from 'ethers/lib/utils';
 
 import { AccountVM } from '../AccountVM';
 import App from '../Application';
+import EIP1559Price from '../../../gas/EIP1559Price';
 import ERC1155ABI from '../../../abis/ERC1155.json';
 import ERC20ABI from '../../../abis/ERC20.json';
 import { ERC20Token } from '../../../common/ERC20Token';
@@ -126,9 +127,9 @@ export class TransferVM {
     this.self = accountVM.address;
     this.selectedToken = accountVM.allTokens[0];
 
-    this.rapid = Gasnow.rapidGwei;
-    this.standard = Gasnow.standardGwei;
-    this.fast = Gasnow.fastGwei;
+    this.rapid = EIP1559Price.rapidGwei;
+    this.standard = EIP1559Price.standardGwei;
+    this.fast = EIP1559Price.fastGwei;
 
     this.initGasPrice();
     this.initNonce();
