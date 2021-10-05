@@ -7,7 +7,6 @@ import { NavBar } from '../../components';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-const gasnow = require('../../../assets/icons/3rd/gasnow.png').default;
 const coingecko = require('../../../assets/icons/3rd/coingecko.png').default;
 
 export default ({ app }: { app: Application }) => {
@@ -19,7 +18,7 @@ export default ({ app }: { app: Application }) => {
 
       <div className="content">
         <p>Wallet 3 - {t('A Secure Wallet for Web3 Era')}</p>
-        <p className='appver'>Version: {app.version}</p>
+        <p className="appver">Version: {app.version}</p>
 
         <h3>{t('Features')}</h3>
         <ul>
@@ -40,7 +39,6 @@ export default ({ app }: { app: Application }) => {
         <h3>{t('Data Providers')}</h3>
         <div className="data-providers">
           <img src={DeBank} alt="DeBank" />
-          <img src={gasnow} alt="Gasnow" />
           <img src={coingecko} alt="Coingecko" />
         </div>
 
