@@ -325,7 +325,7 @@ export class WalletKey {
 
     switch (checkSecretType(secret)) {
       case SecretType.mnemonic:
-        const root = ethers.utils.HDNode.fromMnemonic(secret);
+        const root = ethers.utils.HDNode.fromMnemonic(secret, undefined, langToWordlist(secret));
         const account = root.derivePath(`${this.basePath}/${this.basePathIndex + accountIndex}`);
         return account.privateKey;
 

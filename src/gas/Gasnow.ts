@@ -1,6 +1,6 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 
-import ws from 'ws';
+// import ws from 'ws';
 
 export const Gwei_10 = 10000000000;
 export const Gwei_20 = 20000000000;
@@ -12,7 +12,7 @@ export const MAX_GWEI_PRICE = 9007199;
 class GasnowWs {
   static readonly host = 'wss://www.gasnow.org/ws';
 
-  client: WebSocket | ws;
+  client: WebSocket;
   rapid = 0;
   fast = 0;
   standard = 0;
@@ -47,7 +47,8 @@ class GasnowWs {
   start(native = false) {
     if (this.client) return;
 
-    this.client = native ? new ws(GasnowWs.host) : new WebSocket(GasnowWs.host);
+    // this.client = native ? new ws(GasnowWs.host) : new WebSocket(GasnowWs.host);
+    this.client = new WebSocket(GasnowWs.host);
 
     const onmessage = (evt) => {
       const data = JSON.parse(evt.data);
