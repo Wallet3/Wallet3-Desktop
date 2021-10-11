@@ -68,6 +68,7 @@ export const PublicNetworks: INetwork[] = [
     order: 2,
     defaultTokens: PolygonPopularTokens,
     showOverview: true,
+    minGwei: 30,
   },
   {
     symbol: 'xDAI',
