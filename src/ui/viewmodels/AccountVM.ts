@@ -103,10 +103,13 @@ export class AccountVM {
     this.accountIndex = args.accountIndex;
     this._name = store.get(Keys.accountName(args.walletId, this.accountIndex)) || `Account ${args.accountIndex}`;
 
-    NetVM.currentProvider
-      .lookupAddress(this.address)
-      .then((v) => runInAction(() => (this.ens = v)))
-      .catch(() => {});
+    // NetVM.currentProvider
+    //   .lookupAddress(this.address)
+    //   .then((v) => {
+    //     console.log(v);
+    //     runInAction(() => (this.ens = v));
+    //   })
+    //   .catch(() => {});
   }
 
   async refresh() {
@@ -183,8 +186,6 @@ export class AccountVM {
     const defaultTokens = Networks.find((n) => n.chainId === NetVM.currentChainId).defaultTokens.map((t, i) =>
       new UserToken().init(t, { order: i + 1, show: false })
     );
-
-    console.log(NetVM.currentChainId, defaultTokens);
 
     const tmpMap = new Map<string, UserToken>();
     this.loadTokenConfigs().map((t) => tmpMap.set(t.id.toLowerCase(), t));
