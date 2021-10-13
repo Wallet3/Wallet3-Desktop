@@ -46,5 +46,7 @@
     "https://binance.ankr.com/"
   ],
 
-  "10000": ["https://smartbch.fountainhead.cash/mainnet", "https://smartbch.greyh.at"]
+  "10000": ["https://smartbch.fountainhead.cash/mainnet", "https://smartbch.greyh.at"],
+
+  "272": ["https://stage2-api.zksync.dev/web3"]
 }

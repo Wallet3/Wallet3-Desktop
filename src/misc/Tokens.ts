@@ -578,6 +578,20 @@ const ARBI_DAI = {
 
 export const ArbiPopularTokens = [ARBI_DAI, ARBI_USDC, ARBI_USDT];
 
+const zkSyncTest_USDC = {
+  address: '0xeb8f08a975Ab53E34D8a0330E0D34de942C95926',
+  decimals: 6,
+  symbol: 'USDC',
+};
+
+const zkSyncTest_DAI = {
+  address: '0x70a4fCF3e4C8591B5B4318CEC5fACbB96a604198',
+  decimals: 18,
+  symbol: 'DAI',
+};
+
+export const zkSyncTestPopularTokens = [zkSyncTest_USDC, zkSyncTest_DAI];
+
 const all: IToken[] = [
   ...Stablecoins,
   WETH,

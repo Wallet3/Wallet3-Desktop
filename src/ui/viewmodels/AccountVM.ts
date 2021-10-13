@@ -184,6 +184,8 @@ export class AccountVM {
       new UserToken().init(t, { order: i + 1, show: false })
     );
 
+    console.log(NetVM.currentChainId, defaultTokens);
+
     const tmpMap = new Map<string, UserToken>();
     this.loadTokenConfigs().map((t) => tmpMap.set(t.id.toLowerCase(), t));
     const userConfigs = Array.from(tmpMap.values());
