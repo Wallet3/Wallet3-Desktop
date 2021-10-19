@@ -17,6 +17,7 @@ const SVGs = new Map([
   [42161, [NetworkIcons('Arbitrum'), 'Arbitrum']],
   [69, [NetworkIcons('Optimism'), 'Op Kovan']],
   [420, [NetworkIcons('Optimism'), 'Op Goerli']],
+  [272, [NetworkIcons('zkSync'), 'zkSync 2.0']],
 
   [43114, [NetworkIcons('Avalanche'), 'Avalanche']],
   [137, [NetworkIcons('Polygon'), 'Polygon']],

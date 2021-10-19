@@ -163,14 +163,17 @@ app.on('ready', async () => {
 
   createWindow();
 
-  EIP1559Price.refresh();
-  autorun(() => {
-    const { gas } = App.touchBarButtons || {};
-    if (!gas) return;
+  if (isMac) {
+    EIP1559Price.refresh();
+    
+    autorun(() => {
+      const { gas } = App.touchBarButtons || {};
+      if (!gas) return;
 
-    gas.label = `${EIP1559Price.baseGasPriceGwei} + ${EIP1559Price.priorityGasPriceGwei}`;
-    tray?.setTitle(gas.label);
-  });
+      gas.label = `${EIP1559Price.baseGasPriceGwei} + ${EIP1559Price.priorityGasPriceGwei}`;
+      tray?.setTitle(gas.label);
+    });
+  }
 
   Coingecko.start();
   autorun(() => {

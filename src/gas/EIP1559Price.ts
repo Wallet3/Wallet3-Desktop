@@ -74,8 +74,8 @@ class EIP1559Price {
     const [nextBlockFee, priorityFee] = await Promise.all([getNextBlockBaseFee(1), getMaxPriorityFee(1)]);
 
     runInAction(() => {
-      this.baseGasPrice = nextBlockFee;
-      this.priorityGasPrice = priorityFee;
+      this.baseGasPrice = nextBlockFee || this.baseGasPrice;
+      this.priorityGasPrice = priorityFee || this.priorityGasPrice;
     });
   }
 }

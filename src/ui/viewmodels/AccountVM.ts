@@ -103,10 +103,13 @@ export class AccountVM {
     this.accountIndex = args.accountIndex;
     this._name = store.get(Keys.accountName(args.walletId, this.accountIndex)) || `Account ${args.accountIndex}`;
 
-    NetVM.currentProvider
-      .lookupAddress(this.address)
-      .then((v) => runInAction(() => (this.ens = v)))
-      .catch(() => {});
+    // NetVM.currentProvider
+    //   .lookupAddress(this.address)
+    //   .then((v) => {
+    //     console.log(v);
+    //     runInAction(() => (this.ens = v));
+    //   })
+    //   .catch(() => {});
   }
 
   async refresh() {

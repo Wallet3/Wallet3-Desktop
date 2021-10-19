@@ -8,6 +8,7 @@ import {
   IToken,
   PolygonPopularTokens,
   xDaiPopularTokens,
+  zkSyncTestPopularTokens,
 } from '../misc/Tokens';
 
 export interface INetwork {
@@ -68,6 +69,7 @@ export const PublicNetworks: INetwork[] = [
     order: 2,
     defaultTokens: PolygonPopularTokens,
     showOverview: true,
+    minGwei: 30,
   },
   {
     symbol: 'xDAI',
@@ -184,6 +186,14 @@ export const Testnets: INetwork[] = [
     color: '#6186ff',
     test: true,
     defaultTokens: [],
+  },
+  {
+    symbol: 'ETH',
+    network: 'zkSync 2.0 Rinkeby',
+    chainId: 272,
+    color: '',
+    test: true,
+    defaultTokens: zkSyncTestPopularTokens,
   },
   {
     symbol: 'MATIC',
