@@ -60,16 +60,6 @@ function getCustomizedRPC(networkId: number) {
   return store.get(`customizedRPC-${networkId}`) as { rpc: string; explorer: string };
 }
 
-export function broadcastEthTx(rawTx: string) {
-  [
-    'https://api-us.taichi.network:10001/rpc/public',
-    'https://api-eu.taichi.network:10001/rpc/public',
-    'https://api.taichi.network:10001/rpc/public',
-  ].map((url) => {
-    axios.post(url, { jsonrpc: '2.0', method: 'eth_sendRawTransaction', id: Date.now(), params: [rawTx] }).catch((_) => {});
-  });
-}
-
 export async function sendTransaction(chainId: number, txHex: string) {
   const rpcs = Providers[`${chainId}`] as string[];
 
@@ -90,8 +80,6 @@ export async function sendTransaction(chainId: number, txHex: string) {
         return resp.data as { id: number; result: string; error: { code: number; message: string } };
       })
     );
-
-    if (chainId === 1) broadcastEthTx(txHex);
 
     return result;
   } catch (error) {
@@ -151,7 +139,7 @@ export async function call<T>(
 export async function estimateGas<T>(
   chainId: number,
   args: {
-    from?: string;
+    from: string;
     to: string;
     gas?: string | number;
     gasPrice?: string | number;

@@ -13,7 +13,7 @@ const Explorers = new Map<number, string>([
   [250, 'https://ftmscan.com'],
   [80001, 'https://explorer-mumbai.maticvigil.com'],
   [42220, 'https://explorer.celo.org'],
-  [43114, 'https://cchain.explorer.avax.network'],
+  [43114, 'https://snowtrace.io'],
 
   [56, 'https://bscscan.com'],
   [128, 'https://hecoinfo.com'],
