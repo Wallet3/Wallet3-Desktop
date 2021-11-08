@@ -486,7 +486,13 @@ const BSC_ETH = {
   symbol: 'ETH',
 };
 
-export const BscPopularTokens = [BSC_ETH, BSC_DAI, BSC_USDC, BUSD, CAKE, XVS, ALPACA];
+const BSC_BUSD = {
+  address: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56',
+  decimals: 18,
+  symbol: 'BUSD',
+};
+
+export const BscPopularTokens = [BSC_ETH, BSC_DAI, BSC_USDC, BSC_BUSD, CAKE, XVS, ALPACA];
 
 const HECO_ETH = {
   address: '0x64FF637fB478863B7468bc97D30a5bF3A428a1fD',
@@ -592,7 +598,7 @@ const zkSyncTest_DAI = {
 
 export const zkSyncTestPopularTokens = [zkSyncTest_USDC, zkSyncTest_DAI];
 
-const all: IToken[] = [
+const all = [
   ...Stablecoins,
   WETH,
   ...BTCTokens,
@@ -603,6 +609,6 @@ const all: IToken[] = [
   ...FTMPopularTokens,
   ...BscPopularTokens,
   ...HecoPopularTokens,
-];
+] as IToken[];
 
 export default all;

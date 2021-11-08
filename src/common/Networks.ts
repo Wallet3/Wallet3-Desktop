@@ -140,7 +140,7 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: [],
   },
   {
-    symbol: 'BSC',
+    symbol: 'BNB',
     comm_id: 'bsc',
     network: 'BSC',
     chainId: 56,
