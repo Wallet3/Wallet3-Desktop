@@ -80,6 +80,7 @@ export const PublicNetworks: INetwork[] = [
     order: 3,
     defaultTokens: xDaiPopularTokens,
     showOverview: true,
+    eip1559: true,
   },
   {
     symbol: 'FTM',

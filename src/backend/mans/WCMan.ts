@@ -123,8 +123,8 @@ export class WCMan {
   private handleWCEvents(wc: WalletConnect) {
     wc.once('disconnect', async () => {
       await wc.wcSession?.remove();
-      wc.dispose();
       this.removeItem(wc);
+      wc.dispose();
     });
 
     wc.on('sessionUpdated', () => {
@@ -141,10 +141,6 @@ export class WCMan {
     if (!target) return;
 
     await target.disconnect();
-    await target.wcSession.remove();
-
-    target.dispose();
-    this.removeItem(target);
   }
 
   removeItem(wcSession: WalletConnect) {
