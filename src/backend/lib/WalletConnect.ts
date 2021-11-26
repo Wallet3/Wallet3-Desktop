@@ -457,8 +457,8 @@ export class WalletConnect extends EventEmitter {
     } as RequestSignMessage);
   };
 
-  disconnect() {
-    return this.connector.killSession({ message: 'User quits' });
+  disconnect(msg?: string) {
+    return this.connector.killSession({ message: msg ?? 'User quits' });
   }
 
   dispose() {
