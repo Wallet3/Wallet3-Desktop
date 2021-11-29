@@ -160,5 +160,8 @@
   "Slippage": "Slippage",
   "Fee": "Fee",
   "Unsupported Network": "Unsupported Network",
-  "Current network is not supported yet": "Current network is not supported yet"
+  "Current network is not supported yet": "Current network is not supported yet",
+  "Mobile_sync_1": "1. Download Wallet 3 for mobile",
+  "Mobile_sync_2": "2. Tap 'Import a wallet'",
+  "Mobile_sync_3": "3. Sync with Wallet 3 Desktop"
 }

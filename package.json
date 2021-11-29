@@ -107,7 +107,7 @@
     "is-online": "^9.0.1",
     "jsqr": "^1.4.0",
     "keytar": "^7.7.0",
-    "mobx": "^6.3.7",
+    "mobx": "^6.3.8",
     "mobx-react-lite": "^3.2.2",
     "mousetrap": "^1.6.5",
     "numeral": "^2.0.6",

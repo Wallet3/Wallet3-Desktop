@@ -45,3 +45,29 @@
 .page.backup-mnemonic .content .privkey:hover span {
   filter: blur(0);
 }
+
+.page.backup-mnemonic .content .mobile-sync {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  margin-top: 16px;
+}
+
+.page.backup-mnemonic .content .mobile-sync canvas {
+  filter: blur(5px);
+  transition: all 0.3s;
+}
+
+.page.backup-mnemonic .content .mobile-sync canvas:hover {
+  filter: blur(0);
+}
+
+.page.backup-mnemonic .content .mobile-sync .tips {
+  margin-left: 12px;
+}
+
+.page.backup-mnemonic .content .mobile-sync p {
+  font-size: 12px;
+  margin-top: 0;
+  margin-bottom: 8px;
+  color: var(--font-color-title);
+}
