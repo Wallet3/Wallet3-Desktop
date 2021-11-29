@@ -119,7 +119,7 @@ export class SwapVM {
       return;
     }
 
-    const erc20 = new ERC20Token(token.address, NetworksVM.currentProvider);
+    const erc20 = new ERC20Token(token.address, NetworksVM.currentProvider, NetworksVM.currentChainId);
 
     erc20.balanceOf(this.account).then((balance) => {
       runInAction(() => (this.max = balance));
@@ -192,7 +192,7 @@ export class SwapVM {
 
     runInAction(() => this.isApproving.set(chainId, true));
 
-    const erc20 = new ERC20Token(token.address, provider);
+    const erc20 = new ERC20Token(token.address, provider, chainId);
     const data = erc20.encodeApproveData(
       this.currentExecutor.getContractAddress(this.currentChainId),
       '115792089237316195423570985008687907853269984665640564039457584007913129639935'

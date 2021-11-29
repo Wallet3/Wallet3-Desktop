@@ -336,7 +336,7 @@ export class WalletConnect extends EventEmitter {
 
     const gas =
       Number.parseInt(param.gas) ||
-      Number.parseInt((Number.parseInt(await estimateGas<string>(chainId, baseTx)) * 1.5) as any) ||
+      Number.parseInt((Number.parseInt(await estimateGas(chainId, baseTx)) * 1.5) as any) ||
       21000;
 
     App.createPopupWindow(

@@ -77,7 +77,7 @@ export class TransferVM {
   }
 
   get estimatedEIP1559Fee() {
-    return BigNumber.from(this.estimatedEIP1559Price_Wei).mul(this.gas); // Number.parseInt((this.estimatedEIP1559Price_Wei * this.gas) as any);
+    return BigNumber.from(this.estimatedEIP1559Price_Wei).mul(this.gas || 0); // Number.parseInt((this.estimatedEIP1559Price_Wei * this.gas) as any);
   }
 
   get txSpeed() {
@@ -212,6 +212,7 @@ export class TransferVM {
 
   setAmount(amount: string) {
     this.amount = amount;
+    this.estimateGas();
   }
 
   private autoSetGasPrice() {
@@ -297,15 +298,12 @@ export class TransferVM {
         return;
       }
 
-      const erc20 = new ERC20Token(this.selectedToken.id, NetworksVM.currentProvider);
-      const gas =
-        Tokens.find((t) => t.address.localeCompare(this.selectedToken.id, 'en', { sensitivity: 'base' }) === 0)?.minGas ??
-        (await erc20.estimateGas(
-          this.self,
-          this.receiptAddress || '0xD1b05E3AFEDcb11F29c5A560D098170bE26Fe5f5',
-          this.amountBigInt,
-          NetworksVM.currentNetwork.l2
-        ));
+      const erc20 = new ERC20Token(this.selectedToken.id, NetworksVM.currentProvider, NetworksVM.currentChainId);
+      const gas = await erc20.estimateGas(
+        this.self,
+        this.receiptAddress || '0xD1b05E3AFEDcb11F29c5A560D098170bE26Fe5f5',
+        this.amountBigInt
+      );
 
       try {
         setGas(gas);

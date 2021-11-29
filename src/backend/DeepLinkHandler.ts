@@ -96,7 +96,7 @@ async function handleERC681(uri: string) {
   const value = Number(parameters['value'] || '0').toLocaleString(undefined, { useGrouping: false });
 
   if (function_name === 'transfer') {
-    const token = new ERC20Token(target_address, provider); // no network detected, why???
+    const token = new ERC20Token(target_address, provider, chainId); // no network detected, why???
 
     const found = findTokenByAddress(target_address);
     const to = parameters['address'];
@@ -133,7 +133,7 @@ async function handleERC681(uri: string) {
         from: from,
         to: to,
         data: data,
-        gas: gas || (await token.estimateGas(from, to, 0, network?.l2)),
+        gas: gas || (await token.estimateGas(from, to, 0)),
         gasPrice,
         nonce,
         value: '0',

@@ -245,7 +245,7 @@ export class AccountVM {
         continue;
       }
 
-      const erc20 = new ERC20Token(t.id, provider);
+      const erc20 = new ERC20Token(t.id, provider, chainId);
       this.tokenWatcher.set(t.id.toLowerCase(), erc20);
 
       const refreshBalance = () =>
