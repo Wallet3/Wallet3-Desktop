@@ -42,15 +42,17 @@ export default observer(({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) 
           <Mnemonic phrases={mnVM.phrases} />
         )}
 
-        <div className="mobile-sync">
-          <QRCode value={`wallet3sync:${btoa(mnVM.phrases.join(','))}`} size={100} bgColor="transparent" color="#75869c" />
+        {mnVM.phrases?.length > 0 ? (
+          <div className="mobile-sync">
+            <QRCode value={`wallet3sync:${btoa(mnVM.phrases.join(','))}`} size={100} bgColor="transparent" color="#75869c" />
 
-          <div className="tips">
-            <p>{t('Mobile_sync_1')}</p>
-            <p>{t('Mobile_sync_2')}</p>
-            <p>{t('Mobile_sync_3')}</p>
+            <div className="tips">
+              <p>{t('Mobile_sync_1')}</p>
+              <p>{t('Mobile_sync_2')}</p>
+              <p>{t('Mobile_sync_3')}</p>
+            </div>
           </div>
-        </div>
+        ) : undefined}
       </div>
     </div>
   );

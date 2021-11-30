@@ -54,11 +54,13 @@
 
 .page.backup-mnemonic .content .mobile-sync canvas {
   filter: blur(5px);
+  opacity: 0.5;
   transition: all 0.3s;
 }
 
 .page.backup-mnemonic .content .mobile-sync canvas:hover {
   filter: blur(0);
+  opacity: 1;
 }
 
 .page.backup-mnemonic .content .mobile-sync .tips {
