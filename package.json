@@ -1,8 +1,8 @@
 {
   "name": "wallet3",
   "productName": "Wallet 3",
-  "version": "1.8.9",
-  "description": "A Secure Wallet for Web3 Era",
+  "version": "1.9.0",
+  "description": "A Secure Wallet for Web3",
   "main": ".webpack/main",
   "repository": {
     "type": "git",
