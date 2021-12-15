@@ -73,7 +73,7 @@ export class TransferVM {
   }
 
   get estimatedEIP1559Price_Wei() {
-    return Math.min(this.gasPrice_Wei, this.nextBlockBaseFee_Wei + Number.parseInt(this.priorityPrice_Wei as any));
+    return Math.min(this.gasPrice_Wei, this.nextBlockBaseFee_Wei + Number.parseInt(this.priorityPrice_Wei as any)) || 0;
   }
 
   get estimatedEIP1559Fee() {
@@ -234,7 +234,7 @@ export class TransferVM {
 
     runInAction(() => {
       this.nextBlockBaseFee_Wei = nextBlockBaseFee;
-      this.suggestedPriorityPrice_Wei = suggestedPriorityFee;
+      this.suggestedPriorityPrice_Wei = suggestedPriorityFee || Gwei_1;
     });
   };
 
@@ -259,7 +259,7 @@ export class TransferVM {
     if (!currentNetwork.eip1559) return;
 
     this.fetchBaseFee(currentNetwork.chainId);
-    getMaxPriorityFee(currentNetwork.chainId).then((v) => runInAction(() => (this.priorityPrice_Wei = v + 2 * Gwei_1)));
+    getMaxPriorityFee(currentNetwork.chainId).then((v) => runInAction(() => (this.priorityPrice_Wei = (v || 0) + 2 * Gwei_1)));
 
     NetworksVM.currentProvider.on('block', async () => this.fetchBaseFee(currentNetwork.chainId));
   }
