@@ -136,7 +136,7 @@ export async function call<T>(
   return undefined;
 }
 
-export async function estimateGas<T>(
+export async function estimateGas(
   chainId: number,
   args: {
     from: string;
@@ -158,7 +158,7 @@ export async function estimateGas<T>(
         id: Date.now(),
       });
 
-      return resp.data.result as T;
+      return resp.data.result as string;
     } catch (error) {}
   }
 

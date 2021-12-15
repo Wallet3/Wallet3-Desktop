@@ -35,7 +35,7 @@ export class AddTokenVM {
     this.tokenAddress = addr;
 
     try {
-      const erc20 = new ERC20Token(addr, NetworksVM.currentProvider);
+      const erc20 = new ERC20Token(addr, NetworksVM.currentProvider, NetworksVM.currentChainId);
 
       let [balance, name, decimals, symbol] = await Promise.all([
         erc20.balanceOf(this.accountVM.address),

@@ -6,6 +6,7 @@ import { Application } from '../../viewmodels/Application';
 import Mnemonic from '../../components/Mnemonic';
 import { MnemonicVM } from '../../viewmodels/MnemonicVM';
 import { NavBar } from '../../components';
+import QRCode from 'qrcode.react';
 import { observer } from 'mobx-react-lite';
 import { useRouteMatch } from 'react-router';
 import { useTranslation } from 'react-i18next';
@@ -40,6 +41,18 @@ export default observer(({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) 
         ) : (
           <Mnemonic phrases={mnVM.phrases} />
         )}
+
+        {mnVM.phrases?.length > 0 ? (
+          <div className="mobile-sync">
+            <QRCode value={`wallet3sync:${btoa(mnVM.phrases.join(','))}`} size={100} bgColor="transparent" color="#75869c" />
+
+            <div className="tips">
+              <p>{t('Mobile_sync_1')}</p>
+              <p>{t('Mobile_sync_2')}</p>
+              <p>{t('Mobile_sync_3')}</p>
+            </div>
+          </div>
+        ) : undefined}
       </div>
     </div>
   );

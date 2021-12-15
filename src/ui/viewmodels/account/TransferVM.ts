@@ -73,11 +73,11 @@ export class TransferVM {
   }
 
   get estimatedEIP1559Price_Wei() {
-    return Math.min(this.gasPrice_Wei, this.nextBlockBaseFee_Wei + Number.parseInt(this.priorityPrice_Wei as any));
+    return Math.min(this.gasPrice_Wei, this.nextBlockBaseFee_Wei + Number.parseInt(this.priorityPrice_Wei as any)) || 0;
   }
 
   get estimatedEIP1559Fee() {
-    return BigNumber.from(this.estimatedEIP1559Price_Wei).mul(this.gas); // Number.parseInt((this.estimatedEIP1559Price_Wei * this.gas) as any);
+    return BigNumber.from(this.estimatedEIP1559Price_Wei).mul(this.gas || 0); // Number.parseInt((this.estimatedEIP1559Price_Wei * this.gas) as any);
   }
 
   get txSpeed() {
@@ -212,6 +212,7 @@ export class TransferVM {
 
   setAmount(amount: string) {
     this.amount = amount;
+    this.estimateGas();
   }
 
   private autoSetGasPrice() {
@@ -233,7 +234,7 @@ export class TransferVM {
 
     runInAction(() => {
       this.nextBlockBaseFee_Wei = nextBlockBaseFee;
-      this.suggestedPriorityPrice_Wei = suggestedPriorityFee;
+      this.suggestedPriorityPrice_Wei = suggestedPriorityFee || Gwei_1;
     });
   };
 
@@ -258,7 +259,7 @@ export class TransferVM {
     if (!currentNetwork.eip1559) return;
 
     this.fetchBaseFee(currentNetwork.chainId);
-    getMaxPriorityFee(currentNetwork.chainId).then((v) => runInAction(() => (this.priorityPrice_Wei = v + 2 * Gwei_1)));
+    getMaxPriorityFee(currentNetwork.chainId).then((v) => runInAction(() => (this.priorityPrice_Wei = (v || 0) + 2 * Gwei_1)));
 
     NetworksVM.currentProvider.on('block', async () => this.fetchBaseFee(currentNetwork.chainId));
   }
@@ -297,15 +298,12 @@ export class TransferVM {
         return;
       }
 
-      const erc20 = new ERC20Token(this.selectedToken.id, NetworksVM.currentProvider);
-      const gas =
-        Tokens.find((t) => t.address.localeCompare(this.selectedToken.id, 'en', { sensitivity: 'base' }) === 0)?.minGas ??
-        (await erc20.estimateGas(
-          this.self,
-          this.receiptAddress || '0xD1b05E3AFEDcb11F29c5A560D098170bE26Fe5f5',
-          this.amountBigInt,
-          NetworksVM.currentNetwork.l2
-        ));
+      const erc20 = new ERC20Token(this.selectedToken.id, NetworksVM.currentProvider, NetworksVM.currentChainId);
+      const gas = await erc20.estimateGas(
+        this.self,
+        this.receiptAddress || '0xD1b05E3AFEDcb11F29c5A560D098170bE26Fe5f5',
+        this.amountBigInt
+      );
 
       try {
         setGas(gas);
