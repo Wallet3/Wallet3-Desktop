@@ -10,7 +10,7 @@ import path from 'path';
 import { tmpdir } from 'os';
 import yaml from 'yaml';
 
-const isStoreDistribution = false;
+const isStoreDistribution = true;
 
 export async function checkUpdates() {
   try {
@@ -174,14 +174,6 @@ async function installDMG(dmgPath: string) {
 }
 
 async function installUpdate(version: string, execPath: string) {
-  const approved = await App.ask({
-    title: i18n.t('New Update Available'),
-    icon: 'arrow-up-circle',
-    message: i18n.t('Update Message', { version }),
-  });
-
-  if (!approved) return;
-
   switch (process.platform) {
     case 'win32':
       installWindows({ installerPath: execPath, isAdminRightsRequired: false, isForceRunAfter: true, isSilent: false });
@@ -208,6 +200,19 @@ export async function updateApp() {
 
   if (!targetInfo) return;
   if (!updateAvailable) return;
+
+  const approved = await App.ask({
+    title: i18n.t('New Update Available'),
+    icon: 'arrow-up-circle',
+    message: i18n.t('Update Message', { version: latestVersion }),
+  });
+
+  if (!approved) return;
+
+  if (platform === 'linux') {
+    shell.openExternal('https://wallet3.io');
+    return;
+  }
 
   try {
     statSync(dlPath, {});
