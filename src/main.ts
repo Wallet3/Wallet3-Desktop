@@ -147,14 +147,14 @@ const createWindow = async (): Promise<void> => {
 
   mainWindow.once('closed', () => {
     mainWindow.removeAllListeners();
-    if (!isWin) app.dock.hide();
+    if (!isWin) app.dock?.hide();
     App.mainWindow = undefined;
   });
 
   createTouchBar(mainWindow);
   createTray();
 
-  if (!isWin) app.dock.show();
+  if (!isWin) app.dock?.show();
 };
 
 // This method will be called when Electron has finished
