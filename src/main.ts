@@ -115,7 +115,7 @@ const createTray = async () => {
 };
 
 const createWindow = async (): Promise<void> => {
-  if (App.mainWindow) {
+  if (App.mainWindow && !App.mainWindow.isDestroyed()) {
     App.mainWindow.show();
     App.mainWindow.focus();
     return;
@@ -143,7 +143,7 @@ const createWindow = async (): Promise<void> => {
   App.mainWindow = mainWindow;
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY, {});
 
-  if (isLinux) mainWindow.setIcon(nativeImage.createFromDataURL(require('./assets/icons/app/AppIcon.png').default));
+  if (isLinux) mainWindow.setIcon(nativeImage.createFromDataURL(require('./assets/icons/app/AppIcon_256.png').default));
 
   mainWindow.once('closed', () => {
     mainWindow.removeAllListeners();
@@ -153,6 +153,7 @@ const createWindow = async (): Promise<void> => {
 
   createTouchBar(mainWindow);
   createTray();
+
   if (!isWin) app.dock.show();
 };
 
@@ -166,7 +167,7 @@ app.on('ready', async () => {
 
   createWindow();
 
-  if (!isWin) {
+  if (isMac) {
     EIP1559Price.refresh();
 
     autorun(() => {
