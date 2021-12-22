@@ -140,6 +140,7 @@
 .page.swap .token-label {
   font-size: 16px;
   text-transform: none;
+  min-width: 100px;
 }
 
 .page.swap .token-label img {
