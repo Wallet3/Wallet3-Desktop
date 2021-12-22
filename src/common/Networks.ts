@@ -1,5 +1,6 @@
 import {
   ArbiPopularTokens,
+  BobaPopularTokens,
   BscPopularTokens,
   CeloPopularTokens,
   EthereumPopularTokens,
@@ -59,6 +60,15 @@ export const PublicNetworks: INetwork[] = [
     l2: true,
     defaultTokens: ArbiPopularTokens,
     showOverview: false,
+  },
+  {
+    symbol: 'ETH',
+    comm_id: 'boba',
+    network: 'Boba',
+    chainId: 288,
+    color: '#1CD8D2',
+    l2: true,
+    defaultTokens: BobaPopularTokens,
   },
   {
     symbol: 'MATIC',
