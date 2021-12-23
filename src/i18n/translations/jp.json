@@ -160,5 +160,8 @@
   "Slippage": "スリッページ",
   "Fee": "手数料",
   "Unsupported Network": "非対応のネットワーク",
-  "Current network is not supported yet": "今のネットワークはまだサポートされていません"
+  "Current network is not supported yet": "今のネットワークはまだサポートされていません",
+  "Mobile_sync_1": "1. Wallet 3 モバイルをダウンロード",
+  "Mobile_sync_2": "2. 「ウォレットのインポート」をタップ",
+  "Mobile_sync_3": "3. 「Wallet 3 Desktopとの同期」をクリック"
 }

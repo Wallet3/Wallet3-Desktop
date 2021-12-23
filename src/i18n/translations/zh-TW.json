@@ -160,5 +160,8 @@
   "Slippage": "滑點",
   "Fee": "手續費",
   "Unsupported Network": "暫未支持該網絡",
-  "Current network is not supported yet": "該網絡暫未支持，請關註最新版本的 Wallet 3"
+  "Current network is not supported yet": "該網絡暫未支持，請關註最新版本的 Wallet 3",
+  "Mobile_sync_1": "1. 下載 Wallet 3 手機版",
+  "Mobile_sync_2": "2. 點擊導入錢包",
+  "Mobile_sync_3": "3. 點擊與桌面端同步"
 }

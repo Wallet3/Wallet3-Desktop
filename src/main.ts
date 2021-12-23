@@ -26,6 +26,7 @@ let idleTimer: NodeJS.Timeout;
 const prod = app.isPackaged;
 const isMac = process.platform === 'darwin';
 const isWin = process.platform === 'win32';
+const isLinux = process.platform === 'linux';
 
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 if (!isMac) require('@electron/remote/main').initialize();
@@ -114,7 +115,7 @@ const createTray = async () => {
 };
 
 const createWindow = async (): Promise<void> => {
-  if (App.mainWindow) {
+  if (App.mainWindow && !App.mainWindow.isDestroyed()) {
     App.mainWindow.show();
     App.mainWindow.focus();
     return;
@@ -142,15 +143,18 @@ const createWindow = async (): Promise<void> => {
   App.mainWindow = mainWindow;
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY, {});
 
+  if (isLinux) mainWindow.setIcon(nativeImage.createFromDataURL(require('./assets/icons/app/AppIcon_256.png').default));
+
   mainWindow.once('closed', () => {
     mainWindow.removeAllListeners();
-    if (isMac) app.dock.hide();
+    if (!isWin) app.dock?.hide();
     App.mainWindow = undefined;
   });
 
   createTouchBar(mainWindow);
   createTray();
-  if (isMac) app.dock.show();
+
+  if (!isWin) app.dock?.show();
 };
 
 // This method will be called when Electron has finished
@@ -165,7 +169,7 @@ app.on('ready', async () => {
 
   if (isMac) {
     EIP1559Price.refresh();
-    
+
     autorun(() => {
       const { gas } = App.touchBarButtons || {};
       if (!gas) return;
