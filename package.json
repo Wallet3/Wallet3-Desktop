@@ -1,7 +1,7 @@
 {
   "name": "wallet3",
   "productName": "Wallet 3",
-  "version": "1.9.0",
+  "version": "1.9.1",
   "description": "A Secure Wallet for Web3",
   "main": ".webpack/main",
   "repository": {
@@ -64,8 +64,8 @@
     "@types/react-router-dom": "^5.3.2",
     "@types/react-select": "^5.0.1",
     "@types/react-virtualized": "^9.21.15",
-    "@typescript-eslint/eslint-plugin": "^5.6.0",
-    "@typescript-eslint/parser": "^5.6.0",
+    "@typescript-eslint/eslint-plugin": "^5.8.0",
+    "@typescript-eslint/parser": "^5.8.0",
     "@vercel/webpack-asset-relocator-loader": "^1.7.0",
     "babel-jest": "^27.4.2",
     "css-loader": "^6.5.1",
@@ -107,7 +107,7 @@
     "is-online": "^9.0.1",
     "jsqr": "^1.4.0",
     "keytar": "^7.7.0",
-    "mobx": "^6.3.9",
+    "mobx": "^6.3.10",
     "mobx-react-lite": "^3.2.2",
     "mousetrap": "^1.6.5",
     "numeral": "^2.0.6",
