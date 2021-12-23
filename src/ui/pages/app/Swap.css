@@ -52,7 +52,7 @@
 
 .page.swap > .swap-container .swap .swapbox {
   display: grid;
-  grid-template-columns: 1fr 100px;
+  grid-template-columns: 1fr auto;
   column-gap: 8px;
   border-radius: 7px;
   border: 1px solid var(--border-color);
@@ -140,6 +140,7 @@
 .page.swap .token-label {
   font-size: 16px;
   text-transform: none;
+  min-width: 100px;
 }
 
 .page.swap .token-label img {

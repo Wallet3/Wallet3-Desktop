@@ -1,7 +1,7 @@
 import * as Biometrics from './lib/Biometrics';
 import * as Cipher from '../common/Cipher';
 
-import { BrowserWindow, TouchBar, TouchBarButton, app, ipcMain } from 'electron';
+import { BrowserWindow, TouchBar, TouchBarButton, app, ipcMain, nativeImage } from 'electron';
 import { DBMan, KeyMan, TxMan } from './mans';
 import MessageKeys, {
   AuthenticationResult,
@@ -453,6 +453,9 @@ export class App {
 
     popup.loadURL(POPUP_WINDOW_WEBPACK_ENTRY);
     popup.once('ready-to-show', () => popup.show());
+
+    if (process.platform === 'linux')
+      popup.setIcon(nativeImage.createFromDataURL(require('../assets/icons/app/AppIcon_256.png').default));
 
     return new Promise<BrowserWindow>((resolve) => {
       popup.webContents.once('did-finish-load', () => {

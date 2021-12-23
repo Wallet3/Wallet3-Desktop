@@ -195,7 +195,7 @@ button.menu-button:hover {
   background-color: var(--border-color);
 }
 
-#root.win32 ::-webkit-scrollbar {
+#root.win32 ::-webkit-scrollbar, #root.linux ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
   background-color: rgba(0, 0, 0, 0);
@@ -205,15 +205,15 @@ button.menu-button:hover {
   -webkit-app-region: no-drag;
 }
 
-#root.win32 ::-webkit-scrollbar:start {
+#root.win32 ::-webkit-scrollbar:start, #root.linux ::-webkit-scrollbar:start {
   opacity: 1;
 }
 
-#root.win32 ::-webkit-scrollbar:hover {
+#root.win32 ::-webkit-scrollbar:hover, #root.linux ::-webkit-scrollbar:hover  {
   background-color: rgba(0, 0, 0, 0.09);
 }
 
-#root.win32 ::-webkit-scrollbar-thumb {
+#root.win32 ::-webkit-scrollbar-thumb, #root.linux ::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.25);
   border-radius: 100px;
   -webkit-app-region: no-drag;
@@ -222,20 +222,20 @@ button.menu-button:hover {
   transition: all 0.3s;
 }
 
-#root.win32 ::-webkit-scrollbar-thumb:active {
+#root.win32 ::-webkit-scrollbar-thumb:active, #root.linux ::-webkit-scrollbar-thumb:active {
   background: rgba(0, 0, 0, 0.5);
   border-radius: 100px;
 }
 
-#root.win32 ::-webkit-scrollbar-thumb:vertical {
+#root.win32 ::-webkit-scrollbar-thumb:vertical, #root.linux ::-webkit-scrollbar-thumb:vertical {
   min-height: 10px;
 }
 
-#root.win32 ::-webkit-scrollbar-thumb:horizontal {
+#root.win32 ::-webkit-scrollbar-thumb:horizontal, #root.linux ::-webkit-scrollbar-thumb:horizontal {
   min-width: 10px;
   height: 8px;
 }
 
-#root.win32 ::-webkit-scrollbar-button {
+#root.win32 ::-webkit-scrollbar-button, #root.linux ::-webkit-scrollbar-button {
   display: none;
 }

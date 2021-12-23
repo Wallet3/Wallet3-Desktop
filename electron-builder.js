@@ -53,6 +53,7 @@ module.exports = {
     target: 'AppImage',
     icon: 'assets/AppIcon.png',
     publish: ['github'],
+    mimeTypes: ['x-scheme-handler/wallet3']
   },
   nsis: {
     deleteAppDataOnUninstall: true,

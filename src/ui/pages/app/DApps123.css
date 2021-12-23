@@ -65,6 +65,10 @@
   width: calc(100vw / 2 - 12px - 6px - 4px);
 }
 
+#root.linux .page.dapps123 > .list > .category > .projects > .project {
+  width: calc(100vw / 2 - 12px - 6px - 4px);
+}
+
 .page.dapps123 > .list > .category > .projects > .project img {
   height: 25px;
   max-width: 80%;
