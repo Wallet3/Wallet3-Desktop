@@ -33,6 +33,7 @@ const SVGs = new Map([
   [288, [NetworkIcons('Boba'), 'Boba']],
 
   [1337, [NetworkIcons('Ganache'), 'Ganache']],
+  [97, [NetworkIcons('bsc'), 'BSC Testnet']],
 ]);
 
 interface INetworkLabel {

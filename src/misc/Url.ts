@@ -19,7 +19,8 @@ const Explorers = new Map<number, string>([
   [128, 'https://hecoinfo.com'],
   [66, 'https://www.oklink.com/okexchain'],
   [10000, 'https://smartbch.org'],
-  [288,  'https://blockexplorer.boba.network']
+  [288, 'https://blockexplorer.boba.network'],
+  [97, 'https://testnet.bscscan.com'],
 ]);
 
 export function convertTxToUrl(tx: { chainId: number; hash?: string }) {

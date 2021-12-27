@@ -61,15 +61,15 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: ArbiPopularTokens,
     showOverview: false,
   },
-  // {
-  //   symbol: 'ETH',
-  //   comm_id: 'boba',
-  //   network: 'Boba',
-  //   chainId: 288,
-  //   color: '#1CD8D2',
-  //   l2: true,
-  //   defaultTokens: BobaPopularTokens,
-  // },
+  {
+    symbol: 'ETH',
+    comm_id: 'boba',
+    network: 'Boba',
+    chainId: 288,
+    color: '#1CD8D2',
+    l2: true,
+    defaultTokens: BobaPopularTokens,
+  },
   {
     symbol: 'MATIC',
     comm_id: 'matic',
@@ -200,12 +200,11 @@ export const Testnets: INetwork[] = [
     defaultTokens: [],
   },
   {
-    symbol: 'ETH',
-    network: 'zkSync 2.0 Rinkeby',
-    chainId: 272,
-    color: '',
-    test: true,
-    defaultTokens: zkSyncTestPopularTokens,
+    symbol: 'BNB',
+    chainId: 97,
+    network: 'BSC Testnet',
+    color: '#f3ba2f',
+    defaultTokens: [],
   },
   {
     symbol: 'MATIC',
@@ -214,6 +213,14 @@ export const Testnets: INetwork[] = [
     color: '#8247E5',
     test: true,
     defaultTokens: [],
+  },
+  {
+    symbol: 'ETH',
+    network: 'zkSync 2.0 Rinkeby',
+    chainId: 272,
+    color: '',
+    test: true,
+    defaultTokens: zkSyncTestPopularTokens,
   },
 ];
 
