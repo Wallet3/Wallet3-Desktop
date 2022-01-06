@@ -42,7 +42,7 @@ export default observer(({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) 
           <Mnemonic phrases={mnVM.phrases} />
         )}
 
-        {mnVM.phrases?.length > 0 ? (
+        {mnVM.phrases?.length > 0 && mnVM.isEnglish ? (
           <div className="mobile-sync">
             <QRCode value={`wallet3sync:${btoa(mnVM.phrases.join(','))}`} size={100} bgColor="transparent" color="#75869c" />
 
