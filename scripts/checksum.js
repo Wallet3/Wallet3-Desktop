@@ -6,9 +6,9 @@ const { version } = require('../package.json');
 const { execSync } = require('child_process');
 const path = require('path');
 
-const oss = ['mac', 'win'];
-const arches = ['x64', 'arm64'];
-const exts = ['exe', 'dmg'];
+const oss = ['mac', 'win', 'linux'];
+const arches = ['x64', 'arm64','x86_64'];
+const exts = ['exe', 'dmg', 'AppImage'];
 
 const latest = {
   version,

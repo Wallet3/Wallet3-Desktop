@@ -1,6 +1,6 @@
 import MessageKeys, { BooleanResult, GenMnemonic, SetupMnemonic } from '../../common/Messages';
-import { SecretType, checkSecretType } from '../../common/Mnemonic';
-import { action, makeAutoObservable, runInAction } from 'mobx';
+import { SecretType, checkSecretType, hasChinese, hasJapanese, hasKorean } from '../../common/Mnemonic';
+import { action, has, makeAutoObservable, runInAction } from 'mobx';
 
 import App from './Application';
 import delay from 'delay';
@@ -11,6 +11,10 @@ export class MnemonicVM {
   privkey: string = '';
   address = '';
   saving = false;
+
+  get isEnglish() {
+    return !(hasChinese(this.phrases[0]) || hasKorean(this.phrases[0]) || hasJapanese(this.phrases[0]));
+  }
 
   constructor() {
     makeAutoObservable(this);

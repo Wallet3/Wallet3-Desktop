@@ -49,5 +49,6 @@
   "10000": ["https://smartbch.fountainhead.cash/mainnet", "https://smartbch.greyh.at"],
 
   "272": ["https://stage2-api.zksync.dev/web3"],
-  "288": ["https://mainnet.boba.network"]
+  "288": ["https://mainnet.boba.network"],
+  "97": ["https://data-seed-prebsc-1-s1.binance.org:8545"]
 }
