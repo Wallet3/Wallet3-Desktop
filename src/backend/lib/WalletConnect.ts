@@ -205,8 +205,8 @@ export class WalletConnect extends EventEmitter {
       return false;
     };
 
-    console.log(request.method);
-    console.log(request.params);
+    // console.log(request.method);
+    // console.log(request.params);
 
     switch (request.method) {
       case 'eth_sendTransaction':
