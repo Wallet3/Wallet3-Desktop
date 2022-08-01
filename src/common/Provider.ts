@@ -154,7 +154,7 @@ export async function estimateGas(
       const resp = await axios.post(url, {
         jsonrpc: '2.0',
         method: 'eth_estimateGas',
-        params: [args, 'latest'],
+        params: [args],
         id: Date.now(),
       });
 
