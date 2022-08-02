@@ -1,7 +1,16 @@
 import * as Biometrics from './lib/Biometrics';
 import * as Cipher from '../common/Cipher';
 
-import { BrowserWindow, TouchBar, TouchBarButton, app, ipcMain, nativeImage } from 'electron';
+import {
+  BrowserWindow,
+  TouchBar,
+  TouchBarButton,
+  app,
+  screen,
+  ipcMain,
+  nativeImage,
+  BrowserWindowConstructorOptions,
+} from 'electron';
 import { DBMan, KeyMan, TxMan } from './mans';
 import MessageKeys, {
   AuthenticationResult,
@@ -424,7 +433,7 @@ export class App {
     height = height ?? (modal ? 333 : 320);
     const width = process.platform === 'darwin' ? 365 : 375;
 
-    const popup = new BrowserWindow({
+    const windowOpts: BrowserWindowConstructorOptions = {
       width,
       minWidth: width,
       height,
@@ -444,7 +453,14 @@ export class App {
         nodeIntegration: false,
         webSecurity: true,
       },
-    });
+    };
+    if (!parent) {
+      const cursorPos = screen.getCursorScreenPoint();
+      windowOpts.x = cursorPos.x - 50;
+      windowOpts.y = cursorPos.y - 50;
+    }
+
+    const popup = new BrowserWindow(windowOpts);
 
     if (this.touchBarButtons) {
       const { gas, price } = this.touchBarButtons || {};

@@ -196,7 +196,7 @@ export class WalletKey {
   }
 
   setTmpSecret(mnemonic: string) {
-    this.tmpSecret = mnemonic;
+    this.tmpSecret = mnemonic.toLowerCase();
     return this.tmpSecretType !== undefined;
   }
 
@@ -230,7 +230,7 @@ export class WalletKey {
       const iv = this.key.mnIv;
       const enSecret = await keytar.getPassword(Keys.secret, Keys.secretAccount(this.key.kc_unique));
 
-      return Cipher.decrypt(Buffer.from(iv, 'hex'), enSecret, this.getCorePassword(userPassword));
+      return Cipher.decrypt(Buffer.from(iv, 'hex'), enSecret, this.getCorePassword(userPassword)).toLowerCase();
     } catch (error) {
       console.error(error.message);
       return undefined;
