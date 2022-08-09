@@ -64,6 +64,6 @@ Wallet 3 is available in the following languages:
 4. Copy `sign/appSign.example.js` to `sign/appSign.js`, `sign/winSign.example.js` to `sign/winSign.js`
 5. Launch: `yarn start`
 
-## Copyright & License
+## Copyright
 
-&copy; 2021-2022 ChainBow Co, Ltd. Business Source License 1.1
+&copy; 2021-2022 ChainBow Co, Ltd.
