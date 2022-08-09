@@ -43,7 +43,7 @@ export default ({ app }: { app: Application }) => {
         </div>
 
         <h3>Copyright</h3>
-        <span className="copyright">&copy; 2021 ChainBow Co, Ltd. Business Source License v1.1.</span>
+        <span className="copyright">&copy; 2021-2022 ChainBow Co, Ltd.</span>
       </div>
     </div>
   );

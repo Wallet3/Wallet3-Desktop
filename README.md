@@ -66,4 +66,4 @@ Wallet 3 is available in the following languages:
 
 ## Copyright & License
 
-&copy; 2021 ChainBow Co, Ltd. Business Source License 1.1
+&copy; 2021-2022 ChainBow Co, Ltd. Business Source License 1.1

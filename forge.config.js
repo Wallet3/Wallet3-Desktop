@@ -13,10 +13,10 @@ module.exports = {
     appCategoryType: 'public.app-category.finance',
     darwinDarkModeSupport: false,
     icon: './assets/AppIcon.icns',
-    platform: 'mas',
+    platform: 'dmg',
     osxSign: {
       identity: '3rd Party Mac Developer Application: ChainBow Co. Ltd (Z3N6SZF439)',
-      platform: 'mas',
+      platform: 'dmg',
       hardenedRuntime: false,
       'gatekeeper-assess': true,
       // 'signature-flags': 'library',

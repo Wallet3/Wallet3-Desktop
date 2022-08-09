@@ -2,18 +2,18 @@
   "name": "wallet3",
   "productName": "Wallet 3",
   "version": "1.10.0",
-  "description": "A Secure Wallet for Web3",
+  "description": "A Secure Wallet for Web3 Era",
   "main": ".webpack/main",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Wallet3/Wallet3.git"
+    "url": "https://github.com/Wallet3/Wallet3-Desktop.git"
   },
   "scripts": {
     "start": "npx electron-forge start",
     "package": "npx electron-forge package --platform=mas",
-    "build:mac:arm64": "npx electron-forge package --platform=mas --arch=arm64 && DEBUG=electron-builder ./node_modules/.bin/electron-builder build --mac --arm64",
-    "build:mac:x64": "npx electron-forge package --platform=mas --arch=x64 && DEBUG=electron-builder ./node_modules/.bin/electron-builder build --mac --x64",
-    "build:mac:universal": "npx electron-forge package --platform=mas --arch=all && DEBUG=electron-builder ./node_modules/.bin/electron-builder build --mac --universal",
+    "build:mac:arm64": "npx electron-forge package --platform=darwin --arch=arm64 && DEBUG=electron-builder ./node_modules/.bin/electron-builder build --mac --arm64",
+    "build:mac:x64": "npx electron-forge package --platform=darwin --arch=x64 && DEBUG=electron-builder ./node_modules/.bin/electron-builder build --mac --x64",
+    "build:mac:universal": "npx electron-forge package --platform=darwin --arch=all && DEBUG=electron-builder ./node_modules/.bin/electron-builder build --mac --universal",
     "build:mas": "npx electron-forge package --platform=mas --arch=all && DEBUG=electron-builder ./node_modules/.bin/electron-builder build --mac --universal",
     "pack:mas": "npx electron-forge package --platform=mas",
     "build:win": "npx electron-forge package --platform=win32 --arch=x64 && ./node_modules/.bin/electron-builder build --win --x64",
@@ -35,7 +35,7 @@
     "name": "ChainBow Co, Ltd.",
     "email": "team@chainbow.io"
   },
-  "license": "BUSL-1.1",
+  "private": true,
   "config": {
     "forge": "./forge.config.js"
   },

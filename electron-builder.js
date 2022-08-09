@@ -8,19 +8,19 @@ module.exports = {
   appId: 'jp.co.chainbow.wallet3',
   productName: 'Wallet 3',
   artifactName: '${name}-${os}-${arch}-${version}.${ext}',
-  copyright: 'Copyright © 2021 ChainBow Co. Ltd.',
+  copyright: 'Copyright © 2021-2022 ChainBow Co. Ltd.',
   protocols: {
     name: 'Wallet 3',
     schemes: ['ethereum', 'wallet3', 'wc', 'ledgerlive'],
   },
   //npmRebuild: 'false',
-  //afterSign: "sign/appSign.js",
+  afterSign: "sign/appSign.js",
   mac: {
     icon: 'assets/AppIcon.icns',
-    entitlements: 'sign/entitlements.mas.plist',
+    entitlements: 'sign/entitlements.plist',
     category: 'public.app-category.finance',
     identity: 'ChainBow Co. Ltd (Z3N6SZF439)',
-    target: ['mas'],
+    target: ['dmg'],
     publish: ['github'],
   },
   mas: {
