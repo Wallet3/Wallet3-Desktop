@@ -38,7 +38,7 @@ export default ({ app, mnVM }: { app: Application; mnVM: MnemonicVM }) => {
         app.history.goBack();
       }
 
-      Notification.show({ title: t('Passcode updated') });
+      Notification.show(t('Security Tips'), { body: t('Passcode updated') });
       return;
     }
 

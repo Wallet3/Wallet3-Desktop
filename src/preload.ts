@@ -1,7 +1,7 @@
 import * as crypto from 'crypto';
 
 import { BrowserWindow, DesktopCapturerSource, IpcRendererEvent, SourcesOptions, desktopCapturer } from 'electron';
-import { NotificationConstructorOptions, clipboard, contextBridge, ipcRenderer, shell, webFrame } from 'electron';
+import { clipboard, contextBridge, ipcRenderer, shell, webFrame } from 'electron';
 import { decrypt, encrypt } from './common/Cipher';
 
 import Messages from './common/Messages';
@@ -98,8 +98,15 @@ contextBridge.exposeInMainWorld(ShellApi.API_KEY, new ShellApi());
 export class NotificationApi {
   static readonly API_KEY = 'wallet3_notification';
 
-  show = (args: NotificationConstructorOptions) => {
-    ipcRenderer.invoke(Messages.sendLocalNotification, args);
+  show = async (title: string, args: NotificationOptions) => {
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') return;
+
+    const notification = new Notification(title, args);
+
+    if ((args.data as string)?.startsWith('https')) {
+      notification.onclick = () => shell.openExternal(args.data);
+    }
   };
 }
 
@@ -124,3 +131,9 @@ export class WindowApi {
 }
 
 contextBridge.exposeInMainWorld(WindowApi.API_KEY, new WindowApi());
+
+export class SecureApi {
+  static readonly API_KEY = 'wallet3_secure';
+}
+
+contextBridge.exposeInMainWorld(SecureApi.API_KEY, new SecureApi());

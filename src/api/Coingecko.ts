@@ -2,12 +2,29 @@ import { makeAutoObservable, runInAction } from 'mobx';
 
 import axios from 'axios';
 
+interface Price {
+  usd: number;
+}
+
+interface ChainsPrice {
+  ethereum: Price;
+  'huobi-token': Price;
+  fantom: Price;
+  'matic-network': Price;
+  binancecoin: Price;
+  okexchain: Price;
+  avax: Price;
+}
+
 const host = 'https://api.coingecko.com';
 
-export async function getPrice(ids = 'ethereum', currencies = 'usd') {
+export async function getPrice(
+  ids = 'ethereum,matic-network,fantom,okexchain,huobi-token,binancecoin,avalanche-2,celo',
+  currencies = 'usd'
+) {
   try {
     const resp = await axios.get(`${host}/api/v3/simple/price?ids=${ids}&vs_currencies=${currencies}`);
-    return resp.data as { [index: string]: { usd: number } };
+    return resp.data as ChainsPrice;
   } catch (error) {
     return undefined;
   }
@@ -35,7 +52,21 @@ class Coingecko {
         }
 
         const { ethereum } = data;
-        runInAction(() => (this.eth = ethereum.usd));
+
+        runInAction(() => {
+          this.eth = ethereum.usd;
+          this['1'] = ethereum.usd;
+          this['10'] = ethereum.usd;
+          this['42161'] = ethereum.usd;
+          this['137'] = data['matic-network'].usd;
+          this['100'] = 1;
+          this['250'] = data.fantom.usd;
+          this['128'] = data['huobi-token'].usd;
+          this['66'] = data['huobi-token'].usd;
+          this['56'] = data.binancecoin.usd;
+          this['43114'] = data['avalanche-2'].usd;
+          this['42220'] = data['celo'].usd;
+        });
         run();
       })
       .catch(() => run());

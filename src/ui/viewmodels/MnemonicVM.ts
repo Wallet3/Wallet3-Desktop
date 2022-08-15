@@ -1,16 +1,20 @@
 import MessageKeys, { BooleanResult, GenMnemonic, SetupMnemonic } from '../../common/Messages';
-import { action, makeAutoObservable, runInAction } from 'mobx';
+import { SecretType, checkSecretType, hasChinese, hasJapanese, hasKorean } from '../../common/Mnemonic';
+import { action, has, makeAutoObservable, runInAction } from 'mobx';
 
 import App from './Application';
 import delay from 'delay';
 import ipc from '../bridges/IPC';
-import { utils } from 'ethers';
 
 export class MnemonicVM {
   phrases: string[] = new Array(12).fill('');
   privkey: string = '';
   address = '';
   saving = false;
+
+  get isEnglish() {
+    return !(hasChinese(this.phrases[0]) || hasKorean(this.phrases[0]) || hasJapanese(this.phrases[0]));
+  }
 
   constructor() {
     makeAutoObservable(this);
@@ -25,12 +29,12 @@ export class MnemonicVM {
     });
   }
 
-  checkSecret(secret: string) {
-    if (utils.isValidMnemonic(secret)) return true;
-
-    if ((secret.toLowerCase().startsWith('0x') && secret.length === 66) || secret.length === 64) return true;
-
-    return undefined;
+  checkSecret(secret: string): boolean {
+    return (
+      checkSecretType(secret) !== undefined ||
+      (secret.toLowerCase().startsWith('0x') && secret.length === 66) ||
+      secret.length === 64
+    );
   }
 
   async saveTmpSecret(secret: string) {
@@ -62,7 +66,7 @@ export class MnemonicVM {
     if (!secret) return;
 
     runInAction(() => {
-      if (utils.isValidMnemonic(secret)) this.phrases = secret.split(/\s/);
+      if (checkSecretType(secret) === SecretType.mnemonic) this.phrases = secret.split(/\s/);
       else this.privkey = secret;
     });
   }

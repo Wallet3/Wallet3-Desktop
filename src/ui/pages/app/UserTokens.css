@@ -19,6 +19,10 @@
   margin-top: 10px;
 }
 
+#root.win32 .page.tokens > .line-1 a {
+  margin-top: 15px;
+}
+
 .page.tokens > .line-1 a:hover {
   opacity: 1;
 }

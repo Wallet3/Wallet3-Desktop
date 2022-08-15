@@ -3,11 +3,11 @@ import './ConnectedDAppLabel.css';
 import { AppsIcon, NetworkIcons } from '../../../misc/Icons';
 
 import Image from '../../../components/Image';
-import { Networks } from '../../../../misc/Networks';
+import { Networks } from '../../../../common/Networks';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-export default (props: IWcSession) => {
+export default (props: IRawWcSession) => {
   const network = Networks.find((n) => n.chainId === props.userChainId);
   const { t } = useTranslation();
 

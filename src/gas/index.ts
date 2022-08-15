@@ -1,9 +1,8 @@
-import Gasnow, { GasnowWs } from './Gasnow';
-import { autorun, makeAutoObservable, reaction } from 'mobx';
-
-import BscGas from './BscGas';
 import CheapStation from './CheapStation';
-import PolygonGasStation from './PolygonGasStation';
+import EIP1559Price from './EIP1559Price';
+import { Gwei_1 } from '../common/Constants';
+import { Networks } from '../common/Networks';
+import { makeAutoObservable } from 'mobx';
 
 interface IGasStation {
   rapid: number;
@@ -17,20 +16,11 @@ interface IGasStation {
 
 class GasStation {
   private _chainId = 1;
-  private _stations = new Map<number, IGasStation>([
-    [1, Gasnow],
-    [100, new CheapStation(100)],
-    [250, new CheapStation(250)],
-    [128, new CheapStation(128)],
-    [137, PolygonGasStation],
-    [66, new CheapStation(66)],
-    [56, BscGas],
-    [3, new CheapStation(3)],
-    [4, new CheapStation(4)],
-    [5, new CheapStation(5)],
-    [42, new CheapStation(42)],
-    [80001, new CheapStation(80001)],
-  ]);
+  private _stations = new Map<number, IGasStation>(
+    Networks.map((network) => {
+      return [network.chainId, network.chainId === 1 ? EIP1559Price : new CheapStation(network.chainId)];
+    })
+  );
 
   constructor() {
     makeAutoObservable(this);
@@ -49,15 +39,15 @@ class GasStation {
   }
 
   get rapidGwei() {
-    return this.rapid / GasnowWs.gwei_1;
+    return this.rapid / Gwei_1;
   }
 
   get fastGwei() {
-    return this.fast / GasnowWs.gwei_1;
+    return this.fast / Gwei_1;
   }
 
   get standardGwei() {
-    return this.standard / GasnowWs.gwei_1;
+    return this.standard / Gwei_1;
   }
 
   get chainId() {
@@ -73,17 +63,17 @@ class GasStation {
 
     switch (type) {
       case 'rapid':
-        return station?.rapid ?? 5 * GasnowWs.gwei_1;
+        return station?.rapid ?? 5 * Gwei_1;
       case 'fast':
-        return station?.fast ?? 1 * GasnowWs.gwei_1;
+        return station?.fast ?? 1 * Gwei_1;
       case 'standard':
-        return station?.standard ?? 1 * GasnowWs.gwei_1;
+        return station?.standard ?? 1 * Gwei_1;
     }
   }
 
   refresh() {
     this._stations.get(this.chainId)?.refresh();
-    Gasnow.refresh();
+    EIP1559Price.refresh();
   }
 }
 

@@ -1,9 +1,39 @@
 import * as ethers from 'ethers';
 
-import { WalletKey } from './WalletKey';
-
+const BasePath = `m/44\'/60\'/0\'/0`;
 const mnemonic = 'afford candy jewel raven version roast unfair female diary render buffalo buddy comic mimic control';
-const wk = new WalletKey();
+
+class WK {
+  tmpSecret: string;
+  basePath = BasePath;
+  basePathIndex = 0;
+
+  setTmpSecret(mnemonic: string) {
+    this.tmpSecret = mnemonic;
+  }
+
+  async setFullPath(fullPath: string) {
+    const lastSlash = fullPath.lastIndexOf('/');
+    this.basePath = fullPath.substring(0, lastSlash);
+    this.basePathIndex = Number.parseInt(fullPath.substring(lastSlash + 1)) || 0;
+  }
+
+  async genAddresses(userPassword: string, count: number) {
+    const secret = this.tmpSecret;
+    if (!secret) return undefined;
+
+    let addresses: string[] = [];
+
+    const hd = ethers.utils.HDNode.fromMnemonic(secret);
+    addresses = [hd.derivePath(`${this.basePath}/${this.basePathIndex}`).address];
+
+    for (let i = 1; i < count; i++) {
+      addresses.push(hd.derivePath(`${this.basePath}/${this.basePathIndex + i}`).address);
+    }
+
+    return addresses;
+  }
+}
 
 test('derive path', () => {
   const hd = ethers.utils.HDNode.fromMnemonic(mnemonic);
@@ -26,9 +56,9 @@ test('personal_sign', () => {
 test(
   'custom path',
   async () => {
-    wk.setTmpSecret(
-      'become replace lecture bleak reform topple fringe menu original damage equip crime sorry alarm erase'
-    );
+    const wk = new WK();
+
+    wk.setTmpSecret('become replace lecture bleak reform topple fringe menu original damage equip crime sorry alarm erase');
 
     wk.setFullPath(`m/44'/60'/5'/2/0`);
     expect(wk.basePath).toBe(`m/44'/60'/5'/2`);

@@ -36,12 +36,20 @@ export class CurrencyVM {
         value = usd;
         break;
       case 'ETH':
-        value = usd / Coingecko.eth;
+        value = usd / this.ethPrice;
         break;
     }
 
     const formatted = numeral(value).format('0,0.00');
     return `${this.currentCurrency.symbol} ${formatted === 'NaN' ? '0.00' : formatted}`.trim();
+  }
+
+  get ethPrice() {
+    return Coingecko.eth || 1;
+  }
+
+  getPrice(chainId: number) {
+    return Coingecko[chainId] || 1;
   }
 }
 

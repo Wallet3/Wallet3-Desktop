@@ -12,7 +12,7 @@ class TxNotification {
     if (addrs.length === 0) return;
 
     const provider = getProviderByChainId(chainId);
-    const tokens = erc20s.map((t) => new ERC20Token(t.address, provider));
+    const tokens = erc20s.map((t) => new ERC20Token(t.address, provider, chainId));
     console.log(await provider.ready);
 
     for (let i = 0; i < tokens.length; i++) {

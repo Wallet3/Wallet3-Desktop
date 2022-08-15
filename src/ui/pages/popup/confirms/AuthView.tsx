@@ -21,7 +21,7 @@ export default observer(
     const { t } = useTranslation();
 
     const [loading, setLoading] = useState(false);
-    const [launched, setLaunced] = useState(false);
+    const [launched, setLaunched] = useState(false);
 
     const auth = async (passcode?: string) => {
       if (loading) return;
@@ -37,7 +37,7 @@ export default observer(
     };
 
     if (runTouchID && touchIDSupported && loading === false && launched == false) {
-      setLaunced(true);
+      setLaunched(true);
       if (authMethod !== 'fingerprint') return;
       auth();
     }

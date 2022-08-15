@@ -1,18 +1,21 @@
 import './backend/AppMenu';
+import './backend/CryptoRandom';
 
 import { BrowserWindow, Menu, TouchBar, TouchBarButton, Tray, app, nativeImage, powerMonitor, protocol } from 'electron';
 import { DBMan, KeyMan, TxMan } from './backend/mans';
+import { handleDeepLink, supportedSchemes } from './backend/DeepLinkHandler';
 
 import App from './backend/App';
 import Coingecko from './api/Coingecko';
-import GasnowWs from './gas/Gasnow';
+import EIP1559Price from './gas/EIP1559Price';
 import Messages from './common/Messages';
 import { autorun } from 'mobx';
+import delay from 'delay';
 import { globalShortcut } from 'electron';
 import i18n from './i18n';
-import querystring from 'querystring';
+import isOnline from 'is-online';
 import { resolve } from 'path';
-import updateapp from 'update-electron-app';
+import { updateApp } from './backend/Updater';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -20,11 +23,12 @@ declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 let tray: Tray;
 let idleTimer: NodeJS.Timeout;
 
-const prod = process.env.NODE_ENV === 'production';
+const prod = app.isPackaged;
 const isMac = process.platform === 'darwin';
 const isWin = process.platform === 'win32';
-console.log('is production', prod);
+const isLinux = process.platform === 'linux';
 
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 if (!isMac) require('@electron/remote/main').initialize();
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -81,7 +85,16 @@ const createTouchBar = (mainWindow: BrowserWindow) => {
 const createTray = async () => {
   if (tray) return;
 
-  tray = new Tray(nativeImage.createFromDataURL(require(`./assets/icons/app/tray_${process.platform}.png`).default));
+  const trayImage = nativeImage.createEmpty();
+  trayImage.addRepresentation({
+    scaleFactor: 3,
+    width: 20,
+    height: 20,
+    dataURL: require(`./assets/icons/app/tray_${process.platform}.png`).default,
+  });
+  trayImage.isMacTemplateImage = true;
+
+  tray = new Tray(trayImage);
   const menu = Menu.buildFromTemplate([
     {
       label: i18n.t('WalletConnect'),
@@ -97,10 +110,12 @@ const createTray = async () => {
   ]);
 
   tray.setContextMenu(menu);
+
+  if (isWin) tray.on('double-click', () => createWindow());
 };
 
 const createWindow = async (): Promise<void> => {
-  if (App.mainWindow) {
+  if (App.mainWindow && !App.mainWindow.isDestroyed()) {
     App.mainWindow.show();
     App.mainWindow.focus();
     return;
@@ -125,64 +140,21 @@ const createWindow = async (): Promise<void> => {
     },
   });
 
-  // and load the index.html of the app.
-  mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   App.mainWindow = mainWindow;
+  mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY, {});
 
-  mainWindow.once('ready-to-show', () => {
-    mainWindow.webContents.send(Messages.pendingTxsChanged, [...TxMan.pendingTxs]);
-    // mainWindow.webContents.send(Messages.wcConnectsChanged, WCMan.connectedSessions);
-  });
+  if (isLinux) mainWindow.setIcon(nativeImage.createFromDataURL(require('./assets/icons/app/AppIcon_256.png').default));
 
   mainWindow.once('closed', () => {
-    if (isMac) app.dock.hide();
+    mainWindow.removeAllListeners();
+    if (!isWin) app.dock?.hide();
     App.mainWindow = undefined;
   });
 
   createTouchBar(mainWindow);
   createTray();
-  if (isMac) app.dock.show();
-};
 
-const handleDeepLink = async (deeplink: string) => {
-  if (!deeplink) return;
-
-  const query = querystring.decode(deeplink);
-  const [protocol] = Object.getOwnPropertyNames(query);
-  const uri = query[protocol] as string;
-
-  if (!uri?.startsWith('wc:') || !uri?.includes('bridge=')) return undefined;
-
-  if (!KeyMan.current) return;
-
-  if (!KeyMan.current.authenticated) {
-    App.createPopupWindow(
-      'msgbox',
-      {
-        title: i18n.t('Authentication'),
-        icon: 'alert-triangle',
-        message: i18n.t('Wallet not authorized'),
-      },
-      { height: 250 }
-    );
-    return;
-  }
-
-  const window = await App.createPopupWindow('dapp-connecting', {}, { height: 103, resizable: false });
-  const success = await KeyMan.currentWCMan.connectAndWaitSession(uri);
-  if (!success) {
-    App.createPopupWindow(
-      'msgbox',
-      {
-        title: 'WalletConnect',
-        icon: 'link-2',
-        message: i18n.t('WalletConnect uri expired'),
-      },
-      { height: 250 }
-    );
-  }
-
-  window.close();
+  if (!isWin) app.dock?.show();
 };
 
 // This method will be called when Electron has finished
@@ -191,19 +163,21 @@ const handleDeepLink = async (deeplink: string) => {
 app.on('ready', async () => {
   await DBMan.init();
   await Promise.all([KeyMan.init(), TxMan.init()]);
-
   await App.init();
+
   createWindow();
 
-  GasnowWs.start(true);
-  GasnowWs.onclose = () => GasnowWs.start(true);
-  autorun(() => {
-    const { gas } = App.touchBarButtons || {};
-    if (!gas) return;
+  if (isMac) {
+    EIP1559Price.refresh();
 
-    gas.label = `${GasnowWs.rapidGwei} | ${GasnowWs.fastGwei} | ${GasnowWs.standardGwei}`;
-    tray?.setTitle(gas.label);
-  });
+    autorun(() => {
+      const { gas } = App.touchBarButtons || {};
+      if (!gas) return;
+
+      gas.label = `${EIP1559Price.baseGasPriceGwei} + ${EIP1559Price.priorityGasPriceGwei}`;
+      tray?.setTitle(gas.label);
+    });
+  }
 
   Coingecko.start();
   autorun(() => {
@@ -231,17 +205,22 @@ app.on('ready', async () => {
   globalShortcut.register('CommandOrControl+Option+3', () => createWindow());
   globalShortcut.register('CommandOrControl+Alt+3', () => createWindow());
 
-  const schemes = ['wallet3', 'ledgerlive'];
   if (process.platform === 'win32') {
     // Set the path of electron.exe and your app.
     // These two additional parameters are only available on windows.
     // Setting this is required to get this working in dev mode.
-    schemes.forEach((s) => app.setAsDefaultProtocolClient(s, process.execPath, [resolve(process.argv[1])]));
+    supportedSchemes.forEach((s) => app.setAsDefaultProtocolClient(s, process.execPath, [resolve(process.argv[1])]));
   } else {
-    schemes.forEach((s) => app.setAsDefaultProtocolClient(s));
+    supportedSchemes.forEach((s) => app.setAsDefaultProtocolClient(s));
   }
 
-  updateapp({ notifyUser: true });
+  if (isWin) {
+    app.setAppUserModelId('jp.co.chainbow.wallet3');
+  }
+
+  if (isMac) app.setSecureKeyboardEntryEnabled(true);
+
+  updateApp();
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -271,19 +250,33 @@ app.on('web-contents-created', (event, contents) => {
   });
 });
 
-powerMonitor.on('resume', () => {
-  setTimeout(async () => {
-    GasnowWs.restart(true);
-    KeyMan.keys.forEach(async (k) => {
-      const { wcman } = KeyMan.connections.get(k.id) || {};
-      await wcman?.dispose();
-      await wcman?.init();
-    });
-  }, 5000);
+powerMonitor.on('resume', async () => {
+  let attempts = 0;
+
+  while (!(await isOnline({ timeout: 5000 }))) {
+    await delay(1000);
+    attempts++;
+
+    if (attempts > 10) {
+      return;
+    }
+  }
+
+  KeyMan.keys.forEach(async (k) => {
+    const { wcman } = KeyMan.connections.get(k.id) || {};
+    await wcman?.init();
+  });
 });
 
-powerMonitor.on('suspend', () => {
+powerMonitor.on('suspend', async () => {
   App.mainWindow?.webContents.send(Messages.idleExpired, { idleExpired: true });
+
+  await Promise.all(
+    KeyMan.keys.map(async (k) => {
+      const { wcman } = KeyMan.connections.get(k.id) || {};
+      await wcman?.dispose();
+    })
+  );
 });
 
 if (!app.requestSingleInstanceLock()) {
@@ -292,7 +285,7 @@ if (!app.requestSingleInstanceLock()) {
   app.on('second-instance', (event, argv, workingDirectory) => {
     if (process.platform !== 'darwin') {
       // Find the arg that is our custom protocol url and store it
-      const deeplinkUrl = argv.find((arg) => arg.startsWith('wallet3://') || arg.startsWith('ledgerlive://'));
+      const deeplinkUrl = argv.find((arg) => supportedSchemes.some((s) => arg?.startsWith(s)));
       handleDeepLink(deeplinkUrl);
     }
 
@@ -305,3 +298,5 @@ app.on('open-url', function (event, url) {
   event.preventDefault();
   handleDeepLink(url);
 });
+
+process.on('uncaughtException', (e) => console.error(e));

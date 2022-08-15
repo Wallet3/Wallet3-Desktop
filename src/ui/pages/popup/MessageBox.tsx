@@ -1,7 +1,6 @@
 import './MessageBox.css';
 
-import App, { ApplicationPopup } from '../../viewmodels/ApplicationPopup';
-
+import { ApplicationPopup } from '../../viewmodels/ApplicationPopup';
 import { PopupTitle } from '../../components';
 import React from 'react';
 import { useTranslation } from 'react-i18next';

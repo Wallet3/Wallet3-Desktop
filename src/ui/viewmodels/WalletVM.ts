@@ -1,12 +1,12 @@
 import Messages, { IKey, TxParams } from '../../common/Messages';
 import { makeAutoObservable, reaction, runInAction } from 'mobx';
 
-import { AccountType } from '../../backend/models/Types';
 import { AccountVM } from './AccountVM';
 import { DAppVM } from './wallet/DAppVM';
 import { HistoryTxsVM } from './wallet/HistoryTxsVM';
 import NetVM from './NetworksVM';
 import { PendingTxVM } from './wallet/PendingTxVM';
+import { SecretType } from '../../common/Mnemonic';
 import ipc from '../bridges/IPC';
 import store from 'storejs';
 
@@ -18,7 +18,7 @@ export class WalletVM {
   accounts: AccountVM[] = [];
   currentAccount: AccountVM = null;
   allPendingTxs: TxParams[] = [];
-  connectedDApps: IWcSession[] = [];
+  connectedDApps: IRawWcSession[] = [];
 
   private key: IKey;
 
@@ -27,7 +27,21 @@ export class WalletVM {
   }
 
   get pendingTxs() {
-    return this.allPendingTxs.filter((tx) => tx.from === this.currentAccount.address).sort((t1, t2) => t1.nonce - t2.nonce);
+    const pendingTxs = this.allPendingTxs
+      .filter((tx) => tx.from === this.currentAccount.address)
+
+      .sort((t1, t2) => t1.nonce - t2.nonce);
+
+    const distinctTxs: TxParams[] = [];
+
+    for (let tx of pendingTxs) {
+      if (distinctTxs.find((t) => t.nonce === tx.nonce)) continue;
+
+      const [target] = pendingTxs.filter((t) => t.nonce === tx.nonce).sort((t1, t2) => t2.gasPrice - t1.gasPrice);
+      distinctTxs.push(target);
+    }
+
+    return distinctTxs;
   }
 
   get pendingTxCount() {
@@ -50,7 +64,7 @@ export class WalletVM {
     return this.key.id;
   }
 
-  get type(): AccountType {
+  get type(): SecretType {
     return this.key.type;
   }
 
@@ -63,7 +77,7 @@ export class WalletVM {
       () => this.currentAccount?.refresh()
     );
 
-    ipc.on(Messages.wcConnectsChanged(key.id), (e, content: IWcSession[]) =>
+    ipc.on(Messages.wcConnectsChanged(key.id), (e, content: IRawWcSession[]) =>
       runInAction(() => (this.connectedDApps = content.sort((a, b) => b.lastUsedTimestamp - a.lastUsedTimestamp)))
     );
   }
@@ -75,7 +89,7 @@ export class WalletVM {
   }: {
     addresses?: string[];
     pendingTxs?: TxParams[];
-    connectedDApps?: IWcSession[];
+    connectedDApps?: IRawWcSession[];
   }) {
     if (addresses?.length > 0 && (!this.accounts || this.accounts.length === 0)) {
       this.accounts = addresses.map((address, i) => new AccountVM({ address, accountIndex: i + 1, walletId: this.id }));
@@ -116,9 +130,13 @@ export class WalletVM {
     this.pendingTxVM = new PendingTxVM(tx);
   }
 
+  releasePendingVM() {
+    this.pendingTxVM = null;
+  }
+
   dAppVM: DAppVM = null;
 
-  selectDAppSession(session: IWcSession) {
+  selectDAppSession(session: IRawWcSession) {
     this.dAppVM = new DAppVM(session, this.key.id);
   }
 
@@ -129,8 +147,8 @@ export class WalletVM {
   }
 
   clean() {
-    this.pendingTxVM = null;
     this._historyTxsVM?.selectTx(undefined);
+    this._historyTxsVM = undefined;
     this.accounts.forEach((a) => a?.clean());
     store.remove(Keys.lastUsedAccount(this.id));
   }

@@ -1,4 +1,4 @@
-import { IReactionDisposer, autorun, makeAutoObservable, reaction, runInAction } from 'mobx';
+import { IReactionDisposer, makeAutoObservable, reaction, runInAction } from 'mobx';
 import Messages, { IKey } from '../../common/Messages';
 
 import App from '../App';
@@ -64,20 +64,6 @@ class KeyMan {
 
     if (keys.length === 0) return;
 
-    await Promise.all(
-      keys.map(async (key) => {
-        const wcman = new WCMan(key);
-        await wcman.init();
-
-        const disposer = reaction(
-          () => wcman.connectedSessions,
-          () => App.mainWindow?.webContents.send(Messages.wcConnectsChanged(key.id), wcman.connectedSessions)
-        );
-
-        this.connections.set(key.id, { wcman, disposer });
-      })
-    );
-
     runInAction(() => {
       this.keys = keys;
       this.switch(id);
@@ -87,6 +73,8 @@ class KeyMan {
   }
 
   async switch(id: number) {
+    // console.log('currentId', this.currentId, 'to', id);
+
     if (this.currentId === id) return this.currentId;
 
     this.current = this.keys.find((k) => k.id === id) || this.keys[0];

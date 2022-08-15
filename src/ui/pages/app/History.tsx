@@ -7,7 +7,7 @@ import { Application } from '../../viewmodels/Application';
 import { List } from 'react-virtualized';
 import { NavBar } from '../../components';
 import { NetworkIcons } from '../../../ui/misc/Icons';
-import { Networks } from '../../../misc/Networks';
+import { Networks } from '../../../common/Networks';
 import React from 'react';
 import Tokens from '../../../misc/Tokens';
 import { formatAddress } from '../../misc/Formatter';

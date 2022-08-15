@@ -2,6 +2,7 @@ export interface IToken {
   address: string;
   decimals: number;
   symbol: string;
+  minGas?: number;
 }
 
 export const ETH = {
@@ -202,6 +203,13 @@ export const DPI = {
   symbol: 'DPI',
 };
 
+export const LDO = {
+  address: '0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32',
+  decimals: 18,
+  symbol: 'LDO',
+  minGas: 150_000,
+};
+
 export const RAI = {
   address: '0x03ab458634910AaD20eF5f1C8ee96F1D6ac54919',
   decimals: 18,
@@ -278,7 +286,7 @@ export const Stablecoins = [DAI, USDC, USDT, TUSD, BUSD, sUSD, PAX, USDN, GUSD, 
 export const AlgorithmStablecoins = [ESD, DSD];
 export const ETHTokens = [ETH, sETH, WETH, ETH_0];
 export const BTCTokens = [WBTC, renBTC, hBTC, tBTC, sBTC];
-export const DeFiTokens = [CRV, UNI, SUSHI, YFI, COMP, SNX, MKR, AAVE, RPL];
+export const DeFiTokens = [CRV, UNI, SUSHI, YFI, COMP, SNX, MKR, AAVE, RPL, LDO, LON, bALPHA, DPI, LINK];
 
 export function findTokenBySymbol(symbol: string) {
   const upper = symbol.toUpperCase();
@@ -290,9 +298,11 @@ export function findTokenByAddress(address: string) {
   return all.find((t) => t.address.toUpperCase() === upper);
 }
 
-export const EthereumPopularTokens = [DAI, USDC, USDT, UNI, SUSHI, COMP, MKR, CRV, LINK, AAVE, DPI];
+import { PartnerTokens } from './PartnerTokens';
 
-const MATIC_DAI = {
+export const EthereumPopularTokens = [DAI, USDC, USDT, UNI, SUSHI, COMP, MKR, CRV, LINK, AAVE, DPI, ...PartnerTokens];
+
+export const MATIC_DAI = {
   address: '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
   decimals: 18,
   symbol: 'DAI',
@@ -310,10 +320,16 @@ const MATIC_UNI = {
   symbol: 'UNI',
 };
 
-const MATIC_USDC = {
+export const MATIC_USDC = {
   address: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
   decimals: 6,
   symbol: 'USDC',
+};
+
+export const MATIC_USDT = {
+  address: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
+  decimals: 6,
+  symbol: 'USDT',
 };
 
 const MATIC_CRV = {
@@ -334,7 +350,29 @@ const MATIC_SUSHI = {
   symbol: 'SUSHI',
 };
 
-export const PolygonPopularTokens = [MATIC_DAI, MATIC_USDC, MATIC_AAVE, MATIC_UNI, MATIC_CRV, MATIC_SUSHI, MATIC_COMP];
+const MATIC_WETH = {
+  address: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+  decimals: 18,
+  symbol: 'WETH',
+};
+
+export const PolygonPopularTokens = [
+  MATIC_DAI,
+  MATIC_USDC,
+  MATIC_USDT,
+  MATIC_AAVE,
+  MATIC_UNI,
+  MATIC_CRV,
+  MATIC_SUSHI,
+  MATIC_COMP,
+  MATIC_WETH,
+];
+
+export const wxDAI = {
+  address: '0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d',
+  decimals: 18,
+  symbol: 'WXDAI',
+};
 
 const xDAI_AAVE = {
   address: '0xDF613aF6B44a31299E48131e9347F034347E2F00',
@@ -348,10 +386,16 @@ const xDAI_UNI = {
   symbol: 'UNI',
 };
 
-const xDAI_USDC = {
+export const xDAI_USDC = {
   address: '0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83',
   decimals: 6,
   symbol: 'USDC',
+};
+
+export const xDAI_USDT = {
+  address: '0x4ECaBa5870353805a9F068101A40E0f32ed605C6',
+  decimals: 6,
+  symbol: 'USDT',
 };
 
 const xDAI_HNY = {
@@ -362,13 +406,13 @@ const xDAI_HNY = {
 
 export const xDaiPopularTokens = [xDAI_USDC, xDAI_HNY, xDAI_AAVE, xDAI_UNI];
 
-const FTM_USDC = {
+export const FTM_USDC = {
   address: '0x04068DA6C83AFCFA0e13ba15A6696662335D5B75',
   decimals: 6,
   symbol: 'USDC',
 };
 
-const FTM_DAI = {
+export const FTM_DAI = {
   address: '0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E',
   decimals: 18,
   symbol: 'DAI',
@@ -442,7 +486,13 @@ const BSC_ETH = {
   symbol: 'ETH',
 };
 
-export const BscPopularTokens = [BSC_ETH, BSC_DAI, BSC_USDC, BUSD, CAKE, XVS, ALPACA];
+const BSC_BUSD = {
+  address: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56',
+  decimals: 18,
+  symbol: 'BUSD',
+};
+
+export const BscPopularTokens = [BSC_ETH, BSC_DAI, BSC_USDC, BSC_BUSD, CAKE, XVS, ALPACA];
 
 const HECO_ETH = {
   address: '0x64FF637fB478863B7468bc97D30a5bF3A428a1fD',
@@ -498,17 +548,75 @@ const HECO_LTC = {
   symbol: 'HLTC',
 };
 
-export const HecoPopularTokens = [
-  HECO_ETH,
-  HECO_BTC,
-  HECO_USDC,
-  HECO_DAI,
-  HECO_UNI,
-  HECO_USDT,
-  HECO_DOT,
-  HECO_BCH,
-  HECO_LTC,
-];
+export const HecoPopularTokens = [HECO_ETH, HECO_BTC, HECO_USDC, HECO_DAI, HECO_UNI, HECO_USDT, HECO_DOT, HECO_BCH, HECO_LTC];
+
+const CELO_USD = {
+  address: '0x765de816845861e75a25fca122bb6898b8b1282a',
+  decimals: 18,
+  symbol: 'cUSD',
+};
+
+const CELO_EUR = {
+  address: '0xd8763cba276a3738e6de85b4b3bf5fded6d6ca73',
+  decimals: 18,
+  symbol: 'cEUR',
+};
+
+export const CeloPopularTokens = [CELO_USD, CELO_EUR];
+
+const ARBI_USDT = {
+  address: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
+  decimals: 6,
+  symbol: 'USDT',
+};
+
+const ARBI_USDC = {
+  address: '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
+  decimals: 6,
+  symbol: 'USDC',
+};
+
+const ARBI_DAI = {
+  address: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
+  decimals: 18,
+  symbol: 'DAI',
+};
+
+export const ArbiPopularTokens = [ARBI_DAI, ARBI_USDC, ARBI_USDT];
+
+const Boba_USDT = {
+  address: '0x5DE1677344D3Cb0D7D465c10b72A8f60699C062d',
+  decimals: 6,
+  symbol: 'USDT',
+};
+
+const Boba_USDC = {
+  address: '0x66a2A913e447d6b4BF33EFbec43aAeF87890FBbc',
+  decimals: 6,
+  symbol: 'USDC',
+};
+
+const Boba_DAI = {
+  address: '0xf74195Bb8a5cf652411867c5C2C5b8C2a402be35',
+  decimals: 18,
+  symbol: 'DAI',
+};
+
+export const BobaPopularTokens = [Boba_DAI, Boba_USDC, Boba_USDT];
+
+const zkSyncTest_USDC = {
+  address: '0xeb8f08a975Ab53E34D8a0330E0D34de942C95926',
+  decimals: 6,
+  symbol: 'USDC',
+};
+
+const zkSyncTest_DAI = {
+  address: '0x70a4fCF3e4C8591B5B4318CEC5fACbB96a604198',
+  decimals: 18,
+  symbol: 'DAI',
+};
+
+export const zkSyncTestPopularTokens = [zkSyncTest_USDC, zkSyncTest_DAI];
 
 const all = [
   ...Stablecoins,
@@ -521,6 +629,6 @@ const all = [
   ...FTMPopularTokens,
   ...BscPopularTokens,
   ...HecoPopularTokens,
-];
+] as IToken[];
 
 export default all;

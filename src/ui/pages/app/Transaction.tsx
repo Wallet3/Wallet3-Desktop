@@ -15,7 +15,7 @@ export default ({ app }: { app: Application }) => {
   let vm = pendingTxVM || historyTxsVM.selectedTx;
 
   useEffect(() => {
-    return () => app.currentWallet.clean();
+    return () => app.currentWallet.releasePendingVM();
   }, []);
 
   return (
@@ -29,6 +29,8 @@ export default ({ app }: { app: Application }) => {
         hash={vm.hash}
         gasLimit={vm.gas}
         gasPrice={vm.gasPrice}
+        maxFeePerGas={vm.maxFeePerGas}
+        maxPriorityFeePerGas={vm.maxPriorityFeePerGas}
         data={vm.data}
         nonce={vm.nonce}
         status={vm.status}

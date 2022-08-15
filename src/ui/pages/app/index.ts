@@ -2,9 +2,12 @@ import Account from './Account';
 import AddToken from './AddToken';
 import ConnectedDApp from './ConnectedDApp';
 import ConnectedDApps from './ConnectedDApps';
+import CustomizeNetwork from './CustomizeNetwork';
 import DApps123 from './DApps123';
 import History from './History';
+import Networks from './Networks';
 import Settings from './Settings';
+import Swap from './Swap';
 import Transaction from './Transaction';
 import Transfer from './Transfer';
 import TransferNFT from './TransferNFT';
@@ -14,6 +17,7 @@ import Wallet from './Wallet';
 
 export {
   History,
+  CustomizeNetwork,
   Wallet,
   Settings,
   Transfer,
@@ -22,8 +26,10 @@ export {
   AddToken,
   Transaction,
   ConnectedDApp,
+  Swap,
   ConnectedDApps,
   UserNFTs,
   TransferNFT,
   DApps123,
+  Networks,
 };

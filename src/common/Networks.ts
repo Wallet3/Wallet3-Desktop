@@ -1,12 +1,16 @@
 import {
+  ArbiPopularTokens,
+  BobaPopularTokens,
   BscPopularTokens,
+  CeloPopularTokens,
   EthereumPopularTokens,
   FTMPopularTokens,
   HecoPopularTokens,
   IToken,
   PolygonPopularTokens,
   xDaiPopularTokens,
-} from './Tokens';
+  zkSyncTestPopularTokens,
+} from '../misc/Tokens';
 
 export interface INetwork {
   comm_id?: string;
@@ -15,8 +19,12 @@ export interface INetwork {
   chainId: number;
   color: string;
   test?: boolean;
+  l2?: boolean;
+  eip1559?: boolean;
   order?: number;
   defaultTokens: IToken[];
+  showOverview?: boolean;
+  minGwei?: number;
 }
 
 export const PublicNetworks: INetwork[] = [
@@ -26,9 +34,42 @@ export const PublicNetworks: INetwork[] = [
     network: 'Ethereum',
     chainId: 1,
     color: '#6186ff',
+    eip1559: true,
     order: 1,
     defaultTokens: EthereumPopularTokens,
+    showOverview: true,
   },
+  {
+    symbol: 'ETH',
+    comm_id: 'op',
+    network: 'Optimism',
+    chainId: 10,
+    color: '#FF0420',
+    order: 3,
+    l2: true,
+    defaultTokens: [],
+    showOverview: false,
+  },
+  {
+    symbol: 'ETH',
+    comm_id: 'arb',
+    network: 'Arbitrum',
+    chainId: 42161,
+    color: '#2D374B',
+    order: 3,
+    l2: true,
+    defaultTokens: ArbiPopularTokens,
+    showOverview: false,
+  },
+  // {
+  //   symbol: 'ETH',
+  //   comm_id: 'boba',
+  //   network: 'Boba',
+  //   chainId: 288,
+  //   color: '#1CD8D2',
+  //   l2: true,
+  //   defaultTokens: BobaPopularTokens,
+  // },
   {
     symbol: 'MATIC',
     comm_id: 'matic',
@@ -37,24 +78,8 @@ export const PublicNetworks: INetwork[] = [
     color: '#8247E5',
     order: 2,
     defaultTokens: PolygonPopularTokens,
-  },
-  {
-    symbol: 'OETH',
-    comm_id: 'optimism',
-    network: 'Optimism',
-    chainId: 10,
-    color: '#FF0420',
-    order: 3,
-    defaultTokens: [],
-  },
-  {
-    symbol: 'ETH',
-    comm_id: 'arbitrum',
-    network: 'Arbitrum',
-    chainId: 42161,
-    color: '#2D374B',
-    order: 3,
-    defaultTokens: [],
+    showOverview: true,
+    minGwei: 30,
   },
   {
     symbol: 'xDAI',
@@ -64,6 +89,8 @@ export const PublicNetworks: INetwork[] = [
     color: '#48A9A6',
     order: 3,
     defaultTokens: xDaiPopularTokens,
+    showOverview: true,
+    eip1559: true,
   },
   {
     symbol: 'FTM',
@@ -73,6 +100,37 @@ export const PublicNetworks: INetwork[] = [
     color: '#1969FF',
     order: 4,
     defaultTokens: FTMPopularTokens,
+    showOverview: true,
+    minGwei: 50,
+  },
+  {
+    symbol: 'AVAX',
+    comm_id: 'avax',
+    chainId: 43114,
+    network: 'Avalanche',
+    color: '#E84142',
+    order: 5,
+    eip1559: true,
+    defaultTokens: [],
+    showOverview: true,
+  },
+  {
+    symbol: 'CELO',
+    comm_id: 'celo',
+    chainId: 42220,
+    network: 'Celo',
+    color: '#5EA33B',
+    order: 6,
+    defaultTokens: CeloPopularTokens,
+  },
+  {
+    symbol: 'BCH',
+    comm_id: 'bch',
+    chainId: 10000,
+    network: 'SmartBCH',
+    order: 7,
+    color: '#8dc351',
+    defaultTokens: [],
   },
   {
     symbol: 'HT',
@@ -93,13 +151,15 @@ export const PublicNetworks: INetwork[] = [
     defaultTokens: [],
   },
   {
-    symbol: 'BSC',
+    symbol: 'BNB',
     comm_id: 'bsc',
     network: 'BSC',
     chainId: 56,
     color: '#f3ba2f',
     order: 5,
     defaultTokens: BscPopularTokens,
+    showOverview: true,
+    minGwei: 5,
   },
 ];
 
@@ -110,6 +170,7 @@ export const Testnets: INetwork[] = [
     chainId: 3,
     color: '#6186ff',
     test: true,
+    eip1559: true,
     defaultTokens: [],
   },
   {
@@ -118,6 +179,7 @@ export const Testnets: INetwork[] = [
     chainId: 4,
     color: '#6186ff',
     test: true,
+    eip1559: true,
     defaultTokens: [],
   },
   {
@@ -125,6 +187,7 @@ export const Testnets: INetwork[] = [
     network: 'Goerli',
     chainId: 5,
     color: '#6186ff',
+    eip1559: true,
     test: true,
     defaultTokens: [],
   },
@@ -137,12 +200,27 @@ export const Testnets: INetwork[] = [
     defaultTokens: [],
   },
   {
+    symbol: 'BNB',
+    chainId: 97,
+    network: 'BSC Testnet',
+    color: '#f3ba2f',
+    defaultTokens: [],
+  },
+  {
     symbol: 'MATIC',
     network: 'Mumbai',
     chainId: 80001,
     color: '#8247E5',
     test: true,
     defaultTokens: [],
+  },
+  {
+    symbol: 'ETH',
+    network: 'zkSync 2.0 Rinkeby',
+    chainId: 272,
+    color: '',
+    test: true,
+    defaultTokens: zkSyncTestPopularTokens,
   },
 ];
 

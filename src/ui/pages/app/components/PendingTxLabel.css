@@ -1,7 +1,7 @@
 .pendingtx-label {
   display: grid;
   grid-template-rows: auto auto;
-  width: 220px;
+  width: 250px;
   overflow: hidden;
   font-size: 12px;
 }
@@ -19,11 +19,10 @@
 }
 
 .pendingtx-label > .title > div > span {
-  max-width: 100px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  max-width: 120px;
+  max-width: 150px;
 }
 
 .pendingtx-label > .title > div > .gas {

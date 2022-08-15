@@ -2,11 +2,12 @@ import './ConfirmTx.css';
 
 import * as Anime from '../../misc/Anime';
 
-import App, { ApplicationPopup } from '../../viewmodels/ApplicationPopup';
 import React, { useEffect, useState } from 'react';
 
+import { ApplicationPopup } from '../../viewmodels/ApplicationPopup';
 import ApproveView from './confirms/ApproveView';
 import AuthView from './confirms/AuthView';
+import { CurrencyVM } from '../../viewmodels/settings/CurrencyVM';
 import { PopupTitle } from '../../components';
 import SignView from './confirms/SignView';
 import TransferView from './confirms/TransferView';
@@ -131,15 +132,15 @@ export default observer(({ app }: Props) => {
 
       <div className="container">
         {confirmVM?.method === 'Transfer' ? (
-          <TransferView implVM={app.confirmVM} onContinue={onContinue} onReject={onReject} />
+          <TransferView confirmVM={app.confirmVM} currencyVM={app.currencyVM} onContinue={onContinue} onReject={onReject} />
         ) : undefined}
 
         {confirmVM?.method === 'Approve' ? (
-          <ApproveView confirmVM={app.confirmVM} onContinue={onContinue} onReject={onReject} />
+          <ApproveView confirmVM={app.confirmVM} currencyVM={app.currencyVM} onContinue={onContinue} onReject={onReject} />
         ) : undefined}
 
         {confirmVM?.method === 'Contract Interaction' ? (
-          <TransferView implVM={app.confirmVM} onContinue={onContinue} onReject={onReject} />
+          <TransferView confirmVM={app.confirmVM} currencyVM={app.currencyVM} onContinue={onContinue} onReject={onReject} />
         ) : undefined}
 
         {signVM ? <SignView signVM={signVM} onReject={onReject} onContinue={onContinue} /> : undefined}

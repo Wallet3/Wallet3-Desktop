@@ -4,14 +4,15 @@ import * as ethSignUtil from 'eth-sig-util';
 import * as ethers from 'ethers';
 import * as keytar from 'keytar';
 
+import { SecretType, checkSecretType, langToWordlist } from '../../common/Mnemonic';
 import { action, computed, makeObservable, observable, runInAction } from 'mobx';
 
-import { AccountType } from '../models/Types';
 import Key from '../models/Key';
 import { TxParams } from '../../common/Messages';
+import { app } from 'electron';
 
 const BasePath = `m/44\'/60\'/0\'/0`;
-const prod = process.env.NODE_ENV === 'production';
+const prod = app.isPackaged;
 
 const Keys = {
   password: 'wallet3-password',
@@ -50,7 +51,7 @@ export class WalletKey {
   }
 
   get name() {
-    return this.key?.name || `${this.type === AccountType.privkey ? 'Key' : 'Wallet'} ${this.key?.id ?? 'Temp'}`;
+    return this.key?.name || `${this.type === SecretType.privkey ? 'Key' : 'Wallet'} ${this.key?.id ?? 'Temp'}`;
   }
 
   get type() {
@@ -60,7 +61,7 @@ export class WalletKey {
   private get tmpSecretType() {
     if (!this.tmpSecret) return undefined;
 
-    return this.checkSecretType(this.tmpSecret);
+    return checkSecretType(this.tmpSecret);
   }
 
   constructor() {
@@ -69,6 +70,7 @@ export class WalletKey {
       currentAddressIndex: observable,
       currentAddress: computed,
       changeAddressIndex: action,
+      authenticated: computed,
     });
   }
 
@@ -194,7 +196,7 @@ export class WalletKey {
   }
 
   setTmpSecret(mnemonic: string) {
-    this.tmpSecret = mnemonic;
+    this.tmpSecret = mnemonic.toLowerCase();
     return this.tmpSecretType !== undefined;
   }
 
@@ -228,7 +230,7 @@ export class WalletKey {
       const iv = this.key.mnIv;
       const enSecret = await keytar.getPassword(Keys.secret, Keys.secretAccount(this.key.kc_unique));
 
-      return Cipher.decrypt(Buffer.from(iv, 'hex'), enSecret, this.getCorePassword(userPassword));
+      return Cipher.decrypt(Buffer.from(iv, 'hex'), enSecret, this.getCorePassword(userPassword)).toLowerCase();
     } catch (error) {
       console.error(error.message);
       return undefined;
@@ -240,15 +242,25 @@ export class WalletKey {
     if (!privKey) return '';
 
     const signer = new ethers.Wallet(privKey);
-    return await signer.signTransaction({
+
+    const tx: ethers.providers.TransactionRequest = {
       to: txParams.to,
       chainId: txParams.chainId,
       data: txParams.data,
       nonce: txParams.nonce,
       gasLimit: ethers.BigNumber.from(txParams.gas),
-      gasPrice: ethers.BigNumber.from(txParams.gasPrice),
-      value: ethers.BigNumber.from(txParams.value),
-    });
+      value: ethers.BigNumber.from(Number(txParams.value) === 0 ? 0 : txParams.value),
+    };
+
+    if (txParams.maxFeePerGas > 0) {
+      tx.maxFeePerGas = ethers.BigNumber.from(txParams.maxFeePerGas);
+      tx.maxPriorityFeePerGas = ethers.BigNumber.from(txParams.maxPriorityFeePerGas || 0);
+      tx.type = 2;
+    } else {
+      tx.gasPrice = ethers.BigNumber.from(txParams.gasPrice || 0);
+    }
+
+    return await signer.signTransaction(tx);
   }
 
   async personalSignMessage(userPassword: string, accountIndex = 0, msg: string | ethers.utils.Bytes) {
@@ -267,14 +279,15 @@ export class WalletKey {
   }
 
   async genAddresses(userPassword: string, count: number) {
+    // return ['0x09D4083fFD20D21ACb9118465aD7C52Ac8B548f7']; NFT richer
     const secret = await this.readSecret(userPassword);
     if (!secret) return undefined;
 
     let addresses: string[] = [];
 
-    switch (this.checkSecretType(secret)) {
-      case AccountType.mnemonic:
-        const hd = ethers.utils.HDNode.fromMnemonic(secret);
+    switch (checkSecretType(secret)) {
+      case SecretType.mnemonic:
+        const hd = ethers.utils.HDNode.fromMnemonic(secret, undefined, langToWordlist(secret));
         addresses = [hd.derivePath(`${this.basePath}/${this.basePathIndex}`).address];
 
         for (let i = 1; i < count; i++) {
@@ -283,7 +296,7 @@ export class WalletKey {
 
         break;
 
-      case AccountType.privkey:
+      case SecretType.privkey:
         const signer = new ethers.Wallet(secret);
         addresses = [signer.address];
         break;
@@ -310,27 +323,23 @@ export class WalletKey {
     const secret = await this.readSecret(userPassword);
     if (!secret) return undefined;
 
-    switch (this.checkSecretType(secret)) {
-      case AccountType.mnemonic:
-        const root = ethers.utils.HDNode.fromMnemonic(secret);
+    switch (checkSecretType(secret)) {
+      case SecretType.mnemonic:
+        const root = ethers.utils.HDNode.fromMnemonic(secret, undefined, langToWordlist(secret));
         const account = root.derivePath(`${this.basePath}/${this.basePathIndex + accountIndex}`);
         return account.privateKey;
 
-      case AccountType.privkey:
+      case SecretType.privkey:
         return secret;
     }
-  }
-
-  checkSecretType(secret: string) {
-    if (ethers.utils.isValidMnemonic(secret)) return AccountType.mnemonic;
-
-    if ((secret.toLowerCase().startsWith('0x') && secret.length === 66) || secret.length === 64) return AccountType.privkey;
-
-    return undefined;
   }
 
   private getCorePassword(userPassword: string) {
     const salt = Cipher.decrypt(Buffer.from(this.key.saltIv, 'hex'), this.key.salt, userPassword);
     return `${salt}-${userPassword}`;
+  }
+
+  checkSecretType(secret: string) {
+    return checkSecretType(secret);
   }
 }

@@ -8,11 +8,12 @@ import { AddTokenVM } from './account/AddTokenVM';
 import { ERC20Token } from '../../common/ERC20Token';
 import { NFT } from './models/NFT';
 import NetVM from './NetworksVM';
-import { Networks } from '../../misc/Networks';
+import { Networks } from '../../common/Networks';
 import Notification from '../bridges/Notification';
 import POAP from '../../nft/POAP';
 import Rarible from '../../nft/Rarible';
 import { TransferVM } from './account/TransferVM';
+import { catUrl } from '../../misc/Url';
 import i18n from '../../i18n';
 import store from 'storejs';
 
@@ -61,14 +62,14 @@ export class AccountVM {
 
   get chainsOverview(): ChainOverview[] {
     return this.chains
-      .filter((c) => Networks.find((n) => n?.symbol.toLowerCase() === c.id)) // Filter supported chains
+      .filter((c) => Networks.find((n) => n.comm_id === c.id && n.showOverview && !n.test))
       .map((chain) => {
-        const network = Networks.find((n) => n?.symbol.toLowerCase() === chain.id);
+        const network = Networks.find((n) => n?.comm_id === chain.id);
         return {
           name: network?.network ?? '',
           value: chain?.usd_value ?? 0,
           color: network?.color ?? '',
-          order: network.order ?? chain.community_id,
+          order: network?.order ?? chain.community_id,
         };
       })
       .sort((a, b) => a.order - b.order);
@@ -102,10 +103,13 @@ export class AccountVM {
     this.accountIndex = args.accountIndex;
     this._name = store.get(Keys.accountName(args.walletId, this.accountIndex)) || `Account ${args.accountIndex}`;
 
-    NetVM.currentProvider
-      .lookupAddress(this.address)
-      .then((v) => runInAction(() => (this.ens = v)))
-      .catch(() => {});
+    // NetVM.currentProvider
+    //   .lookupAddress(this.address)
+    //   .then((v) => {
+    //     console.log(v);
+    //     runInAction(() => (this.ens = v));
+    //   })
+    //   .catch(() => {});
   }
 
   async refresh() {
@@ -132,15 +136,9 @@ export class AccountVM {
     this.save();
   }
 
-  save() {
-    store.set(
-      Keys.userTokens(this.walletId, NetVM.currentChainId, this.accountIndex),
-      JSON.stringify(this.allTokens.slice(1).map((t) => t.toObject()))
-    );
-  }
-
   refreshChainOverview = async () => {
     const overview = await Debank.fetchChainsOverview(this.address);
+
     if (!overview) {
       runInAction(() => (this.chains = []));
       return;
@@ -176,6 +174,7 @@ export class AccountVM {
 
     runInAction(() => {
       this.nativeToken = nativeToken;
+      if (this.allTokens.length === 0) return;
       this.allTokens[0] = nativeToken;
     });
 
@@ -183,16 +182,22 @@ export class AccountVM {
   }
 
   refreshChainTokens = async () => {
-    const nativeSymbols = Networks.map((n) => n?.symbol.toLowerCase());
-    const userConfigs = this.loadTokenConfigs();
+    const nativeSymbols = Networks.map((n) => n?.symbol.toLowerCase()).concat(Networks.map((n) => n.comm_id));
+    const defaultTokens = Networks.find((n) => n.chainId === NetVM.currentChainId).defaultTokens.map((t, i) =>
+      new UserToken().init(t, { order: i + 1, show: false })
+    );
+
+    const tmpMap = new Map<string, UserToken>();
+    this.loadTokenConfigs().map((t) => tmpMap.set(t.id.toLowerCase(), t));
+    const userConfigs = Array.from(tmpMap.values());
+
+    userConfigs.push(...defaultTokens.filter((t) => !userConfigs.find((uc) => uc.id.toLowerCase() === t.id.toLowerCase())));
 
     const tokens = NetVM.currentNetwork.test ? [] : await Debank.getTokenBalances(this.address, NetVM.currentNetwork.comm_id);
 
     let assets = NetVM.currentNetwork.test
       ? []
       : tokens
-          .filter((t) => t.amount * (t.price || 0) > 0.1 && !nativeSymbols.includes(t.id))
-          .sort((a, b) => b.amount * b.price - a.amount * a.price)
           .map((t, i) => {
             const token = new UserToken();
             token.id = t.id;
@@ -201,32 +206,22 @@ export class AccountVM {
             token.amount = t.amount;
             token.decimals = t.decimals;
             token.price = t.price;
+            token.order = i + 1000;
+            token.show = false;
 
-            const userConfig = userConfigs.find((c) => c.id === t.id);
-            token.order = userConfig?.order ?? i + 1000;
-            token.show = userConfig?.show ?? true;
-
-            const foundIndex = userConfigs.findIndex((c) => c.id === t.id);
-            if (foundIndex >= 0) userConfigs.splice(foundIndex, 1);
+            const uc = userConfigs.find((uc) => uc.id.toLowerCase() === t.id.toLowerCase());
+            if (uc) uc.price = t.price;
 
             return token;
-          });
+          })
+          .filter(
+            (t) => !nativeSymbols.includes(t.id) && !userConfigs.find((uc) => uc.id.toLowerCase() === t.id.toLowerCase())
+          )
+          .sort((a, b) => b.amount * b.price - a.amount * a.price);
 
-    assets.push(...userConfigs);
-
-    const defaultTokens = Networks.find((n) => n.chainId === NetVM.currentChainId).defaultTokens.map((t, i) =>
-      new UserToken().init(t, { order: i + 1, show: false })
-    );
-
-    assets.push(...defaultTokens.filter((dt) => !assets.find((a) => a.id.toLowerCase() === dt.id.toLowerCase())));
-
-    let allTokens: UserToken[] = [];
-    assets.forEach((t) => {
-      if (allTokens.find((at) => at.id.toLowerCase() === t.id.toLowerCase())) return;
-      allTokens.push(t);
-    });
-
-    allTokens = allTokens.sort((a, b) => a.order - b.order);
+    const allTokens = [...userConfigs, ...assets]
+      .filter((t) => !nativeSymbols.find((n) => n === t.id))
+      .sort((a, b) => a.order - b.order);
 
     const nativeCurrency = tokens.find((t) => nativeSymbols.includes(t.id));
     const nativeToken = await this.refreshNativeToken(nativeCurrency);
@@ -241,7 +236,7 @@ export class AccountVM {
 
   watchTokens() {
     const provider = NetVM.currentProvider;
-    const { network } = NetVM.currentNetwork;
+    const { network, chainId } = NetVM.currentNetwork;
 
     for (let t of this.allTokens.slice(1)) {
       if (this.tokenWatcher.has(t.id.toLowerCase())) {
@@ -250,7 +245,7 @@ export class AccountVM {
         continue;
       }
 
-      const erc20 = new ERC20Token(t.id, provider);
+      const erc20 = new ERC20Token(t.id, provider, chainId);
       this.tokenWatcher.set(t.id.toLowerCase(), erc20);
 
       const refreshBalance = () =>
@@ -265,10 +260,11 @@ export class AccountVM {
 
         const symbol = t.symbol;
         const decimals = t.decimals;
+        const url = catUrl(chainId, `/address/${to}#tokentxns`);
 
-        Notification.show({
-          title: i18n.t('Received Token', { symbol, network: network }),
+        Notification.show(i18n.t('Received Token', { symbol, network: network }), {
           body: `${utils.formatUnits(value, decimals)} ${symbol} ${i18n.t('Received')}`,
+          data: url,
         });
       };
 
@@ -291,13 +287,20 @@ export class AccountVM {
     }
   };
 
+  save() {
+    store.set(
+      Keys.userTokens(this.walletId, NetVM.currentChainId, this.accountIndex),
+      JSON.stringify(this.allTokens.slice(1).map((t) => t.toObject()))
+    );
+  }
+
   refreshNFTs = async () => {
     if (NetVM.currentChainId !== 1 || this.nfts?.length > 0) {
       this.nfts = [];
       return;
     }
 
-    const addr = '0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B';
+    // const addr = '0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B';
 
     const poap = POAP.getNFTs(this.address).then(async (data) => {
       const nfts = data.map((item) => {

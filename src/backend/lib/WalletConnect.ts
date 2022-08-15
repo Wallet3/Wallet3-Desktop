@@ -1,16 +1,27 @@
 import App, { App as Application } from '../App';
 import { AuthParams, ConfirmSendTx, RequestSignMessage, SendTxParams, WcMessages } from '../../common/Messages';
 import { BigNumber, ethers, utils } from 'ethers';
-import Gasnow, { GasnowWs } from '../../gas/Gasnow';
 import { IReactionDisposer, reaction } from 'mobx';
-import { call, getTransactionCount } from '../../common/Provider';
+import {
+  call,
+  estimateGas,
+  getGasPrice,
+  getMaxPriorityFee,
+  getNextBlockBaseFee,
+  getTransactionCount,
+} from '../../common/Provider';
 
+import EIP1559Price from '../../gas/EIP1559Price';
 import ERC20ABI from '../../abis/ERC20.json';
 import EventEmitter from 'events';
+import { Gwei_1 } from '../../common/Constants';
+import { Networks } from '../../common/Networks';
+import { TxMan } from '../mans';
 import WCSession from '../models/WCSession';
 import WalletConnector from '@walletconnect/client';
 import { WalletKey } from './WalletKey';
 import { findTokenByAddress } from '../../misc/Tokens';
+import i18n from '../../i18n';
 import { ipcMain } from 'electron';
 
 export class WalletConnect extends EventEmitter {
@@ -52,7 +63,7 @@ export class WalletConnect extends EventEmitter {
     );
 
     this._currAddrObserver = reaction(
-      () => this.wallet.currentAddress,
+      () => this.wallet.currentAddressIndex,
       () => this.updateSession()
     );
   }
@@ -62,7 +73,7 @@ export class WalletConnect extends EventEmitter {
       uri,
       clientMeta: {
         name: 'Wallet 3',
-        description: 'A Secure Wallet for Bankless Era',
+        description: 'A Secure Wallet for Web3 Era',
         icons: [],
         url: 'https://wallet3.io',
       },
@@ -70,15 +81,20 @@ export class WalletConnect extends EventEmitter {
 
     this.connector.on('session_request', this.handleSessionRequest);
     this.connector.on('call_request', this.handleCallRequest);
-    this.connector.on('disconnect', () => this.emit('disconnect', this));
+    this.connector.on('disconnect', () => this.emit('disconnect'));
+    this.connector.on('transport_error', () => this.emit('transport_error'));
+    this.connector.on('transport_open', () => this.emit('transport_open'));
   }
 
-  connectViaSession(session: IWcSession) {
+  connectViaSession(session: IRawWcSession) {
     this.connector = new WalletConnector({ session });
 
     this.connector.on('session_request', this.handleSessionRequest);
     this.connector.on('call_request', this.handleCallRequest);
-    this.connector.on('disconnect', () => this.emit('disconnect', this));
+    this.connector.on('disconnect', () => this.emit('disconnect'));
+    this.connector.on('transport_error', () => this.emit('transport_error'));
+    this.connector.on('transport_open', () => this.emit('transport_open'));
+
     this.peerId = session.peerId;
     this.appMeta = session.peerMeta;
   }
@@ -126,6 +142,16 @@ export class WalletConnect extends EventEmitter {
 
     if (!this.key.authenticated) {
       this.connector.rejectSession({ message: 'This account has not been authorized' });
+
+      App.createPopupWindow(
+        'msgbox',
+        {
+          title: i18n.t('Authentication'),
+          icon: 'alert-triangle',
+          message: i18n.t('Wallet not authorized'),
+        },
+        { height: 250 }
+      );
       return;
     }
 
@@ -172,16 +198,15 @@ export class WalletConnect extends EventEmitter {
       return;
     }
 
-    // console.log(request.method);
-    // console.log(request.id);
-    // console.log(request.params);
-
     const checkAccount = (from: string) => {
       if (from?.toLowerCase() === this.wallet.currentAddress.toLowerCase()) return true;
       this.connector.rejectRequest({ id: request.id, error: { message: 'Update session' } });
       this.updateSession();
       return false;
     };
+
+    // console.log(request.method);
+    // console.log(request.params);
 
     switch (request.method) {
       case 'eth_sendTransaction':
@@ -194,6 +219,9 @@ export class WalletConnect extends EventEmitter {
         this.connector.rejectRequest({ id: request.id, error: { message: 'Use eth_sendTransaction' } });
         return;
       case 'eth_sign':
+        if (!checkAccount(request.params[0])) return;
+        this.sign(request, request.params, 'eth_sign');
+        break;
       case 'personal_sign':
         if (!checkAccount(request.params[1])) return;
         this.sign(request, request.params, 'personal_sign');
@@ -261,7 +289,7 @@ export class WalletConnect extends EventEmitter {
         return;
       }
 
-      const hash = await Application.sendTx(params.chainId || this.appChainId, params, txHex);
+      const hash = await TxMan.sendTx(params.chainId || this.appChainId, params, txHex);
 
       if (!hash) {
         this.connector.rejectRequest({ id: request.id, error: { message: 'Transaction failed' } });
@@ -276,9 +304,7 @@ export class WalletConnect extends EventEmitter {
       this.connector.rejectRequest({ id: request.id, error: { message: 'User rejected' } });
     });
 
-    const recipient: { address: string; name: string } = this.wallet.addresses.find(
-      (addr) => addr === utils.getAddress(param.to)
-    )
+    const recipient = this.wallet.addresses.find((addr) => addr === utils.getAddress(param.to))
       ? {
           address: param.to,
           name: `Account ${this.wallet.addresses.indexOf(utils.getAddress(param.to)) + 1}`,
@@ -286,29 +312,62 @@ export class WalletConnect extends EventEmitter {
       : undefined;
 
     const chainId = requestedChainId || this.appChainId;
-    let defaultGasPrice = chainId === 56 ? GasnowWs.gwei_5 : GasnowWs.gwei_1;
-    defaultGasPrice = chainId === 1 ? Gasnow.fast : defaultGasPrice;
+    const network = Networks.find((n) => n.chainId === chainId);
+    if (!network) return;
 
-    App.createPopupWindow('sendTx', {
-      chainId,
+    const { eip1559, minGwei } = network;
+
+    let defaultGasPrice = (minGwei ?? 1) * Gwei_1;
+    defaultGasPrice = chainId === 1 ? EIP1559Price.fast : defaultGasPrice;
+
+    let baseFee: number = undefined;
+    let priorityFee: number = undefined;
+    if (eip1559) {
+      [baseFee, priorityFee] = await Promise.all([getNextBlockBaseFee(chainId), getMaxPriorityFee(chainId)]);
+      priorityFee += 2 * Gwei_1;
+      baseFee = Math.max(Number.parseInt((baseFee * 1.5) as any), priorityFee);
+    }
+
+    const baseTx = {
       from: this.wallet.currentAddress,
-      accountIndex: this.wallet.currentAddressIndex,
       to: param.to,
       data: param.data || '0x',
-      gas: Number.parseInt(param.gas) || 21000,
-      gasPrice: Number.parseInt(param.gasPrice) || defaultGasPrice,
-      nonce:
-        Number.parseInt(param.nonce) ||
-        (await getTransactionCount(requestedChainId ?? this.appChainId, this.wallet.currentAddress)),
-      value: param.value || 0,
+    };
 
-      recipient,
-      transferToken,
-      walletConnect: { peerId: this.peerId, reqid: request.id, app: this.appMeta },
-    } as ConfirmSendTx);
+    const gas =
+      Number.parseInt(param.gas) ||
+      Number.parseInt((Number.parseInt(await estimateGas(chainId, baseTx)) * 1.5) as any) ||
+      21000;
+
+    App.createPopupWindow(
+      'sendTx',
+      {
+        chainId,
+        accountIndex: this.wallet.currentAddressIndex,
+
+        ...baseTx,
+        value: param.value || 0,
+        gasPrice: eip1559 ? undefined : Number.parseInt(param.gasPrice) || (await getGasPrice(chainId)) || defaultGasPrice,
+        maxFeePerGas: baseFee,
+        maxPriorityFeePerGas: priorityFee,
+        gas,
+        nonce:
+          Number.parseInt(param.nonce) ||
+          (await getTransactionCount(requestedChainId ?? this.appChainId, this.wallet.currentAddress)),
+
+        recipient,
+        transferToken,
+        walletConnect: { peerId: this.peerId, reqid: request.id, app: this.appMeta },
+      } as ConfirmSendTx,
+      { height: eip1559 ? 375 : undefined }
+    );
   };
 
-  private sign = async (request: WCCallRequestRequest, params: string[], type: 'personal_sign' | 'signTypedData') => {
+  private sign = async (
+    request: WCCallRequestRequest,
+    params: string[],
+    type: 'eth_sign' | 'personal_sign' | 'signTypedData'
+  ) => {
     const clearHandlers = () => {
       ipcMain.removeHandler(`${WcMessages.approveWcCallRequest(this.peerId, request.id)}-secure`);
       ipcMain.removeHandler(`${WcMessages.rejectWcCallRequest(this.peerId, request.id)}-secure`);
@@ -329,21 +388,26 @@ export class WalletConnect extends EventEmitter {
         return Application.encryptIpc({ success: false }, key);
       }
 
-      let signed = '';
+      const signMessage = async (message: string) => {
+        const signed = await this.wallet.personalSignMessage(password, this.wallet.currentAddressIndex, message);
+
+        if (!signed) {
+          this.connector.rejectRequest({ id: request.id, error: { message: 'Permission Denied' } });
+          return false;
+        }
+
+        this.connector.approveRequest({ id: request.id, result: signed });
+        return true;
+      };
 
       switch (type) {
+        case 'eth_sign':
+          return Application.encryptIpc({ success: await signMessage(params[1]) }, key);
         case 'personal_sign':
-          const msg = params[0];
-          signed = await this.wallet.personalSignMessage(password, this.wallet.currentAddressIndex, msg);
-
-          if (!signed) {
-            this.connector.rejectRequest({ id: request.id, error: { message: 'Permission Denied' } });
-            return Application.encryptIpc({ success: false }, key);
-          }
-
-          this.connector.approveRequest({ id: request.id, result: signed });
-          return Application.encryptIpc({ suceess: true }, key);
+          return Application.encryptIpc({ success: await signMessage(params[0]) }, key);
         case 'signTypedData':
+          let signed = '';
+
           try {
             const typedData = JSON.parse(params[1]);
             signed = await this.wallet.signTypedData_v4(password, this.wallet.currentAddressIndex, typedData);
@@ -369,10 +433,13 @@ export class WalletConnect extends EventEmitter {
 
     let msg: string;
     let json = false;
+
     switch (type) {
+      case 'eth_sign':
+        msg = Buffer.from(utils.arrayify(params[1])).toString('utf8');
+        break;
       case 'personal_sign':
         msg = Buffer.from(utils.arrayify(params[0])).toString('utf8');
-        json = false;
         break;
       case 'signTypedData':
         const data = JSON.parse(params[1]);
@@ -390,14 +457,29 @@ export class WalletConnect extends EventEmitter {
     } as RequestSignMessage);
   };
 
-  disconnect() {
-    this.connector.killSession({ message: 'User exits' });
+  disconnect(msg?: string) {
+    return this.connector.killSession({ message: msg ?? 'User quits' });
   }
 
   dispose() {
     this._chainIdObserver?.();
     this._currAddrObserver?.();
     this.removeAllListeners();
+
+    this.connector?.off('session_request');
+    this.connector?.off('call_request');
+    this.connector?.off('disconnect');
+    this.connector?.off('transport_error');
+    this.connector?.off('transport_open');
+    this.connector?.transportClose();
+
+    this.connector = undefined;
+    this.key = undefined;
+    this._wcSession = undefined;
+    this.handleCallRequest = undefined;
+    this.handleSessionRequest = undefined;
+    this.eth_sendTransaction = undefined;
+    this.sign = undefined;
 
     this._chainIdObserver = undefined;
     this._currAddrObserver = undefined;

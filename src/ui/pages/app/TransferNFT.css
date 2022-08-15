@@ -2,23 +2,30 @@
   display: grid;
   grid-template-rows: auto 1fr;
   color: var(--font-color-title);
+  overflow-y: auto;
 }
 
-.page.nft > .nav {
-  position: -webkit-sticky;
-  position: sticky;
+.page.nft > .title-area {
+  position: absolute;
   top: 12px;
+  left: 12px;
+  right: 12px;
+}
+
+.page.nft > .title-area > .nav {
+  position: sticky;
   color: white !important;
   z-index: 9;
 }
 
-.page.nft > .nav button {
+.page.nft > .title-area > .nav button {
   color: white;
 }
 
 .page.nft > .content {
   display: grid;
   grid-template-rows: 1fr auto;
+  padding-bottom: 12px;
 }
 
 .page.nft > .content > .nft {
@@ -34,6 +41,7 @@
   margin: 0 -12px;
   margin-top: -60px;
   position: sticky;
+  user-select: none;
 }
 
 .page.nft > .content > .nft > .details {

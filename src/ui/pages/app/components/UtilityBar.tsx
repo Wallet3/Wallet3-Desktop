@@ -1,14 +1,15 @@
 import './UtilityBar.css';
 
-import { Image, NetworkMenu } from '../../../components';
 import { Menu, MenuButton, MenuDivider, MenuItem } from '@szhsin/react-menu';
-import { PublicNetworks, Testnets } from '../../../../misc/Networks';
+import { PublicNetworks, Testnets } from '../../../../common/Networks';
 
 import { Application } from '../../../viewmodels/Application';
+import Clipboard from '../../../bridges/Clipboard';
 import ConnectedAppsIndicator from './ConnectedAppsIndicator';
 import ConnectedDAppLabel from './ConnectedDAppLabel';
 import Feather from 'feather-icons-react';
 import GasStation from '../../../../gas';
+import { NetworkMenu } from '../../../components';
 import { NetworksVM } from '../../../viewmodels/NetworksVM';
 import PendingTx from './PendingTxLabel';
 import PendingTxIndicator from './PendingTxIndicator';
@@ -117,7 +118,7 @@ export default observer(({ app, networksVM }: Props) => {
           {appCount > 6 ? <MenuDivider /> : undefined}
           {appCount > 6 ? (
             <MenuItem styles={MenuItemStyle}>
-              <button onClick={(_) => app.history.push('/connectedapps')}>
+              <button className="see-all" onClick={(_) => app.history.push('/connectedapps')}>
                 <span>{`${t('See All')} (${appCount})`}</span>
               </button>
             </MenuItem>
@@ -131,6 +132,9 @@ export default observer(({ app, networksVM }: Props) => {
         testnets={Testnets}
         onNetworkSelected={(id) => networksVM.setCurrentChainId(id)}
         position="anchor"
+        showCustomize
+        testnetsCollapsed
+        history={app.history}
       />
 
       <Menu
@@ -163,6 +167,15 @@ export default observer(({ app, networksVM }: Props) => {
             <div className="profile-item">
               <Feather icon="database" size={13} />
               <span>{t('History')}</span>
+            </div>
+          </button>
+        </MenuItem>
+
+        <MenuItem styles={MenuItemStyle}>
+          <button onClick={(_) => Clipboard.writeText(currentWallet.currentAccount.address)}>
+            <div className="profile-item">
+              <Feather icon="copy" size={13} />
+              <span>{t('Copy Address')}</span>
             </div>
           </button>
         </MenuItem>

@@ -1,45 +1,71 @@
+const { certPassword, devCertPath, publisher, publisherName } = require('./sign/winSign');
+
 module.exports = {
   directories: {
     app: '.',
   },
-  files: ['./.webpack/**/*', './package.json'],
+  files: ['./.webpack/**/*', './package.json', './sign/embedded.provisionprofile'],
   appId: 'jp.co.chainbow.wallet3',
   productName: 'Wallet 3',
   artifactName: '${name}-${os}-${arch}-${version}.${ext}',
-  copyright: 'Copyright © 2021 ChainBow Co. Ltd.',
+  copyright: 'Copyright © 2021-2022 ChainBow Co. Ltd.',
   protocols: {
     name: 'Wallet 3',
-    schemes: ['wallet3', 'wc', 'ledgerlive'],
+    schemes: ['ethereum', 'wallet3', 'wc', 'ledgerlive'],
   },
-  npmRebuild: 'false',
-  // afterSign: "sign/appSign.js",
+  //npmRebuild: 'false',
+  afterSign: "sign/appSign.js",
   mac: {
     icon: 'assets/AppIcon.icns',
-    // background: 'assets/DMGBG.png',
-    // backgroundColor: '#6186ff',
-    //entitlements: "sign/entitlements.plist",
+    entitlements: 'sign/entitlements.plist',
     category: 'public.app-category.finance',
-    target: [
-      'dmg',
-      'zip',
-      // 'mas'
-    ],
+    identity: 'ChainBow Co. Ltd (Z3N6SZF439)',
+    target: ['dmg'],
     publish: ['github'],
   },
+  mas: {
+    type: 'distribution',
+    hardenedRuntime: false, //IMPORTANT!!!!
+    identity: 'ChainBow Co. Ltd (Z3N6SZF439)',
+    entitlements: 'sign/entitlements.mas.plist',
+    entitlementsInherit: 'sign/entitlements.mas.inherit.plist',
+    provisioningProfile: 'sign/embedded.provisionprofile',
+
+    asar: {
+      smartUnpack: true,
+    },
+    asarUnpack: ['**/*.node'],
+  },
   win: {
-    target: 'nsis',
-    icon: 'assets/AppIcon.ico',
+    target: ['appx'],
+    icon: 'assets/win/AppIcon.png',
     publish: ['github'],
+    legalTrademarks: 'Wallet 3, ChainBow Co, Ltd.',
+    certificateFile: devCertPath,
+    certificatePassword: certPassword,
+
+    asar: {
+      smartUnpack: true,
+    },
+    asarUnpack: ['**/*.node'],
   },
   linux: {
     target: 'AppImage',
     icon: 'assets/AppIcon.png',
     publish: ['github'],
+    mimeTypes: ['x-scheme-handler/wallet3']
   },
   nsis: {
     deleteAppDataOnUninstall: true,
     createDesktopShortcut: 'always',
     // include: 'nsis.nsh'
   },
-  publish: null,
+  appx: {
+    applicationId: 'ChainBowCo.Ltd.Wallet3',
+    identityName: 'ChainBowCo.Ltd.8951B06B2934',
+    displayName: 'Wallet 3',
+    publisher: publisher,
+    publisherDisplayName: 'ChainBow Co. Ltd.',
+    setBuildNumber: true,
+  },
 };

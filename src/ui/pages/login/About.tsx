@@ -7,7 +7,6 @@ import { NavBar } from '../../components';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-const gasnow = require('../../../assets/icons/3rd/gasnow.png').default;
 const coingecko = require('../../../assets/icons/3rd/coingecko.png').default;
 
 export default ({ app }: { app: Application }) => {
@@ -18,7 +17,8 @@ export default ({ app }: { app: Application }) => {
       <NavBar title={t('About')} onBackClick={() => app.history.goBack()} />
 
       <div className="content">
-        <p>Wallet 3 - {t('A secure Wallet for Bankless Era')}</p>
+        <p>Wallet 3 - {t('A Secure Wallet for Web3 Era')}</p>
+        <p className="appver">Version: {app.version}</p>
 
         <h3>{t('Features')}</h3>
         <ul>
@@ -39,12 +39,11 @@ export default ({ app }: { app: Application }) => {
         <h3>{t('Data Providers')}</h3>
         <div className="data-providers">
           <img src={DeBank} alt="DeBank" />
-          <img src={gasnow} alt="Gasnow" />
           <img src={coingecko} alt="Coingecko" />
         </div>
 
         <h3>Copyright</h3>
-        <span className="copyright">&copy; 2021 ChainBow Co, Ltd. Business Source License v1.1.</span>
+        <span className="copyright">&copy; 2021-2022 ChainBow Co, Ltd.</span>
       </div>
     </div>
   );

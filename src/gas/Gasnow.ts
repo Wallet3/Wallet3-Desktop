@@ -1,42 +1,18 @@
-import axios, { AxiosResponse } from 'axios';
 import { makeAutoObservable, runInAction } from 'mobx';
 
-import ws from 'ws';
+// import ws from 'ws';
 
-export class GasnowHttp {
-  static async refresh() {
-    let resp: AxiosResponse;
+export const Gwei_10 = 10000000000;
+export const Gwei_20 = 20000000000;
+export const Gwei_1 = 1000000000;
+export const Gwei_5 = 5000000000;
 
-    try {
-      resp = await axios.get(`https://www.gasnow.org/api/v3/gas/price?utm_source=imToken`);
+export const MAX_GWEI_PRICE = 9007199;
 
-      const { fast, rapid, standard, slow } = resp.data?.data;
-
-      return {
-        fast: Number.parseInt((fast / GasnowWs.gwei_1) as any),
-        rapid: Number.parseInt((rapid / GasnowWs.gwei_1) as any),
-        standard: Number.parseInt((standard / GasnowWs.gwei_1) as any),
-        slow: Number.parseInt((slow / GasnowWs.gwei_1) as any),
-      };
-    } catch (error) {
-      return {
-        fast: 0,
-        rapid: 0,
-        standard: 0,
-        slow: 0,
-      };
-    }
-  }
-}
-
-export class GasnowWs {
-  static readonly gwei_10 = 10000000000;
-  static readonly gwei_20 = 20000000000;
-  static readonly gwei_1 = 1000000000;
-  static readonly gwei_5 = 5000000000;
+class GasnowWs {
   static readonly host = 'wss://www.gasnow.org/ws';
 
-  client: WebSocket | ws;
+  client: WebSocket;
   rapid = 0;
   fast = 0;
   standard = 0;
@@ -44,19 +20,19 @@ export class GasnowWs {
   onclose?: () => void;
 
   get rapidGwei() {
-    return Number.parseInt((this.rapid / GasnowWs.gwei_1) as any);
+    return Number.parseInt((this.rapid / Gwei_1) as any);
   }
 
   get fastGwei() {
-    return Number.parseInt((this.fast / GasnowWs.gwei_1) as any);
+    return Number.parseInt((this.fast / Gwei_1) as any);
   }
 
   get standardGwei() {
-    return Number.parseInt((this.standard / GasnowWs.gwei_1) as any);
+    return Number.parseInt((this.standard / Gwei_1) as any);
   }
 
   get slowGwei() {
-    return Number.parseInt((this.slow / GasnowWs.gwei_1) as any);
+    return Number.parseInt((this.slow / Gwei_1) as any);
   }
 
   constructor() {
@@ -71,7 +47,8 @@ export class GasnowWs {
   start(native = false) {
     if (this.client) return;
 
-    this.client = native ? new ws(GasnowWs.host) : new WebSocket(GasnowWs.host);
+    // this.client = native ? new ws(GasnowWs.host) : new WebSocket(GasnowWs.host);
+    this.client = new WebSocket(GasnowWs.host);
 
     const onmessage = (evt) => {
       const data = JSON.parse(evt.data);
@@ -83,16 +60,13 @@ export class GasnowWs {
 
     const onerror = () => {
       try {
-        this.client.close();
-        this.client.onmessage = undefined;
-        this.client.onerror = undefined;
-        this.client.onclose = undefined;
-        this.client = null;
+        this.stop();
         this.start();
       } catch (error) {}
     };
 
     const onclose = () => {
+      if (!this.client) return;
       this.client.onmessage = undefined;
       this.client.onerror = undefined;
       this.client.onclose = undefined;
@@ -106,12 +80,7 @@ export class GasnowWs {
   }
 
   stop() {
-    if (!this.client) return;
-
-    this.client.close();
-    this.client.onmessage = undefined;
-    this.client.onerror = undefined;
-    this.client = undefined;
+    this.client?.close();
   }
 
   updatePrices = (data) => {
@@ -131,4 +100,4 @@ export class GasnowWs {
   }
 }
 
-export default new GasnowWs();
+// export default new GasnowWs();

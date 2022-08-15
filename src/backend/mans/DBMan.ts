@@ -8,7 +8,7 @@ import Transaction from '../models/Transaction';
 import WCSession from '../models/WCSession';
 import { app } from 'electron';
 
-const prod = process.env.NODE_ENV === 'production';
+const prod = app.isPackaged;
 
 export class DBMan {
   private _connection: Connection;

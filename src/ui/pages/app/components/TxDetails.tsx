@@ -1,7 +1,7 @@
 import './TxDetails.css';
 
 import { NetworkIcons } from '../../../misc/Icons';
-import { Networks } from '../../../../misc/Networks';
+import { Networks } from '../../../../common/Networks';
 import React from 'react';
 import { convertTxToUrl } from '../../../../misc/Url';
 import { formatAddress } from '../../../misc/Formatter';
@@ -17,7 +17,9 @@ interface Props {
   to: string;
   value: string;
   gasLimit: number | string;
-  gasPrice: number;
+  gasPrice?: number;
+  maxFeePerGas?: number;
+  maxPriorityFeePerGas?: number;
   nonce: number;
   status: boolean;
   blockNumber?: number;
@@ -64,10 +66,26 @@ export default observer((vm: Props) => {
         <span>{vm.gasLimit}</span>
       </div>
 
-      <div>
-        <span>{t('Gas Price')}:</span>
-        <span>{`${vm.gasPrice / 1000000000} Gwei`}</span>
-      </div>
+      {vm.gasPrice && !vm.maxPriorityFeePerGas ? (
+        <div>
+          <span>{t('Gas Price')}:</span>
+          <span>{`${vm.gasPrice / 1000000000} Gwei`}</span>
+        </div>
+      ) : undefined}
+
+      {vm.maxFeePerGas && vm.maxPriorityFeePerGas ? (
+        <div>
+          <span>{t('Max Gas Fee')}:</span>
+          <span>{`${vm.gasPrice / 1000000000} Gwei`}</span>
+        </div>
+      ) : undefined}
+
+      {vm.maxPriorityFeePerGas ? (
+        <div>
+          <span>{t('Gas Tip')}:</span>
+          <span>{`${vm.maxPriorityFeePerGas / 1000000000} Gwei`}</span>
+        </div>
+      ) : undefined}
 
       <div>
         <span>{t('Nonce')}:</span>

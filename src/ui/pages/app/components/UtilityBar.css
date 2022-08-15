@@ -5,7 +5,8 @@
   height: 26px;
 }
 
-.utility-bar.win32 {
+.utility-bar.win32,
+.utility-bar.linux {
   flex-direction: row-reverse;
   -webkit-app-region: drag;
   margin-right: 72px;
@@ -42,6 +43,10 @@
 
 .utility-bar.win32 > button.icon-button {
   margin-left: -8px;
+}
+
+.utility-bar button.see-all {
+  font-size: 12px;
 }
 
 .utility-bar > button.walletconnect {

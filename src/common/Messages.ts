@@ -21,7 +21,6 @@ export default {
   returnAuthenticationResult: (id: string) => `msg-return-authentication-${id}`,
   disconnectDApp: (keyId: number) => `msg-disconnect-dapp-${keyId}`,
   switchDAppNetwork: (keyId: number) => `msg-switch-dapp-network-${keyId}`,
-  sendLocalNotification: 'msg-send-notification',
   popupMessageBox: 'msg-popup-msgbox',
   returnMsgBoxResult: (id: string) => `msg-return-msgbox-result-${id}`,
   setLang: 'msg-set-lang',
@@ -55,7 +54,7 @@ export const WcMessages = {
 
 export interface InitStatus {
   touchIDSupported: boolean;
-  // appAuthenticated: boolean;
+  appVersion: string;
   pendingTxs: TxParams[];
   keys: IKey[];
   currentKeyId: number;
@@ -94,7 +93,12 @@ export interface TxParams {
   to: string;
   value: string;
   gas: number;
-  gasPrice: number; // wei
+  gasPrice?: number; // wei
+  maxFeePerGas?: number; // wei
+
+  tipPrice?: number; // wei
+  maxPriorityFeePerGas?: number; // wei
+
   nonce: number;
   data: string;
   hash?: string;
@@ -141,7 +145,7 @@ export interface IKey {
   name: string;
   id: number;
   addresses: string[];
-  connectedDApps: IWcSession[];
+  connectedDApps: IRawWcSession[];
   type: number;
 }
 

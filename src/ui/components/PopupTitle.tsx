@@ -3,7 +3,7 @@ import './PopupTitle.css';
 import Feather from 'feather-icons-react';
 import Logo from './Logo';
 import { NetworkIcons } from '../misc/Icons';
-import { Networks } from '../../misc/Networks';
+import { Networks } from '../../common/Networks';
 import React from 'react';
 
 export default ({ title, icon, chainId }: { title?: string; icon?: string; chainId?: number }) => {

@@ -1,7 +1,7 @@
 import { Menu, app } from 'electron';
 
 const isMac = process.platform === 'darwin';
-const prod = process.env.NODE_ENV === 'production';
+const prod = app.isPackaged;
 
 const template: any[] = [
   // { role: 'appMenu' }
@@ -75,9 +75,7 @@ const template: any[] = [
     submenu: [
       { role: 'minimize' },
       { role: 'zoom' },
-      ...(isMac
-        ? [{ type: 'separator' }, { role: 'front' }, { type: 'separator' }, { role: 'window' }]
-        : [{ role: 'close' }]),
+      ...(isMac ? [{ type: 'separator' }, { role: 'front' }, { type: 'separator' }, { role: 'window' }] : [{ role: 'close' }]),
     ],
   },
   {

@@ -1,5 +1,10 @@
 const { appleId, appleIdPassword } = require('./sign/appSign');
+const { certPassword, devCertPath, publisher } = require('./sign/winSign');
 const package = require('./package.json');
+
+const entitlementsForFile = (path) => {
+  return path.includes('Helper') ? 'sign/entitlements.mas.plist' : undefined;
+};
 
 module.exports = {
   packagerConfig: {
@@ -7,14 +12,18 @@ module.exports = {
     appCopyright: 'ChainBow Co, Ltd.',
     appCategoryType: 'public.app-category.finance',
     darwinDarkModeSupport: false,
-    icon: './assets/AppIcon.png',
+    icon: './assets/AppIcon.icns',
+    platform: 'dmg',
     osxSign: {
-      identity: 'Developer ID Application: ChainBow Co. Ltd (Z3N6SZF439)',
-      hardenedRuntime: true,
-      'gatekeeper-assess': false,
-      entitlements: 'sign/entitlements.plist',
-      'entitlements-inherit': 'sign/entitlements.plist',
-      'signature-flags': 'library',
+      identity: '3rd Party Mac Developer Application: ChainBow Co. Ltd (Z3N6SZF439)',
+      platform: 'dmg',
+      hardenedRuntime: false,
+      'gatekeeper-assess': true,
+      // 'signature-flags': 'library',
+      entitlements: 'sign/entitlements.mas.plist',
+      'entitlements-inherit': 'sign/entitlements.mas.inherit.plist',
+      'provisioning-profile': 'sign/embedded.provisionprofile',
+      type: 'distribution',
     },
     // osxNotarize: {
     //   appleId,
@@ -24,18 +33,37 @@ module.exports = {
       {
         name: 'Wallet 3',
         protocol: 'wallet3',
-        schemes: ['wallet3', 'wc', 'ledgerlive'],
+        schemes: ['ethereum', 'wallet3', 'wc', 'ledgerlive'],
       },
     ],
+
+    win32metadata: {
+      CompanyName: 'ChainBow Co, Ltd.',
+      ProductName: 'Wallet 3',
+    },
   },
   makers: [
     {
-      name: '@electron-forge/maker-dmg',
+      name: '@electron-forge/maker-pkg',
       config: {
+        platform: 'mas',
+        identity: '3rd Party Mac Developer Installer: ChainBow Co. Ltd (Z3N6SZF439)',
         name: `${package.name}-mac-${process.arch}-${package.version}`,
-        icon: 'assets/AppIcon.icns',
-        background: 'assets/DMGBG.png',
-        backgroundColor: '#6186ff',
+      },
+    },
+    {
+      name: '@electron-forge/maker-appx',
+      config: {
+        publisher,
+        devCert: devCertPath,
+        certPass: certPassword,
+        packageDisplayName: 'Wallet 3',
+        packageDescription: 'A Secure Wallet for Web3 Era',
+        containerVirtualization: true,
+        packageVersion: package.version,
+        makeVersionWinStoreCompatible: true,
+        flatten: true,
+        assets: './assets/win/AppIcon.png',
       },
     },
   ],
@@ -43,6 +71,7 @@ module.exports = {
     [
       '@electron-forge/plugin-webpack',
       {
+        devContentSecurityPolicy: `default-src * self blob: data: gap:; style-src * self 'unsafe-inline' blob: data: gap:; script-src * 'self' 'unsafe-eval' 'unsafe-inline' blob: data: gap:; object-src * 'self' blob: data: gap:; img-src * self 'unsafe-inline' blob: data: gap:; connect-src self * 'unsafe-inline' blob: data: gap:; frame-src * self blob: data: gap:;`,
         mainConfig: './webpack.main.config.js',
         renderer: {
           config: './webpack.renderer.config.js',
@@ -68,7 +97,4 @@ module.exports = {
       },
     ],
   ],
-  win32metadata: {
-    CompanyName: 'ChainBow Co, Ltd.',
-  },
 };

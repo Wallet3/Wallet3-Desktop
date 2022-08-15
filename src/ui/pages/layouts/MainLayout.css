@@ -16,7 +16,7 @@ div[class$='-SkeletonTheme'] {
 
 .layout > .tabs {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   column-gap: 12px;
   border-top: 1px solid var(--border-color);
 }
@@ -30,10 +30,10 @@ div[class$='-SkeletonTheme'] {
 .layout > .tabs > a > div {
   padding: 2px 0;
   padding-top: 12px;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: 20px auto;
   justify-content: center;
-  align-items: center;
+  justify-items: center;
   cursor: pointer;
   transition: all 0.3s;
   font-size: 10px;

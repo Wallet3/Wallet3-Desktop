@@ -17,15 +17,23 @@ const SVGs = new Map([
   [42161, [NetworkIcons('Arbitrum'), 'Arbitrum']],
   [69, [NetworkIcons('Optimism'), 'Op Kovan']],
   [420, [NetworkIcons('Optimism'), 'Op Goerli']],
+  [272, [NetworkIcons('zkSync'), 'zkSync 2.0']],
 
+  [43114, [NetworkIcons('Avalanche'), 'Avalanche']],
   [137, [NetworkIcons('Polygon'), 'Polygon']],
+  [80001, [NetworkIcons('Polygon'), 'Mumbai']],
   [100, [NetworkIcons('xDAI'), 'xDAI']],
   [250, [NetworkIcons('Fantom'), 'Fantom']],
-  [56, [NetworkIcons('bsc'), 'BSC']],
-  [128, [NetworkIcons('Heco'), 'Heco']],
-  [66, [NetworkIcons('OKEx'), 'OKEx']],
+  [42220, [NetworkIcons('Celo'), 'Celo']],
 
-  [80001, [NetworkIcons('Polygon'), 'Mumbai']],
+  [128, [NetworkIcons('Heco'), 'Heco']],
+  [56, [NetworkIcons('bsc'), 'BSC']],
+  [66, [NetworkIcons('OKEx'), 'OKEx']],
+  [10000, [NetworkIcons('SmartBCH'), 'SmartBCH']],
+  [288, [NetworkIcons('Boba'), 'Boba']],
+
+  [1337, [NetworkIcons('Ganache'), 'Ganache']],
+  [97, [NetworkIcons('bsc'), 'BSC Testnet']],
 ]);
 
 interface INetworkLabel {

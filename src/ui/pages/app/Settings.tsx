@@ -2,7 +2,6 @@ import './Settings.css';
 
 import { Menu, MenuButton, MenuDivider, MenuItem } from '@szhsin/react-menu';
 
-import { AccountType } from '../../../backend/models/Types';
 import { AccountVM } from '../../viewmodels/AccountVM';
 import { Application } from '../../viewmodels/Application';
 import DisplayCurrency from './components/DisplayCurrency';
@@ -113,7 +112,7 @@ export default observer(({ app, langsVM }: IConstructor) => {
               <button onClick={(_) => app.history.push('/generate?')}>
                 <div>
                   <Feather icon="plus-square" size={13} />
-                  <span>{t('Create')}</span>
+                  <span>{t('New')}</span>
                 </div>
               </button>
             </MenuItem>

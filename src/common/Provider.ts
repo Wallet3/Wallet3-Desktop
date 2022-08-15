@@ -1,22 +1,39 @@
 import * as Providers from './.wallet3.rc.json';
 import * as ethers from 'ethers';
 
+import { Gwei_1 } from './Constants';
 import axios from 'axios';
 
 const cache = new Map<number, ethers.providers.JsonRpcProvider | ethers.providers.WebSocketProvider>();
 const failedRPCs = new Set<string>();
+
+export function getChainProviderUrl(chainId: number) {
+  const list = [getCustomizedRPC(chainId)?.rpc || (Providers[`${chainId}`] as string[])].flat();
+  if (!list) {
+    throw new Error(`Unsupported chain:${chainId}`);
+  }
+
+  const url = list.filter((rpc) => !failedRPCs.has(rpc))[0] || list[0];
+  return url;
+}
+
+export function getChainProviderMaskUrl(chainId: number) {
+  const url = getChainProviderUrl(chainId);
+  if (url.includes('.infura.io')) {
+    const comps = url.split('/');
+    comps.pop();
+    return comps.join('/');
+  }
+
+  return url;
+}
 
 export function getProviderByChainId(chainId: number) {
   if (cache.has(chainId)) {
     return cache.get(chainId);
   }
 
-  const list = Providers[`${chainId}`] as string[];
-  if (!list) {
-    throw new Error(`Unsupported chain:${chainId}`);
-  }
-
-  const url = list.filter((rpc) => !failedRPCs.has(rpc))[0] || list[0];
+  const url = getChainProviderUrl(chainId);
 
   const provider = url.startsWith('http')
     ? new ethers.providers.JsonRpcProvider(url, chainId)
@@ -31,23 +48,43 @@ export function markRpcFailed(network: number, rpc: string) {
   failedRPCs.add(rpc);
 }
 
+export function saveCustomizedRPC(networkId: number, rpc: string, explorer: string) {
+  const store = require('storejs');
+  store.set(`customizedRPC-${networkId}`, { rpc, explorer });
+  cache.delete(networkId);
+}
+
+function getCustomizedRPC(networkId: number) {
+  if (!window) return undefined;
+  const store = require('storejs');
+  return store.get(`customizedRPC-${networkId}`) as { rpc: string; explorer: string };
+}
+
 export async function sendTransaction(chainId: number, txHex: string) {
   const rpcs = Providers[`${chainId}`] as string[];
 
-  for (let url of rpcs) {
-    try {
-      const resp = await axios.post(url, {
-        jsonrpc: '2.0',
-        method: 'eth_sendRawTransaction',
-        params: [txHex],
-        id: Date.now(),
-      });
+  try {
+    const result = await Promise.any(
+      rpcs.map(async (url) => {
+        const resp = await axios.post(url, {
+          jsonrpc: '2.0',
+          method: 'eth_sendRawTransaction',
+          params: [txHex],
+          id: Date.now(),
+        });
 
-      return resp.data as { id: number; result: string };
-    } catch (error) {}
+        if (resp.data.error) {
+          throw new Error(resp.data.error.message);
+        }
+
+        return resp.data as { id: number; result: string; error: { code: number; message: string } };
+      })
+    );
+
+    return result;
+  } catch (error) {
+    return { error: (error as AggregateError).errors[0], result: undefined };
   }
-
-  return undefined;
 }
 
 export async function getTransactionCount(chainId: number, address: string) {
@@ -58,7 +95,7 @@ export async function getTransactionCount(chainId: number, address: string) {
       const resp = await axios.post(url, {
         jsonrpc: '2.0',
         method: 'eth_getTransactionCount',
-        params: [address, 'latest'],
+        params: [address, 'pending'],
         id: Date.now(),
       });
 
@@ -99,6 +136,54 @@ export async function call<T>(
   return undefined;
 }
 
+export async function estimateGas(
+  chainId: number,
+  args: {
+    from: string;
+    to: string;
+    gas?: string | number;
+    gasPrice?: string | number;
+    value?: string | number;
+    data: string;
+  }
+) {
+  const rpcs = Providers[`${chainId}`] as string[];
+
+  for (let url of rpcs) {
+    try {
+      const resp = await axios.post(url, {
+        jsonrpc: '2.0',
+        method: 'eth_estimateGas',
+        params: [args],
+        id: Date.now(),
+      });
+
+      return resp.data.result as string;
+    } catch (error) {}
+  }
+
+  return undefined;
+}
+
+export async function getGasPrice(chainId: number) {
+  const rpcs = Providers[`${chainId}`] as string[];
+
+  for (let url of rpcs) {
+    try {
+      const resp = await axios.post(url, {
+        jsonrpc: '2.0',
+        method: 'eth_gasPrice',
+        params: [],
+        id: Date.now(),
+      });
+
+      return Number.parseInt(resp.data.result);
+    } catch (error) {}
+  }
+
+  return undefined;
+}
+
 export async function getTransactionReceipt(chainId: number, hash: string) {
   const rpcs = Providers[`${chainId}`] as string[];
 
@@ -128,4 +213,46 @@ export async function getTransactionReceipt(chainId: number, hash: string) {
   }
 
   return undefined;
+}
+
+export async function getNextBlockBaseFee(chainId: number) {
+  const rpcs = Providers[`${chainId}`] as string[];
+
+  for (let url of rpcs) {
+    try {
+      const resp = await axios.post(url, {
+        jsonrpc: '2.0',
+        method: 'eth_feeHistory',
+        params: [1, 'latest', []],
+        id: Date.now(),
+      });
+
+      const { baseFeePerGas } = resp.data.result as { baseFeePerGas: string[]; oldestBlock: number };
+
+      if (baseFeePerGas.length === 0) return 0;
+
+      return Number.parseInt(baseFeePerGas[baseFeePerGas.length - 1]) + Gwei_1 / 100;
+    } catch (error) {}
+  }
+
+  return 0;
+}
+
+export async function getMaxPriorityFee(chainId: number) {
+  const rpcs = Providers[`${chainId}`] as string[];
+
+  for (let url of rpcs) {
+    try {
+      const resp = await axios.post(url, {
+        jsonrpc: '2.0',
+        method: 'eth_maxPriorityFeePerGas',
+        params: [],
+        id: Date.now(),
+      });
+
+      return Number.parseInt(resp.data.result);
+    } catch (error) {}
+  }
+
+  return 0;
 }

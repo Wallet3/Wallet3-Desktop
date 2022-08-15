@@ -24,12 +24,14 @@ type AuthMethod = 'fingerprint' | 'keyboard';
 
 export class Application {
   readonly history = createMemoryHistory();
+  private authenticating = false;
 
   touchIDSupported = false;
   connectingApp = false;
 
   wallets: WalletVM[] = [];
   currentWallet: WalletVM = null;
+  version = '';
 
   get currentWalletId() {
     return this.currentWallet?.id;
@@ -91,10 +93,11 @@ export class Application {
   }
 
   async init(jump = true) {
-    const { touchIDSupported, pendingTxs, platform, keys, currentKeyId } = await ipc.invokeSecure<InitStatus>(
+    const { touchIDSupported, pendingTxs, platform, keys, currentKeyId, appVersion } = await ipc.invokeSecure<InitStatus>(
       MessageKeys.getInitStatus
     );
 
+    this.version = appVersion;
     this.wallets = keys.map((k) => new WalletVM(k).initAccounts(k));
     this.switchWallet(currentKeyId);
     this.touchIDSupported = touchIDSupported;
@@ -128,8 +131,6 @@ export class Application {
 
     const targetWallet = this.wallets.find((w) => w.id === keyId);
     if (!targetWallet) return;
-
-    console.log(targetWallet, targetWallet.currentAccount, 'expected:', toId, 'switched', keyId);
 
     runInAction(() => {
       this.currentWallet = targetWallet;
@@ -198,8 +199,15 @@ export class Application {
   };
 
   promptTouchID = async (message?: string) => {
-    const { success } = await ipc.invokeSecure<BooleanResult>(MessageKeys.promptTouchID, { message });
-    return success;
+    if (this.authenticating) return;
+
+    try {
+      this.authenticating = true;
+      const { success } = await ipc.invokeSecure<BooleanResult>(MessageKeys.promptTouchID, { message });
+      return success;
+    } finally {
+      this.authenticating = false;
+    }
   };
 
   switchAuthMethod = async (method: AuthMethod) => {

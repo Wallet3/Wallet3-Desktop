@@ -1,29 +1,37 @@
+import * as Biometrics from './lib/Biometrics';
 import * as Cipher from '../common/Cipher';
 
-import { BrowserWindow, Notification, TouchBar, TouchBarButton, ipcMain, systemPreferences } from 'electron';
-import { DBMan, KeyMan, TxMan, TxNotification } from './mans';
+import {
+  BrowserWindow,
+  TouchBar,
+  TouchBarButton,
+  app,
+  screen,
+  ipcMain,
+  nativeImage,
+  BrowserWindowConstructorOptions,
+} from 'electron';
+import { DBMan, KeyMan, TxMan } from './mans';
 import MessageKeys, {
   AuthenticationResult,
   ConfirmSendTx,
   InitStatus,
   PopupWindowTypes,
   SendTxParams,
-  TxParams,
 } from '../common/Messages';
 import { createECDH, createHash, randomBytes } from 'crypto';
 import { makeObservable, observable, reaction, runInAction } from 'mobx';
 
-import { Networks } from '../misc/Networks';
-import Transaction from './models/Transaction';
+// import BluetoothTransport from '@ledgerhq/hw-transport-node-ble';
+import { Networks } from '../common/Networks';
 import i18n from '../i18n';
-import { sendTransaction } from '../common/Provider';
-import { utils } from 'ethers';
 
 declare const POPUP_WINDOW_WEBPACK_ENTRY: string;
 declare const POPUP_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
 export class App {
-  touchIDSupported = process.platform === 'darwin' && systemPreferences.canPromptTouchID();
+  touchIDSupported = false;
+  bluetoothSupported = false;
 
   windows = new Map<string, { key: Buffer }>();
   mainWindow?: BrowserWindow;
@@ -49,6 +57,9 @@ export class App {
   }
 
   async init() {
+    this.touchIDSupported = await Biometrics.isTouchIDSupported();
+    // this.bluetoothSupported = await BluetoothTransport.isSupported();
+
     if (this.ready) return;
 
     reaction(
@@ -84,6 +95,7 @@ export class App {
           platform: process.platform,
           keys: KeyMan.overviewKeys,
           currentKeyId: KeyMan.currentId,
+          appVersion: app.getVersion(),
         } as InitStatus,
         key
       );
@@ -105,12 +117,7 @@ export class App {
 
       if (!this.touchIDSupported) return App.encryptIpc({ success: false }, key);
 
-      try {
-        await systemPreferences.promptTouchID(message ?? i18n.t('Unlock Wallet'));
-        return App.encryptIpc({ success: true }, key);
-      } catch (error) {
-        return App.encryptIpc({ success: false }, key);
-      }
+      return App.encryptIpc({ success: await Biometrics.verifyTouchID(message ?? i18n.t('Unlock Wallet')) }, key);
     });
 
     ipcMain.handle(`${MessageKeys.genMnemonic}-secure`, (e, encrypted, winId) => {
@@ -213,7 +220,10 @@ export class App {
         const addresses = (await this.walletKey.genAddresses(password, count)) || [];
         const verified = addresses.length > 0;
 
-        if (verified && this.touchIDSupported) await this.walletKey.encryptUserPassword(password);
+        if (verified) {
+          setTimeout(() => this.mainWindow.webContents.send(MessageKeys.pendingTxsChanged, [...TxMan.pendingTxs]), 1000);
+          if (this.touchIDSupported) await this.walletKey.encryptUserPassword(password);
+        }
 
         // TxNotification.watch(this.currentNetwork.defaultTokens, addresses, this.chainId);
 
@@ -291,13 +301,9 @@ export class App {
         return App.encryptIpc({}, key);
       }
 
-      App.sendTx(params.chainId || this.chainId, params, txHex);
+      TxMan.sendTx(params.chainId || this.chainId, params, txHex);
 
       return App.encryptIpc({ txHex }, key);
-    });
-
-    ipcMain.handle(MessageKeys.sendLocalNotification, async (e, content) => {
-      new Notification(content).show();
     });
 
     ipcMain.handle(MessageKeys.setLang, async (e, content) => {
@@ -334,50 +340,17 @@ export class App {
     return password;
   };
 
-  static readonly sendTx = async (chainId: number, params: TxParams, txHex: string) => {
-    const { result } = await sendTransaction(chainId, txHex);
-    if (!result) {
-      new Notification({
-        title: i18n.t('Transaction Failed'),
-        body: i18n.t('TxFailed2', { nonce: params.nonce }),
-      }).show();
-
-      return undefined;
-    }
-
-    App.saveTx(params, txHex);
-    return result;
-  };
-
-  static readonly saveTx = async (params: TxParams, txHex: string) => {
-    const tx = utils.parseTransaction(txHex);
-
-    if ((await TxMan.findTxs({ where: { hash: tx.hash } })).length === 0) {
-      const t = new Transaction();
-      t.chainId = params.chainId;
-      t.from = params.from;
-      t.to = params.to;
-      t.data = params.data;
-      t.gas = params.gas;
-      t.gasPrice = params.gasPrice;
-      t.hash = tx.hash;
-      t.nonce = params.nonce;
-      t.value = params.value;
-      t.timestamp = Date.now();
-
-      TxMan.save(t);
-    }
-
-    return tx;
-  };
-
   initPopupHandlers = () => {
     ipcMain.handle(`${MessageKeys.createTransferTx}-secure`, async (e, encrypted, winId) => {
       const { key } = this.windows.get(winId);
       const [iv, cipherText] = encrypted;
 
       const params: ConfirmSendTx = App.decryptIpc(cipherText, iv, key);
-      const popup = await this.createPopupWindow('sendTx', params, { modal: true, parent: this.mainWindow });
+      const popup = await this.createPopupWindow('sendTx', params, {
+        modal: true,
+        parent: this.mainWindow,
+        height: params.maxFeePerGas ? 375 : undefined,
+      });
 
       await new Promise<boolean>((resolve) => {
         popup.once('close', () => resolve(true));
@@ -426,23 +399,29 @@ export class App {
       const [iv, cipherText] = encrypted;
 
       const params = App.decryptIpc(cipherText, iv, key);
-      const reqid = randomBytes(4).toString('hex');
-      this.createPopupWindow('msgbox', { reqid, ...params }, { modal: true, parent: this.mainWindow, height: 250 });
-
-      const approved = await new Promise<boolean>((resolve) => {
-        ipcMain.handleOnce(`${MessageKeys.returnMsgBoxResult(reqid)}-secure`, async (e, encrypted, popWinId) => {
-          const { key } = this.windows.get(popWinId);
-          const [iv, cipherText] = encrypted;
-
-          const { approved } = App.decryptIpc(cipherText, iv, key) as { approved: boolean };
-
-          resolve(approved);
-        });
-      });
+      const approved = await this.ask(params);
 
       return App.encryptIpc({ approved }, key);
     });
   };
+
+  async ask(args: { title: string; icon: string; message: string }) {
+    const reqid = randomBytes(4).toString('hex');
+    this.createPopupWindow('msgbox', { reqid, ...args }, { modal: true, parent: this.mainWindow, height: 250 });
+
+    const approved = await new Promise<boolean>((resolve) => {
+      ipcMain.handleOnce(`${MessageKeys.returnMsgBoxResult(reqid)}-secure`, async (e, encrypted, popWinId) => {
+        const { key } = this.windows.get(popWinId);
+        const [iv, cipherText] = encrypted;
+
+        const { approved } = App.decryptIpc(cipherText, iv, key) as { approved: boolean };
+
+        resolve(approved);
+      });
+    });
+
+    return approved;
+  }
 
   createPopupWindow(
     type: PopupWindowTypes,
@@ -454,11 +433,13 @@ export class App {
     height = height ?? (modal ? 333 : 320);
     const width = process.platform === 'darwin' ? 365 : 375;
 
-    const popup = new BrowserWindow({
+    const windowOpts: BrowserWindowConstructorOptions = {
       width,
       minWidth: width,
       height,
       minHeight: height,
+      maxWidth: process.platform === 'win32' ? width : undefined,
+      maxHeight: process.platform === 'win32' ? height + 52 : undefined,
       modal,
       parent,
       resizable: resizable ?? true,
@@ -472,7 +453,14 @@ export class App {
         nodeIntegration: false,
         webSecurity: true,
       },
-    });
+    };
+    if (!parent) {
+      const cursorPos = screen.getCursorScreenPoint();
+      windowOpts.x = cursorPos.x - 50;
+      windowOpts.y = cursorPos.y - 50;
+    }
+
+    const popup = new BrowserWindow(windowOpts);
 
     if (this.touchBarButtons) {
       const { gas, price } = this.touchBarButtons || {};
@@ -481,6 +469,9 @@ export class App {
 
     popup.loadURL(POPUP_WINDOW_WEBPACK_ENTRY);
     popup.once('ready-to-show', () => popup.show());
+
+    if (process.platform === 'linux')
+      popup.setIcon(nativeImage.createFromDataURL(require('../assets/icons/app/AppIcon_256.png').default));
 
     return new Promise<BrowserWindow>((resolve) => {
       popup.webContents.once('did-finish-load', () => {

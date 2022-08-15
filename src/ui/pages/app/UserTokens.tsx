@@ -3,7 +3,6 @@ import './UserTokens.css';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import React, { useEffect, useState } from 'react';
 
-import { AccountVM } from '../../viewmodels/AccountVM';
 import { Application } from '../../viewmodels/Application';
 import { CryptoIcons } from '../../misc/Icons';
 import Feather from 'feather-icons-react';
@@ -53,6 +52,7 @@ export default observer(({ app }: { app: Application }) => {
                             }`}
                             onClick={(_) => {
                               if (i > 0) setForceRefresh((t.show = !t.show) ? Date.now() : Date.now());
+                              accountVM.save();
                             }} // Ugly code: Force refresh UI
                             ref={provided.innerRef}
                             {...provided.draggableProps}
@@ -61,9 +61,7 @@ export default observer(({ app }: { app: Application }) => {
                             <img src={CryptoIcons(t.symbol)} alt={t.symbol} />
                             <div className="desc">
                               <div>{t.symbol}</div>
-                              <div className="amount">
-                                {t.amount.toLocaleString(undefined, { maximumFractionDigits: 18 })}
-                              </div>
+                              <div className="amount">{t.amount.toLocaleString(undefined, { maximumFractionDigits: 18 })}</div>
                             </div>
 
                             <Toggle

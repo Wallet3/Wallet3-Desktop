@@ -3,10 +3,13 @@ import './NetworkMenu.css';
 
 import { Menu, MenuButton, MenuDivider, MenuItem, MenuPosition, SubMenu } from '@szhsin/react-menu';
 
-import { INetwork } from '../../misc/Networks';
+import Feather from 'feather-icons-react';
+import { History } from 'history';
+import { INetwork } from '../../common/Networks';
 import NetworkLabel from './NetworkLabel';
 import React from 'react';
 import { observer } from 'mobx-react-lite';
+import { useTranslation } from 'react-i18next';
 
 const MenuItemStyles = { padding: 0 };
 
@@ -17,11 +20,25 @@ interface Props {
   onNetworkSelected: (chainId: number) => void;
   currentChainId: number;
   position?: MenuPosition;
-  collapsed?: boolean;
+  testnetsCollapsed?: boolean;
+  showCustomize?: boolean;
+  history?: History;
 }
 
 export default observer(
-  ({ publicNetworks, testnets, currentChainId, onNetworkSelected, showAutoSwitch, position, collapsed }: Props) => {
+  ({
+    publicNetworks,
+    testnets,
+    currentChainId,
+    onNetworkSelected,
+    showAutoSwitch,
+    position,
+    testnetsCollapsed,
+    showCustomize,
+    history,
+  }: Props) => {
+    const { t } = useTranslation();
+
     const Testnets = () =>
       testnets.map((item) => {
         return (
@@ -36,13 +53,14 @@ export default observer(
     return (
       <Menu
         menuButton={() => (
-          <MenuButton className="menu-button">
+          <MenuButton className="menu-button networks">
             <NetworkLabel chainId={currentChainId} />
           </MenuButton>
         )}
         styles={{ minWidth: '5.5rem' }}
         direction="bottom"
         overflow="auto"
+        className="networks-menu"
         position={position || 'auto'}
       >
         {showAutoSwitch ? (
@@ -64,15 +82,38 @@ export default observer(
           );
         })}
 
-        <MenuDivider />
+        {testnetsCollapsed ? undefined : <MenuDivider />}
 
-        {collapsed ? (
-          <SubMenu label="Testnets" className="networks-sub-menu">
+        {testnetsCollapsed ? (
+          <SubMenu
+            label={() => (
+              <button>
+                <div className="network-label expand">
+                  <Feather icon="archive" size={12} />
+                  <span>{t('Testnets')}</span>
+                </div>
+              </button>
+            )}
+            styles={MenuItemStyles}
+            className="networks-sub-menu"
+          >
             {Testnets()}
           </SubMenu>
         ) : (
           Testnets()
         )}
+
+        {showCustomize ? <MenuDivider /> : undefined}
+
+        {showCustomize ? (
+          <MenuItem styles={MenuItemStyles}>
+            <button className="customize" onClick={(_) => history?.push('/networks')}>
+              <div className={`network-label expand`}>
+                <Feather icon="tool" size={12} /> <span>{t('Customize')}</span>
+              </div>
+            </button>
+          </MenuItem>
+        ) : undefined}
       </Menu>
     );
   }

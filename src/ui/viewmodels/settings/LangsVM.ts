@@ -18,6 +18,7 @@ export class LangsVM {
     { flag: 'jp', name: '日本語', value: 'jp' },
     { flag: 'tw', name: '繁体中文', value: 'zh-tw' },
     { flag: 'cn', name: '简体中文', value: 'zh-cn' },
+    { flag: 'ru', name: 'Русский', value: 'ru' },
   ];
 
   constructor() {

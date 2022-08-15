@@ -4,11 +4,11 @@ import Messages from '../../../common/Messages';
 import ipc from '../../bridges/IPC';
 
 export class DAppVM {
-  _session: IWcSession;
+  _session: IRawWcSession;
   userChainId: number = 0;
   keyId = -1;
 
-  constructor(session: IWcSession, keyId: number) {
+  constructor(session: IRawWcSession, keyId: number) {
     makeAutoObservable(this);
     this.keyId = keyId;
     this._session = session;
