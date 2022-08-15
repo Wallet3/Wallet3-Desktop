@@ -90,7 +90,6 @@
   },
   "dependencies": {
     "@electron/remote": "^2.0.4",
-    "@nodert-win10-20h1/windows.security.credentials.ui": "^0.1.0",
     "@szhsin/react-menu": "1.11.0",
     "@walletconnect/client": "^1.7.8",
     "animate.css": "^4.1.1",
