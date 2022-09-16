@@ -193,7 +193,9 @@ export class AccountVM {
 
     userConfigs.push(...defaultTokens.filter((t) => !userConfigs.find((uc) => uc.id.toLowerCase() === t.id.toLowerCase())));
 
-    const tokens = NetVM.currentNetwork.test ? [] : await Debank.getTokenBalances(this.address, NetVM.currentNetwork.comm_id);
+    const tokens = NetVM.currentNetwork.test
+      ? []
+      : await Debank.getTokenBalances(this.address, NetVM.currentNetwork.comm_id, false, NetVM.currentNetwork.chainId);
 
     let assets = NetVM.currentNetwork.test
       ? []
