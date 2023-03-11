@@ -1,3 +1,9 @@
+Please use Wallet 3 for [iOS](https://itunes.apple.com/us/app/wallet-3/id1597395741)/[Android](https://play.google.com/store/apps/details?id=jp.co.chainbow.wallet3.mobile) to get a better experience.
+
+[![App Store](https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg)](https://itunes.apple.com/us/app/wallet-3/id1597395741) 
+[<img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Google Play" style="width:155px;height:60px;margin-bottom:-10px"/>](https://itunes.apple.com/us/app/wallet-3/id1597395741)
+
+
 # Wallet 3 - A Secure Wallet for Web3 Era
 
 Wallet 3 is a secure crypto wallet for desktop users. It has a simple, UX-friendly design for users. With WalletConnect, users can experience the powerful DeFi ecosystem.
